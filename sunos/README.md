@@ -1,5 +1,5 @@
-Sunos v0.7-beta
-===============
+Sunos 
+===========
 
 Por BrunoMine
 

@@ -6,11 +6,13 @@ Por BrunoMine
 Esse mod adiciona os povos sunos ao jogo.
 Eles aparecem aleatoriamente
 
-# Sobre os Sunos
+## Sobre os Sunos
 Os sunos (do esperanto, "sol") são povoados humildes que vivem 
 em planicies. Não possuem muita habilidade técnica e por isso 
 só utilizam materiais simples de encontrar 
 (Madeira, Pedras e etc).
+
+============
 
 ### Licenças 
 
@@ -34,7 +36,7 @@ se não, veja <http://www.gnu.org/licenses/>.
 
 funcionalidades:
 
-- Salvar uma estrutura: s <nome> <arquivo>
+- Salvar uma estrutura: `s <nome> <arquivo>`
 
 ## Estruturas
 

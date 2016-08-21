@@ -34,7 +34,7 @@ se não, veja <http://www.gnu.org/licenses/>.
 
 funcionalidades:
 
-- Salvar uma estrutura: s <nome> <arquivo>
+- Salvar uma estrutura: `s <nome> <arquivo>`
 
 ## Estruturas
 

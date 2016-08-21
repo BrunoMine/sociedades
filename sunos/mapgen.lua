@@ -129,6 +129,19 @@ minetest.register_on_generated(function(minp, maxp, seed)
 	-- Verificar altura
 	if minp.y < -70 or minp.y > 120 then return end
 	
+	-- Verificar se tem terra com grama no centro do bloco gerado
+	local solo_central = pegar_solo({x=minp.x+40, y=maxp.y, z=minp.z+40}) -- Solo encontrado no centro
+	if solo_central == nil then return end
+	
+	-- Evitar florestas
+	--[[
+		Se tiver arvore perto do centro, será descartado pois
+		a area central é a area mais util do bloco.
+		Agua tambem é evitada nessa parte.
+	  ]]
+	if minetest.find_node_near(solo_central, 10, {"group:tree", "group:water"}) ~= nil then return end
+	
+	
 	-- Pegar malha
 	local malha = pegar_malha(minp, maxp)
 	

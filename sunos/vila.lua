@@ -80,8 +80,8 @@ local verif_obs = function(pos, assent)
 	end
 	
 	-- Amplitude das verificações
-	local subir = 2 -- Subir antes de descer verificando
-	local desce = 4 -- Descer verificando
+	local subir = 1 -- Subir antes de descer verificando
+	local desce = 2 -- Descer verificando
 	
 	if assent and tonumber(assent) then
 		local a = 0

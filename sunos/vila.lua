@@ -181,7 +181,7 @@ local tentar_assentamento = function(pos)
 		-- Desconta a dintancia entre obstrucoes (assentamentos, ruas e etc)
 		dist_disp = dist_disp - 3
 		-- armazenando
-		if dist_disp >= 1 then
+		if dist_disp >= 1 and minetest.find_node_near(p, dist_assent, {"group:leaves", "group:tree", "group:water"}) == nil then
 			table.insert(mpos, {p=p, dist=dist_disp})
 		end
 	end
@@ -231,7 +231,7 @@ sunos.criar_vila = function(pos, vpos)
 		
 		-- Verifica se todas as direcoes estao obstruidas
 		if table.maxn(obs) < 4 
-			and minetest.find_node_near(pos, 6, {"group:leaves", "group:water"}) == nil
+			and minetest.find_node_near(pos, 6, {"group:leaves", "group:tree", "group:water"}) == nil
 		then
 		
 			-- Define nova direcao

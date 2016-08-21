@@ -1,4 +1,4 @@
-Sunos v0.7-beta
+Sunos v0.8-beta
 ===============
 
 Por BrunoMine

@@ -72,12 +72,16 @@ local criar_assent = function(pos, dist)
 end
 
 
--- Verificar pos obstruidos (pode verificar largura disponivel de assentamento)
+-- Verifica uma pos obstruida (pode verificar largura disponivel de assentamento)
 local verif_obs = function(pos, assent)
 	if pos == nil then
 		minetest.log("error", "[Sunos] Tabela pos nula (em verif_obs)")
 		return false
 	end
+	
+	-- Amplitude das verificações
+	local subir = 2 -- Subir antes de descer verificando
+	local desce = 4 -- Descer verificando
 	
 	if assent and tonumber(assent) then
 		local a = 0
@@ -87,29 +91,29 @@ local verif_obs = function(pos, assent)
 			
 			-- Quinas
 			p = {x=pos.x+a, y=pos.y, z=pos.z+a}
-			if sunos.pegar_solo(p, 4, 2) then i = i + 1 end
+			if sunos.pegar_solo(p, desce, subir) then i = i + 1 end
 			
 			p = {x=pos.x+a, y=pos.y, z=pos.z-a}
-			if sunos.pegar_solo(p, 4, 2) then i = i + 1 end
+			if sunos.pegar_solo(p, desce, subir) then i = i + 1 end
 			
 			p = {x=pos.x-a, y=pos.y, z=pos.z+a}
-			if sunos.pegar_solo(p, 4, 2) then i = i + 1 end
+			if sunos.pegar_solo(p, desce, subir) then i = i + 1 end
 			
 			p = {x=pos.x-a, y=pos.y, z=pos.z-a}
-			if sunos.pegar_solo(p, 4, 2) then i = i + 1 end
+			if sunos.pegar_solo(p, desce, subir) then i = i + 1 end
 			
 			-- Lados
 			p = {x=pos.x+a, y=pos.y, z=pos.z}
-			if sunos.pegar_solo(p, 4, 2) then i = i + 1 end
+			if sunos.pegar_solo(p, desce, subir) then i = i + 1 end
 			
 			p = {x=pos.x-a, y=pos.y, z=pos.z}
-			if sunos.pegar_solo(p, 4, 2) then i = i + 1 end
+			if sunos.pegar_solo(p, desce, subir) then i = i + 1 end
 			
 			p = {x=pos.x, y=pos.y, z=pos.z+a}
-			if sunos.pegar_solo(p, 4, 2) then i = i + 1 end
+			if sunos.pegar_solo(p, desce, subir) then i = i + 1 end
 			
 			p = {x=pos.x, y=pos.y, z=pos.z-a}
-			if sunos.pegar_solo(p, 4, 2) then i = i + 1 end
+			if sunos.pegar_solo(p, desce, subir) then i = i + 1 end
 			
 			if i < 8 then 
 				a = a - 1
@@ -127,7 +131,6 @@ local verif_obs = function(pos, assent)
 		return false	
 	end
 end
-sunos.verif_obs = verif_obs
 
 -- Verifica direcoes obstruidas (retorna tabela de disponiveis como segundo valor)
 local verif_obs_dir = function(pos, dist)
@@ -154,7 +157,11 @@ local verif_obs_dir = function(pos, dist)
 end
 
 
--- Tentar colocar assentamento por perto
+-- Tentar colocar assentamentos
+--[[
+	Essa função tenta colocar um assentamento
+	da melhor maneira possivel dentre as 4 direções possiveis
+  ]]
 local tentar_assentamento = function(pos)
 	if pos == nil then
 		minetest.log("error", "[Sunos] Tabela pos nula (em verif_assentamento)")
@@ -264,7 +271,7 @@ sunos.criar_vila = function(pos, vpos)
 		ciclo = ciclo + 1
 	end
 	
-	-- Montar Estruturas nos assentamentos
+	-- Montar estruturas nos assentamentos criados
 	if assentamentos then
 		for _,dados in ipairs(assentamentos) do
 			sunos.montar_estrutura(dados.pos, dados.dist)

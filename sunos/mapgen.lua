@@ -22,10 +22,14 @@ end
 
 
 -- Encontrar solo
+--[[
+	Verifica 80 blocos de uma coluna.
+	Feita para verificar MapBlocks (blocos de mapa)
+  ]]
 local function pegar_solo(pos)
 	local y = 0
 	local r = nil
-	while y <= 80 do
+	while y <= 79 do
 		local node = pegar_node({x=pos.x, y=pos.y-y, z=pos.z})
 		if node.name == "default:dirt_with_grass" then
 			r = {x=pos.x, y=pos.y-y, z=pos.z}
@@ -72,7 +76,7 @@ end
 local pegar_malha = function(minp, maxp)	
 	local vetor = {}
 	
-	-- montando vetor
+	-- Vetor de dados
 	for x=1, 7 do
 		vetor[x] = {}
 		for z=1, 7 do
@@ -115,6 +119,11 @@ end
 
 
 -- Chamada de função para verificar mapa gerado
+--[[
+	São feita algumas verificações prévias importantes e 
+	extração de posições de chão plano.
+	Deve-se ter cuidado para evitar alto uso de memoria nas verificações
+  ]]
 minetest.register_on_generated(function(minp, maxp, seed)
 	
 	-- Verificar altura
@@ -123,7 +132,10 @@ minetest.register_on_generated(function(minp, maxp, seed)
 	-- Pegar malha
 	local malha = pegar_malha(minp, maxp)
 	
-	-- Verificar qunatidade de pontos em areas planos
+	-- Verificar quantidade de pontos em areas planos
+	--[[
+		Isso é uma analize de pontos da malha
+	  ]]
 	local rel = {nul=0,bom=0,ruim=0}
 	local min = nil
 	local pos = nil
@@ -153,12 +165,12 @@ minetest.register_on_generated(function(minp, maxp, seed)
 		end
 	end
 	
+	-- Verifica quantidade aceitavel de areas planas
 	if rel.bom < 10 then return end
 	
+	-- Sortear chance de criar vila
 	if 1 < math.random(1, sunos.RARIDADE) then return end
 	
-	
-	if pos then
-		sunos.criar_vila(pos, vpos)
-	end
+	-- Criar vila
+	sunos.criar_vila(pos, vpos)
 end)

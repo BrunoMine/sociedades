@@ -25,7 +25,12 @@ sunos.pegar_dir_oposta = function(dir)
 	end
 end
 
--- Pega ignore apenas se bloco nao foi gerado
+-- Pega um node
+--[[
+	Pega o node normalmente e tenta carregar o node
+	caso resulte em ignore. Se o node não tiver sido gerado
+	o retorno será ignore.
+  ]]
 sunos.pegar_node = function(pos)
 	local node = minetest.get_node(pos)
 	if node.name == "ignore" then
@@ -36,6 +41,18 @@ sunos.pegar_node = function(pos)
 end
 
 -- Encontrar solo
+--[[
+	Essa função recebe uma pos e tenta encontrar
+	o solo de terra com grama através de um loop que desce
+	verificando a partir da altura da pos.
+	Retorno:
+		<pos> é a pos do solo encontrado ou nil caso não encontre
+	Argumentos:
+		<dist> OPCIONAL | é a distancia que o loop 
+			acontece descendo (padrão é 10) 
+		<subir> OPCIONAL | é uma distância para cima que o
+			loop deve iniciar (padrão é 0) 
+  ]]
 sunos.pegar_solo = function(pos, dist, subir)
 	if pos == nil then
 		minetest.log("error", "[Sunos] Tabela pos nula (em sunos.pegar_solo)")
@@ -60,6 +77,18 @@ end
 
 
 -- Mover pos para uma direcao
+--[[
+	Essa função calcula uma pos deslocada para uma direção
+	definida.
+	Retorno:
+		<pos> é a pos deslocada
+	Argumentos:
+		<pos> é a pos de onde o descolamento ocorre
+		<dir> é a string da direção que o deslocamento ocorre
+			("x+", "x-", "z+" ou "z-")
+		<dist> OPCIONAL | é a distância de deslocamento
+			(padrão é 1)
+  ]]
 sunos.ir_dir = function(pos, dir, dist)
 	if pos == nil then
 		minetest.log("error", "[Sunos] Tabela pos nula (em sunos.ir_dir)")
@@ -81,7 +110,21 @@ sunos.ir_dir = function(pos, dir, dist)
 	end
 end
 
+
 -- Gira uma direcao
+--[[
+	Essa função calcula uma direção rotacionada.
+	Para ajudar o entendimento, imagine que você
+	(como jogador) está vidade para a direção "x+",
+	caso vire para a esquerda estará virado para "z+".
+	Essa é a lógica aqui.
+	Retorno:
+		<dir> é a direção rotacionada
+	Argumentos:
+		<dir> é a direção inicial
+		<lado> é pra que lado ela deve virar
+			("<"(direita) ou ">"(esquerda))
+  ]]
 sunos.girar_dir = function(dir, lado)
 	if dir == nil then
 		minetest.log("error", "[Sunos] String dir nula (em sunos.girar_dir)")
@@ -121,6 +164,15 @@ end
 
 
 -- Pegar uma direcao aleatoriamente
+--[[
+	Essa função retona uma direção aleatoriamente
+	Retorno:
+		<dir> é uma direção aleatória
+	Argumentos:
+		<exeto> OPCIONAL | é uma tabela ordenada
+			de direção que devem ser evitadas
+			(ex. {"x+", "z-"})
+  ]]
 sunos.pegar_dir_aleatoria = function(exeto)
 	local d = {"x+", "x-", "z+", "z-"}
 	if table.maxn(exeto) >= 4 then 
@@ -143,6 +195,21 @@ end
 
 
 -- Forçar tentar pegar solo
+--[[
+	Essa função é similar à sunos.pegar_solo, mas
+	não força um retorno não nulo.
+	Retorno:
+		<pos> pos de um solo
+	Argumentos:
+		<pos> é uma pos onde será analizado
+		<degrau> é um valor booleano para que retorne
+			uma <pos> com apenas 1 de diferença de altura
+			(util para montar diferença suave de alturas/degrais)
+		<dist> OPCIONAL | é a distancia que o loop 
+			acontece descendo (padrão é o mesmo de sunos.pegar_solo) 
+		<subir> OPCIONAL | é uma distância para cima que o
+			loop deve iniciar (padrão é 0)
+  ]]
 sunos.f_pegar_solo = function(p, degrau, dist, subir)
 	if p == nil then
 		minetest.log("error", "[Sunos] Tabela p nula (em sunos.f_pegar_solo)")

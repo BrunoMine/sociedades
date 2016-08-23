@@ -274,7 +274,7 @@ sunos.criar_vila = function(pos, vpos)
 	-- Montar estruturas nos assentamentos criados
 	if assentamentos then
 		for _,dados in ipairs(assentamentos) do
-			sunos.montar_estrutura(dados.pos, dados.dist)
+			sunos.montar_estrutura(dados.pos, dados.dist, "casa")
 		end
 	end
 end

@@ -9,6 +9,9 @@
 	Métodos comuns
   ]]
 
+-- Caminho do diretório do mod
+local modpath = minetest.get_modpath("sunos")
+
 -- Pegar direcao oposta
 sunos.pegar_dir_oposta = function(dir)
 	if dir == "x+" then
@@ -73,6 +76,47 @@ sunos.pegar_solo = function(pos, dist, subir)
 		y = y + 1
 	end
 	return r
+end
+
+-- Pegar uma arquivo de estrutura aleatoriamente
+--[[
+	Essa função retorna um nome aleatorio de arquivo para estrutura.
+	Argumentos:
+		<largura> Largura da estrutura
+		<tipo> Tipo da estrutura
+	Retorno:
+		<nome> Nome da estrutura (Ex. casa_simples)
+  ]]
+sunos.pegar_arquivo = function(largura, tipo)
+	if largura == nil then
+		minetest.log("error", "[Sunos] Largura nula (em sunos.pegar_arquivo)")
+		return nil
+	end
+	if tipo == nil then
+		minetest.log("error", "[Sunos] Tipo de estrutura nula (em sunos.pegar_arquivo)")
+		return nil
+	end
+	
+	local estruturas = minetest.get_dir_list(modpath.."/estruturas/"..tipo)
+	
+	local validos = {}
+	if estruturas ~= nil then
+		for _,nome in ipairs(estruturas) do
+			local n = string.split(nome, ".")
+			if n[2] and tonumber(n[2]) == tonumber(largura) then
+				table.insert(validos, n[1])
+			end
+		end
+	else
+		return nil
+	end
+		
+	
+	if validos[1] then
+		return validos[math.random(1, table.maxn(validos))]
+	else
+		return nil
+	end
 end
 
 

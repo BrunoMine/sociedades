@@ -17,50 +17,27 @@ minetest.register_chatcommand("sunos", {
 	privs = {server=true},
 	params = "<funcao> [Salvar estrutura | s <nome> <largura>] ",
 	description = "Opera algumas funcionalidades",
-	func = function(name,  param)
+	func = function(name,  param)		
 		local m = string.split(param, " ")
 		local param1, param2, param3 = m[1], m[2], m[3]
 		if param1 == "s" and tonumber(param3) then
 			param3 = tonumber(param3)
 			if param3 == 3 or param3 == 5 or param3 == 7 or param3 == 9 or param3 == 11 then
 				
-				-- Serializando a estrutura
-				
+				-- Pegando dados do local
 				local player = minetest.get_player_by_name(name)
 				local pos = player:getpos()
-
+				
+				-- Dimensões da estrutura
 				local largura = param3
 				local altura = 15
 				
-				-- Criar estrutura
-				local estrutura = {}
-				local ix, iy, iz = 1, 1, 1
-				local x, y, z = pos.x, pos.y, pos.z
-				local limx, limy, limz = (pos.x+largura-1), (pos.y+altura-1), (pos.z+largura-1)
-				local i = 0
-				while (x <= limx) do
-					while (y <= limy) do
-						while (z <= limz) do
-							estrutura[ix.." "..iy.." "..iz] = minetest.get_node({x = x, y = y, z = z})
-							i = i + 1
-							z = z + 1
-							iz = iz + 1
-						end
-						z = pos.z
-						iz = 1
-						y = y + 1
-						iy = iy + 1
-					end
-					y = pos.y
-					iy = 1
-					x = x + 1
-					ix = ix + 1
-				end
-
-				-- Criar arquivo
-				local output = io.open(modpath .. "/estruturas/"..param2.."."..largura, "w")
-				output:write(minetest.serialize(estrutura))
-				io.close(output)
+				-- Coordenadas dos extremos
+				local p1 = pos
+				local p2 = {x=pos.x+largura, y=pos.y+15, z=pos.z+largura}
+				
+				-- Serializando a estrutura
+				minetest.create_schematic(p1, p2, {}, modpath .. "/estruturas/"..param2.."."..largura..".mts")
 
 				-- Estrutura serializada com sucesso
 				minetest.chat_send_all("Serializacao concluida.")
@@ -72,3 +49,4 @@ minetest.register_chatcommand("sunos", {
 		end
 	end
 })
+

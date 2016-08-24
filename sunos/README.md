@@ -3,22 +3,15 @@ Sunos
 
 Por BrunoMine
 
-Esse mod adiciona os povos sunos ao jogo.
-Eles aparecem aleatoriamente
-
-# Sobre os Sunos
+Esse mod adiciona os povos sunos ao jogo que aparecem aleatoriamente pelo mapa.
 Os sunos (do esperanto, "sol") são povoados humildes que vivem 
 em planicies. Não possuem muita habilidade técnica e por isso 
 só utilizam materiais simples de encontrar 
-(Madeira, Pedras e etc). Suas casas possuem materiais 
-predominantemente de madeira comum e muitas janelas para que a 
-luz do sol entre no interior da casa.
-Recipientes, estantes, flores e fornos são muito comuns de serem 
-encontrados nas casas dos sunos.
+(Madeira, Pedras e etc). Leia mais sobre os sunos nó [wiki do projeto](https://github.com/BrunoMine/sociedades/wiki/Sunos)
 
 ==================================================================
 
-### Licenças 
+## Licenças 
 
 Software LGPL v3
 
@@ -42,9 +35,7 @@ funcionalidades:
 
 - Salvar uma estrutura: `s <tipo> <nome> <largura>`
 
-## Estruturas
-
-### Criar
+## Criar estruturas
 Todas as estruturas tem largura e comprimento iguais e altura
 maxima de 15.
 As estruturas são salvas no modo schematic do minetest dentro 
@@ -56,6 +47,7 @@ Todas as estruturas devem ser mencionadas no arquivo CATALOGO.md
 de documentação de estruturas dentro da pasta do tipo referente às 
 estruturas no seguinte formato:
 
+```md
 	Estruturas:
 		<Nomde de um arquivo>
 		<Nome de outro arquivo>
@@ -68,6 +60,7 @@ estruturas no seguinte formato:
 		<ID de outro node>
 		<ID de mais outro node>
 	Descrição: <OPCIONAL para descrever como funciona a estrutura>
+```
 
 Ao montar uma estrutura para os sunos, certifique-se de que esteja seguindo 
 os parâmetros culturais estabelecidos para essa sociedade.

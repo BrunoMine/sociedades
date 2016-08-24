@@ -3,7 +3,7 @@ Sunos
 
 # Arquitetura de dados
 
-O mod memor é usado para gerenciar essas tabelas de dados
+O mod memor é usado para gerenciar essas tabelas de dados (use a API do memor para compreender o funcionamento)
 
 ## Dados gerais
 

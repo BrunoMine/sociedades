@@ -7,6 +7,8 @@ O mod memor é usado para gerenciar essas tabelas de dados
 
 ## Dados gerais
 
+Esses são dados gerais do mod sunos
+
 ```lua
 geral = {
 	vilas = <numero de vilas>
@@ -15,6 +17,8 @@ geral = {
 
 ## Dados da vila
 
+Esses são os dados que cada vila guarda dela mesma.
+
 ```lua
 vila_<numero da vila> = {
 	<tipo_estrutura>_<numero da estrutura> = <registro da estrutura>
@@ -22,6 +26,8 @@ vila_<numero da vila> = {
 ```
 
 ### Casa
+
+Esses são os dados que cada casa guarda dela mesma.
 
 ```lua
 casa_x = {

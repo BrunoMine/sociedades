@@ -10,7 +10,13 @@ Eles aparecem aleatoriamente
 Os sunos (do esperanto, "sol") são povoados humildes que vivem 
 em planicies. Não possuem muita habilidade técnica e por isso 
 só utilizam materiais simples de encontrar 
-(Madeira, Pedras e etc).
+(Madeira, Pedras e etc). Suas casas possuem materiais 
+predominantemente de madeira comum e muitas janelas para que a 
+luz do sol entre no interior da casa.
+Recipientes, estantes, flores e fornos são muito comuns de serem 
+encontrados nas casas dos sunos.
+
+==================================================================
 
 ### Licenças 
 
@@ -34,10 +40,45 @@ se não, veja <http://www.gnu.org/licenses/>.
 
 funcionalidades:
 
-- Salvar uma estrutura: `s <nome> <largura>`
+- Salvar uma estrutura: `s <tipo> <nome> <largura>`
 
 ## Estruturas
 
+### Criar
 Todas as estruturas tem largura e comprimento iguais e altura
 maxima de 15.
+As estruturas são salvas no modo schematic do minetest dentro 
+a pasta `estruturas` dentro da pasta de sua desiginação 
+(casa, decor e etc).
+O nome do arquivo deve seguir a regra:
+`<nome>.<largura>.mts`
+Todas as estruturas devem ser mencionadas no arquivo CATALOGO.md 
+de documentação de estruturas dentro da pasta do tipo referente às 
+estruturas no seguinte formato:
+
+	Estruturas:
+		<Nomde de um arquivo>
+		<Nome de outro arquivo>
+		<Nome de mais outro arquivo>
+	Autor: <Nome>
+	Data: <Data de termino>
+	Licença: <Licença>
+	Nodes: <OPCIONAL>
+		<ID de um node>
+		<ID de outro node>
+		<ID de mais outro node>
+	Descrição: <OPCIONAL para descrever como funciona a estrutura>
+
+Ao montar uma estrutura para os sunos, certifique-se de que esteja seguindo 
+os parâmetros culturais estabelecidos para essa sociedade.
+
+### Casas
+
+Podem ter largura de 5, 7 ou 9 blocos de largura.
+Devem ficar na pasta `casa` de estruturas.
+
+### Estruturas decorativas
+
+Podem ter largura de 3, 5, 7 ou 9 blocos de largura.
+Devem ficar na pasta `decor` de estruturas.
 

@@ -15,21 +15,21 @@ local modpath = minetest.get_modpath("sunos")
 -- Comando de serializar estrutura
 minetest.register_chatcommand("sunos", {
 	privs = {server=true},
-	params = "<funcao> [Salvar estrutura | s <nome> <largura>] ",
+	params = "<funcao> [Salvar estrutura | s <tipo> <nome> <largura>] ",
 	description = "Opera algumas funcionalidades",
 	func = function(name,  param)		
 		local m = string.split(param, " ")
-		local param1, param2, param3 = m[1], m[2], m[3]
-		if param1 == "s" and tonumber(param3) then
-			param3 = tonumber(param3)
-			if param3 == 3 or param3 == 5 or param3 == 7 or param3 == 9 or param3 == 11 then
+		local param1, param2, param3, param4 = m[1], m[2], m[3], m[4]
+		if param1 == "s" and tonumber(param4) then
+			param4 = tonumber(param4)
+			if param4 == 3 or param4 == 5 or param4 == 7 or param4 == 9 or param4 == 11 then
 				
 				-- Pegando dados do local
 				local player = minetest.get_player_by_name(name)
 				local pos = player:getpos()
 				
 				-- Dimensões da estrutura
-				local largura = param3
+				local largura = param4
 				local altura = 15
 				
 				-- Coordenadas dos extremos
@@ -37,14 +37,18 @@ minetest.register_chatcommand("sunos", {
 				local p2 = {x=pos.x+largura, y=pos.y+15, z=pos.z+largura}
 				
 				-- Serializando a estrutura
-				minetest.create_schematic(p1, p2, {}, modpath .. "/estruturas/"..param2.."."..largura..".mts")
+				minetest.create_schematic(p1, p2, {}, modpath .. "/estruturas/"..param2.."/"..param3.."."..largura..".mts")
 
 				-- Estrutura serializada com sucesso
-				minetest.chat_send_all("Serializacao concluida.")
+				minetest.chat_send_all("Salvamento concluida.")
+				minetest.chat_send_all("Nome: "..param3)
+				minetest.chat_send_all("Largura: "..param4)
+				minetest.chat_send_all("Tipo: "..param2)
 				
 				
 			end
 		else
+			minetest.chat_send_all("Falha ao salvar estrutura.")
 			return false
 		end
 	end

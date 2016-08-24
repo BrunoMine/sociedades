@@ -9,6 +9,30 @@
 	Montagem de vilas
   ]]
 
+
+-- Validar bando de dados
+if sunos.bd:verif("geral", "vilas") ~= true then
+	sunos.bd:salvar("geral", "vilas", 0)
+end
+
+
+-- Registrar nova vila (retorna o numero da vila registrada)
+local registrar_vila = function()
+	
+	-- Pegar quantidade vilas
+	local qtd = tonumber(sunos.bd:pegar("geral", "vilas"))
+	
+	qtd = qtd + 1
+	
+	-- Criar registro
+	sunos.bd:salvar("vila_"..qtd, "numero", qtd)
+	
+	-- Atualizar quantidade de vilas
+	sunos.bd:salvar("geral", "vilas", qtd)
+	
+	return qtd
+end
+
 -- Criar assentamento de construcao
 local criar_assent = function(pos, dist)
 	for x=pos.x-dist, pos.x+dist do
@@ -273,8 +297,50 @@ sunos.criar_vila = function(pos, vpos)
 	
 	-- Montar estruturas nos assentamentos criados
 	if assentamentos then
-		for _,dados in ipairs(assentamentos) do
-			sunos.montar_estrutura(dados.pos, dados.dist, "casa")
+		
+		-- Registra a nova vila
+		local vila = registrar_vila()
+		
+		--
+		for n,dados in ipairs(assentamentos) do
+			
+			-- Tipo
+			local tipo = "casa"
+			
+			-- Largura
+			local largura = dados.dist*2+1
+			
+			-- Troca o tipo para decor caso a largura seja 3
+			if largura == 3 then tipo = "decor" end
+			
+			sunos.montar_estrutura(dados.pos, dados.dist, tipo)
+			
+			-- Verifica se tem baus na estrutura montada
+			local baus = minetest.find_nodes_in_area(
+				{x=dados.pos.x-dados.dist, y=dados.pos.y, z=dados.pos.z-dados.dist}, 
+				{x=dados.pos.x+dados.dist, y=dados.pos.y+15, z=dados.pos.z+dados.dist}, 
+				{"sunos:bau"}
+			)
+			
+			-- Salva dados da estrutura no bau dela
+			for _,pos_bau in ipairs(baus) do
+				local meta = minetest.get_meta(pos_bau)
+				meta:set_string("numero", n)
+				meta:set_string("infotext", "Bau de Suno")
+			end
+			
+			-- Registros a serem salvos
+			local registros = {
+				numero = n,
+				tipo = tipo,
+				estrutura = {
+					dist = dados.dist,
+					largura = largura,
+					pos = dados.pos
+				}
+			}
+			
+			sunos.bd:salvar("vila_"..vila, "casa_"..n, registros)
 		end
 	end
 end

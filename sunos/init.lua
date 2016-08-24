@@ -31,6 +31,8 @@ end
 -- Modpath
 local modpath = minetest.get_modpath("sunos")
 
+-- Banco de dados (Memor)
+sunos.bd = memor.montar_bd()
 
 -- Carregar scripts
 notificar("Carregando...")

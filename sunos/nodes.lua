@@ -9,17 +9,13 @@
 	Nodes
   ]]
 
-minetest.register_node("sunos:teste", {
-	description = "TESTE SUNOS",
-	tiles = {"default_stone.png"},
-	is_ground_content = true,
-	groups = {cracky=3, stone=1},
-	drop = 'default:cobble',
-	legacy_mineral = true,
-	sounds = default.node_sound_stone_defaults(),
-	on_use = function(itemstack, player, pointed_thing)
-		if pointed_thing and pointed_thing.under then
-			sunos.criar_vila(pointed_thing.under)
-		end
-	end,
+minetest.register_node("sunos:bau", {
+	description = "Bau dos Sunos",
+	tiles = {"default_chest_top.png", "default_chest_top.png", "default_chest_side.png",
+		"default_chest_side.png", "default_chest_side.png", "default_chest_lock.png"},
+	paramtype2 = "facedir",
+	groups = {choppy = 2, oddly_breakable_by_hand = 2},
+	legacy_facedir_simple = true,
+	is_ground_content = false,
+	sounds = default.node_sound_wood_defaults(),
 })

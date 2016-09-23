@@ -9,6 +9,19 @@
 	Mob comum das vilas
   ]]
 
+-- Variaveis sistematicas
+
+-- Verificador do Bau de sunos
+-- Tempo (em segundos) que demora para um bau verificar se tem um suno dele por perto
+local tempo_verif_npc = 60
+-- Distancia (om blocos) que um bau verifica em sua volta para encontrar seu proprio npc
+local dist_verif_npc = 8
+
+-- Verificador do npc suno comum 
+-- Tempo (em segundos) que um npc demora para verificar se esta perto da pos de seu bau
+local tempo_verif_bau = 20
+-- A cada quantos loops de verificação do npc ele deve verificar se seu bau ainda existe
+local qtd_loops_npc = 8
 
 -- Verificar distancia entre duas pos
 local verif_dist_pos = function(pos1, pos2)
@@ -71,39 +84,23 @@ mobs:register_mob("sunos:npc", {
 	},
 	
 	do_custom = function(self, dtime)
-	
+		
 		-- Verifica se esta perto do bau de origem
-		if self.temp then
-			self.temp = self.temp + dtime
-		else
-			self.temp = 14
-			self.loop = 0 -- Verifica um numero de loops
-		end
-		if self.temp >= 15 then
+		self.temp = self.temp + dtime
+		if self.temp >= tempo_verif_bau then
+		
 			self.temp = 0
 			self.loop = self.loop + 1
 			
-			-- Verifica se ja tem um bau registrado para esse npc
-			if self.registro == nil then
-				local pos_node = minetest.find_node_near(self.object:getpos(), 2, {"sunos:bau"})
-				
-				if pos_node == nil then -- Caso não tenha nenhum bau perto
-					self.object:remove()
-					return
-				end
-				
-				self.registro = minetest.serialize(pos_node)
-			end
-			
 			-- Verificar se esta perto do bau
 			local pos_node = minetest.deserialize(self.registro)
-			if verif_dist_pos(self.object:getpos(), pos_node) > 12 then
+			if verif_dist_pos(self.object:getpos(), pos_node) > dist_verif_npc then
 				self.object:remove()
 				return
 			end
 			
 			-- Verifica o se o bau de origem ainda existe
-			if self.loop >= 10 then
+			if self.loop >= qtd_loops_npc then
 				self.loop = 0
 				
 				local node = minetest.get_node(pos_node)
@@ -117,14 +114,21 @@ mobs:register_mob("sunos:npc", {
 	end,
 })
 
--- Verifica se tem um nps suno comum
+-- Verifica se tem um npc suno comum
 local verificar_bau_sunos = function(pos)
 
 	-- Pegar e verificar mobs em uma area
 	local r = false
-	for  _,obj in ipairs(minetest.get_objects_inside_radius(pos, 8)) do
+	local meta = minetest.get_meta(pos)
+	local num = meta:get_string("numero")
+	if num == nil then return end -- Cancela toda a operação caso nao teha numero de casa
+	for  _,obj in ipairs(minetest.get_objects_inside_radius(pos, dist_verif_npc)) do
 		local ent = obj:get_luaentity() or {}
-		if ent and ent.name == "sunos:npc" then
+		if ent 
+			and ent.name == "sunos:npc" -- Verifica se for mob certo
+			and ent.casa
+			and tonumber(ent.casa) == tonumber(num) -- Verifica se foi referente ao numero do bau
+		then 
 			r = true
 			break
 		end
@@ -134,14 +138,23 @@ local verificar_bau_sunos = function(pos)
 		local node = minetest.get_node(pos)
 		local p = minetest.facedir_to_dir(node.param2)
 		local spos = {x=pos.x-p.x,y=pos.y+1.5,z=pos.z-p.z}
-		minetest.add_entity(spos, "sunos:npc")
+		
+		local obj = minetest.add_entity(spos, "sunos:npc") -- Cria o mob
+		
+		-- Salva alguns dados na entidade inicialmente
+		if obj then
+			local ent = obj:get_luaentity()
+			ent.temp = 0 -- Temporizador
+			ent.loop = 0 -- Numero de loop de temporizador
+			ent.casa = num -- Numero da casa
+		end
 	end
 end
 
 -- Coloca e verifica o barman
 minetest.register_abm({
 	nodenames = {"sunos:bau"},
-	interval = 60,
+	interval = tempo_verif_npc,
 	chance = 1,
 	action = function(pos)	
 		-- Espera alguns segundos para que o mapa seja corretamente carregado

@@ -13,16 +13,7 @@ só utilizam materiais simples de encontrar
 
 ## Licenças 
 
-### Texturas CC BY-SA 3.0
-
-Autores dos arquivos de mídia
------------------------------
-
-BrunoMine:
-  textures/sunos_npc.png
-  textures/sunos_npc2.png
-  
-### Software LGPL v3
+Software LGPL v3
 
 Sunos é um software livre; você pode redistribuí-lo e/ou 
 modificá-lo dentro dos termos da Licença Pública Geral Menor GNU 

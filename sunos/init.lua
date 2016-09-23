@@ -18,7 +18,7 @@ sunos = {}
 	Quanto maior, mais raro (Minimo é 1).
 	The larger, more rare (Minimo is 1).
   ]]
-sunos.RARIDADE = 3
+sunos.RARIDADE = 1
 
 
 -- Notificador de Inicializador
@@ -42,5 +42,4 @@ dofile(modpath.."/vila.lua")
 dofile(modpath.."/mapgen.lua")
 dofile(modpath.."/nodes.lua")
 dofile(modpath.."/comandos.lua")
-dofile(modpath.."/npc.lua")
 notificar("[OK]!")

@@ -93,8 +93,7 @@ mobs:register_mob("sunos:npc", {
 			self.loop = self.loop + 1
 			
 			-- Verificar se esta perto do bau
-			local pos_node = minetest.deserialize(self.registro)
-			if verif_dist_pos(self.object:getpos(), pos_node) > dist_verif_npc then
+			if verif_dist_pos(self.object:getpos(), self.registro) > dist_verif_npc then
 				self.object:remove()
 				return
 			end
@@ -103,7 +102,7 @@ mobs:register_mob("sunos:npc", {
 			if self.loop >= qtd_loops_npc then
 				self.loop = 0
 				
-				local node = minetest.get_node(pos_node)
+				local node = minetest.get_node(self.registro)
 				if node.name ~= "sunos:bau" then
 					self.object:remove()
 					return
@@ -116,10 +115,19 @@ mobs:register_mob("sunos:npc", {
 
 -- Verifica se tem um npc suno comum
 local verificar_bau_sunos = function(pos)
-
+	local meta = minetest.get_meta(pos)
+	local pos_fund = minetest.deserialize(meta:get_string("pos_fundamento"))
+	
+	-- Verificar se o fundamento ainda existe
+	local node_fund = minetest.get_node(pos_fund)
+	if node_fund.name ~= "sunos:fundamento" then
+		minetest.remove_node(pos)
+		return 
+	end
+	
 	-- Pegar e verificar mobs em uma area
 	local r = false
-	local meta = minetest.get_meta(pos)
+	
 	local num = meta:get_string("numero")
 	if num == nil then return end -- Cancela toda a operação caso nao teha numero de casa
 	for  _,obj in ipairs(minetest.get_objects_inside_radius(pos, dist_verif_npc)) do
@@ -138,7 +146,6 @@ local verificar_bau_sunos = function(pos)
 		local node = minetest.get_node(pos)
 		local p = minetest.facedir_to_dir(node.param2)
 		local spos = {x=pos.x-p.x,y=pos.y+1.5,z=pos.z-p.z}
-		
 		local obj = minetest.add_entity(spos, "sunos:npc") -- Cria o mob
 		
 		-- Salva alguns dados na entidade inicialmente
@@ -147,6 +154,7 @@ local verificar_bau_sunos = function(pos)
 			ent.temp = 0 -- Temporizador
 			ent.loop = 0 -- Numero de loop de temporizador
 			ent.casa = num -- Numero da casa
+			ent.registro = pos -- Pos do bau
 		end
 	end
 end
@@ -158,6 +166,6 @@ minetest.register_abm({
 	chance = 1,
 	action = function(pos)	
 		-- Espera alguns segundos para que o mapa seja corretamente carregado
-		minetest.after(5, verificar_bau_sunos, pos)
+		verificar_bau_sunos(pos)
 	end,
 })

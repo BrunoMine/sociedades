@@ -315,6 +315,13 @@ sunos.criar_vila = function(pos, vpos)
 			
 			sunos.montar_estrutura(dados.pos, dados.dist, tipo)
 			
+			-- Colocar o fundamento e salvar dados nele
+			minetest.set_node(dados.pos, {name="sunos:fundamento"})
+			local meta_fundamento = minetest.get_meta(dados.pos)
+			meta_fundamento:set_string("vila", vila) -- Numero da vila
+			meta_fundamento:set_string("tipo", tipo) -- Numero da vila
+			meta_fundamento:set_string("estrutura", n) -- Numero da estrutura
+			
 			-- Verifica se tem baus na estrutura montada
 			local baus = minetest.find_nodes_in_area(
 				{x=dados.pos.x-dados.dist, y=dados.pos.y, z=dados.pos.z-dados.dist}, 
@@ -325,7 +332,9 @@ sunos.criar_vila = function(pos, vpos)
 			-- Salva dados da estrutura no bau dela
 			for _,pos_bau in ipairs(baus) do
 				local meta = minetest.get_meta(pos_bau)
-				meta:set_string("numero", n)
+				meta:set_string("vila", vila) -- Numero da vila
+				meta:set_string("estrutura", n) -- Numero da estrutura
+				meta:set_string("pos_fundamento", minetest.serialize(dados.pos)) -- Pos do fundamento
 				meta:set_string("infotext", "Bau de Suno")
 			end
 			

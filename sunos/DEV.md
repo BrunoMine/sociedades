@@ -21,6 +21,7 @@ Esses são os dados que cada vila guarda dela mesma.
 
 ```lua
 vila_<numero da vila> = {
+	numero = <numero da vila>
 	<tipo_estrutura>_<numero da estrutura> = <registro da estrutura>
 }
 ```

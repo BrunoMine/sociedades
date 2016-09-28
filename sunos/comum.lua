@@ -275,3 +275,87 @@ sunos.f_pegar_solo = function(p, degrau, dist, subir)
 	end
 	return s
 end
+
+-- Verificar se uma estrutura esta inalterada
+--[[
+	Essa função verifica se uma estrutura esta inalterada 
+	ou obstruida por um jogador (analizando apenas o entorno da estrutura)
+	Retorno:
+		<booleano> (true == inalterada | false == obstruida)
+	Argumentos:
+		<pos> é uma pos do fundamento da estrutura verificada
+		<dist> do centro a borda da estrutura
+  ]]
+sunos.verificar_estrutura = function(pos, dist)
+	if pos == nil then
+		minetest.log("error", "[Sunos] Tabela pos nula (em sunos.verificar_estrutura)")
+		return false
+	end
+	if dist == nil then
+		minetest.log("error", "[Sunos] Variavel dist nula (em sunos.verificar_estrutura)")
+		return false
+	end
+	
+	-- Nodes de solo de entorno
+	local nodes_solo_entorno = {"default:dirt_with_grass", "default:cobble"}
+	
+	-- Verificar o solo do entorno
+	local nodes_solo_1 = minetest.find_nodes_in_area( -- X+
+		{x=pos.x+dist+1, y=pos.y, z=pos.z-dist}, 
+		{x=pos.x+dist+1, y=pos.y, z=pos.z+dist+1}, 
+		nodes_solo_entorno
+	)
+	local nodes_solo_2 = minetest.find_nodes_in_area( -- X-
+		{x=pos.x-dist-1, y=pos.y, z=pos.z-dist-1}, 
+		{x=pos.x-dist-1, y=pos.y, z=pos.z+dist}, 
+		nodes_solo_entorno
+	)
+	local nodes_solo_3 = minetest.find_nodes_in_area( -- Z+
+		{x=pos.x-dist-1, y=pos.y, z=pos.z+dist+1}, 
+		{x=pos.x+dist, y=pos.y, z=pos.z+dist+1}, 
+		nodes_solo_entorno
+	)
+	local nodes_solo_4 = minetest.find_nodes_in_area( -- Z-
+		{x=pos.x-dist, y=pos.y, z=pos.z-dist-1}, 
+		{x=pos.x+dist+1, y=pos.y, z=pos.z-dist-1}, 
+		nodes_solo_entorno
+	)
+	local total_nodes_solo = table.maxn(nodes_solo_1) + table.maxn(nodes_solo_2) + table.maxn(nodes_solo_3) + table.maxn(nodes_solo_4)
+	
+	-- Verificando a superficie do entorno
+	local nodes_acima_solo_1 = minetest.find_nodes_in_area( -- X+
+		{x=pos.x+dist+1, y=pos.y+1, z=pos.z-dist}, 
+		{x=pos.x+dist+1, y=pos.y+1, z=pos.z+dist+1}, 
+		{"air"}
+	)
+	local nodes_acima_solo_2 = minetest.find_nodes_in_area( -- X-
+		{x=pos.x-dist-1, y=pos.y+1, z=pos.z-dist-1}, 
+		{x=pos.x-dist-1, y=pos.y+1, z=pos.z+dist}, 
+		{"air"}
+	)
+	local nodes_acima_solo_3 = minetest.find_nodes_in_area( -- Z+
+		{x=pos.x-dist-1, y=pos.y+1, z=pos.z+dist+1}, 
+		{x=pos.x+dist, y=pos.y+1, z=pos.z+dist+1}, 
+		{"air"}
+	)
+	local nodes_acima_solo_4 = minetest.find_nodes_in_area( -- Z-
+		{x=pos.x-dist, y=pos.y+1, z=pos.z-dist-1}, 
+		{x=pos.x+dist+1, y=pos.y+1, z=pos.z-dist-1}, 
+		{"air"}
+	)
+	local total_nodes_acima_solo = table.maxn(nodes_acima_solo_1) + table.maxn(nodes_acima_solo_2) + table.maxn(nodes_acima_solo_3) + table.maxn(nodes_acima_solo_4)
+	
+	-- Total de blocos verificados em cada faixa de altura
+	local verificados_por_faixa = ( 2*(dist+1) ) * 4
+	
+	-- Tolerancia de obstruicao
+	local tolerancia = 2*(dist) + 6
+	
+	if total_nodes_solo < verificados_por_faixa - tolerancia 
+		or total_nodes_acima_solo < verificados_por_faixa - tolerancia 
+	then
+		return false
+	else
+		return true
+	end
+end

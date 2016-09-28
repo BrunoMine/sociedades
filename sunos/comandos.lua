@@ -22,7 +22,7 @@ minetest.register_chatcommand("sunos", {
 		local param1, param2, param3, param4 = m[1], m[2], m[3], m[4]
 		if param1 == "s" and tonumber(param4) then
 			param4 = tonumber(param4)
-			if param4 == 3 or param4 == 5 or param4 == 7 or param4 == 9 or param4 == 11 then
+			if param4 == 3 or param4 == 5 or param4 == 7 or param4 == 9 or param4 == 11 or param4 == 13 then
 				
 				-- Pegando dados do local
 				local player = minetest.get_player_by_name(name)
@@ -34,7 +34,7 @@ minetest.register_chatcommand("sunos", {
 				
 				-- Coordenadas dos extremos
 				local p1 = pos
-				local p2 = {x=pos.x+largura, y=pos.y+15, z=pos.z+largura}
+				local p2 = {x=pos.x+largura-1, y=pos.y+15, z=pos.z+largura-1}
 				
 				-- Serializando a estrutura
 				minetest.create_schematic(p1, p2, {}, modpath .. "/estruturas/"..param2.."/"..param3.."."..largura..".mts")

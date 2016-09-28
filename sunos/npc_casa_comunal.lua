@@ -6,16 +6,16 @@
 	Public License junto com esse software,
 	se não, veja em <http://www.gnu.org/licenses/>. 
 	
-	Mob comum das vilas
+	Mob da Casa Comunal
   ]]
 
 -- Variaveis sistematicas
 
 -- Verificador do Bau de sunos
 -- Tempo (em segundos) que demora para um bau verificar se tem um suno dele por perto
-local tempo_verif_npc = 60
+local tempo_verif_npc = 5
 -- Distancia (om blocos) que um bau verifica em sua volta para encontrar seu proprio npc
-local dist_verif_npc = 8
+local dist_verif_npc = 3
 
 -- Verificador do npc suno comum 
 -- Tempo (em segundos) que um npc demora para verificar se esta perto da pos de seu bau
@@ -35,7 +35,7 @@ local verif_dist_pos = function(pos1, pos2)
 end
 
 -- Registrar um NPC
-mobs:register_mob("sunos:npc", {
+mobs:register_mob("sunos:npc_casa_comunal", {
 	type = "npc",
 	passive = false,
 	damage = 3,
@@ -103,7 +103,7 @@ mobs:register_mob("sunos:npc", {
 				self.loop = 0
 				
 				local node = minetest.get_node(self.registro)
-				if node.name ~= "sunos:bau" then
+				if node.name ~= "sunos:bau_casa_comunal" then
 					self.object:remove()
 					return
 				end
@@ -118,10 +118,10 @@ mobs:register_mob("sunos:npc", {
 	end, 
 })
 
--- Verifica se tem um npc suno comum
-local verificar_bau_sunos = function(pos)
-	local meta = minetest.get_meta(pos)
-	local pos_fund = minetest.deserialize(meta:get_string("pos_fundamento"))
+-- Verifica se tem um npc da casa comunal perto do bau
+local verificar_bau_casa_comunal = function(pos)
+	local meta = minetest.get_meta(pos) -- Pegar os metadados
+	local pos_fund = minetest.deserialize(meta:get_string("pos_fundamento")) -- Pegar pos do fundamento
 	
 	-- Verificar se o fundamento ainda existe
 	local node_fund = minetest.get_node(pos_fund)
@@ -133,25 +133,22 @@ local verificar_bau_sunos = function(pos)
 	-- Pegar e verificar mobs em uma area
 	local r = false
 	
-	local num = meta:get_string("numero")
-	if num == nil then return end -- Cancela toda a operação caso nao tenha numero de casa
 	for  _,obj in ipairs(minetest.get_objects_inside_radius(pos, dist_verif_npc)) do
 		local ent = obj:get_luaentity() or {}
 		if ent 
-			and ent.name == "sunos:npc" -- Verifica se for mob certo
-			and ent.casa
-			and tonumber(ent.casa) == tonumber(num) -- Verifica se foi referente ao numero do bau
+			and ent.name == "sunos:npc_casa_comunal" -- Verifica se for mob certo
 		then 
 			r = true
 			break
 		end
 	end
 	
+	-- Caso nao encontre o mob
 	if r == false then
 		local node = minetest.get_node(pos)
 		local p = minetest.facedir_to_dir(node.param2)
 		local spos = {x=pos.x-p.x,y=pos.y+1.5,z=pos.z-p.z}
-		local obj = minetest.add_entity(spos, "sunos:npc") -- Cria o mob
+		local obj = minetest.add_entity(spos, "sunos:npc_casa_comunal") -- Cria o mob
 		
 		-- Salva alguns dados na entidade inicialmente
 		if obj then
@@ -159,18 +156,17 @@ local verificar_bau_sunos = function(pos)
 			ent.temp = 0 -- Temporizador
 			ent.loop = 0 -- Numero de loop de temporizador
 			ent.vila = meta:get_string("vila") -- numero da vila
-			ent.casa = num -- Numero da casa
 			ent.registro = pos -- Pos do bau
 		end
 	end
 end
 
--- Coloca e verifica o Bau dos Sunos
+-- Verificar o Bau da Casa Comunal
 minetest.register_abm({
-	nodenames = {"sunos:bau"},
+	nodenames = {"sunos:bau_casa_comunal"},
 	interval = tempo_verif_npc,
 	chance = 1,
 	action = function(pos)
-		verificar_bau_sunos(pos)
+		verificar_bau_casa_comunal(pos)
 	end,
 })

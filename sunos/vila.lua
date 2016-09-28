@@ -15,6 +15,14 @@ if sunos.bd:verif("geral", "vilas") ~= true then
 	sunos.bd:salvar("geral", "vilas", 0)
 end
 
+-- Tabela de população por tamanho de casa
+local tb_pop = {
+	-- Largura da casa	População
+	["5"] = 			2,
+	["7"] =			3,
+	["9"] =			4,
+	["11"] =			6,
+}
 
 -- Registrar nova vila (retorna o numero da vila registrada)
 local registrar_vila = function(n_estruturas)
@@ -323,8 +331,9 @@ sunos.criar_vila = function(pos, vpos)
 			minetest.set_node(dados.pos, {name="sunos:fundamento"})
 			local meta_fundamento = minetest.get_meta(dados.pos)
 			meta_fundamento:set_string("vila", vila) -- Numero da vila
-			meta_fundamento:set_string("tipo", tipo) -- Numero da vila
+			meta_fundamento:set_string("tipo", tipo) -- Tipo da estrutura
 			meta_fundamento:set_string("estrutura", n) -- Numero da estrutura
+			meta_fundamento:set_string("dist", dados.dist) -- Distancia centro a borda da estrutura
 			
 			-- Verifica se tem baus na estrutura montada
 			local baus = minetest.find_nodes_in_area(
@@ -353,7 +362,15 @@ sunos.criar_vila = function(pos, vpos)
 				}
 			}
 			
-			sunos.bd:salvar("vila_"..vila, "casa_"..n, registros)
+			-- Define população para casas
+			if tipo == "casa" then
+				registros.pop = tb_pop[tostring(largura)] or 1
+			end
+			
+			sunos.bd:salvar("vila_"..vila, tipo.."_"..n, registros)
+			
+			-- Atualiza o banco de dados da vila
+			sunos.atualizar_bd_vila(vila)
 		end
 	end
 end

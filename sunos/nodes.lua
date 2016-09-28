@@ -37,4 +37,26 @@ minetest.register_node("sunos:fundamento", {
 	groups = {tree = 1, choppy = 2, oddly_breakable_by_hand = 1, flammable = 2},
 	sounds = default.node_sound_wood_defaults(),
 	drop = "default:tree",
+	-- Remover do banco de dados caso o bloco seja removido
+	on_destruct = function(pos)
+		local meta = minetest.get_meta(pos)
+		local tipo = meta:get_string("tipo")
+		
+		-- Remover do bando de dados
+		if tipo == "casa" then -- Casa
+			sunos.bd:remover("vila_"..meta:get_string("vila"), "casa_"..meta:get_string("estrutura"))
+		elseif tipo == "casa_comunal" then -- Casa Comunal
+			sunos.bd:remover("vila_"..meta:get_string("vila"), "casa_comunal")
+		elseif tipo == "decor" then -- Decorativo
+			sunos.bd:remover("vila_"..meta:get_string("vila"), "decor_"..meta:get_string("estrutura"))
+		end
+	end,
+	-- Para desenvolvimento
+	on_punch = function(pos, node, player, pointed_thing)
+		local meta = minetest.get_meta(pos)
+		minetest.chat_send_all("Vila: "..meta:get_string("vila"))
+		minetest.chat_send_all("Tipo: "..meta:get_string("tipo"))
+		minetest.chat_send_all("Estrutura: "..meta:get_string("estrutura"))
+	end,
+	
 })

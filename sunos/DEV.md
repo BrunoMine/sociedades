@@ -31,6 +31,18 @@ Cada estrutura possui (e precisa possuir para ser ativa) necessariamente:
 
 Casa estrutura guarda dados de registro no bando de dados do mod.
 
+## Fundamentos
+
+Os fundamentos são blocos que ficam no centro do chão das estruturas e 
+possuem os seguintes metadados obrigatórios:
+
+```lua
+vila = <numero> -- Numero da vila
+tipo = <string> -- Tipo de estrutura
+estrutura = <numero> -- Numero da estrutura
+dist = <numero> -- Distancia centro a borda
+```
+
 ### Casas
 
 As casas armazenadas no banco de dados da seguinte maneira.
@@ -54,5 +66,18 @@ casa_comunal = {
 	pos = <coordenada do fundamento>, -- Pos do fundamento
 	vila = <número>, -- Numero da vila
 	nivel = <nível>, -- Nivel da casa comunal
+}
+```
+
+## NPCs
+
+### NPC Suno Comum
+
+Esse é o típico morador das vilas e possuem os seguintes dados em si mesmos:
+
+```lua
+vila = <numero> -- Número da vila
+casa = <numero> -- Numero da casa
+registro = <pos> -- Pos do bau da casa a qual pertence
 }
 ```

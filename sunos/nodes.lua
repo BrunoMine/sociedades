@@ -22,6 +22,7 @@ minetest.register_node("sunos:bau", {
 	legacy_facedir_simple = true,
 	is_ground_content = false,
 	sounds = default.node_sound_wood_defaults(),
+	drop = "default:chest",
 })
 
 -- Fundamento dos sunos
@@ -35,4 +36,5 @@ minetest.register_node("sunos:fundamento", {
 	is_ground_content = false,
 	groups = {tree = 1, choppy = 2, oddly_breakable_by_hand = 1, flammable = 2},
 	sounds = default.node_sound_wood_defaults(),
+	drop = "default:tree",
 })

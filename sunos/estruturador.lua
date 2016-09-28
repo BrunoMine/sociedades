@@ -28,7 +28,6 @@ sunos.montar_estrutura = function(cpos, dist, tipo)
 	
 	-- Largura
 	local largura = 2*dist+1
-	local altura = 15
 	
 	-- Caminho do arquivo da estrutura
 	local arquivo = modpath.."/estruturas/"..tipo.."/"..sunos.pegar_arquivo(largura, tipo).."."..largura..".mts"

@@ -17,7 +17,8 @@ end
 
 
 -- Registrar nova vila (retorna o numero da vila registrada)
-local registrar_vila = function()
+local registrar_vila = function(n_estruturas)
+	if n_estruturas == nil then n_estruturas = tonumber(0) end
 	
 	-- Pegar quantidade vilas
 	local qtd = tonumber(sunos.bd:pegar("geral", "vilas"))
@@ -26,6 +27,9 @@ local registrar_vila = function()
 	
 	-- Criar registro
 	sunos.bd:salvar("vila_"..qtd, "numero", qtd)
+	
+	-- Salvar numero incial de estruturas
+	sunos.bd:salvar("vila_"..qtd, "estruturas", n_estruturas)
 	
 	-- Atualizar quantidade de vilas
 	sunos.bd:salvar("geral", "vilas", qtd)
@@ -299,9 +303,9 @@ sunos.criar_vila = function(pos, vpos)
 	if assentamentos then
 		
 		-- Registra a nova vila
-		local vila = registrar_vila()
+		local vila = registrar_vila(table.maxn(assentamentos))
 		
-		--
+		-- Cria cada casa
 		for n,dados in ipairs(assentamentos) do
 			
 			-- Tipo

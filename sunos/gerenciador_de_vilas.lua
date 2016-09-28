@@ -35,6 +35,9 @@ minetest.register_abm({
 				
 				-- Remover bloco de fundamento por madeira
 				minetest.set_node(pos, {name="default:tree"})
+				
+				-- Atualizar banco de dados da vila
+				sunos.atualizar_bd_vila(vila)
 			end
 		else
 			minetest.set_nodes(pos, {name="default:tree"})

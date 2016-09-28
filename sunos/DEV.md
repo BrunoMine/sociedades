@@ -81,3 +81,13 @@ casa = <numero> -- Numero da casa
 registro = <pos> -- Pos do bau da casa a qual pertence
 }
 ```
+
+### NPC Casa Comunal
+
+Esse é da casa comunal e possuem os seguintes dados em si mesmos:
+
+```lua
+vila = <numero> -- Número da vila
+registro = <pos> -- Pos do bau da casa a qual pertence
+}
+```

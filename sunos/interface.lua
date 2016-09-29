@@ -52,60 +52,16 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 	if formname == "sunos:npc" then 
 		if fields.trocar then -- Trocar fundamento de casa comunal
 			
-			-- Verificar se pode trocar
-			local item1 = tror.verificar(player, "default:tree 20", "sunos:fundamento_casa_comunal")
-			local item2 = tror.verificar(player, "default:cobble 30", "sunos:fundamento_casa_comunal")
-			local item3 = tror.verificar(player, "wool:yellow 10", "sunos:fundamento_casa_comunal")
-			if item1 ~= true then
-				if item1 == 1 then
-					return minetest.chat_send_player(player:get_player_name(), "Precisa conseguir os itens para montar um fundamento de Casa Comunal")
-				else
-					return minetest.chat_send_player(player:get_player_name(), "Inventario lotado")
-				end
+			-- Tenta trocar pelo fundamento de casa comunal
+			if tror.trocar_plus(player, 
+				{"default:tree 20", "default:cobble 30", "wool:yellow 10"}, 
+				{"sunos:fundamento_casa_comunal"}
+			) == false 
+			then
+				return minetest.chat_send_player(player:get_player_name(), "Precisa conseguir os itens para montar um fundamento de Casa Comunal")
+			else
+				return minetest.chat_send_player(player:get_player_name(), "Recebeste um Fundamento de Casa Comunal. Coloque em um local adequado para que seja construida")
 			end
-			if item2 ~= true then
-				if item2 == 1 then
-					return minetest.chat_send_player(player:get_player_name(), "Precisa conseguir os itens para montar um fundamento de Casa Comunal")
-				else
-					return minetest.chat_send_player(player:get_player_name(), "Inventario lotado")
-				end
-			end
-			if item3 ~= true then
-				if item3 == 1 then
-					return minetest.chat_send_player(player:get_player_name(), "Precisa conseguir os itens para montar um fundamento de Casa Comunal")
-				else
-					return minetest.chat_send_player(player:get_player_name(), "Inventario lotado")
-				end
-			end
-			
-			-- Realizar troca
-			local inv = player:get_inventory()
-			-- Retirar item 1 do inventario
-			local i = string.split("default:tree 20", " ")
-			local n = i[2] or 1
-			i = i[1]
-			for r=1, tonumber(n) do -- 1 eh o tanto que quero tirar
-				inv:remove_item("main", i) -- tira 1 por vez
-			end
-			-- Retirar item 2 do inventario
-			local i = string.split("default:cobble 30", " ")
-			local n = i[2] or 1
-			i = i[1]
-			for r=1, tonumber(n) do -- 1 eh o tanto que quero tirar
-				inv:remove_item("main", i) -- tira 1 por vez
-			end
-			-- Retirar item 3 do inventario
-			local i = string.split("wool:yellow 10", " ")
-			local n = i[2] or 1
-			i = i[1]
-			for r=1, tonumber(n) do -- 1 eh o tanto que quero tirar
-				inv:remove_item("main", i) -- tira 1 por vez
-			end
-			
-			-- Adicionar item
-			inv:add_item("main", "sunos:fundamento_casa_comunal")
-			
-			return minetest.chat_send_player(player:get_player_name(), "Recebeste um Fundamento de Casa Comunal. Coloque em um local adequado para que seja construida")
 		end
 	end
 end)

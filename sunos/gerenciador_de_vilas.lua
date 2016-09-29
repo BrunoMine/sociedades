@@ -107,7 +107,7 @@ minetest.register_abm({
 				sunos.atualizar_bd_vila(vila)
 			end
 		else
-			minetest.set_nodes(pos, {name="default:tree"})
+			minetest.set_node(pos, {name="default:tree"})
 		end
 	end,
 })

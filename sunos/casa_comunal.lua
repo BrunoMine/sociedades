@@ -145,6 +145,8 @@ minetest.register_node("sunos:fundamento_casa_comunal", {
 	groups = {tree = 1, choppy = 2, oddly_breakable_by_hand = 1, flammable = 2},
 	sounds = default.node_sound_wood_defaults(),
 	stack_max = 1,
+	
+	-- Colocar uma casa comunal
 	on_place = function(itemstack, placer, pointed_thing)
 		local r = construir_casa_comunal(pointed_thing.above, 1)
 		if r ~= true then

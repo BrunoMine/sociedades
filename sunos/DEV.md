@@ -28,6 +28,8 @@ Cada estrutura possui (e precisa possuir para ser ativa) necessariamente:
 
 - Entorno de gramado ou pedregulho
 - Fundamento no centro do chão da estrutura
+- Os possiveis tamanhos permitidos de largura são 3, 5, 7, 9, 11 e 13.
+- Parte estrutural (paredes, chão e etc) composto por "default:wood" e "default:cobble"
 
 Casa estrutura guarda dados de registro no bando de dados do mod.
 
@@ -41,6 +43,7 @@ vila = <numero> -- Numero da vila
 tipo = <string> -- Tipo de estrutura
 estrutura = <numero> -- Numero da estrutura
 dist = <numero> -- Distancia centro a borda
+nodes = <numero> -- Número de blocos estruturais da estrutura intacta
 ```
 
 ### Casas

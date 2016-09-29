@@ -20,9 +20,38 @@ minetest.register_abm({
 	chance = 1,
 	action = function(pos)	
 		local meta = minetest.get_meta(pos)
+		local vila = meta:get_string("vila")
 		local tipo = meta:get_string("tipo")
+		local dist = meta:get_string("dist")
+		
 		if tipo == "casa" or tipo == "casa_comunal" or tipo == "decor" then
-			if sunos.verificar_estrutura(pos, tonumber(meta:get_string("dist"))) == false then
+			
+			if sunos.verificar_blocos_estruturais(pos) == false -- Verificar Estrutura danificada
+				-- or sunos.verificar_estrutura(pos, tonumber(meta:get_string("dist"))) == false -- [CANCELADO]
+			then
+				
+				-- Tornar estrutura em ruinas
+				-- Pega todas elementos pedrosos
+				local nodes = minetest.find_nodes_in_area(
+					{x=pos.x-dist, y=pos.y, z=pos.z-dist}, 
+					{x=pos.x+dist, y=pos.y+15, z=pos.z+dist}, 
+					{"group:stone", "group:cobble"}
+				)
+				-- Limpa toda a area
+				for x=pos.x-dist, pos.x+dist do
+					for z=pos.z-dist, pos.z+dist do
+						for y=pos.y, pos.y+14 do
+							minetest.remove_node({x=x,y=y,z=z})
+						end
+					end
+				end
+				-- Recoloca pedregulho no lugar de elementos pedrosos
+				for _,p in ipairs(nodes) do
+					minetest.set_node(p, {name="default:cobble"})
+				end
+				
+				
+				
 				
 				-- Remover do bando de dados
 				if tipo == "casa" then
@@ -33,7 +62,7 @@ minetest.register_abm({
 					sunos.bd:remover("vila_"..meta:get_string("vila"), "decor_"..meta:get_string("estrutura"))
 				end
 				
-				-- Remover bloco de fundamento por madeira
+				-- Trocar bloco de fundamento por madeira
 				minetest.set_node(pos, {name="default:tree"})
 				
 				-- Atualizar banco de dados da vila

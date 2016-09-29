@@ -71,6 +71,11 @@ local construir_casa_comunal = function(pos, nivel)
 		return "O local precisa estar limpo, gramado em plano para a casa comunal com um 15x15 blocos da largura"
 	end
 	
+	-- Verificar se tem outra estrutura de suno interferindo na area da nova estrutura
+	if sunos.verif_fundamento(pos, dist) == false then
+		return "Muito perto de uma estrutura de sunos. Afaste um pouco."
+	end
+	
 	-- Verificar se a vila foi abandonada [Em projeto]
 	
 	-- Criar casa comunal
@@ -88,6 +93,7 @@ local construir_casa_comunal = function(pos, nivel)
 	meta_novo_fund:set_string("tipo", "casa_comunal") -- Numero da vila
 	meta_novo_fund:set_string("estrutura", n_estrutura+1) -- Numero da estrutura
 	meta_novo_fund:set_string("dist", dist) -- Distancia centro a borda da estrutra
+	sunos.contabilizar_blocos_estruturais(pos) -- Armazena quantidade de nodes estruturais
 	
 	-- Salvar novo total de estruturas da vila
 	sunos.bd:salvar("vila_"..vila, "estruturas", n_estrutura+1)

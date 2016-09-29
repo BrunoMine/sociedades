@@ -34,7 +34,7 @@ minetest.register_node("sunos:fundamento", {
 	tiles = {"default_tree_top.png^sunos_fundamento.png", "default_tree_top.png", "default_tree.png"},
 	paramtype2 = "facedir",
 	is_ground_content = false,
-	groups = {tree = 1, choppy = 2, oddly_breakable_by_hand = 1, flammable = 2},
+	groups = {choppy = 2, oddly_breakable_by_hand = 1},
 	sounds = default.node_sound_wood_defaults(),
 	drop = "default:tree",
 	-- Remover do banco de dados caso o bloco seja removido
@@ -57,6 +57,7 @@ minetest.register_node("sunos:fundamento", {
 		minetest.chat_send_all("Vila: "..meta:get_string("vila"))
 		minetest.chat_send_all("Tipo: "..meta:get_string("tipo"))
 		minetest.chat_send_all("Estrutura: "..meta:get_string("estrutura"))
+		minetest.chat_send_all("Nodes: "..meta:get_string("nodes"))
 	end,
 	
 })

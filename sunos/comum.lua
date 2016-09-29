@@ -28,6 +28,33 @@ sunos.pegar_dir_oposta = function(dir)
 	end
 end
 
+-- Verificar distancia entre duas pos
+--[[
+	Verifica a maior distancia possivel em um vetor (x, y ou z)
+	Retorno:
+		<dist> é a maior distancia de um vetor entre pos1 e pos2
+	Argumentos:
+		<pos1> é uma pos para ser comparada com a outra
+		<pos2> é uma pos para ser comparada com a outra
+  ]]
+sunos.verif_dist_pos = function(pos1, pos2)
+	if pos1 == nil then
+		minetest.log("error", "[Sunos] Tabela pos1 nula (em sunos.verif_dist_pos)")
+		return false
+	end
+	if pos2 == nil then
+		minetest.log("error", "[Sunos] Tabela pos2 nula (em sunos.verif_dist_pos)")
+		return false
+	end
+	local x = math.abs(math.abs(pos1.x)-math.abs(pos2.x))
+	local y = math.abs(math.abs(pos1.y)-math.abs(pos2.y))
+	local z = math.abs(math.abs(pos1.z)-math.abs(pos2.z))
+	if x > z and x > y then return x end
+	if y > x and y > z then return y end
+	if z > x and z > y then return z end
+	return x or y or z
+end
+
 -- Pega um node
 --[[
 	Pega o node normalmente e tenta carregar o node
@@ -358,4 +385,108 @@ sunos.verificar_estrutura = function(pos, dist)
 	else
 		return true
 	end
+end
+
+-- Verificar fundamentos de sunos por perto
+--[[
+	Essa função verifica se tem um fundamento de estrutura dos sunos
+	muito perto de uma possivel nova estrutura.
+	Retorno:
+		<booleano> (true == aceitavel | false == obstruida)
+	Argumentos:
+		<pos> é a coordenada do fundamento da possivel nova estrutura
+		<dist> do centro a borda da possivel nova estrutura
+  ]]
+sunos.verif_fundamento = function(pos, dist)
+	if pos == nil then
+		minetest.log("error", "[Sunos] Tabela pos nula (em verif_fundamento)")
+		return false
+	end
+	if dist == nil then
+		minetest.log("error", "[Sunos] Variavel dist nula (em verif_fundamento)")
+		return false
+	end
+	
+	-- Distancia a verificar
+	-- Considerando a pior hipotese de uma estrutura de largura 13 e mais 1 bloco de espaço
+	local dist_verif = (dist+1) + 7 + 1
+	
+	-- Pegar fundamento que podem interferir
+	local nodes = minetest.find_nodes_in_area(
+		{x=pos.x-dist_verif, y=pos.y-dist_verif, z=pos.z-dist_verif}, 
+		{x=pos.x+dist_verif, y=pos.y+dist_verif, z=pos.z+dist_verif}, 
+		{"sunos:fundamento"}
+	)
+	
+	for _,pfund in ipairs(nodes) do
+		local meta = minetest.get_meta(pfund)
+		local dist_fund = tonumber(meta:get_string("dist"))
+		local dist_pp = sunos.verif_dist_pos(pos, pfund)-- Distancia entre os fundamentos
+		
+		-- Verifica se tem espaço para as duas estruturas dos fundamentos
+		if ((dist_fund+1) + 1 + (dist+1)) < dist_pp then
+			return false
+		end
+	end
+	
+	return true
+end
+
+-- Contabilizar blocos estruturais
+--[[
+	Contabiliza quantos blocos estruturais tem na estrutura
+	do fundamento da pos informada
+	Retorno:
+		Nenhum
+	Argumentos:
+		<pos> é a coordenada do fundamento da estrutura
+  ]]
+sunos.contabilizar_blocos_estruturais = function(pos)
+	if pos == nil then
+		minetest.log("error", "[Sunos] Tabela pos nula (em sunos.contabilizar_blocos_estruturais)")
+		return false
+	end
+	
+	local meta = minetest.get_meta(pos)
+	local dist = meta:get_string("dist")
+	
+	local nodes = minetest.find_nodes_in_area(
+		{x=pos.x-dist, y=pos.y, z=pos.z-dist}, 
+		{x=pos.x+dist, y=pos.y+15, z=pos.z+dist}, 
+		{"default:wood", "default:cobble"}
+	)
+	
+	meta:set_string("nodes", table.maxn(nodes))
+end
+
+-- Verifica quantidade de blocos estruturais
+--[[
+	Verifica quantos blocos estruturais tem na estrutura
+	do fundamento da pos informada e compara com a quatidade
+	armazenada para verificar obstrução
+	Retorno:
+		<booleano> (true == aceitavel | false == obstruida)
+	Argumentos:
+		<pos> é a coordenada do fundamento da estrutura
+  ]]
+sunos.verificar_blocos_estruturais = function(pos)
+	if pos == nil then
+		minetest.log("error", "[Sunos] Tabela pos nula (em sunos.verificar_blocos_estruturais)")
+		return false
+	end
+	
+	local meta = minetest.get_meta(pos)
+	local dist = meta:get_string("dist")
+	local nodes_reg = tonumber(meta:get_string("nodes"))
+	
+	local nodes = minetest.find_nodes_in_area(
+		{x=pos.x-dist, y=pos.y, z=pos.z-dist}, 
+		{x=pos.x+dist, y=pos.y+14, z=pos.z+dist}, 
+		{"default:wood", "default:cobble"}
+	)
+	
+	if table.maxn(nodes) < nodes_reg - 10 then -- Permite ate 10 blocos serem removidos
+		return false
+	end
+	return true
 end

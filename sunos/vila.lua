@@ -334,6 +334,7 @@ sunos.criar_vila = function(pos, vpos)
 			meta_fundamento:set_string("tipo", tipo) -- Tipo da estrutura
 			meta_fundamento:set_string("estrutura", n) -- Numero da estrutura
 			meta_fundamento:set_string("dist", dados.dist) -- Distancia centro a borda da estrutura
+			sunos.contabilizar_blocos_estruturais(dados.pos) -- Armazena quantidade de nodes estruturais
 			
 			-- Verifica se tem baus na estrutura montada
 			local baus = minetest.find_nodes_in_area(

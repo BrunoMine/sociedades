@@ -61,7 +61,12 @@ minetest.register_node("sunos:fundamento", {
 		minetest.chat_send_all("Vila: "..meta:get_string("vila"))
 		minetest.chat_send_all("Tipo: "..meta:get_string("tipo"))
 		minetest.chat_send_all("Estrutura: "..meta:get_string("estrutura"))
-		minetest.chat_send_all("Nodes: "..meta:get_string("nodes"))
+		if meta:get_string("tipo") == "casa_comunal" then
+			minetest.chat_send_all("Status: "..meta:get_string("status"))
+			if meta:get_string("status") == "destruida" then
+				minetest.chat_send_all("Decadencia: "..meta:get_string("tempo").." seg")
+			end
+		end
 	end,
 	
 	-- Impede explosão

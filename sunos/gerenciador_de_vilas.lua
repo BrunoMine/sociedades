@@ -12,6 +12,8 @@
 -- Variaveis do sistema
 -- Tempo (em segundos) entre as verificações de estrutura obstruida
 local tempo_verif_estruturas = 5--60
+-- Tempo (em segundos) em que uma casa comunal pode ficar em decadencia antes de perder o fundamento
+local tempo_decadencia = 20--300
 
 -- Atualiza as estruturas verificando se estao obstruidas
 minetest.register_abm({
@@ -24,7 +26,53 @@ minetest.register_abm({
 		local tipo = meta:get_string("tipo")
 		local dist = meta:get_string("dist")
 		
-		if tipo == "casa" or tipo == "casa_comunal" or tipo == "decor" then
+		-- Verificação de caasa comunal
+		if tipo == "casa_comunal" then
+			local status = meta:get_string("status")
+			
+			if status == "ativa" then
+				if sunos.verificar_blocos_estruturais(pos) == false then -- Verificar Estrutura danificada
+				
+					-- Tornar estrutura em ruinas (mantendo o solo e fundamento)
+					-- Pega todas elementos pedrosos
+					local nodes = minetest.find_nodes_in_area(
+						{x=pos.x-dist, y=pos.y, z=pos.z-dist}, 
+						{x=pos.x+dist, y=pos.y+14, z=pos.z+dist}, 
+						{"group:stone", "group:cobble"}
+					)
+					-- Limpa toda a area
+					for x=pos.x-dist, pos.x+dist do
+						for z=pos.z-dist, pos.z+dist do
+							for y=pos.y+1, pos.y+14 do
+								minetest.remove_node({x=x,y=y,z=z})
+							end
+						end
+					end
+					-- Recoloca pedregulho no lugar de elementos pedrosos
+					for _,p in ipairs(nodes) do
+						minetest.set_node(p, {name="default:cobble"})
+					end
+				
+					-- Inicia processo de decadencia da casa comunal
+					meta:set_string("status", "destruida")
+					meta:set_string("tempo", 0) -- Tempo de decadencia (em segundos)
+				end
+			
+			-- Casa comunal em decadencia
+			else
+				local tempo = tonumber(meta:get_string("tempo")) + tempo_verif_estruturas
+				
+				if tempo > tempo_decadencia then
+					sunos.bd:remover("vila_"..meta:get_string("vila"), "casa_comunal")
+					-- Trocar bloco de fundamento por madeira
+					minetest.set_node(pos, {name="default:tree"})
+				else
+					meta:set_string("tempo", tempo) -- Salva o tempo que passou e continua a decadencia
+				end
+			end
+			
+		-- Verificação de casa e estrutura decorativa
+		elseif tipo == "casa" or tipo == "decor" then
 			
 			if sunos.verificar_blocos_estruturais(pos) == false -- Verificar Estrutura danificada
 				-- or sunos.verificar_estrutura(pos, tonumber(meta:get_string("dist"))) == false -- [CANCELADO]
@@ -34,7 +82,7 @@ minetest.register_abm({
 				-- Pega todas elementos pedrosos
 				local nodes = minetest.find_nodes_in_area(
 					{x=pos.x-dist, y=pos.y, z=pos.z-dist}, 
-					{x=pos.x+dist, y=pos.y+15, z=pos.z+dist}, 
+					{x=pos.x+dist, y=pos.y+14, z=pos.z+dist}, 
 					{"group:stone", "group:cobble"}
 				)
 				-- Pega a terra do chao
@@ -60,20 +108,18 @@ minetest.register_abm({
 					minetest.set_node(p, {name="default:dirt_with_grass"})
 				end
 				
-				
-				
-				
 				-- Remover do bando de dados
 				if tipo == "casa" then
 					sunos.bd:remover("vila_"..meta:get_string("vila"), "casa_"..meta:get_string("estrutura"))
+					-- Trocar bloco de fundamento por madeira
+					minetest.set_node(pos, {name="default:tree"})
 				elseif tipo == "casa_comunal" then
-					sunos.bd:remover("vila_"..meta:get_string("vila"), "casa_comunal")
+					meta:set_string("status", "destruida")
 				elseif tipo == "decor" then
 					sunos.bd:remover("vila_"..meta:get_string("vila"), "decor_"..meta:get_string("estrutura"))
+					-- Trocar bloco de fundamento por madeira
+					minetest.set_node(pos, {name="default:tree"})
 				end
-				
-				-- Trocar bloco de fundamento por madeira
-				minetest.set_node(pos, {name="default:tree"})
 				
 				-- Atualizar banco de dados da vila
 				sunos.atualizar_bd_vila(vila)

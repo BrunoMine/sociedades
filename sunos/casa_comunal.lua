@@ -100,6 +100,7 @@ local construir_casa_comunal = function(pos, nivel)
 	meta_novo_fund:set_string("tipo", "casa_comunal") -- Numero da vila
 	meta_novo_fund:set_string("estrutura", n_estrutura+1) -- Numero da estrutura
 	meta_novo_fund:set_string("dist", dist) -- Distancia centro a borda da estrutra
+	meta_novo_fund:set_string("status", "ativa") -- Status da casa comunal
 	sunos.contabilizar_blocos_estruturais(pos_novo_fund) -- Armazena quantidade de nodes estruturais
 	
 	-- Salvar novo total de estruturas da vila

@@ -38,18 +38,25 @@ minetest.register_node("sunos:fundamento", {
 	sounds = default.node_sound_wood_defaults(),
 	drop = "default:tree",
 	
+	-- Nao pode ser escavado/quebrado por jogadores
+	on_dig = function() end,
+	
 	-- Remover do banco de dados caso o bloco seja removido
 	on_destruct = function(pos)
 		local meta = minetest.get_meta(pos)
 		local vila = meta:get_string("vila")
 		local tipo = meta:get_string("tipo")
+		local dist = meta:get_string("dist")
 		
 		-- Remover do bando de dados
 		if tipo == "casa" then -- Casa
+			sunos.montar_ruinas(pos, dist)
 			sunos.bd:remover("vila_"..meta:get_string("vila"), "casa_"..meta:get_string("estrutura"))
 		elseif tipo == "casa_comunal" then -- Casa Comunal
+			sunos.montar_ruinas(pos, dist)
 			sunos.bd:remover("vila_"..meta:get_string("vila"), "casa_comunal")
 		elseif tipo == "decor" then -- Decorativo
+			sunos.montar_ruinas(pos, dist)
 			sunos.bd:remover("vila_"..meta:get_string("vila"), "decor_"..meta:get_string("estrutura"))
 		end
 		sunos.atualizar_bd_vila(vila)

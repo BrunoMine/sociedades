@@ -13,7 +13,7 @@
 -- Tempo (em segundos) entre as verificações de estrutura obstruida
 local tempo_verif_estruturas = 5--60
 -- Tempo (em segundos) em que uma casa comunal pode ficar em decadencia antes de perder o fundamento
-local tempo_decadencia = 20--300
+local tempo_decadencia = 10--300
 
 -- Atualiza as estruturas verificando se estao obstruidas
 minetest.register_abm({
@@ -63,9 +63,18 @@ minetest.register_abm({
 				local tempo = tonumber(meta:get_string("tempo")) + tempo_verif_estruturas
 				
 				if tempo > tempo_decadencia then
-					sunos.bd:remover("vila_"..meta:get_string("vila"), "casa_comunal")
-					-- Trocar bloco de fundamento por madeira
-					minetest.set_node(pos, {name="default:tree"})
+					
+					-- Verifica se ainda tem habitantes mantem a decadencia
+					local pop = sunos.bd:pegar("vila_"..vila, "pop")
+					if pop > 0 then
+						meta:set_string("tempo", 0)
+					else
+						-- Remove casa comunal de vez
+						-- Remove do banco de dados
+						sunos.bd:remover("vila_"..vila, "casa_comunal")
+						-- Trocar bloco de fundamento por madeira
+						minetest.set_node(pos, {name="default:tree"})
+					end
 				else
 					meta:set_string("tempo", tempo) -- Salva o tempo que passou e continua a decadencia
 				end
@@ -78,35 +87,8 @@ minetest.register_abm({
 				-- or sunos.verificar_estrutura(pos, tonumber(meta:get_string("dist"))) == false -- [CANCELADO]
 			then
 				
-				-- Tornar estrutura em ruinas
-				-- Pega todas elementos pedrosos
-				local nodes = minetest.find_nodes_in_area(
-					{x=pos.x-dist, y=pos.y, z=pos.z-dist}, 
-					{x=pos.x+dist, y=pos.y+14, z=pos.z+dist}, 
-					{"group:stone", "group:cobble"}
-				)
-				-- Pega a terra do chao
-				local nodes_solo = minetest.find_nodes_in_area(
-					{x=pos.x-dist, y=pos.y, z=pos.z-dist}, 
-					{x=pos.x+dist, y=pos.y, z=pos.z+dist}, 
-					{"default:dirt", "default:dirt_with_grass"}
-				)
-				-- Limpa toda a area
-				for x=pos.x-dist, pos.x+dist do
-					for z=pos.z-dist, pos.z+dist do
-						for y=pos.y, pos.y+14 do
-							minetest.remove_node({x=x,y=y,z=z})
-						end
-					end
-				end
-				-- Recoloca pedregulho no lugar de elementos pedrosos
-				for _,p in ipairs(nodes) do
-					minetest.set_node(p, {name="default:cobble"})
-				end
-				-- Recoloca terra no solo
-				for _,p in ipairs(nodes_solo) do
-					minetest.set_node(p, {name="default:dirt_with_grass"})
-				end
+				-- Montar ruinas no local da antiga casa
+				sunos.montar_ruinas(pos, dist)
 				
 				-- Remover do bando de dados
 				if tipo == "casa" then
@@ -150,13 +132,15 @@ sunos.atualizar_bd_vila = function(vila)
 	local casas = {}
 	for _,arq in ipairs(list) do
 		local v = string.split(arq, "_")
-		if v[1] == "casa" then casas[arq] = 1 end
+		if v[1] == "casa" and tonumber(v[2]) then
+			local reg = sunos.bd:pegar("vila_"..vila, arq)
+			pop_total = pop_total + reg.pop
+		end
 	end
 	
 	-- Verifica a população de todas as casas
 	for casa,pop in pairs(casas) do
-		local reg = sunos.bd:pegar("vila_"..vila, casa)
-		pop_total = pop_total + reg.pop
+		
 	end
 	
 	-- Salva a população atual

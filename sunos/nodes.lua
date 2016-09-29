@@ -40,6 +40,7 @@ minetest.register_node("sunos:fundamento", {
 	-- Remover do banco de dados caso o bloco seja removido
 	on_destruct = function(pos)
 		local meta = minetest.get_meta(pos)
+		local vila = meta:get_string("vila")
 		local tipo = meta:get_string("tipo")
 		
 		-- Remover do bando de dados
@@ -50,6 +51,7 @@ minetest.register_node("sunos:fundamento", {
 		elseif tipo == "decor" then -- Decorativo
 			sunos.bd:remover("vila_"..meta:get_string("vila"), "decor_"..meta:get_string("estrutura"))
 		end
+		sunos.atualizar_bd_vila(vila)
 	end,
 	-- Para desenvolvimento
 	on_punch = function(pos, node, player, pointed_thing)

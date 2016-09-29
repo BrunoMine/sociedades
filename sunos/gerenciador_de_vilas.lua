@@ -79,7 +79,7 @@ sunos.atualizar_bd_vila = function(vila)
 	if vila == nil then
 		minetest.log("error", "[Sunos] Variavel vila nula (em sunos.atualizar_bd_vila)")
 		return false
-	end	
+	end
 	
 	-- População total
 	local pop_total = 0
@@ -97,6 +97,7 @@ sunos.atualizar_bd_vila = function(vila)
 		if v[1] == "casa" then casas[arq] = 1 end
 	end
 	
+	-- Verifica a população de todas as casas
 	for casa,pop in pairs(casas) do
 		local reg = sunos.bd:pegar("vila_"..vila, casa)
 		pop_total = pop_total + reg.pop
@@ -104,6 +105,12 @@ sunos.atualizar_bd_vila = function(vila)
 	
 	-- Salva a população atual
 	sunos.bd:salvar("vila_"..vila, "pop", pop_total)
+	
+	-- Remove banco de dados da vila caso esteja deserta e sem casa comunal
+	if pop_total == 0 and sunos.bd:verif("vila_"..vila, "casa_comunal") == false then
+		
+		sunos.bd:drop_tb("vila_"..vila)
+	end
 	
 	return true
 end

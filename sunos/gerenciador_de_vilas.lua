@@ -37,6 +37,12 @@ minetest.register_abm({
 					{x=pos.x+dist, y=pos.y+15, z=pos.z+dist}, 
 					{"group:stone", "group:cobble"}
 				)
+				-- Pega a terra do chao
+				local nodes_solo = minetest.find_nodes_in_area(
+					{x=pos.x-dist, y=pos.y, z=pos.z-dist}, 
+					{x=pos.x+dist, y=pos.y, z=pos.z+dist}, 
+					{"default:dirt", "default:dirt_with_grass"}
+				)
 				-- Limpa toda a area
 				for x=pos.x-dist, pos.x+dist do
 					for z=pos.z-dist, pos.z+dist do
@@ -48,6 +54,10 @@ minetest.register_abm({
 				-- Recoloca pedregulho no lugar de elementos pedrosos
 				for _,p in ipairs(nodes) do
 					minetest.set_node(p, {name="default:cobble"})
+				end
+				-- Recoloca terra no solo
+				for _,p in ipairs(nodes_solo) do
+					minetest.set_node(p, {name="default:dirt_with_grass"})
 				end
 				
 				

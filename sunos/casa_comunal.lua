@@ -78,11 +78,11 @@ local construir_casa_comunal = function(pos, nivel)
 	
 	-- Verificar se a vila foi abandonada
 	sunos.atualizar_bd_vila(vila) -- Atualizar o banco de dados
-	if sunos.bd:verif("vila_"..vila) == false then
+	if sunos.bd:verif("vila_"..vila, "numero") == false then
 		return "Vila abandonada"
 	end
 	if sunos.bd:verif("vila_"..vila, "pop") == true and sunos.bd:pegar("vila_"..vila, "pop") == 0 then
-		return "Vila abandonada"
+		return "Vila abandonada (inabitada)"
 	end
 	
 	-- Criar casa comunal

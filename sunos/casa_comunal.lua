@@ -77,6 +77,10 @@ local construir_casa_comunal = function(pos, nivel)
 	end
 	
 	-- Verificar se a vila foi abandonada [Em projeto]
+	sunos.atualizar_bd_vila(vila) -- Atualizar o banco de dados
+	if sunos.bd:pegar("vila_"..vila, "pop") == 0 then
+		return "Vila abandonada"
+	end
 	
 	-- Criar casa comunal
 	-- Caminho do arquivo da estrutura
@@ -93,7 +97,7 @@ local construir_casa_comunal = function(pos, nivel)
 	meta_novo_fund:set_string("tipo", "casa_comunal") -- Numero da vila
 	meta_novo_fund:set_string("estrutura", n_estrutura+1) -- Numero da estrutura
 	meta_novo_fund:set_string("dist", dist) -- Distancia centro a borda da estrutra
-	sunos.contabilizar_blocos_estruturais(pos) -- Armazena quantidade de nodes estruturais
+	sunos.contabilizar_blocos_estruturais(pos_novo_fund) -- Armazena quantidade de nodes estruturais
 	
 	-- Salvar novo total de estruturas da vila
 	sunos.bd:salvar("vila_"..vila, "estruturas", n_estrutura+1)

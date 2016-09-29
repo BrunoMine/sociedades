@@ -87,7 +87,7 @@ sunos.atualizar_bd_vila = function(vila)
 	-- Verificar população
 	local list = minetest.get_dir_list(minetest.get_worldpath().."/sunos/vila_"..vila)
 	if list == nil then
-		minetest.log("error", "[Sunos] Banco de dados da vila inesistente (em sunos.atualizar_bd_vila)")
+		minetest.log("error", "[Sunos] Banco de dados da vila inexistente (em sunos.atualizar_bd_vila)")
 		return false
 	end
 	

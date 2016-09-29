@@ -448,7 +448,7 @@ sunos.contabilizar_blocos_estruturais = function(pos)
 	end
 	
 	local meta = minetest.get_meta(pos)
-	local dist = meta:get_string("dist")
+	local dist = tonumber(meta:get_string("dist"))
 	
 	local nodes = minetest.find_nodes_in_area(
 		{x=pos.x-dist, y=pos.y, z=pos.z-dist}, 

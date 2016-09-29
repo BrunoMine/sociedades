@@ -37,6 +37,7 @@ minetest.register_node("sunos:fundamento", {
 	groups = {choppy = 2, oddly_breakable_by_hand = 1},
 	sounds = default.node_sound_wood_defaults(),
 	drop = "default:tree",
+	
 	-- Remover do banco de dados caso o bloco seja removido
 	on_destruct = function(pos)
 		local meta = minetest.get_meta(pos)
@@ -53,6 +54,7 @@ minetest.register_node("sunos:fundamento", {
 		end
 		sunos.atualizar_bd_vila(vila)
 	end,
+	
 	-- Para desenvolvimento
 	on_punch = function(pos, node, player, pointed_thing)
 		local meta = minetest.get_meta(pos)
@@ -62,4 +64,6 @@ minetest.register_node("sunos:fundamento", {
 		minetest.chat_send_all("Nodes: "..meta:get_string("nodes"))
 	end,
 	
+	-- Impede explosão
+	on_blast = function() end,
 })

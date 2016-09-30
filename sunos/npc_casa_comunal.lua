@@ -21,7 +21,7 @@ local dist_verif_npc = 3
 -- Tempo (em segundos) que um npc demora para verificar se esta perto da pos de seu bau
 local tempo_verif_bau = 20
 -- A cada quantos loops de verificação do npc ele deve verificar se seu bau ainda existe
-local qtd_loops_npc = 8
+local qtd_loops_npc = 5
 
 -- Verificar distancia entre duas pos
 local verif_dist_pos = function(pos1, pos2)
@@ -133,17 +133,16 @@ local verificar_bau_casa_comunal = function(pos)
 	-- Pegar e verificar mobs em uma area
 	local r = false
 	
-	for  _,obj in ipairs(minetest.get_objects_inside_radius(pos, dist_verif_npc)) do
+	for _,obj in ipairs(minetest.get_objects_inside_radius(pos, dist_verif_npc)) do
 		local ent = obj:get_luaentity() or {}
-		if ent 
-			and ent.name == "sunos:npc_casa_comunal" -- Verifica se for mob certo
-		then 
+		-- Verifica se for mob certo
+		if ent.name == "sunos:npc_casa_comunal" then 
 			r = true
 			break
 		end
 	end
 	
-	-- Caso nao encontre o mob
+	-- Caso nao encontre o mob cria um novo
 	if r == false then
 		local node = minetest.get_node(pos)
 		local p = minetest.facedir_to_dir(node.param2)

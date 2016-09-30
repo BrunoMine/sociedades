@@ -33,25 +33,8 @@ minetest.register_abm({
 			if status == "ativa" then
 				if sunos.verificar_blocos_estruturais(pos) == false then -- Verificar Estrutura danificada
 				
-					-- Tornar estrutura em ruinas (mantendo o solo e fundamento)
-					-- Pega todas elementos pedrosos
-					local nodes = minetest.find_nodes_in_area(
-						{x=pos.x-dist, y=pos.y, z=pos.z-dist}, 
-						{x=pos.x+dist, y=pos.y+14, z=pos.z+dist}, 
-						{"group:stone", "group:cobble"}
-					)
-					-- Limpa toda a area
-					for x=pos.x-dist, pos.x+dist do
-						for z=pos.z-dist, pos.z+dist do
-							for y=pos.y+1, pos.y+14 do
-								minetest.remove_node({x=x,y=y,z=z})
-							end
-						end
-					end
-					-- Recoloca pedregulho no lugar de elementos pedrosos
-					for _,p in ipairs(nodes) do
-						minetest.set_node(p, {name="default:cobble"})
-					end
+					-- Tornar estrutura em ruinas
+					sunos.montar_ruinas(pos, dist)
 				
 					-- Inicia processo de decadencia da casa comunal
 					meta:set_string("status", "destruida")

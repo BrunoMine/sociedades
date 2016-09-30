@@ -15,6 +15,8 @@ local modpath = minetest.get_modpath("sunos")
 -- Nodes de verificação para casas obstruidas
 local nodes_estruturais = {"default:wood", "default:cobble", "group:stair"}
 
+-- Nodes removidos na montagem de ruinas
+local nodes_rem_ruinas = {"default:wood", "group:stair", "group:glass", "group:fence", "group:ladder", "group:flower", "group:vessel", "default:torch", "group:pane", "default:ladder_wood", "default:ladder_steel", "group:leaves"}
 
 -- Pegar direcao oposta
 sunos.pegar_dir_oposta = function(dir)
@@ -510,7 +512,7 @@ sunos.montar_ruinas = function(pos, dist)
 	local nodes = minetest.find_nodes_in_area(
 		{x=pos.x-dist, y=pos.y, z=pos.z-dist}, 
 		{x=pos.x+dist, y=pos.y+14, z=pos.z+dist}, 
-		{"group:stone", "group:cobble", "default:furnace"}
+		{"group:stone"}
 	)
 	-- Pega a terra do chao
 	local nodes_solo = minetest.find_nodes_in_area(
@@ -518,14 +520,19 @@ sunos.montar_ruinas = function(pos, dist)
 		{x=pos.x+dist, y=pos.y, z=pos.z+dist}, 
 		{"default:dirt", "default:dirt_with_grass"}
 	)
-	-- Limpa toda a area
-	for x=pos.x-dist, pos.x+dist do
-		for z=pos.z-dist, pos.z+dist do
-			for y=pos.y+1, pos.y+14 do
-				minetest.remove_node({x=x,y=y,z=z})
-			end
-		end
+	
+	-- Pegar blocos a serem removidos
+	local nodes_rem = minetest.find_nodes_in_area(
+		{x=pos.x-dist, y=pos.y, z=pos.z-dist}, 
+		{x=pos.x+dist, y=pos.y+14, z=pos.z+dist}, 
+		nodes_rem_ruinas
+	)
+	
+	-- Limpar nodes a serem removidos
+	for _,p in ipairs(nodes_rem) do
+		minetest.remove_node(p)
 	end
+	
 	-- Recoloca pedregulho no lugar de elementos pedrosos
 	for _,p in ipairs(nodes) do
 		minetest.set_node(p, {name="default:cobble"})

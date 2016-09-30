@@ -13,76 +13,63 @@
 local modpath = minetest.get_modpath("sunos")
 
 -- Construir casa comunal
-local construir_casa_comunal = function(pos, nivel)
+--[[
+	Essa função construi uma casa comunal e configura o fundamento
+	Retorno:
+		^ true caso ocorra tudo bem
+		^ string de erro caso algo de errado
+	Argumentos:
+		<pos> é a coordenada do fundamento da estrutura
+		<vila> é o numero da vila a qual a casa comunal pertence
+		<nivel> é o nível da casa comunal a ser construida
+		<n_estrutura> é o numero da estrutura da casa comunal
+		<force_area> OPCIONAL | Para ignorar as verificações de area limpa
+  ]]
+sunos.construir_casa_comunal = function(pos, vila, nivel, n_estrutura, force_area)
 	-- Validar argumentos de entrada
 	if pos == nil then
 		minetest.log("error", "[Sunos] Tabela pos nula (construir_casa_comunal)")
 		return "Erro interno (pos nula)"
 	end
 	if nivel == nil then
-		minetest.log("error", "[Sunos] nivel (em construir_casa_comunal)")
+		minetest.log("error", "[Sunos] variavel nivel nula (em construir_casa_comunal)")
 		return "Erro interno (nivel nulo)"
 	end
-	local dist = 6 -- Distancia centro a borda padrão
-	if dist == nil then
-		minetest.log("error", "[Sunos] falha em encontrar dist (em construir_casa_comunal)")
-		return "Erro interno (dist inexistente)"
+	if vila == nil then
+		minetest.log("error", "[Sunos] variavel vila nula (em construir_casa_comunal)")
+		return "Erro interno (vila inexistente)"
+	end
+	if n_estrutura == nil then
+		minetest.log("error", "[Sunos] variavel n_estrutura nula (em construir_casa_comunal)")
+		return "Erro interno (Numero de estrutura inexistente)"
 	end
 	
-	-- Verificações
+	-- Distancia centro a borda padrão
+	local dist = 6 
 	
-	-- Verificar Vila e pegar dados (buscando por um fundamento proximo)
-	local pos_node_vila = minetest.find_node_near(pos, 20, {"sunos:fundamento"})
-	if pos_node_vila == nil then 
-		return "Precisa estar perto de uma vila"
-	end
-	local meta_fund = minetest.get_meta(pos_node_vila)
-	local vila = meta_fund:get_string("vila")
-	local n_estrutura = sunos.bd:pegar("vila_"..vila, "estruturas") -- Numero da nova estrutura
-	
-	-- Verificar se ja existe uma casa comunal ativa
-	if sunos.bd:verif("vila_"..vila, "casa_comunal") == true then
-		local registros_casa_comunal_antiga = sunos.bd:pegar("vila_"..vila, "casa_comunal")
-		local node_casa_comunal_antiga = minetest.get_node(registros_casa_comunal_antiga.pos)
-		if node_casa_comunal_antiga.name == "sunos:fundamento" then
-			local meta_casa_comunal_antiga = minetest.get_meta(registros_casa_comunal_antiga.pos)
-			if meta_casa_comunal_antiga:get_string("tipo") == "casa_comunal" then
-				return "Ja existe uma casa comunal nessa vila"
-			end
-		end
-	end
-	
+	-- Verificações de area
+	if force_area ~= true then
 	-- Verificar se o local esta limpo, gramado e plano (contando o entorno da estrutura)
-	local nodes_solo = minetest.find_nodes_in_area(
-		{x=pos.x-dist-1, y=pos.y-1, z=pos.z-dist-1}, 
-		{x=pos.x+dist+1, y=pos.y-1, z=pos.z+dist+1}, 
-		{"default:dirt_with_grass", "default:dirt"}
-	)
-	local nodes_acima_solo = minetest.find_nodes_in_area(
-		{x=pos.x-dist-1, y=pos.y, z=pos.z-dist-1}, 
-		{x=pos.x+dist+1, y=pos.y, z=pos.z+dist+1}, 
-		{"air"}
-	)
-	local n = minetest.get_node({x=pos.x-dist, y=pos.y-1, z=pos.z-dist})
+		local nodes_solo = minetest.find_nodes_in_area(
+			{x=pos.x-dist-1, y=pos.y, z=pos.z-dist-1}, 
+			{x=pos.x+dist+1, y=pos.y, z=pos.z+dist+1}, 
+			{"default:dirt_with_grass", "default:dirt"}
+		)
+		local nodes_acima_solo = minetest.find_nodes_in_area(
+			{x=pos.x-dist-1, y=pos.y+1, z=pos.z-dist-1}, 
+			{x=pos.x+dist+1, y=pos.y+1, z=pos.z+dist+1}, 
+			{"air"}
+		)
+		if table.maxn(nodes_solo) < ((2*(dist+1))+1)^2
+			or table.maxn(nodes_acima_solo) < (((2*(dist+1))+1)^2)-1
+		then
+			return "O local precisa estar limpo, gramado em plano para a casa comunal com um 15x15 blocos da largura"
+		end
 	
-	if table.maxn(nodes_solo) < ((2*(dist+1))+1)^2
-		or table.maxn(nodes_acima_solo) < (((2*(dist+1))+1)^2)-1
-	then
-		return "O local precisa estar limpo, gramado em plano para a casa comunal com um 15x15 blocos da largura"
-	end
-	
-	-- Verificar se tem outra estrutura de suno interferindo na area da nova estrutura
-	if sunos.verif_fundamento(pos, dist) == false then
-		return "Muito perto de uma estrutura de sunos. Afaste um pouco."
-	end
-	
-	-- Verificar se a vila foi abandonada
-	sunos.atualizar_bd_vila(vila) -- Atualizar o banco de dados
-	if sunos.bd:verif("vila_"..vila, "numero") == false then
-		return "Vila abandonada"
-	end
-	if sunos.bd:verif("vila_"..vila, "pop") == true and sunos.bd:pegar("vila_"..vila, "pop") == 0 then
-		return "Vila abandonada (inabitada)"
+		-- Verificar se tem outra estrutura de suno interferindo na area da nova estrutura
+		if sunos.verif_fundamento(pos, dist) == false then
+			return "Muito perto de uma estrutura de sunos. Afaste um pouco."
+		end
 	end
 	
 	-- Criar casa comunal
@@ -90,43 +77,42 @@ local construir_casa_comunal = function(pos, nivel)
 	local arquivo = modpath.."/estruturas/casa_comunal/casa_comunal_nivel_"..nivel..".13.mts"
 	
 	-- Criar estrutura
-	minetest.place_schematic({x=pos.x-dist,y=pos.y-1,z=pos.z-dist}, arquivo, nil, nil, true)
+	minetest.place_schematic({x=pos.x-dist,y=pos.y,z=pos.z-dist}, arquivo, nil, nil, true)
 	
 	-- Criar fundamento e configurar
-	local pos_novo_fund = {x=pos.x,y=pos.y-1,z=pos.z}
-	minetest.set_node(pos_novo_fund, {name="sunos:fundamento"})
-	local meta_novo_fund = minetest.get_meta(pos_novo_fund)
-	meta_novo_fund:set_string("vila", vila) -- Numero da vila
-	meta_novo_fund:set_string("tipo", "casa_comunal") -- Numero da vila
-	meta_novo_fund:set_string("estrutura", n_estrutura+1) -- Numero da estrutura
-	meta_novo_fund:set_string("dist", dist) -- Distancia centro a borda da estrutra
-	meta_novo_fund:set_string("status", "ativa") -- Status da casa comunal
-	sunos.contabilizar_blocos_estruturais(pos_novo_fund) -- Armazena quantidade de nodes estruturais
-	
-	-- Salvar novo total de estruturas da vila
-	sunos.bd:salvar("vila_"..vila, "estruturas", n_estrutura+1)
+	minetest.set_node(pos, {name="sunos:fundamento"})
+	local meta = minetest.get_meta(pos)
+	meta:set_string("vila", vila) -- Numero da vila
+	meta:set_string("tipo", "casa_comunal") -- Numero da vila
+	meta:set_string("estrutura", n_estrutura) -- Numero da estrutura
+	meta:set_string("nivel", nivel) -- Nivel da casa comunal
+	meta:set_string("dist", dist) -- Distancia centro a borda da estrutra
+	meta:set_string("status", "ativa") -- Status da casa comunal
+	sunos.contabilizar_blocos_estruturais(pos) -- Armazena quantidade de nodes estruturais
 	
 	-- Salvar nova dados da estrutura no banco de dados da vila
 	local dados_casa_comunal = {
-		pos = pos_novo_fund, -- Pos do fundamento
+		pos = pos, -- Pos do fundamento
 		vila = vila, -- Numero da vila
 		nivel = nivel, -- Nivel da Casa Comunal
 	}
 	sunos.bd:salvar("vila_"..vila, "casa_comunal", dados_casa_comunal)
-
+	
+	-- Ajustar nodes da estrutura
+	
+	-- Ajustar baus
 	-- Verifica se tem baus na estrutura montada
 	local baus = minetest.find_nodes_in_area(
 		{x=pos.x-dist, y=pos.y, z=pos.z-dist}, 
 		{x=pos.x+dist, y=pos.y+15, z=pos.z+dist}, 
 		{"sunos:bau_casa_comunal"}
 	)
-	
 	-- Salva dados da estrutura no bau dela
 	for _,pos_bau in ipairs(baus) do
 		local meta = minetest.get_meta(pos_bau)
 		meta:set_string("vila", vila) -- Numero da vila
-		meta:set_string("estrutura", n_estrutura+1) -- Numero da estrutura
-		meta:set_string("pos_fundamento", minetest.serialize(pos_novo_fund)) -- Pos do fundamento
+		meta:set_string("estrutura", n_estrutura) -- Numero da estrutura
+		meta:set_string("pos_fundamento", minetest.serialize(pos)) -- Pos do fundamento
 		meta:set_string("infotext", "Bau de Casa Comunal")
 	end
 	
@@ -148,13 +134,46 @@ minetest.register_node("sunos:fundamento_casa_comunal", {
 	
 	-- Colocar uma casa comunal
 	on_place = function(itemstack, placer, pointed_thing)
-		local r = construir_casa_comunal(pointed_thing.above, 1)
-		if r ~= true then
-			minetest.chat_send_player(placer:get_player_name(), r)
-			return 
-		else
+		
+		-- Verificar Vila e pegar dados (buscando por um fundamento proximo)
+		local pos_fund_prox = minetest.find_node_near(pointed_thing.under, 25, {"sunos:fundamento"})
+		if pos_fund_prox == nil then 
+			return minetest.chat_send_player(placer:get_player_name(), "Nenhuma vila por perto")
+		end
+		
+		-- Pegar dados da vila encontrada
+		local meta_fund_prox = minetest.get_meta(pos_fund_prox)
+		local vila = meta_fund_prox:get_string("vila")
+		
+		-- Numero da estrutura da nova casa comunal
+		local n_estrutura = sunos.bd:pegar("vila_"..vila, "estruturas")+1 -- Numero da nova estrutura
+		
+		-- Verificar se a vila pode criar uma nova casa comunal
+		sunos.atualizar_bd_vila(vila) -- Atualizar o banco de dados
+		
+		-- Verificar se ainda existe um banco de dados da vila
+		if sunos.bd:verif("vila_"..vila, "numero") == false then
+			return minetest.chat_send_player(placer:get_player_name(), "Vila abandonada")
+		end
+		
+		-- Verificar se ja existe uma casa comunal
+		if sunos.bd:verif("vila_"..vila, "casa_comunal") == true then
+			return minetest.chat_send_player(placer:get_player_name(), "Ja existe uma casa comunal nessa vila")
+		end
+		
+		local r = sunos.construir_casa_comunal(pointed_thing.under, vila, 1, n_estrutura)
+		if r == true then
+			-- Salvar novo total de estruturas da vila
+			sunos.bd:salvar("vila_"..vila, "estruturas", n_estrutura)
+			
+			-- Retorna mensagem de montagem concluida
 			minetest.chat_send_player(placer:get_player_name(), "Casa Comunal construida.")
 			itemstack:take_item()
+			return itemstack
+			
+		else
+			-- Retorna mensagem de falha
+			minetest.chat_send_player(placer:get_player_name(), r)
 			return itemstack
 		end
 	end,

@@ -12,6 +12,10 @@
 -- Caminho do diretório do mod
 local modpath = minetest.get_modpath("sunos")
 
+-- Nodes de verificação para casas obstruidas
+local nodes_estruturais = {"default:wood", "default:cobble", "group:stair"}
+
+
 -- Pegar direcao oposta
 sunos.pegar_dir_oposta = function(dir)
 	if dir == "x+" then
@@ -453,7 +457,7 @@ sunos.contabilizar_blocos_estruturais = function(pos)
 	local nodes = minetest.find_nodes_in_area(
 		{x=pos.x-dist, y=pos.y, z=pos.z-dist}, 
 		{x=pos.x+dist, y=pos.y+15, z=pos.z+dist}, 
-		{"default:wood", "default:cobble"}
+		{"default:wood", "default:cobble", "group:stair"}
 	)
 	
 	meta:set_string("nodes", table.maxn(nodes))
@@ -482,7 +486,7 @@ sunos.verificar_blocos_estruturais = function(pos)
 	local nodes = minetest.find_nodes_in_area(
 		{x=pos.x-dist, y=pos.y, z=pos.z-dist}, 
 		{x=pos.x+dist, y=pos.y+14, z=pos.z+dist}, 
-		{"default:wood", "default:cobble"}
+		nodes_estruturais
 	)
 	
 	if table.maxn(nodes) < nodes_reg - 10 then -- Permite ate 10 blocos serem removidos

@@ -54,7 +54,7 @@ minetest.register_node("sunos:fundamento", {
 	
 			if tipo == "casa_comunal" then
 				if meta:get_string("status") == "destruida" then
-					if itemstack:get_name() == "default:wood" then
+					if itemstack:get_name() == "sunos:kit_reparador" then
 						local n_estrutura = meta:get_string("estrutura")
 						
 						-- Obter dados do fundamento

@@ -20,13 +20,25 @@ sunos = {}
   ]]
 sunos.RARIDADE = 3
 
-
 -- Notificador de Inicializador
 local notificar = function(msg)
 	if minetest.setting_get("log_mods") then
 		minetest.debug("[SUNOS]"..msg)
 	end
 end
+
+-- Tabela do menu da casa comunal 
+--[[
+	Ordenar de cima para baixo em ordem de mais valiosos até os menos valiosso)
+  ]]
+sunos.tb_menu_casa_comunal = {
+	["Kit Reparador"] = { -- Nome do items
+		desc = "Esse Kit serve para reconstruir uma estrutura do povo Suno",
+		pop = 5, -- População necessaria
+		item_add = "sunos:kit_reparador", -- Item a receber (apenas 1 item e 1 unidade)
+		item_rem = {"default:tree 20", "default:cobble 20", "wool:yellow 5"} -- Itens a pagar (de 1 a 14 itens diferentes de qualquer quantidade) 
+	},
+}
 
 -- Modpath
 local modpath = minetest.get_modpath("sunos")

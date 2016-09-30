@@ -9,9 +9,48 @@
 	Interface
   ]]
 
+-- Tabela de entidade acessada na casa comunal
+sunos.acesso = memor.online()
+
+-- Lista que relaciona numero com titulo od item
+local tb_itens_menu_casa_comunal = {}
+
+-- Lista de itens do menu da casa comunal em formato de string
+local string_menu_casa_comunal = ""
+for item,_ in pairs(sunos.tb_menu_casa_comunal) do
+	if string_menu_casa_comunal ~= "" then string_menu_casa_comunal = string_menu_casa_comunal .. "," end
+	string_menu_casa_comunal = string_menu_casa_comunal .. item
+	table.insert(tb_itens_menu_casa_comunal, item)
+end
+
+-- Envia uma formspec simples de aviso
+local avisar = function(player, texto)
+	if not player then
+		minetest.log("error", "[Sunos] player nulo (em avisar do script interface.lua)")
+		return false
+	end
+	if not texto then
+		minetest.log("error", "[Sunos] texto nulo (em avisar do script interface.lua)")
+		return false
+	end
+	
+	minetest.show_formspec(player:get_player_name(), "sunos:npc", "size[12,1]"
+		..default.gui_bg
+		..default.gui_bg_img
+		.."label[0.5,0;Aviso \n"..texto.."]")
+	return true
+end
 
 -- Acessar NPC
-sunos.acessar_npc = function(ent, player)
+sunos.acessar_npc = function(ent, player, fields)
+	
+	-- Verifica se NPC ainda existe
+	if not ent then
+		return
+	end
+	
+	-- Salva a entidade acessada
+	sunos.acesso[player:get_player_name()].ent = ent
 	
 	-- NPC suno comum
 	if ent.name == "sunos:npc" then
@@ -36,12 +75,91 @@ sunos.acessar_npc = function(ent, player)
 	-- NPC da casa Comunal
 	elseif ent.name == "sunos:npc_casa_comunal" then
 		
-		-- Verifica se casa comunal existe
+		-- Atualizar banco de dados da vila
+		sunos.atualizar_bd_vila(ent.vila)
+		
+		-- Verifica se existe casa comunal na vila
 		if sunos.bd:verif("vila_"..ent.vila, "casa_comunal") == false then
 			return minetest.chat_send_player(player:get_player_name(), "Nenhuma Casa Comunal ativa nessa vila.")
-		else
-			return minetest.chat_send_player(player:get_player_name(), "Nenhuma atividade disponivel.")
 		end
+		
+		-- Coletar dados da vila
+		local habitantes = sunos.bd:pegar("vila_"..ent.vila, "pop") or "Erro interno"
+		
+		-- Formspec de NPC da casa comunal
+		local formspec = "size[12,8.3]"
+			..default.gui_bg
+			..default.gui_bg_img
+			.."image[0,0;3,3;sunos.png]"
+			.."label[3,0;Bem vindo a Casa Comunal]"
+			.."label[3,0.5;Habitantes: "..habitantes.."]"
+			.."textlist[0,3;4.8,5.3;menu;"..string_menu_casa_comunal.."]"
+			
+		-- Painel do item escolhido
+		if fields and fields.menu then
+			local n = string.split(fields.menu, ":")
+			local escolha = n[2]
+			
+			-- Dados do item escolhido
+			local titulo = tb_itens_menu_casa_comunal[tonumber(escolha)]
+			local dados = sunos.tb_menu_casa_comunal[titulo]
+			
+			-- Armazena o item escolhido
+			sunos.acesso[player:get_player_name()].item = titulo
+			
+			-- Titulo do item
+			formspec = formspec .."label[5,3;"..titulo.."]"
+			
+			-- Botao de trocar
+			formspec = formspec .. "item_image_button[5,3.5;2,2;"..dados.item_add..";trocar;Trocar]"
+			
+			-- Texto descritivo
+			formspec = formspec .. "textarea[7.2,3.5;5.1,2.25;desc;;"..dados.desc.."]"
+			
+			-- Requisitos
+			formspec = formspec .."label[5,5.5;Requisitos]"
+			
+			-- População minima
+			formspec = formspec .."label[5,6;Habitantes na vila: "..dados.pop.."]"
+			
+			-- Organizando formspec dos itens
+			for n,item in pairs(dados.item_rem) do
+				if n == 1 then -- Item 1
+					formspec = formspec .. "item_image_button[5,6.5;1,1;"..item..";item1;]"
+				elseif n == 2 then -- Item 2
+					formspec = formspec .. "item_image_button[6,6.5;1,1;"..item..";item2;]"
+				elseif n == 3 then -- Item 3
+					formspec = formspec .. "item_image_button[7,6.5;1,1;"..item..";item3;]"
+				elseif n == 4 then -- Item 4
+					formspec = formspec .. "item_image_button[8,6.5;1,1;"..item..";item4;]"
+				elseif n == 5 then -- Item 5
+					formspec = formspec .. "item_image_button[9,6.5;1,1;"..item..";item5;]"
+				elseif n == 6 then -- Item 6
+					formspec = formspec .. "item_image_button[10,6.5;1,1;"..item..";item6;]"
+				elseif n == 7 then -- Item 7
+					formspec = formspec .. "item_image_button[11,6.5;1,1;"..item..";item7;]"
+				elseif n == 8 then -- Item 8
+					formspec = formspec .. "item_image_button[5,7.5;1,1;"..item..";item8;]"
+				elseif n == 9 then -- Item 9
+					formspec = formspec .. "item_image_button[6,7.5;1,1;"..item..";item9;]"
+				elseif n == 10 then -- Item 10
+					formspec = formspec .. "item_image_button[7,7.5;1,1;"..item..";item10;]"
+				elseif n == 11 then -- Item 11
+					formspec = formspec .. "item_image_button[8,7.5;1,1;"..item..";item11;]"
+				elseif n == 12 then -- Item 12
+					formspec = formspec .. "item_image_button[9,7.5;1,1;"..item..";item12;]"
+				elseif n == 13 then -- Item 13
+					formspec = formspec .. "item_image_button[10,7.5;1,1;"..item..";item13;]"
+				elseif n == 14 then -- Item 14
+					formspec = formspec .. "item_image_button[11,7.5;1,1;"..item..";item14;]"
+				end
+			end
+			
+		else
+			formspec = formspec .."label[6,5;Escolha algo da lista]"
+		end
+		
+		return minetest.show_formspec(player:get_player_name(), "sunos:npc_casa_comunal", formspec)
 	end
 end
 
@@ -50,6 +168,10 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 
 	-- NPC suno comum
 	if formname == "sunos:npc" then 
+		-- Validar entidade acessada
+		local ent = sunos.acesso[player:get_player_name()].ent
+		if not ent then return end
+		
 		if fields.trocar then -- Trocar fundamento de casa comunal
 			
 			-- Tenta trocar pelo fundamento de casa comunal
@@ -64,4 +186,38 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 			end
 		end
 	end
+	
+	if formname == "sunos:npc_casa_comunal" then
+		-- Validar entidade acessada
+		local ent = sunos.acesso[player:get_player_name()].ent
+		if not ent then return end
+		
+		if fields.menu then		
+			-- Retorna o acesso
+			sunos.acessar_npc(ent, player, fields)
+		end
+		
+		if fields.trocar then
+		
+			-- Dados do item escolhido
+			local titulo = sunos.acesso[player:get_player_name()].item
+			local dados = sunos.tb_menu_casa_comunal[titulo]
+			
+			-- Verifica se tem os habitantes necessarios
+			-- Atualizar banco de dados da vila
+			sunos.atualizar_bd_vila(ent.vila)
+			local pop_atual = sunos.bd:pegar("vila_"..ent.vila, "pop")
+			if pop_atual == nil or pop_atual < dados.pop then
+				return avisar(player, "A vila precisa de mais habitantes para isso")
+			end   
+			
+			-- Tenta trocar
+			if tror.trocar_plus(player, dados.item_rem, {dados.item_add}) == false then
+				return avisar(player, "Precisa dos itens exigidos para a trocar por "..titulo)
+			else
+				return avisar(player, "Recebeste um "..titulo)
+			end
+		end
+	end
+	
 end)

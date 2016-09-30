@@ -19,8 +19,14 @@ Autores dos arquivos de mídia
 -----------------------------
 
 BrunoMine:
+  textures/sunos.png
   textures/sunos_npc.png
   textures/sunos_npc2.png
+  textures/sunos_bau_frente.png
+  textures/sunos_bau_lado.png
+  textures/sunos_bau_topo.png
+  textures/sunos_kit_reparador.png
+  textures/sunos_fundamento.png
   
 ### Software LGPL v3
 

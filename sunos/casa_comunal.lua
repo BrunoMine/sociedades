@@ -179,7 +179,7 @@ minetest.register_node("sunos:fundamento_casa_comunal", {
 	end,
 })
 
--- Piso de atendente da casa comunal
+-- Bau da casa comunal (para spawnar atendentes)
 --[[
 	Esse é o node usado para construir uma casa comunal
 ]]

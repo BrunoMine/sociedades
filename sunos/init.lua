@@ -40,6 +40,15 @@ sunos.tb_menu_casa_comunal = {
 	},
 }
 
+-- Tabela de população por tamanho de casa
+sunos.tb_pop_casa = {
+	-- Largura da casa	População
+	["5"] = 			2,
+	["7"] =			3,
+	["9"] =			4,
+	["11"] =			6,
+}
+
 -- Modpath
 local modpath = minetest.get_modpath("sunos")
 
@@ -60,4 +69,6 @@ dofile(modpath.."/npc.lua")
 dofile(modpath.."/casa_comunal.lua")
 dofile(modpath.."/npc_casa_comunal.lua")
 dofile(modpath.."/gerenciador_de_vilas.lua")
+-- Estruturas adicionadas
+dofile(modpath.."/casa.lua")
 notificar("[OK]!")

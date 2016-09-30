@@ -13,10 +13,10 @@
 local modpath = minetest.get_modpath("sunos")
 
 -- Nodes de verificação para casas obstruidas
-local nodes_estruturais = {"default:wood", "default:cobble", "group:stair"}
+local nodes_estruturais = {"default:wood", "default:cobble", "default:stonebrick", "group:stair"}
 
 -- Nodes removidos na montagem de ruinas
-local nodes_rem_ruinas = {"sunos:bau", "default:wood", "group:stair", "group:glass", "group:fence", "group:ladder", "group:flower", "group:vessel", "default:torch", "group:pane", "default:ladder_wood", "default:ladder_steel", "group:leaves", "group:wool", "group:door"}
+local nodes_rem_ruinas = {"sunos:bau", "sunos:bau_loja", "default:wood", "group:stair", "group:glass", "group:fence", "group:ladder", "group:flower", "group:vessel", "default:torch", "group:pane", "default:ladder_wood", "default:ladder_steel", "group:leaves", "group:wool", "group:door"}
 
 -- Pegar direcao oposta
 sunos.pegar_dir_oposta = function(dir)
@@ -459,7 +459,7 @@ sunos.contabilizar_blocos_estruturais = function(pos)
 	local nodes = minetest.find_nodes_in_area(
 		{x=pos.x-dist, y=pos.y, z=pos.z-dist}, 
 		{x=pos.x+dist, y=pos.y+15, z=pos.z+dist}, 
-		{"default:wood", "default:cobble", "group:stair"}
+		nodes_estruturais
 	)
 	
 	meta:set_string("nodes", table.maxn(nodes))

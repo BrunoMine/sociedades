@@ -70,7 +70,7 @@ minetest.register_abm({
 			end
 			
 		-- Verificação de casa e estrutura decorativa
-		elseif tipo == "casa" or tipo == "decor" then
+		elseif tipo == "casa" or tipo == "decor" or tipo == "loja" then
 			
 			if sunos.verificar_blocos_estruturais(pos) == false -- Verificar Estrutura danificada
 				-- or sunos.verificar_estrutura(pos, tonumber(meta:get_string("dist"))) == false -- [CANCELADO]
@@ -82,6 +82,10 @@ minetest.register_abm({
 				-- Remover do bando de dados
 				if tipo == "casa" then
 					sunos.bd:remover("vila_"..meta:get_string("vila"), "casa_"..meta:get_string("estrutura"))
+					-- Trocar bloco de fundamento por madeira
+					minetest.set_node(pos, {name="default:tree"})
+				elseif tipo == "loja" then
+					sunos.bd:remover("vila_"..meta:get_string("vila"), "loja_"..meta:get_string("estrutura"))
 					-- Trocar bloco de fundamento por madeira
 					minetest.set_node(pos, {name="default:tree"})
 				elseif tipo == "casa_comunal" then

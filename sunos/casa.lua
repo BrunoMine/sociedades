@@ -20,7 +20,7 @@ local modpath = minetest.get_modpath("sunos")
 		^ string de erro caso algo de errado
 	Argumentos:
 		<pos> é a coordenada do fundamento da estrutura
-		<vila> é o numero da vila a qual a casa comunal pertence
+		<vila> é o numero da vila a qual a casa pertence
 		<dist> distancia centro a borda da nova estrutura
   ]]
 sunos.construir_casa_comum = function(pos, dist)

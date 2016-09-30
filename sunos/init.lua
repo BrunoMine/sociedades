@@ -27,28 +27,6 @@ local notificar = function(msg)
 	end
 end
 
--- Tabela do menu da casa comunal 
---[[
-	Ordenar de cima para baixo em ordem de mais valiosos até os menos valiosso)
-  ]]
-sunos.tb_menu_casa_comunal = {
-	["Kit Reparador"] = { -- Nome do items
-		desc = "Esse Kit serve para reconstruir uma estrutura do povo Suno",
-		pop = 5, -- População necessaria
-		item_add = "sunos:kit_reparador", -- Item a receber (apenas 1 item e 1 unidade)
-		item_rem = {"default:tree 20", "default:cobble 20", "wool:yellow 5"} -- Itens a pagar (de 1 a 14 itens diferentes de qualquer quantidade) 
-	},
-}
-
--- Tabela de população por tamanho de casa
-sunos.tb_pop_casa = {
-	-- Largura da casa	População
-	["5"] = 			2,
-	["7"] =			3,
-	["9"] =			4,
-	["11"] =			6,
-}
-
 -- Modpath
 local modpath = minetest.get_modpath("sunos")
 
@@ -57,6 +35,7 @@ sunos.bd = memor.montar_bd()
 
 -- Carregar scripts
 notificar("Carregando...")
+dofile(modpath.."/diretrizes.lua")
 dofile(modpath.."/comum.lua")
 dofile(modpath.."/estruturador.lua")
 dofile(modpath.."/vila.lua")

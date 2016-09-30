@@ -26,9 +26,15 @@ minetest.register_abm({
 		local tipo = meta:get_string("tipo")
 		local dist = meta:get_string("dist")
 		
+		-- Verificar mapa carregado antes de verificar estruturas
+		if dist and sunos.verif_carregamento(pos, dist) == false then
+			return
+		end
+		
 		-- Verificação de caasa comunal
 		if tipo == "casa_comunal" then
 			local status = meta:get_string("status")
+			
 			
 			if status == "ativa" then
 				if sunos.verificar_blocos_estruturais(pos) == false then -- Verificar Estrutura danificada

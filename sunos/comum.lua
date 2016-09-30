@@ -16,7 +16,7 @@ local modpath = minetest.get_modpath("sunos")
 local nodes_estruturais = {"default:wood", "default:cobble", "group:stair"}
 
 -- Nodes removidos na montagem de ruinas
-local nodes_rem_ruinas = {"default:wood", "group:stair", "group:glass", "group:fence", "group:ladder", "group:flower", "group:vessel", "default:torch", "group:pane", "default:ladder_wood", "default:ladder_steel", "group:leaves", "group:wool", "group:door"}
+local nodes_rem_ruinas = {"sunos:bau", "default:wood", "group:stair", "group:glass", "group:fence", "group:ladder", "group:flower", "group:vessel", "default:torch", "group:pane", "default:ladder_wood", "default:ladder_steel", "group:leaves", "group:wool", "group:door"}
 
 -- Pegar direcao oposta
 sunos.pegar_dir_oposta = function(dir)
@@ -540,6 +540,53 @@ sunos.montar_ruinas = function(pos, dist)
 	-- Recoloca terra no solo
 	for _,p in ipairs(nodes_solo) do
 		minetest.set_node(p, {name="default:dirt_with_grass"})
+	end
+	return true
+end
+
+-- Verificar area carregada
+--[[
+	Verificar se todos os cantos de uma area esta carregada na memoria
+	Retorno:
+		<booleano> true para carregado e false para nao carregado
+	Argumentos:
+		<pos> pos central do chao da area
+		<dist> distancia de centro a borda da area
+  ]]
+sunos.verif_carregamento = function(pos, dist)
+	if pos == nil then
+		minetest.log("error", "[Sunos] Tabela pos nula (em sunos.verif_carregamento)")
+		return false
+	end
+	if dist == nil then
+		minetest.log("error", "[Sunos] Variavel dist nula (em sunos.verif_carregamento)")
+		return false
+	end
+	
+	-- Pegar os 8 cantos da area
+	local nn = {} -- nomes dos nodes
+	local node = minetest.get_node({x=pos.x-dist, y=pos.y, z=pos.z-dist})
+	nn[1] = node.name
+	node = minetest.get_node({x=pos.x-dist, y=pos.y, z=pos.z+dist})
+	nn[2] = node.name
+	node = minetest.get_node({x=pos.x+dist, y=pos.y, z=pos.z+dist})
+	nn[3] = node.name
+	node = minetest.get_node({x=pos.x+dist, y=pos.y, z=pos.z+dist})
+	nn[4] = node.name
+	node = minetest.get_node({x=pos.x-dist, y=pos.y+14, z=pos.z-dist})
+	nn[5] = node.name
+	node = minetest.get_node({x=pos.x-dist, y=pos.y+14, z=pos.z+dist})
+	nn[6] = node.name
+	node = minetest.get_node({x=pos.x+dist, y=pos.y+14, z=pos.z+dist})
+	nn[7] = node.name
+	node = minetest.get_node({x=pos.x+dist, y=pos.y+14, z=pos.z+dist})
+	nn[8] = node.name
+	
+	-- Verificar se algum node nao carregou
+	for _,name in ipairs(nn) do
+		if name == "ignore" then 
+			return false
+		end
 	end
 	return true
 end

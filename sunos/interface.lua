@@ -98,7 +98,7 @@ sunos.acessar_npc = function(ent, player, fields)
 		-- Painel do item escolhido
 		if fields and fields.menu then
 			local n = string.split(fields.menu, ":")
-			local escolha = n[2]
+			local escolha = n[2] or 1
 			
 			-- Dados do item escolhido
 			local titulo = tb_itens_menu_casa_comunal[tonumber(escolha)]

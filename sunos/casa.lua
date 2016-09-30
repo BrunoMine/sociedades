@@ -112,7 +112,7 @@ sunos.construir_casa_comum = function(pos, dist)
 		pop = sunos.tb_pop_casa[tostring(largura)] or 1,
 		estrutura = {
 			dist = dist,
-			largura = (dist*2)+1,
+			largura = largura,
 			pos = pos
 		}
 	}
@@ -126,12 +126,13 @@ sunos.construir_casa_comum = function(pos, dist)
 	return true
 end
 
--- Fundamento de casa comunal
+-- Fundamento de casa comum
 --[[
-	Esse é o node usado para construir uma casa comunal
+	Esse é o node usado para construir uma casa comum
 ]]
-minetest.register_node("sunos:fundamento_casa", {
-	description = "Fundamento de Casa Comum dos Sunos",
+-- Fundamento de casa pequena
+minetest.register_node("sunos:fundamento_casa_pequena", {
+	description = "Fundamento Suno de Casa Pequena",
 	tiles = {"default_tree_top.png^sunos_fundamento.png", "default_tree_top.png", "default_tree.png"},
 	paramtype2 = "facedir",
 	is_ground_content = false,
@@ -143,6 +144,62 @@ minetest.register_node("sunos:fundamento_casa", {
 	on_place = function(itemstack, placer, pointed_thing)
 		
 		local r = sunos.construir_casa_comum(pointed_thing.under, 2)
+		if r == true then
+			
+			-- Retorna mensagem de montagem concluida
+			minetest.chat_send_player(placer:get_player_name(), "Casa construida.")
+			itemstack:take_item()
+			return itemstack
+			
+		else
+			-- Retorna mensagem de falha
+			minetest.chat_send_player(placer:get_player_name(), r)
+			return itemstack
+		end
+	end,
+})
+-- Fundamento de casa mediana
+minetest.register_node("sunos:fundamento_casa_mediana", {
+	description = "Fundamento Suno de Casa Mediana",
+	tiles = {"default_tree_top.png^sunos_fundamento.png", "default_tree_top.png", "default_tree.png"},
+	paramtype2 = "facedir",
+	is_ground_content = false,
+	groups = {tree = 1, choppy = 2, oddly_breakable_by_hand = 1, flammable = 2},
+	sounds = default.node_sound_wood_defaults(),
+	stack_max = 1,
+	
+	-- Colocar uma casa comunal
+	on_place = function(itemstack, placer, pointed_thing)
+		
+		local r = sunos.construir_casa_comum(pointed_thing.under, 3)
+		if r == true then
+			
+			-- Retorna mensagem de montagem concluida
+			minetest.chat_send_player(placer:get_player_name(), "Casa construida.")
+			itemstack:take_item()
+			return itemstack
+			
+		else
+			-- Retorna mensagem de falha
+			minetest.chat_send_player(placer:get_player_name(), r)
+			return itemstack
+		end
+	end,
+})
+-- Fundamento de casa grande
+minetest.register_node("sunos:fundamento_casa_grande", {
+	description = "Fundamento Suno de Casa Grande",
+	tiles = {"default_tree_top.png^sunos_fundamento.png", "default_tree_top.png", "default_tree.png"},
+	paramtype2 = "facedir",
+	is_ground_content = false,
+	groups = {tree = 1, choppy = 2, oddly_breakable_by_hand = 1, flammable = 2},
+	sounds = default.node_sound_wood_defaults(),
+	stack_max = 1,
+	
+	-- Colocar uma casa comunal
+	on_place = function(itemstack, placer, pointed_thing)
+		
+		local r = sunos.construir_casa_comum(pointed_thing.under, 4)
 		if r == true then
 			
 			-- Retorna mensagem de montagem concluida

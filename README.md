@@ -1,5 +1,5 @@
-Modpack Sociedades v0.7-beta
-============================
+Modpack Sociedades
+==================
 
 ### Sobre
 Esse modpack adiciona sociedades em minetest.

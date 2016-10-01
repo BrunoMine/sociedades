@@ -83,7 +83,7 @@ sunos.construir_casa_comum = function(pos, dist, vila, force_area)
 	-- Criar casa
 	sunos.montar_estrutura(pos, dist, "casa")
 	
-	-- Numero da estrutura da nova casa comunal
+	-- Numero da estrutura da nova casa
 	local n_estrutura = sunos.bd:pegar("vila_"..vila, "estruturas")+1 -- Numero da nova estrutura
 	
 	-- Criar fundamento e configurar
@@ -135,6 +135,7 @@ end
 --[[
 	Esse é o node usado para construir uma casa comum
 ]]
+
 -- Fundamento de casa pequena
 minetest.register_node("sunos:fundamento_casa_pequena", {
 	description = "Fundamento Suno de Casa Pequena",
@@ -145,7 +146,7 @@ minetest.register_node("sunos:fundamento_casa_pequena", {
 	sounds = default.node_sound_wood_defaults(),
 	stack_max = 1,
 	
-	-- Colocar uma casa comunal
+	-- Colocar uma casa
 	on_place = function(itemstack, placer, pointed_thing)
 		
 		local r = sunos.construir_casa_comum(pointed_thing.under, 2)
@@ -163,6 +164,7 @@ minetest.register_node("sunos:fundamento_casa_pequena", {
 		end
 	end,
 })
+
 -- Fundamento de casa mediana
 minetest.register_node("sunos:fundamento_casa_mediana", {
 	description = "Fundamento Suno de Casa Mediana",
@@ -173,7 +175,7 @@ minetest.register_node("sunos:fundamento_casa_mediana", {
 	sounds = default.node_sound_wood_defaults(),
 	stack_max = 1,
 	
-	-- Colocar uma casa comunal
+	-- Colocar uma casa
 	on_place = function(itemstack, placer, pointed_thing)
 		
 		local r = sunos.construir_casa_comum(pointed_thing.under, 3)
@@ -191,6 +193,7 @@ minetest.register_node("sunos:fundamento_casa_mediana", {
 		end
 	end,
 })
+
 -- Fundamento de casa grande
 minetest.register_node("sunos:fundamento_casa_grande", {
 	description = "Fundamento Suno de Casa Grande",
@@ -201,7 +204,7 @@ minetest.register_node("sunos:fundamento_casa_grande", {
 	sounds = default.node_sound_wood_defaults(),
 	stack_max = 1,
 	
-	-- Colocar uma casa comunal
+	-- Colocar uma casa
 	on_place = function(itemstack, placer, pointed_thing)
 		
 		local r = sunos.construir_casa_comum(pointed_thing.under, 4)

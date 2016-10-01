@@ -15,13 +15,13 @@
 -- Tempo (em segundos) que demora para um bau verificar se tem um suno dele por perto
 local tempo_verif_npc = 60
 -- Distancia (om blocos) que um bau verifica em sua volta para encontrar seu proprio npc
-local dist_verif_npc = 8
+local dist_verif_npc = 10
 
 -- Verificador do npc suno comum 
 -- Tempo (em segundos) que um npc demora para verificar se esta perto da pos de seu bau
 local tempo_verif_bau = 20
 -- A cada quantos loops de verificação do npc ele deve verificar se seu bau ainda existe
-local qtd_loops_npc = 8
+local qtd_loops_npc = 3
 
 -- Verificar distancia entre duas pos
 local verif_dist_pos = function(pos1, pos2)

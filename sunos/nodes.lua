@@ -118,20 +118,6 @@ minetest.register_node("sunos:fundamento", {
 		sunos.atualizar_bd_vila(vila)
 	end,
 	
-	-- Para desenvolvimento
-	on_punch = function(pos, node, player, pointed_thing)
-		local meta = minetest.get_meta(pos)
-		minetest.chat_send_all("Vila: "..meta:get_string("vila"))
-		minetest.chat_send_all("Tipo: "..meta:get_string("tipo"))
-		minetest.chat_send_all("Estrutura: "..meta:get_string("estrutura"))
-		if meta:get_string("tipo") == "casa_comunal" then
-			minetest.chat_send_all("Status: "..meta:get_string("status"))
-			if meta:get_string("status") == "destruida" then
-				minetest.chat_send_all("Decadencia: "..meta:get_string("tempo").." seg")
-			end
-		end
-	end,
-	
 	-- Impede explosão
 	on_blast = function() end,
 })

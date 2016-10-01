@@ -92,7 +92,7 @@ sunos.acessar_npc = function(ent, player, fields)
 			..default.gui_bg_img
 			.."image[0,0;3,3;sunos.png]"
 			.."label[3,0;"..sunos.S("Bem vindo a Casa Comunal").."]"
-			.."label[3,0.5;"..sunos.S("Habitantes atuais: @1", habitantes)"..]"
+			.."label[3,0.5;"..sunos.S("Habitantes atuais: @1", habitantes).."]"
 			.."textlist[0,3;4.8,5.3;menu;"..string_menu_casa_comunal.."]"
 			
 		-- Painel do item escolhido

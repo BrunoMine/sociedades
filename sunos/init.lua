@@ -18,7 +18,7 @@ sunos = {}
 	Quanto maior, mais raro (Minimo é 1).
 	The larger, more rare (Minimo is 1).
   ]]
-sunos.RARIDADE = 3
+sunos.RARIDADE = 6
 
 -- Notificador de Inicializador
 local notificar = function(msg)

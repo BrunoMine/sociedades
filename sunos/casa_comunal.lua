@@ -47,6 +47,9 @@ sunos.construir_casa_comunal = function(pos, vila, nivel, n_estrutura, force_are
 	-- Distancia centro a borda padrão
 	local dist = 6 
 	
+	-- Variaveis auxiliares
+	local largura = 13
+	
 	-- Verificações de area
 	if force_area ~= true then
 	-- Verificar se o local esta limpo, gramado e plano (contando o entorno da estrutura)

@@ -12,9 +12,9 @@
 -- Tabela do menu da casa comunal 
 sunos.tb_menu_casa_comunal = {
 	-- Casas
-	["Casa Pequena"] = { -- Nome do items
+	[sunos.S("Casa Pequena")] = { -- Nome do items
 		-- Texto descritivo do item
-		desc = "Aumenta um pouco o numero de moradores da vila",
+		desc = sunos.S("Aumenta um pouco a quantidade de moradores da vila"),
 		-- População necessaria
 		pop = 0, 
 		-- Item a receber (apenas 1 item e 1 unidade)
@@ -22,28 +22,28 @@ sunos.tb_menu_casa_comunal = {
 		-- Itens a pagar (de 1 a 14 itens diferentes de qualquer quantidade) 
 		item_rem = {"default:tree 20", "default:cobble 15", "default:stonebrick 15", "xpanes:pane 5", "default:torch 10"} 
 	},
-	["Casa Mediana"] = {
-		desc = "Aumenta o numero de moradores da vila",
+	[sunos.S("Casa Mediana")] = {
+		desc = sunos.S("Aumenta a quantidade de moradores da vila"),
 		pop = 5,
 		item_add = "sunos:fundamento_casa_mediana", 
 		item_rem = {"default:tree 25", "default:cobble 30", "default:stonebrick 25", "xpanes:pane 15", "default:torch 10"}
 	},
-	["Casa Grande"] = {
-		desc = "Aumenta bastante o numero de moradores da vila",
+	[sunos.S("Casa Grande")] = {
+		desc = sunos.S("Aumenta bastante a quantidade de moradores da vila"),
 		pop = 5,
 		item_add = "sunos:fundamento_casa_grande", 
 		item_rem = {"default:tree 40", "default:cobble 45", "default:stonebrick 35", "xpanes:pane 20", "default:torch 15"}
 	},
 	-- Kit Reparador
-	["Kit Reparador"] = {
-		desc = "Esse Kit serve para reconstruir uma estrutura do povo Suno",
+	[sunos.S("Kit Reparador")] = {
+		desc = sunos.S("Esse Kit pode ser usado para reconstruir uma estrutura da vila dos Sunos"),
 		pop = 5,
 		item_add = "sunos:kit_reparador", 
 		item_rem = {"default:tree 20", "default:cobble 20", "wool:yellow 5", "xpanes:pane 15"}
 	},
 	-- Fundamento de Loja
-	["Feirinha"] = {
-		desc = "Uma feirinha para a troca de itens basicos",
+	[sunos.S("Feirinha")] = {
+		desc = sunos.S("Uma feirinha simples para trocar itens"),
 		pop = 7,
 		item_add = "sunos:fundamento_loja", 
 		item_rem = {"default:tree 20", "default:stonebrick 40", "default:torch 10", "xpanes:pane 25"}

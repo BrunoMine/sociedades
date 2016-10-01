@@ -35,6 +35,7 @@ sunos.bd = memor.montar_bd()
 
 -- Carregar scripts
 notificar("Carregando...")
+dofile(modpath.."/intllib.lua")
 dofile(modpath.."/diretrizes.lua")
 dofile(modpath.."/comum.lua")
 dofile(modpath.."/estruturador.lua")

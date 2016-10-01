@@ -63,12 +63,12 @@ sunos.construir_casa_comunal = function(pos, vila, nivel, n_estrutura, force_are
 		if table.maxn(nodes_solo) < ((2*(dist+1))+1)^2
 			or table.maxn(nodes_acima_solo) < (((2*(dist+1))+1)^2)-1
 		then
-			return "O local precisa estar limpo, gramado em plano para a casa comunal com um 15x15 blocos da largura"
+			return sunos.S("O local precisa estar limpo, gramado e plano para uma estrutura com @1x@1 blocos da largura", largura)
 		end
 	
 		-- Verificar se tem outra estrutura de suno interferindo na area da nova estrutura
 		if sunos.verif_fundamento(pos, dist) == false then
-			return "Muito perto de uma estrutura de sunos. Afaste um pouco."
+			return sunos.S("Muito perto de outra estrutura dos Sunos (afaste um pouco)")
 		end
 	end
 	
@@ -113,7 +113,7 @@ sunos.construir_casa_comunal = function(pos, vila, nivel, n_estrutura, force_are
 		meta:set_string("vila", vila) -- Numero da vila
 		meta:set_string("estrutura", n_estrutura) -- Numero da estrutura
 		meta:set_string("pos_fundamento", minetest.serialize(pos)) -- Pos do fundamento
-		meta:set_string("infotext", "Bau de Casa Comunal")
+		meta:set_string("infotext", sunos.S("Bau da Casa Comunal dos Sunos"))
 	end
 	
 	return true
@@ -124,7 +124,7 @@ end
 	Esse é o node usado para construir uma casa comunal
 ]]
 minetest.register_node("sunos:fundamento_casa_comunal", {
-	description = "Fundamento de Casa Comunal dos Sunos",
+	description = sunos.S("Fundamento de Casa Comunal dos Sunos"),
 	tiles = {"default_tree_top.png^sunos_fundamento.png", "default_tree_top.png", "default_tree.png"},
 	paramtype2 = "facedir",
 	is_ground_content = false,
@@ -138,7 +138,7 @@ minetest.register_node("sunos:fundamento_casa_comunal", {
 		-- Verificar Vila e pegar dados (buscando por um fundamento proximo)
 		local pos_fund_prox = minetest.find_node_near(pointed_thing.under, 25, {"sunos:fundamento"})
 		if pos_fund_prox == nil then 
-			return minetest.chat_send_player(placer:get_player_name(), "Nenhuma vila por perto")
+			return minetest.chat_send_player(placer:get_player_name(), sunos.S("Nenhuma vila por perto"))
 		end
 		
 		-- Pegar dados da vila encontrada
@@ -153,12 +153,12 @@ minetest.register_node("sunos:fundamento_casa_comunal", {
 		
 		-- Verificar se ainda existe um banco de dados da vila
 		if sunos.bd:verif("vila_"..vila, "numero") == false then
-			return minetest.chat_send_player(placer:get_player_name(), "Vila abandonada")
+			return minetest.chat_send_player(placer:get_player_name(), sunos.S("Vila abandonada"))
 		end
 		
 		-- Verificar se ja existe uma casa comunal
 		if sunos.bd:verif("vila_"..vila, "casa_comunal") == true then
-			return minetest.chat_send_player(placer:get_player_name(), "Ja existe uma casa comunal nessa vila")
+			return minetest.chat_send_player(placer:get_player_name(), sunos.S("Ja existe uma Casa Comunal nessa vila"))
 		end
 		
 		local r = sunos.construir_casa_comunal(pointed_thing.under, vila, 1, n_estrutura)
@@ -167,7 +167,7 @@ minetest.register_node("sunos:fundamento_casa_comunal", {
 			sunos.bd:salvar("vila_"..vila, "estruturas", n_estrutura)
 			
 			-- Retorna mensagem de montagem concluida
-			minetest.chat_send_player(placer:get_player_name(), "Casa Comunal construida.")
+			minetest.chat_send_player(placer:get_player_name(), sunos.S("Casa Comunal construida"))
 			itemstack:take_item()
 			return itemstack
 			
@@ -184,7 +184,7 @@ minetest.register_node("sunos:fundamento_casa_comunal", {
 	Esse é o node usado para construir uma casa comunal
 ]]
 minetest.register_node("sunos:bau_casa_comunal", {
-	description = "Bau de Atendente da Casa Comunal",
+	description = sunos.S("Bau da Casa Comunal dos Sunos"),
 	tiles = {"default_chest_top.png^sunos_bau_topo.png", "default_chest_top.png", "default_chest_side.png^sunos_bau_lado.png",
 		"default_chest_side.png^sunos_bau_lado.png", "default_chest_side.png^sunos_bau_lado.png", "default_chest_lock.png^sunos_bau_frente.png"},
 	paramtype2 = "facedir",

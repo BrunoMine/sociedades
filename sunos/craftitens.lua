@@ -11,6 +11,7 @@
 
 -- Kit reparador de estruturas
 minetest.register_craftitem("sunos:kit_reparador", {
-	description = "Kit Reparador de estrutura dos Sunos",
+	description = sunos.S("Kit Reparador de estrutura dos Sunos"),
 	inventory_image = "sunos_kit_reparador.png",
+	stack_max = 1,
 })

@@ -42,7 +42,7 @@ sunos.construir_decor = function(pos, dist, vila, force_area)
 	if not vila then
 		local pos_fund_prox = minetest.find_node_near(pos, 25, {"sunos:fundamento"})
 		if pos_fund_prox == nil then 
-			return "Nenhuma vila por perto"
+			return sunos.S("Nenhuma vila por perto")
 		end
 	
 		-- Pegar dados da vila encontrada
@@ -51,7 +51,7 @@ sunos.construir_decor = function(pos, dist, vila, force_area)
 	
 		-- Verificar se ainda existe um banco de dados da vila
 		if sunos.bd:verif("vila_"..vila, "numero") == false then
-			return "Vila abandonada"
+			return sunos.S("Vila abandonada")
 		end
 	end
 	
@@ -71,12 +71,12 @@ sunos.construir_decor = function(pos, dist, vila, force_area)
 		if table.maxn(nodes_solo) < ((2*(dist+1))+1)^2
 			or table.maxn(nodes_acima_solo) < (((2*(dist+1))+1)^2)-1
 		then
-			return "O local precisa estar limpo, gramado em plano para a estrutura decorativa com "..largura.."x"..largura.." blocos da largura"
+			return sunos.S("O local precisa estar limpo, gramado e plano para uma estrutura com @1x@1 blocos da largura", largura)
 		end
 
 		-- Verificar se tem outra estrutura de suno interferindo na area da nova estrutura
 		if sunos.verif_fundamento(pos, dist) == false then
-			return "Muito perto de uma estrutura de sunos. Afaste um pouco."
+			return sunos.S("Muito perto de outra estrutura dos Sunos (afaste um pouco)")
 		end
 	end
 	

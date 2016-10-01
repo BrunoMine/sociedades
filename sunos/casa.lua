@@ -42,7 +42,7 @@ sunos.construir_casa_comum = function(pos, dist, vila, force_area)
 	if not vila then
 		local pos_fund_prox = minetest.find_node_near(pos, 25, {"sunos:fundamento"})
 		if pos_fund_prox == nil then 
-			return "Nenhuma vila por perto"
+			return sunos.S("Nenhuma vila por perto")
 		end
 	
 		-- Pegar dados da vila encontrada
@@ -51,7 +51,7 @@ sunos.construir_casa_comum = function(pos, dist, vila, force_area)
 	
 		-- Verificar se ainda existe um banco de dados da vila
 		if sunos.bd:verif("vila_"..vila, "numero") == false then
-			return "Vila abandonada"
+			return sunos.S("Vila abandonada")
 		end
 	end
 	
@@ -71,12 +71,12 @@ sunos.construir_casa_comum = function(pos, dist, vila, force_area)
 		if table.maxn(nodes_solo) < ((2*(dist+1))+1)^2
 			or table.maxn(nodes_acima_solo) < (((2*(dist+1))+1)^2)-1
 		then
-			return "O local precisa estar limpo, gramado em plano para a casa com "..largura.."x"..largura.." blocos da largura"
+			return sunos.S("O local precisa estar limpo, gramado e plano para uma estrutura com @1x@1 blocos da largura", largura)
 		end
 
 		-- Verificar se tem outra estrutura de suno interferindo na area da nova estrutura
 		if sunos.verif_fundamento(pos, dist) == false then
-			return "Muito perto de uma estrutura de sunos. Afaste um pouco."
+			return sunos.S("Muito perto de outra estrutura dos Sunos (afaste um pouco)")
 		end
 	end
 	
@@ -107,7 +107,7 @@ sunos.construir_casa_comum = function(pos, dist, vila, force_area)
 		meta:set_string("vila", vila) -- Numero da vila
 		meta:set_string("estrutura", n_estrutura) -- Numero da estrutura
 		meta:set_string("pos_fundamento", minetest.serialize(pos)) -- Pos do fundamento
-		meta:set_string("infotext", "Bau de Suno")
+		meta:set_string("infotext", sunos.S("Bau dos Sunos"))
 	end
 	
 	-- Registros a serem salvos
@@ -138,7 +138,7 @@ end
 
 -- Fundamento de casa pequena
 minetest.register_node("sunos:fundamento_casa_pequena", {
-	description = "Fundamento Suno de Casa Pequena",
+	description = sunos.S("Fundamento Suno de Casa Pequena"),
 	tiles = {"default_tree_top.png^sunos_fundamento.png", "default_tree_top.png", "default_tree.png"},
 	paramtype2 = "facedir",
 	is_ground_content = false,
@@ -153,7 +153,7 @@ minetest.register_node("sunos:fundamento_casa_pequena", {
 		if r == true then
 			
 			-- Retorna mensagem de montagem concluida
-			minetest.chat_send_player(placer:get_player_name(), "Casa construida.")
+			minetest.chat_send_player(placer:get_player_name(), sunos.S("Casa construida"))
 			itemstack:take_item()
 			return itemstack
 			
@@ -167,7 +167,7 @@ minetest.register_node("sunos:fundamento_casa_pequena", {
 
 -- Fundamento de casa mediana
 minetest.register_node("sunos:fundamento_casa_mediana", {
-	description = "Fundamento Suno de Casa Mediana",
+	description = sunos.S("Fundamento Suno de Casa Mediana"),
 	tiles = {"default_tree_top.png^sunos_fundamento.png", "default_tree_top.png", "default_tree.png"},
 	paramtype2 = "facedir",
 	is_ground_content = false,
@@ -182,7 +182,7 @@ minetest.register_node("sunos:fundamento_casa_mediana", {
 		if r == true then
 			
 			-- Retorna mensagem de montagem concluida
-			minetest.chat_send_player(placer:get_player_name(), "Casa construida.")
+			minetest.chat_send_player(placer:get_player_name(), sunos.S("Casa construida"))
 			itemstack:take_item()
 			return itemstack
 			
@@ -196,7 +196,7 @@ minetest.register_node("sunos:fundamento_casa_mediana", {
 
 -- Fundamento de casa grande
 minetest.register_node("sunos:fundamento_casa_grande", {
-	description = "Fundamento Suno de Casa Grande",
+	description = sunos.S("Fundamento Suno de Casa Grande"),
 	tiles = {"default_tree_top.png^sunos_fundamento.png", "default_tree_top.png", "default_tree.png"},
 	paramtype2 = "facedir",
 	is_ground_content = false,
@@ -211,7 +211,7 @@ minetest.register_node("sunos:fundamento_casa_grande", {
 		if r == true then
 			
 			-- Retorna mensagem de montagem concluida
-			minetest.chat_send_player(placer:get_player_name(), "Casa construida.")
+			minetest.chat_send_player(placer:get_player_name(), sunos.S("Casa construida"))
 			itemstack:take_item()
 			return itemstack
 			

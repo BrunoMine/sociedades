@@ -15,8 +15,8 @@ local modpath = minetest.get_modpath("sunos")
 -- Comando de serializar estrutura
 minetest.register_chatcommand("sunos", {
 	privs = {server=true},
-	params = "<funcao> [Salvar estrutura | s <tipo> <nome> <largura>] ",
-	description = "Opera algumas funcionalidades",
+	params = sunos.S("<funcao> [Salvar estrutura | s <tipo> <nome> <largura>]"),
+	description = sunos.S("Opera algumas funcionalidades do mod sunos"),
 	func = function(name,  param)		
 		local m = string.split(param, " ")
 		local param1, param2, param3, param4 = m[1], m[2], m[3], m[4]
@@ -40,15 +40,16 @@ minetest.register_chatcommand("sunos", {
 				minetest.create_schematic(p1, p2, {}, modpath .. "/estruturas/"..param2.."/"..param3.."."..largura..".mts")
 
 				-- Estrutura serializada com sucesso
-				minetest.chat_send_all("Salvamento concluida.")
-				minetest.chat_send_all("Nome: "..param3)
-				minetest.chat_send_all("Largura: "..param4)
-				minetest.chat_send_all("Tipo: "..param2)
-				
-				
+				minetest.chat_send_player(name, sunos.S("Salvamento concluido"))
+				minetest.chat_send_player(name, sunos.S("Arquivo: @1", param3))
+				minetest.chat_send_player(name, sunos.S("Largura: @1", param4))
+				minetest.chat_send_player(name, sunos.S("Tipo: @1", param2))
+			else
+				minetest.chat_send_player(name, sunos.S("Largura invalida"))
+				return false
 			end
 		else
-			minetest.chat_send_all("Falha ao salvar estrutura.")
+			minetest.chat_send_player(name, sunos.S("Comando invalido"))
 			return false
 		end
 	end

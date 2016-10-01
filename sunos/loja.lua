@@ -41,7 +41,7 @@ sunos.construir_loja = function(pos, dist)
 	-- Verificar Vila e pegar dados (buscando por um fundamento proximo)
 	local pos_fund_prox = minetest.find_node_near(pos, 25, {"sunos:fundamento"})
 	if pos_fund_prox == nil then 
-		return "Nenhuma vila por perto"
+		return sunos.S("Nenhuma vila por perto")
 	end
 	
 	-- Pegar dados da vila encontrada
@@ -50,7 +50,7 @@ sunos.construir_loja = function(pos, dist)
 	
 	-- Verificar se ainda existe um banco de dados da vila
 	if sunos.bd:verif("vila_"..vila, "numero") == false then
-		return "Vila abandonada"
+		return sunos.S("Vila abandonada")
 	end
 	
 	-- Verificações de area
@@ -68,12 +68,12 @@ sunos.construir_loja = function(pos, dist)
 	if table.maxn(nodes_solo) < ((2*(dist+1))+1)^2
 		or table.maxn(nodes_acima_solo) < (((2*(dist+1))+1)^2)-1
 	then
-		return "O local precisa estar limpo, gramado em plano para a loja com "..largura.."x"..largura.." blocos da largura"
+		return sunos.S("O local precisa estar limpo, gramado e plano para uma estrutura com @1x@1 blocos da largura", largura)
 	end
 
 	-- Verificar se tem outra estrutura de suno interferindo na area da nova estrutura
 	if sunos.verif_fundamento(pos, dist) == false then
-		return "Muito perto de uma estrutura de sunos. Afaste um pouco."
+		return sunos.S("Muito perto de outra estrutura dos Sunos (afaste um pouco)")
 	end
 	
 	-- Criar loja
@@ -100,12 +100,12 @@ sunos.construir_loja = function(pos, dist)
 	-- Salva dados da estrutura no bau dela
 	for _,pos_bau in ipairs(baus) do
 		local meta = minetest.get_meta(pos_bau)
-		meta:set_string("infotext", "Bau de Venda dos Sunos")
+		meta:set_string("infotext", sunos.S("Bau de Venda dos Sunos"))
 		meta:set_string("formspec", "size[9,9]"
 			..default.gui_bg_img
 			.."image[0,0;3,3;sunos.png]"
-			.."label[3,0;Bau de Venda dos Sunos]"
-			.."label[3,1;Troque seus itens por Frutos]"
+			.."label[3,0;"..sunos.S("Bau de Venda dos Sunos").."]"
+			.."label[3,1;"..sunos.S("Troque alguns itens aqui").."]"
 			-- Botoes de trocas
 			.."item_image_button[0,3;3,3;default:tree;trocar_madeira;2]"
 			.."item_image_button[0,6;3,3;default:stonebrick;trocar_pedra;2]"
@@ -138,7 +138,7 @@ end
 
 -- Bau de venda simples
 minetest.register_node("sunos:bau_loja", {
-	description = "Bau de Venda dos Sunos",
+	description = sunos.S("Bau de Venda dos Sunos"),
 	tiles = {"default_chest_top.png^sunos_bau_topo.png", "default_chest_top.png", "default_chest_side.png^sunos_bau_lado.png",
 		"default_chest_side.png^sunos_bau_lado.png", "default_chest_side.png^sunos_bau_lado.png", "default_chest_lock.png^sunos_bau_frente.png"},
 	paramtype2 = "facedir",
@@ -156,44 +156,44 @@ minetest.register_node("sunos:bau_loja", {
 		if fields.trocar_madeira then
 			-- Tenta trocar
 			if tror.trocar_plus(sender, {"default:tree"}, {"default:apple 2"}) == false then
-				return minetest.chat_send_player(sender:get_player_name(), "Precisa dos itens exigidos para trocar")
+				return minetest.chat_send_player(sender:get_player_name(), sunos.S("Precisa do item para trocar"))
 			else
-				return minetest.chat_send_player(sender:get_player_name(), "Troca feita")
+				return minetest.chat_send_player(sender:get_player_name(), sunos.s("Troca feita"))
 			end
 		elseif fields.trocar_pedra then
 			-- Tenta trocar
 			if tror.trocar_plus(sender, {"default:stonebrick"}, {"default:apple 2"}) == false then
-				return minetest.chat_send_player(sender:get_player_name(), "Precisa dos itens exigidos para trocar")
+				return minetest.chat_send_player(sender:get_player_name(), sunos.S("Precisa do item para trocar"))
 			else
-				return minetest.chat_send_player(sender:get_player_name(), "Troca feita")
+				return minetest.chat_send_player(sender:get_player_name(), sunos.s("Troca feita"))
 			end
 		elseif fields.trocar_ouro then
 			-- Tenta trocar
 			if tror.trocar_plus(sender, {"default:gold_ingot"}, {"default:apple 10"}) == false then
-				return minetest.chat_send_player(sender:get_player_name(), "Precisa dos itens exigidos para trocar")
+				return minetest.chat_send_player(sender:get_player_name(), sunos.S("Precisa do item para trocar"))
 			else
-				return minetest.chat_send_player(sender:get_player_name(), "Troca feita")
+				return minetest.chat_send_player(sender:get_player_name(), sunos.s("Troca feita"))
 			end
 		elseif fields.trocar_ferro then
 			-- Tenta trocar
 			if tror.trocar_plus(sender, {"default:steel_ingot"}, {"default:apple 6"}) == false then
-				return minetest.chat_send_player(sender:get_player_name(), "Precisa dos itens exigidos para trocar")
+				return minetest.chat_send_player(sender:get_player_name(), sunos.S("Precisa do item para trocar"))
 			else
-				return minetest.chat_send_player(sender:get_player_name(), "Troca feita")
+				return minetest.chat_send_player(sender:get_player_name(), sunos.s("Troca feita"))
 			end
 		elseif fields.trocar_carvao then
 			-- Tenta trocar
 			if tror.trocar_plus(sender, {"default:coal_lump"}, {"default:apple 1"}) == false then
-				return minetest.chat_send_player(sender:get_player_name(), "Precisa dos itens exigidos para trocar")
+				return minetest.chat_send_player(sender:get_player_name(), sunos.S("Precisa do item para trocar"))
 			else
-				return minetest.chat_send_player(sender:get_player_name(), "Troca feita")
+				return minetest.chat_send_player(sender:get_player_name(), sunos.s("Troca feita"))
 			end
 		elseif fields.trocar_vidro then
 			-- Tenta trocar
 			if tror.trocar_plus(sender, {"default:glass"}, {"default:apple 10"}) == false then
-				return minetest.chat_send_player(sender:get_player_name(), "Precisa dos itens exigidos para trocar")
+				return minetest.chat_send_player(sender:get_player_name(), sunos.S("Precisa do item para trocar"))
 			else
-				return minetest.chat_send_player(sender:get_player_name(), "Troca feita")
+				return minetest.chat_send_player(sender:get_player_name(), sunos.s("Troca feita"))
 			end
 		end
 	end,
@@ -201,7 +201,7 @@ minetest.register_node("sunos:bau_loja", {
 
 -- Fundamento de loja
 minetest.register_node("sunos:fundamento_loja", {
-	description = "Fundamento Suno de Loja",
+	description = sunos.S("Fundamento de Loja dos Sunos"),
 	tiles = {"default_tree_top.png^sunos_fundamento.png", "default_tree_top.png", "default_tree.png"},
 	paramtype2 = "facedir",
 	is_ground_content = false,
@@ -216,7 +216,7 @@ minetest.register_node("sunos:fundamento_loja", {
 		if r == true then
 			
 			-- Retorna mensagem de montagem concluida
-			minetest.chat_send_player(placer:get_player_name(), "Loja construida.")
+			minetest.chat_send_player(placer:get_player_name(), sunos.S("Loja construida"))
 			itemstack:take_item()
 			return itemstack
 			

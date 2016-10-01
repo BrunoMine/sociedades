@@ -37,7 +37,7 @@ local avisar = function(player, texto)
 	minetest.show_formspec(player:get_player_name(), "sunos:npc", "size[12,1]"
 		..default.gui_bg
 		..default.gui_bg_img
-		.."label[0.5,0;Aviso \n"..texto.."]")
+		.."label[0.5,0;"..sunos.S("Aviso").." \n"..texto.."]")
 	return true
 end
 
@@ -60,17 +60,17 @@ sunos.acessar_npc = function(ent, player, fields)
 			local formspec = "size[6,3]"
 				..default.gui_bg
 				..default.gui_bg_img
-				.."label[0,0;Oi. Ajude essa vila a \nmontar uma Casa Comunal]"
+				.."label[0,0;"..sunos.S("Oi. Ajude essa vila a \nmontar uma Casa Comunal").."]"
 				.."item_image_button[0,1;1,1;default:tree 20;item1;]" -- Item 1
 				.."item_image_button[1,1;1,1;default:cobble 30;item1;]" -- Item 2
 				.."item_image_button[2,1;1,1;wool:yellow 10;item1;]" -- Item 3
 				.."item_image_button[5,1;1,1;sunos:fundamento_casa_comunal;fundamento;]" -- Fundamento de Casa Comunal
-				.."button_exit[0,2;6,1;trocar;Trocar por Fundamento]"
+				.."button_exit[0,2;6,1;trocar;"..sunos.S("Trocar por Fundamento").."]"
 			return minetest.show_formspec(player:get_player_name(), "sunos:npc", formspec)
 		end
 		
 		-- Avisa para ir ate a casa comunal
-		return minetest.chat_send_player(player:get_player_name(), "Nenhuma atividade disponivel.")
+		return minetest.chat_send_player(player:get_player_name(), sunos.S("Nenhuma atividade disponivel"))
 	
 	-- NPC da casa Comunal
 	elseif ent.name == "sunos:npc_casa_comunal" then
@@ -80,7 +80,7 @@ sunos.acessar_npc = function(ent, player, fields)
 		
 		-- Verifica se existe casa comunal na vila
 		if sunos.bd:verif("vila_"..ent.vila, "casa_comunal") == false then
-			return minetest.chat_send_player(player:get_player_name(), "Nenhuma Casa Comunal ativa nessa vila.")
+			return minetest.chat_send_player(player:get_player_name(), sunos.S("Nenhuma Casa Comunal nessa vila"))
 		end
 		
 		-- Coletar dados da vila
@@ -91,8 +91,8 @@ sunos.acessar_npc = function(ent, player, fields)
 			..default.gui_bg
 			..default.gui_bg_img
 			.."image[0,0;3,3;sunos.png]"
-			.."label[3,0;Bem vindo a Casa Comunal]"
-			.."label[3,0.5;Habitantes: "..habitantes.."]"
+			.."label[3,0;"..sunos.S("Bem vindo a Casa Comunal").."]"
+			.."label[3,0.5;"..sunos.S("Habitantes atuais: @1", habitantes)"..]"
 			.."textlist[0,3;4.8,5.3;menu;"..string_menu_casa_comunal.."]"
 			
 		-- Painel do item escolhido
@@ -111,16 +111,16 @@ sunos.acessar_npc = function(ent, player, fields)
 			formspec = formspec .."label[5,3;"..titulo.."]"
 			
 			-- Botao de trocar
-			formspec = formspec .. "item_image_button[5,3.5;2,2;"..dados.item_add..";trocar;Trocar]"
+			formspec = formspec .. "item_image_button[5,3.5;2,2;"..dados.item_add..";trocar;"..sunos.S("Trocar").."]"
 			
 			-- Texto descritivo
 			formspec = formspec .. "textarea[7.2,3.5;5.1,2.25;desc;;"..dados.desc.."]"
 			
 			-- Requisitos
-			formspec = formspec .."label[5,5.5;Requisitos]"
+			formspec = formspec .."label[5,5.5;"..sunos.S("Requisitos").."]"
 			
 			-- População minima
-			formspec = formspec .."label[5,6;Habitantes na vila: "..dados.pop.."]"
+			formspec = formspec .."label[5,6;"..sunos.S("Habitantes: @1", dados.pop).."]"
 			
 			-- Organizando formspec dos itens
 			for n,item in pairs(dados.item_rem) do
@@ -156,7 +156,7 @@ sunos.acessar_npc = function(ent, player, fields)
 			end
 			
 		else
-			formspec = formspec .."label[6,5;Escolha algo da lista]"
+			formspec = formspec .."label[6,5;"..sunos.S("Escolha algo da lista").."]"
 		end
 		
 		return minetest.show_formspec(player:get_player_name(), "sunos:npc_casa_comunal", formspec)
@@ -180,9 +180,11 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 				{"sunos:fundamento_casa_comunal"}
 			) == false 
 			then
-				return minetest.chat_send_player(player:get_player_name(), "Precisa conseguir os itens para montar um fundamento de Casa Comunal")
+				return minetest.chat_send_player(player:get_player_name(), sunos.S("Faltou itens para trocar pelo fundamento de Casa Comunal"))
 			else
-				return minetest.chat_send_player(player:get_player_name(), "Recebeste um Fundamento de Casa Comunal. Coloque em um local adequado para que seja construida")
+				minetest.chat_send_player(player:get_player_name(), sunos.S("Recebeste um Fundamento de Casa Comunal"))
+				minetest.chat_send_player(player:get_player_name(), sunos.S("Coloque em um local adequado para que seja construida"))
+				return
 			end
 		end
 	end
@@ -208,14 +210,14 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 			sunos.atualizar_bd_vila(ent.vila)
 			local pop_atual = sunos.bd:pegar("vila_"..ent.vila, "pop")
 			if pop_atual == nil or pop_atual < dados.pop then
-				return avisar(player, "A vila precisa de mais habitantes para isso")
+				return avisar(player, sunos.S("A vila precisa de mais habitantes para isso"))
 			end   
 			
 			-- Tenta trocar
 			if tror.trocar_plus(player, dados.item_rem, {dados.item_add}) == false then
-				return avisar(player, "Precisa dos itens exigidos para a trocar por "..titulo)
+				return avisar(player, sunos.S("Precisa dos itens exigidos para a trocar por \n@1", titulo))
 			else
-				return avisar(player, "Recebeste um "..titulo)
+				return avisar(player, sunos.S("Recebeste um @1", titulo))
 			end
 		end
 	end

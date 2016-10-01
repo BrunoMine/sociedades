@@ -20,10 +20,11 @@ local modpath = minetest.get_modpath("sunos")
 		^ string de erro caso algo de errado
 	Argumentos:
 		<pos> é a coordenada do fundamento da estrutura
-		<vila> é o numero da vila a qual a casa pertence
 		<dist> distancia centro a borda da nova estrutura
+		<vila> OPCIONAL | é o numero da vila a qual a casa pertence
+		<force_area> OPCIONAL | true para ignorar verificadores de area
   ]]
-sunos.construir_casa_comum = function(pos, dist)
+sunos.construir_casa_comum = function(pos, dist, vila, force_area)
 	-- Validar argumentos de entrada
 	if pos == nil then
 		minetest.log("error", "[Sunos] Tabela pos nula (sunos.construir_casa_comum)")
@@ -37,42 +38,46 @@ sunos.construir_casa_comum = function(pos, dist)
 	-- Variaveis auxiliares
 	local largura = (dist*2)+1
 	
-	-- Verificar Vila e pegar dados (buscando por um fundamento proximo)
-	local pos_fund_prox = minetest.find_node_near(pos, 25, {"sunos:fundamento"})
-	if pos_fund_prox == nil then 
-		return "Nenhuma vila por perto"
-	end
+	-- Buscar uma vila por perto
+	if not vila then
+		local pos_fund_prox = minetest.find_node_near(pos, 25, {"sunos:fundamento"})
+		if pos_fund_prox == nil then 
+			return "Nenhuma vila por perto"
+		end
 	
-	-- Pegar dados da vila encontrada
-	local meta_fund_prox = minetest.get_meta(pos_fund_prox)
-	local vila = meta_fund_prox:get_string("vila")
+		-- Pegar dados da vila encontrada
+		local meta_fund_prox = minetest.get_meta(pos_fund_prox)
+		vila = meta_fund_prox:get_string("vila")
 	
-	-- Verificar se ainda existe um banco de dados da vila
-	if sunos.bd:verif("vila_"..vila, "numero") == false then
-		return "Vila abandonada"
+		-- Verificar se ainda existe um banco de dados da vila
+		if sunos.bd:verif("vila_"..vila, "numero") == false then
+			return "Vila abandonada"
+		end
 	end
 	
 	-- Verificações de area
-	-- Verificar se o local esta limpo, gramado e plano (contando o entorno da estrutura)
-	local nodes_solo = minetest.find_nodes_in_area(
-		{x=pos.x-dist-1, y=pos.y, z=pos.z-dist-1}, 
-		{x=pos.x+dist+1, y=pos.y, z=pos.z+dist+1}, 
-		{"default:dirt_with_grass", "default:dirt"}
-	)
-	local nodes_acima_solo = minetest.find_nodes_in_area(
-		{x=pos.x-dist-1, y=pos.y+1, z=pos.z-dist-1}, 
-		{x=pos.x+dist+1, y=pos.y+1, z=pos.z+dist+1}, 
-		{"air"}
-	)
-	if table.maxn(nodes_solo) < ((2*(dist+1))+1)^2
-		or table.maxn(nodes_acima_solo) < (((2*(dist+1))+1)^2)-1
-	then
-		return "O local precisa estar limpo, gramado em plano para a casa com "..largura.."x"..largura.." blocos da largura"
-	end
+	if force_area ~= true then
+		-- Verificar se o local esta limpo, gramado e plano (contando o entorno da estrutura)
+		local nodes_solo = minetest.find_nodes_in_area(
+			{x=pos.x-dist-1, y=pos.y, z=pos.z-dist-1}, 
+			{x=pos.x+dist+1, y=pos.y, z=pos.z+dist+1}, 
+			{"default:dirt_with_grass", "default:dirt"}
+		)
+		local nodes_acima_solo = minetest.find_nodes_in_area(
+			{x=pos.x-dist-1, y=pos.y+1, z=pos.z-dist-1}, 
+			{x=pos.x+dist+1, y=pos.y+1, z=pos.z+dist+1}, 
+			{"air"}
+		)
+		if table.maxn(nodes_solo) < ((2*(dist+1))+1)^2
+			or table.maxn(nodes_acima_solo) < (((2*(dist+1))+1)^2)-1
+		then
+			return "O local precisa estar limpo, gramado em plano para a casa com "..largura.."x"..largura.." blocos da largura"
+		end
 
-	-- Verificar se tem outra estrutura de suno interferindo na area da nova estrutura
-	if sunos.verif_fundamento(pos, dist) == false then
-		return "Muito perto de uma estrutura de sunos. Afaste um pouco."
+		-- Verificar se tem outra estrutura de suno interferindo na area da nova estrutura
+		if sunos.verif_fundamento(pos, dist) == false then
+			return "Muito perto de uma estrutura de sunos. Afaste um pouco."
+		end
 	end
 	
 	-- Criar casa

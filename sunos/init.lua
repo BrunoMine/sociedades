@@ -50,5 +50,6 @@ dofile(modpath.."/npc_casa_comunal.lua")
 dofile(modpath.."/gerenciador_de_vilas.lua")
 -- Estruturas adicionadas
 dofile(modpath.."/casa.lua")
+dofile(modpath.."/decor.lua")
 dofile(modpath.."/loja.lua")
 notificar("[OK]!")

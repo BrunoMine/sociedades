@@ -316,53 +316,17 @@ sunos.criar_vila = function(pos, vpos)
 			-- Troca o tipo para decor caso a largura seja 3
 			if largura == 3 then tipo = "decor" end
 			
-			sunos.montar_estrutura(dados.pos, dados.dist, tipo)
-			
-			-- Colocar o fundamento e salvar dados nele
-			minetest.set_node(dados.pos, {name="sunos:fundamento"})
-			local meta_fundamento = minetest.get_meta(dados.pos)
-			meta_fundamento:set_string("vila", vila) -- Numero da vila
-			meta_fundamento:set_string("tipo", tipo) -- Tipo da estrutura
-			meta_fundamento:set_string("estrutura", n) -- Numero da estrutura
-			meta_fundamento:set_string("dist", dados.dist) -- Distancia centro a borda da estrutura
-			sunos.contabilizar_blocos_estruturais(dados.pos) -- Armazena quantidade de nodes estruturais
-			
-			-- Verifica se tem baus na estrutura montada
-			local baus = minetest.find_nodes_in_area(
-				{x=dados.pos.x-dados.dist, y=dados.pos.y, z=dados.pos.z-dados.dist}, 
-				{x=dados.pos.x+dados.dist, y=dados.pos.y+14, z=dados.pos.z+dados.dist}, 
-				{"sunos:bau"}
-			)
-			-- Salva dados da estrutura no bau dela
-			for _,pos_bau in ipairs(baus) do
-				local meta = minetest.get_meta(pos_bau)
-				meta:set_string("vila", vila) -- Numero da vila
-				meta:set_string("estrutura", n) -- Numero da estrutura
-				meta:set_string("pos_fundamento", minetest.serialize(dados.pos)) -- Pos do fundamento
-				meta:set_string("infotext", "Bau de Suno")
-			end
-			
-			-- Registros a serem salvos
-			local registros = {
-				numero = n,
-				tipo = tipo,
-				estrutura = {
-					dist = dados.dist,
-					largura = largura,
-					pos = dados.pos
-				}
-			}
-			
-			-- Define população para casas
 			if tipo == "casa" then
-				registros.pop = sunos.tb_pop_casa[tostring(largura)] or 1
+				
+				-- Montar casa
+				sunos.construir_casa_comum(dados.pos, dados.dist, vila, true)
+				
+			elseif tipo == "decor" then
+				
+				-- Montar estrutura decorativa
+				sunos.construir_decor(dados.pos, dados.dist, vila, true)
+				
 			end
-			
-			-- Salva no banco de dados
-			sunos.bd:salvar("vila_"..vila, tipo.."_"..n, registros)
-			
-			-- Atualiza o banco de dados da vila
-			sunos.atualizar_bd_vila(vila)
 		end
 	end
 end

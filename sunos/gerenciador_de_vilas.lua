@@ -31,11 +31,11 @@ minetest.register_abm({
 			return
 		end
 		
-		-- Verificação de caasa comunal
+		-- Verificação de casa comunal
 		if tipo == "casa_comunal" then
 			local status = meta:get_string("status")
 			
-			
+			-- Caso esteja ativa
 			if status == "ativa" then
 				if sunos.verificar_blocos_estruturais(pos) == false then -- Verificar Estrutura danificada
 				
@@ -47,7 +47,7 @@ minetest.register_abm({
 					meta:set_string("tempo", 0) -- Tempo de decadencia (em segundos)
 				end
 			
-			-- Casa comunal em decadencia
+			-- Caso esteja em decadencia
 			else
 				local tempo = tonumber(meta:get_string("tempo")) + tempo_verif_estruturas
 				
@@ -69,36 +69,25 @@ minetest.register_abm({
 				end
 			end
 			
-		-- Verificação de casa e estrutura decorativa
+		-- Verificação de estrutura comum
 		elseif tipo == "casa" or tipo == "decor" or tipo == "loja" then
 			
-			if sunos.verificar_blocos_estruturais(pos) == false -- Verificar Estrutura danificada
-				-- or sunos.verificar_estrutura(pos, tonumber(meta:get_string("dist"))) == false -- [CANCELADO]
-			then
+			if sunos.verificar_blocos_estruturais(pos) == false then -- Verificar Estrutura danificada
 				
 				-- Montar ruinas no local da antiga casa
 				sunos.montar_ruinas(pos, dist)
 				
-				-- Remover do bando de dados
-				if tipo == "casa" then
-					sunos.bd:remover("vila_"..meta:get_string("vila"), "casa_"..meta:get_string("estrutura"))
-					-- Trocar bloco de fundamento por madeira
-					minetest.set_node(pos, {name="default:tree"})
-				elseif tipo == "loja" then
-					sunos.bd:remover("vila_"..meta:get_string("vila"), "loja_"..meta:get_string("estrutura"))
-					-- Trocar bloco de fundamento por madeira
-					minetest.set_node(pos, {name="default:tree"})
-				elseif tipo == "casa_comunal" then
-					meta:set_string("status", "destruida")
-				elseif tipo == "decor" then
-					sunos.bd:remover("vila_"..meta:get_string("vila"), "decor_"..meta:get_string("estrutura"))
-					-- Trocar bloco de fundamento por madeira
-					minetest.set_node(pos, {name="default:tree"})
-				end
+				-- Exclui o arquivo da estrutura do banco de dados
+				sunos.bd:remover("vila_"..meta:get_string("vila"), tipo.."_"..meta:get_string("estrutura"))
+				
+				-- Trocar bloco de fundamento por madeira
+				minetest.set_node(pos, {name="default:tree"})
 				
 				-- Atualizar banco de dados da vila
 				sunos.atualizar_bd_vila(vila)
 			end
+			
+		-- Caso nao seja de nenhum tipo encontrado
 		else
 			minetest.set_node(pos, {name="default:tree"})
 		end

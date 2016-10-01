@@ -82,11 +82,12 @@ os parâmetros culturais estabelecidos para essa sociedade.
 
 ### Casas
 
-Podem ter largura de 5, 7 ou 9 blocos de largura.
-Devem ficar na pasta `casa` de estruturas.
+Podem ter 5, 7 ou 9 blocos de largura.
 
 ### Estruturas decorativas
 
-Podem ter largura de 3, 5, 7 ou 9 blocos de largura.
-Devem ficar na pasta `decor` de estruturas.
+Podem ter 3, 5, 7 ou 9 blocos de largura.
 
+### Lojas
+
+Podem ter 5 blocos de largura.

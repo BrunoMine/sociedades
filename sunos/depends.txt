@@ -3,6 +3,7 @@ memor
 vessels
 flowers
 xpanes
+stairs
 doors
 mobs
 tror

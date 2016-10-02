@@ -11,22 +11,12 @@ só utilizam materiais simples de encontrar
 
 ==================================================================
 
-## Licenças 
+# Licenças 
 
 ### Texturas CC BY-SA 3.0
 
-Autores dos arquivos de mídia
------------------------------
-
-BrunoMine:
-  textures/sunos.png
-  textures/sunos_npc.png
-  textures/sunos_npc2.png
-  textures/sunos_bau_frente.png
-  textures/sunos_bau_lado.png
-  textures/sunos_bau_topo.png
-  textures/sunos_kit_reparador.png
-  textures/sunos_fundamento.png
+As atribuições de autoria das texturas estão descritos no 
+arquivo `ATRIBUICAO.txt` no diretório de texturas.
   
 ### Software LGPL v3
 
@@ -42,6 +32,12 @@ Você deve ter recebido uma cópia da Licença Pública
 Geral Menor GNU junto com este programa, 
 se não, veja <http://www.gnu.org/licenses/>.
 
+### Estruturas
+
+As estruturas salvas no formato esquemático de minetest possuem 
+sua devida atribuição descrita no arquivo `CATALOGO.md` que acompanha 
+os arquivos de mídia correspondentes.
+
 ## Comandos
 
 /sunos <func> | Opera algumas funcionalidades
@@ -51,16 +47,15 @@ funcionalidades:
 - Salvar uma estrutura: `s <tipo> <nome> <largura>`
 
 ## Criar estruturas
-Todas as estruturas tem largura e comprimento iguais e altura
-maxima de 15.
-As estruturas são salvas no modo schematic do minetest dentro 
-a pasta `estruturas` dentro da pasta de sua desiginação 
-(casa, decor e etc).
-O nome do arquivo deve seguir a regra:
-`<nome>.<largura>.mts`
-Todas as estruturas devem ser mencionadas no arquivo CATALOGO.md 
-de documentação de estruturas dentro da pasta do tipo referente às 
-estruturas no seguinte formato:
+Todas as estruturas desse mod devem obedecer aos seguintes parametros:
+- Largura e comprimento (vetores x e z) iguais
+- Altura (vetor y) de 15 nodes
+- Largura de 3, 5, 7, 9, 11 ou 13
+- Salvas e armazenadas no formato esquemático de minetest
+- Nome do arquivo deve seguir o formato `<nome>.<largura>.mts`
+- Descrição feita no arquivo `CATALOGO.md`
+
+Formato para arquivos `CATALOGO.md`:
 
 ```md
 	Estruturas:
@@ -76,18 +71,3 @@ estruturas no seguinte formato:
 		<ID de mais outro node>
 	Descrição: <OPCIONAL para descrever como funciona a estrutura>
 ```
-
-Ao montar uma estrutura para os sunos, certifique-se de que esteja seguindo 
-os parâmetros culturais estabelecidos para essa sociedade.
-
-### Casas
-
-Podem ter 5, 7 ou 9 blocos de largura.
-
-### Estruturas decorativas
-
-Podem ter 3, 5, 7 ou 9 blocos de largura.
-
-### Lojas
-
-Podem ter 5 blocos de largura.

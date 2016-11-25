@@ -123,6 +123,9 @@ local verificar_bau_sunos = function(pos)
 	local meta = minetest.get_meta(pos)
 	local pos_fund = minetest.deserialize(meta:get_string("pos_fundamento"))
 	
+	-- Verifica se esse bau tem dados salvos
+	if not pos_fund then return end 
+	
 	-- Verificar se o fundamento ainda existe
 	local node_fund = minetest.get_node(pos_fund)
 	if node_fund.name ~= "sunos:fundamento" then

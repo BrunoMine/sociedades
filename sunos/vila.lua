@@ -321,10 +321,6 @@ sunos.criar_vila = function(pos, vpos)
 				-- Montar casa
 				sunos.construir_casa_comum(dados.pos, dados.dist, vila, true)
 				
-				-- Recoloca itens reais (apartir dos itens de reposição)
-				sunos.decor_repo(dados.pos, dados.dist, sunos.tb_repo_casas[tostring(dados.dist)]())
-				
-				
 			elseif tipo == "decor" then
 				
 				-- Montar estrutura decorativa

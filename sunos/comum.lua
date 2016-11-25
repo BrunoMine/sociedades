@@ -13,10 +13,10 @@
 local modpath = minetest.get_modpath("sunos")
 
 -- Nodes de verificação para casas obstruidas
-local nodes_estruturais = {"default:wood", "default:cobble", "default:stonebrick", "group:stair", "farming:straw"}
+local nodes_estruturais = {"default:wood", "default:cobble", "default:stonebrick", "group:stair"}
 
 -- Nodes removidos na montagem de ruinas
-local nodes_rem_ruinas = {"sunos:bau", "sunos:bau_loja", "default:wood", "group:stair", "group:glass", "group:fence", "group:ladder", "group:flower", "group:vessel", "default:torch", "group:pane", "default:ladder_wood", "default:ladder_steel", "group:leaves", "group:wool", "group:door", "farming:straw", "group:sunos"}
+local nodes_rem_ruinas = {"sunos:bau", "sunos:bau_loja", "default:wood", "group:stair", "group:glass", "group:fence", "group:ladder", "group:flower", "group:vessel", "default:torch", "group:pane", "default:ladder_wood", "default:ladder_steel", "group:leaves", "group:wool", "group:door"}
 
 -- Pegar direcao oposta
 sunos.pegar_dir_oposta = function(dir)

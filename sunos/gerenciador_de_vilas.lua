@@ -16,7 +16,7 @@ local tempo_verif_estruturas = 5--60
 local tempo_decadencia = 10--300
 
 local verificar_fundamento = function(pos)
-
+	if not pos then return end
 	local meta = minetest.get_meta(pos)
 	local vila = meta:get_string("vila")
 	local tipo = meta:get_string("tipo")

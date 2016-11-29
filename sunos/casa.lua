@@ -15,6 +15,15 @@ local modpath = minetest.get_modpath("sunos")
 -- Itens simples decorativos para casas
 local decor_simples = {
 	"default:apple",
+	"flowers:rose",
+	"flowers:tulip",
+	"flowers:dandelion_yellow",
+	"flowers:geranium",
+	"flowers:viola",
+	"flowers:dandelion_white",
+	"flowers:mushroom_brown",
+	"vessels:glass_bottle",
+	"vessels:drinking_glass"
 }
 
 -- Construir casa de sunos

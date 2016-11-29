@@ -22,8 +22,10 @@ local verificar_fundamento = function(pos)
 	local tipo = meta:get_string("tipo")
 	local dist = meta:get_string("dist")
 	
+	if not dist then return end
+	
 	-- Verificar mapa carregado antes de verificar estruturas
-	if dist and sunos.verif_carregamento(pos, dist) == false then
+	if sunos.verif_carregamento(pos, tonumber(dist)) == false then
 		return
 	end
 	

@@ -18,7 +18,7 @@ sunos = {}
 	Quanto maior, mais raro (Minimo é 1).
 	The larger, more rare (Minimo is 1).
   ]]
-sunos.RARIDADE = 6
+sunos.RARIDADE = 1
 
 -- Notificador de Inicializador
 local notificar = function(msg)
@@ -42,6 +42,7 @@ dofile(modpath.."/estruturador.lua")
 dofile(modpath.."/vila.lua")
 dofile(modpath.."/mapgen.lua")
 dofile(modpath.."/nodes.lua")
+dofile(modpath.."/decor_repo.lua")
 dofile(modpath.."/craftitens.lua")
 dofile(modpath.."/comandos.lua")
 dofile(modpath.."/interface.lua")

@@ -17,7 +17,7 @@ local modpath = minetest.get_modpath("sunos")
 	Esse é o node que tem nas casas dos sunos
 ]]
 minetest.register_node("sunos:bau", {
-	description = "Bau dos Sunos",
+	description = sunos.S("Bau dos Sunos"),
 	tiles = {"default_chest_top.png^sunos_bau_topo.png", "default_chest_top.png", "default_chest_side.png^sunos_bau_lado.png",
 		"default_chest_side.png^sunos_bau_lado.png", "default_chest_side.png^sunos_bau_lado.png", "default_chest_lock.png^sunos_bau_frente.png"},
 	paramtype2 = "facedir",
@@ -28,7 +28,7 @@ minetest.register_node("sunos:bau", {
 	drop = "default:chest",
 	
 	-- Nao pode ser escavado/quebrado por jogadores
-	on_dig = function() end,
+	--on_dig = function() end,
 })
 
 -- Fundamento dos sunos
@@ -36,7 +36,7 @@ minetest.register_node("sunos:bau", {
 	Esse é o node de fundamento das estruturas dos sunos
 ]]
 minetest.register_node("sunos:fundamento", {
-	description = "Fundamento dos Sunos",
+	description = sunos.S("Fundamento dos Sunos"),
 	tiles = {"default_tree_top.png^sunos_fundamento.png", "default_tree_top.png", "default_tree.png"},
 	paramtype2 = "facedir",
 	is_ground_content = false,
@@ -75,7 +75,7 @@ minetest.register_node("sunos:fundamento", {
 							sunos.bd:salvar("vila_"..vila, "estruturas", n_estrutura)
 			
 							-- Retorna mensagem de montagem concluida
-							minetest.chat_send_player(player:get_player_name(), "Casa Comunal reconstruida.")
+							minetest.chat_send_player(player:get_player_name(), sunos.S("Casa Comunal reconstruida"))
 							itemstack:take_item()
 							return itemstack
 						else
@@ -83,10 +83,8 @@ minetest.register_node("sunos:fundamento", {
 							minetest.chat_send_player(player:get_player_name(), r)
 							return itemstack
 						end
-						itemstack:take_item()
-						minetest.chat_send_player(player:get_player_name(), "Casa Comunal restaurada")
 					else
-						minetest.chat_send_player(player:get_player_name(), "Casa Comunal em decadencia. Use o kit de reparo.")
+						minetest.chat_send_player(player:get_player_name(), sunos.S("Casa Comunal em decadencia. Use o Kit de Reparo"))
 					end
 				end
 			end
@@ -120,4 +118,72 @@ minetest.register_node("sunos:fundamento", {
 	
 	-- Impede explosão
 	on_blast = function() end,
+})
+
+-- Bancada dos sunos
+minetest.register_node("sunos:bancada", {
+	description = sunos.S("Bancada dos Sunos"),
+	tiles = {"default_wood.png", "default_wood.png", "default_wood.png^sunos_bancada_lado.png",
+		"default_wood.png^sunos_bancada_lado.png", "default_wood.png^sunos_bancada_lado.png", "default_wood.png^sunos_bancada_lado.png"},
+	paramtype2 = "facedir",
+	groups = {choppy = 2, oddly_breakable_by_hand = 2, sunos=1},
+	legacy_facedir_simple = true,
+	is_ground_content = false,
+	sounds = default.node_sound_wood_defaults(),
+	drawtype = "nodebox",
+	paramtype = "light",
+	node_box = {
+		type = "fixed",
+		fixed = {
+			{-0.5, -0.5, -0.5, -0.375, 0.375, -0.375}, -- Perna_1
+			{0.375, -0.5, -0.5, 0.5, 0.375, -0.375}, -- Perna_2
+			{-0.5, -0.5, 0.375, -0.375, 0.375, 0.5}, -- Perna_3
+			{0.375, -0.5, 0.375, 0.5, 0.375, 0.5}, -- Perna_4
+			{-0.5, 0.375, -0.5, 0.5, 0.5, 0.5}, -- Tampo
+			{-0.4375, -0.4375, -0.4375, 0.4375, 0.375, 0.4375}, -- Interior
+		}
+	},
+})
+
+-- Bancada de trabalho dos Sunos
+minetest.register_node("sunos:bancada_de_trabalho", {
+	description = sunos.S("Bancada de Trabalho dos Sunos"),
+	tiles = {"default_wood.png^sunos_bancada_trabalho_topo.png", "default_wood.png", "default_wood.png",
+		"default_wood.png", "default_wood.png", "default_wood.png"},
+	paramtype2 = "facedir",
+	paramtype = "light",
+	drawtype = "nodebox",
+		node_box = {
+		type = "fixed",
+		fixed = {
+			{0.375, -0.4375, -0.4375, 0.4375, 0.375, 0.4375}, -- Tampo_direito
+			{-0.4375, -0.4375, -0.4375, -0.375, 0.375, 0.4375}, -- Tampo_esquerdo
+			{-0.4375, -0.4375, 0.375, 0.4375, 0.375, 0.4375}, -- tampo_trazeiro
+			{0.3125, -0.5, 0.3125, 0.4375, 0.375, 0.4375}, -- Perna_1
+			{-0.4375, -0.5, 0.3125, -0.3125, 0.375, 0.4375}, -- Perna_2
+			{0.3125, -0.5, -0.4375, 0.4375, 0.375, -0.3125}, -- Perna_3
+			{-0.4375, -0.5, -0.4375, -0.3125, 0.375, -0.3125}, -- Perna_4
+			{-0.375, -0.4375, -0.375, 0.375, -0.375, 0.375}, -- Tampo_inferior
+			{-0.5, 0.375, -0.5, 0.5, 0.5, 0.5}, -- Tampo_superior
+		}
+	},
+	groups = {choppy=2,oddly_breakable_by_hand=2,sunos=1},
+	legacy_facedir_simple = true,
+	is_ground_content = false,
+	sounds = default.node_sound_wood_defaults(),
+	on_construct = function(pos)
+		local meta = minetest.get_meta(pos)
+		meta:set_string("formspec", "size[8,8.2]"..
+			default.gui_bg..
+			default.gui_bg_img..
+			default.gui_slots..
+			"label[1.75,0;Craftador]"..
+			"list[current_player;main;0,4.25;8,1;]"..
+			"list[current_player;main;0,5.5;8,3;8]"..
+			"list[current_player;craft;1.75,0.5;3,3;]"..
+			"image[4.85,1.45;1,1;gui_furnace_arrow_bg.png^[transformR270]"..
+			"list[current_player;craftpreview;5.75,1.5;1,1;]"..
+			default.get_hotbar_bg(0,4.25)
+		)
+	end,
 })

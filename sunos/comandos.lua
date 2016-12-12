@@ -15,12 +15,12 @@ local modpath = minetest.get_modpath("sunos")
 -- Comando de serializar estrutura
 minetest.register_chatcommand("sunos", {
 	privs = {server=true},
-	params = sunos.S("<funcao> [Salvar estrutura | s <tipo> <nome> <largura>]"),
+	params = sunos.S("<s ou c> <tipo> <nome> <largura> | Salvar(s) ou carrega(c) estrutura"),
 	description = sunos.S("Opera algumas funcionalidades do mod sunos"),
 	func = function(name,  param)		
 		local m = string.split(param, " ")
 		local param1, param2, param3, param4 = m[1], m[2], m[3], m[4]
-		if param1 == "s" and tonumber(param4) then
+		if (param1 == "s" or param1 == "c") and tonumber(param4) then
 			param4 = tonumber(param4)
 			if param4 == 3 or param4 == 5 or param4 == 7 or param4 == 9 or param4 == 11 or param4 == 13 then
 				
@@ -35,15 +35,24 @@ minetest.register_chatcommand("sunos", {
 				-- Coordenadas dos extremos
 				local p1 = pos
 				local p2 = {x=pos.x+largura-1, y=pos.y+15, z=pos.z+largura-1}
+				local arquivo = modpath .. "/estruturas/"..param2.."/"..param3.."."..largura..".mts"
 				
-				-- Serializando a estrutura
-				minetest.create_schematic(p1, p2, {}, modpath .. "/estruturas/"..param2.."/"..param3.."."..largura..".mts")
+				if param1 == "s" then
+					-- Serializando a estrutura
+					minetest.create_schematic(p1, p2, {}, arquivo)
 
-				-- Estrutura serializada com sucesso
-				minetest.chat_send_player(name, sunos.S("Salvamento concluido"))
-				minetest.chat_send_player(name, sunos.S("Arquivo: @1", param3))
-				minetest.chat_send_player(name, sunos.S("Largura: @1", param4))
-				minetest.chat_send_player(name, sunos.S("Tipo: @1", param2))
+					-- Estrutura serializada com sucesso
+					minetest.chat_send_player(name, sunos.S("Salvamento concluido"))
+					minetest.chat_send_player(name, sunos.S("Arquivo: @1", param3))
+					minetest.chat_send_player(name, sunos.S("Largura: @1", param4))
+					minetest.chat_send_player(name, sunos.S("Tipo: @1", param2))
+				else
+					-- Cria a estrutura
+					minetest.place_schematic(pos, arquivo, nil, nil, true)
+					minetest.chat_send_player(name, sunos.S("Estrutura montada"))
+					
+				end
+				return true
 			else
 				minetest.chat_send_player(name, sunos.S("Largura invalida"))
 				return false

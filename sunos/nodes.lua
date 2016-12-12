@@ -17,7 +17,7 @@ local modpath = minetest.get_modpath("sunos")
 	Esse é o node que tem nas casas dos sunos
 ]]
 minetest.register_node("sunos:bau", {
-	description = "Bau dos Sunos",
+	description = sunos.S("Bau dos Sunos"),
 	tiles = {"default_chest_top.png^sunos_bau_topo.png", "default_chest_top.png", "default_chest_side.png^sunos_bau_lado.png",
 		"default_chest_side.png^sunos_bau_lado.png", "default_chest_side.png^sunos_bau_lado.png", "default_chest_lock.png^sunos_bau_frente.png"},
 	paramtype2 = "facedir",
@@ -36,7 +36,7 @@ minetest.register_node("sunos:bau", {
 	Esse é o node de fundamento das estruturas dos sunos
 ]]
 minetest.register_node("sunos:fundamento", {
-	description = "Fundamento dos Sunos",
+	description = sunos.S("Fundamento dos Sunos"),
 	tiles = {"default_tree_top.png^sunos_fundamento.png", "default_tree_top.png", "default_tree.png"},
 	paramtype2 = "facedir",
 	is_ground_content = false,
@@ -75,7 +75,7 @@ minetest.register_node("sunos:fundamento", {
 							sunos.bd:salvar("vila_"..vila, "estruturas", n_estrutura)
 			
 							-- Retorna mensagem de montagem concluida
-							minetest.chat_send_player(player:get_player_name(), "Casa Comunal reconstruida.")
+							minetest.chat_send_player(player:get_player_name(), sunos.S("Casa Comunal reconstruida"))
 							itemstack:take_item()
 							return itemstack
 						else
@@ -83,10 +83,8 @@ minetest.register_node("sunos:fundamento", {
 							minetest.chat_send_player(player:get_player_name(), r)
 							return itemstack
 						end
-						itemstack:take_item()
-						minetest.chat_send_player(player:get_player_name(), "Casa Comunal restaurada")
 					else
-						minetest.chat_send_player(player:get_player_name(), "Casa Comunal em decadencia. Use o kit de reparo.")
+						minetest.chat_send_player(player:get_player_name(), sunos.S("Casa Comunal em decadencia. Use o Kit de Reparo"))
 					end
 				end
 			end
@@ -124,7 +122,7 @@ minetest.register_node("sunos:fundamento", {
 
 -- Bancada dos sunos
 minetest.register_node("sunos:bancada", {
-	description = "Bancada dos Sunos",
+	description = sunos.S("Bancada dos Sunos"),
 	tiles = {"default_wood.png", "default_wood.png", "default_wood.png^sunos_bancada_lado.png",
 		"default_wood.png^sunos_bancada_lado.png", "default_wood.png^sunos_bancada_lado.png", "default_wood.png^sunos_bancada_lado.png"},
 	paramtype2 = "facedir",
@@ -149,7 +147,7 @@ minetest.register_node("sunos:bancada", {
 
 -- Bancada de trabalho dos Sunos
 minetest.register_node("sunos:bancada_de_trabalho", {
-	description = "Bancada de trabalho dos Sunos",
+	description = sunos.S("Bancada de Trabalho dos Sunos"),
 	tiles = {"default_wood.png^sunos_bancada_trabalho_topo.png", "default_wood.png", "default_wood.png",
 		"default_wood.png", "default_wood.png", "default_wood.png"},
 	paramtype2 = "facedir",

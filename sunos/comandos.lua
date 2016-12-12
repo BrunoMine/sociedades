@@ -49,7 +49,7 @@ minetest.register_chatcommand("sunos", {
 				else
 					-- Cria a estrutura
 					minetest.place_schematic(pos, arquivo, nil, nil, true)
-					minetest.chat_send_player(name, "Estrutura carregada")
+					minetest.chat_send_player(name, sunos.S("Estrutura montada"))
 					
 				end
 				return true

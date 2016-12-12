@@ -12,6 +12,27 @@
 -- Caminho do diretório do mod
 local modpath = minetest.get_modpath("sunos")
 
+
+local set_bau = function(pos, vila, n_estrutura, dist)
+
+	-- Verifica se tem baus na estrutura montada
+	local baus = minetest.find_nodes_in_area(
+		{x=pos.x-dist, y=pos.y, z=pos.z-dist}, 
+		{x=pos.x+dist, y=pos.y+14, z=pos.z+dist}, 
+		{"sunos:bau"}
+	)
+	-- Salva dados da estrutura no bau dela
+	for _,pos_bau in ipairs(baus) do
+		local meta = minetest.get_meta(pos_bau)
+		meta:set_string("vila", vila) -- Numero da vila
+		meta:set_string("estrutura", n_estrutura) -- Numero da estrutura
+		meta:set_string("pos_fundamento", minetest.serialize(pos)) -- Pos do fundamento
+		meta:set_string("infotext", sunos.S("Bau dos Sunos"))
+	end
+
+
+end
+
 -- Itens simples decorativos para casas
 local decor_simples = {
 	"default:apple",
@@ -115,20 +136,8 @@ sunos.construir_casa_comum = function(pos, dist, vila, force_area, itens_repo)
 	meta:set_string("dist", dist) -- Distancia centro a borda da estrutura
 	sunos.contabilizar_blocos_estruturais(pos) -- Armazena quantidade de nodes estruturais
 	
-	-- Verifica se tem baus na estrutura montada
-	local baus = minetest.find_nodes_in_area(
-		{x=pos.x-dist, y=pos.y, z=pos.z-dist}, 
-		{x=pos.x+dist, y=pos.y+14, z=pos.z+dist}, 
-		{"sunos:bau"}
-	)
-	-- Salva dados da estrutura no bau dela
-	for _,pos_bau in ipairs(baus) do
-		local meta = minetest.get_meta(pos_bau)
-		meta:set_string("vila", vila) -- Numero da vila
-		meta:set_string("estrutura", n_estrutura) -- Numero da estrutura
-		meta:set_string("pos_fundamento", minetest.serialize(pos)) -- Pos do fundamento
-		meta:set_string("infotext", sunos.S("Bau dos Sunos"))
-	end
+	-- Configurar bau de casas
+	minetest.after(1, set_bau, {x=pos.x,y=pos.y,z=pos.z}, vila, n_estrutura, dist)
 	
 	-- Registros a serem salvos
 	local registros = {

@@ -124,7 +124,9 @@ local verificar_bau_sunos = function(pos)
 	local pos_fund = minetest.deserialize(meta:get_string("pos_fundamento"))
 	
 	-- Verifica se esse bau tem dados salvos
-	if not pos_fund then return end 
+	if not pos_fund then 
+		return 
+	end 
 	
 	-- Verificar se o fundamento ainda existe
 	local node_fund = minetest.get_node(pos_fund)
@@ -137,7 +139,9 @@ local verificar_bau_sunos = function(pos)
 	local r = false
 	
 	local num = meta:get_string("numero")
-	if num == nil then return end -- Cancela toda a operação caso nao tenha numero de casa
+	if num == nil then 
+		return 
+	end -- Cancela toda a operação caso nao tenha numero de casa
 	for  _,obj in ipairs(minetest.get_objects_inside_radius(pos, dist_verif_npc)) do
 		local ent = obj:get_luaentity() or {}
 		if ent 

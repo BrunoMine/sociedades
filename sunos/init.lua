@@ -20,8 +20,6 @@ sunos = {}
   ]]
 sunos.RARIDADE = tonumber(minetest.setting_get("sunos_raridade") or 3)
 
-minetest.after(4, minetest.chat_send_all, "sunos_raridade = "..dump(minetest.setting_get("sunos_raridade")))
-minetest.after(4, minetest.chat_send_all, "sunos.RARIDADE = "..dump(sunos.RARIDADE))
 
 -- Notificador de Inicializador
 local notificar = function(msg)
@@ -44,8 +42,12 @@ dofile(modpath.."/comum.lua")
 dofile(modpath.."/estruturador.lua")
 dofile(modpath.."/vila.lua")
 dofile(modpath.."/mapgen.lua")
-dofile(modpath.."/nodes/nodes.lua")
+-- Nodes
+dofile(modpath.."/nodes/fundamento.lua")
+dofile(modpath.."/nodes/bau.lua")
 dofile(modpath.."/nodes/decor_repo.lua")
+dofile(modpath.."/nodes/bancada.lua")
+dofile(modpath.."/nodes/bancada_de_trabalho.lua")
 dofile(modpath.."/craftitens.lua")
 dofile(modpath.."/comandos.lua")
 dofile(modpath.."/interface.lua")

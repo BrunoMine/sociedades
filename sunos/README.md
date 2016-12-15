@@ -46,6 +46,11 @@ funcionalidades:
 
 - Salvar uma estrutura: `s <tipo> <nome> <largura>`
 
+## Configurações
+
+Essas configurações são colocadas em minetest.conf
+- `sunos_raridade = 3` (quanto maior, mais raro)
+
 ## Criar estruturas
 Todas as estruturas desse mod devem obedecer aos seguintes parametros:
 - Largura e comprimento (vetores x e z) iguais

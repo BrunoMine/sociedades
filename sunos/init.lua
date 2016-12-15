@@ -18,7 +18,10 @@ sunos = {}
 	Quanto maior, mais raro (Minimo é 1).
 	The larger, more rare (Minimo is 1).
   ]]
-sunos.RARIDADE = 1
+sunos.RARIDADE = tonumber(minetest.setting_get("sunos_raridade") or 3)
+
+minetest.after(4, minetest.chat_send_all, "sunos_raridade = "..dump(minetest.setting_get("sunos_raridade")))
+minetest.after(4, minetest.chat_send_all, "sunos.RARIDADE = "..dump(sunos.RARIDADE))
 
 -- Notificador de Inicializador
 local notificar = function(msg)
@@ -41,17 +44,17 @@ dofile(modpath.."/comum.lua")
 dofile(modpath.."/estruturador.lua")
 dofile(modpath.."/vila.lua")
 dofile(modpath.."/mapgen.lua")
-dofile(modpath.."/nodes.lua")
-dofile(modpath.."/decor_repo.lua")
+dofile(modpath.."/nodes/nodes.lua")
+dofile(modpath.."/nodes/decor_repo.lua")
 dofile(modpath.."/craftitens.lua")
 dofile(modpath.."/comandos.lua")
 dofile(modpath.."/interface.lua")
-dofile(modpath.."/npc.lua")
-dofile(modpath.."/casa_comunal.lua")
-dofile(modpath.."/npc_casa_comunal.lua")
+dofile(modpath.."/npc/npc.lua")
+dofile(modpath.."/script_estruturas/casa_comunal.lua")
+dofile(modpath.."/npc/npc_casa_comunal.lua")
 dofile(modpath.."/gerenciador_de_vilas.lua")
 -- Estruturas adicionadas
-dofile(modpath.."/casa.lua")
-dofile(modpath.."/decor.lua")
-dofile(modpath.."/loja.lua")
+dofile(modpath.."/script_estruturas/casa.lua")
+dofile(modpath.."/script_estruturas/decor.lua")
+dofile(modpath.."/script_estruturas/loja.lua")
 notificar("[OK]!")

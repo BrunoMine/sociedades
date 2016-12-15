@@ -53,9 +53,9 @@ sunos.tb_menu_casa_comunal = {
 -- Tabela de população por tamanho de casa
 sunos.tb_pop_casa = {
 	-- Largura da casa	População
-	["5"] = 			2,
+	["5"] = 		2,
 	["7"] =			3,
 	["9"] =			4,
-	["11"] =			6,
+	["11"] =		6,
 }
 

@@ -14,6 +14,8 @@ Bau da Casa Comunal dos Sunos =
 
 Bau de Venda dos Sunos = 
 
+Fundamento dos Sunos = 
+
 Fundamento de Casa Comunal dos Sunos = 
 
 Fundamento Suno de Casa Pequena = 
@@ -74,6 +76,8 @@ Aumenta bastante a quantidade de moradores da vila =
 
 Kit Reparador = 
 Esse Kit pode ser usado para reconstruir uma estrutura da vila dos Sunos = 
+Casa Comunal reconstruida = 
+Casa Comunal em decadencia. Use o Kit de Reparo = 
 
 Feirinha = 
 Uma feirinha simples para trocar itens = 
@@ -139,7 +143,7 @@ Recebeste um @1 =
 # Comando
 # Command
 
-<funcao> [Salvar estrutura | s <tipo> <nome> <largura>] = 
+<s ou c> <tipo> <nome> <largura> | Salvar(s) ou carrega(c) estrutura = 
 
 Opera algumas funcionalidades do mod sunos = 
 
@@ -148,7 +152,15 @@ Arquivo: @1 =
 Largura: @1 = 
 Tipo: @1 = 
 
+Estrutura montada = 
+
 Largura invalida = 
 
 Comando invalido = 
 
+
+# Nodes
+
+Bancada dos Sunos = 
+
+Bancada de Trabalho dos Sunos = 

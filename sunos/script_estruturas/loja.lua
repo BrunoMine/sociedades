@@ -149,7 +149,7 @@ minetest.register_node("sunos:bau_loja", {
 	drop = "default:chest",
 	
 	-- Nao pode ser escavado/quebrado por jogadores
-	on_dig = function() end,
+	--on_dig = function() end,
 	
 	-- Receptor dos botos
 	on_receive_fields = function(pos, formname, fields, sender)
@@ -158,42 +158,42 @@ minetest.register_node("sunos:bau_loja", {
 			if tror.trocar_plus(sender, {"default:tree"}, {"default:apple 2"}) == false then
 				return minetest.chat_send_player(sender:get_player_name(), sunos.S("Precisa do item para trocar"))
 			else
-				return minetest.chat_send_player(sender:get_player_name(), sunos.s("Troca feita"))
+				return minetest.chat_send_player(sender:get_player_name(), sunos.S("Troca feita"))
 			end
 		elseif fields.trocar_pedra then
 			-- Tenta trocar
 			if tror.trocar_plus(sender, {"default:stonebrick"}, {"default:apple 2"}) == false then
 				return minetest.chat_send_player(sender:get_player_name(), sunos.S("Precisa do item para trocar"))
 			else
-				return minetest.chat_send_player(sender:get_player_name(), sunos.s("Troca feita"))
+				return minetest.chat_send_player(sender:get_player_name(), sunos.S("Troca feita"))
 			end
 		elseif fields.trocar_ouro then
 			-- Tenta trocar
 			if tror.trocar_plus(sender, {"default:gold_ingot"}, {"default:apple 10"}) == false then
 				return minetest.chat_send_player(sender:get_player_name(), sunos.S("Precisa do item para trocar"))
 			else
-				return minetest.chat_send_player(sender:get_player_name(), sunos.s("Troca feita"))
+				return minetest.chat_send_player(sender:get_player_name(), sunos.S("Troca feita"))
 			end
 		elseif fields.trocar_ferro then
 			-- Tenta trocar
 			if tror.trocar_plus(sender, {"default:steel_ingot"}, {"default:apple 6"}) == false then
 				return minetest.chat_send_player(sender:get_player_name(), sunos.S("Precisa do item para trocar"))
 			else
-				return minetest.chat_send_player(sender:get_player_name(), sunos.s("Troca feita"))
+				return minetest.chat_send_player(sender:get_player_name(), sunos.S("Troca feita"))
 			end
 		elseif fields.trocar_carvao then
 			-- Tenta trocar
 			if tror.trocar_plus(sender, {"default:coal_lump"}, {"default:apple 1"}) == false then
 				return minetest.chat_send_player(sender:get_player_name(), sunos.S("Precisa do item para trocar"))
 			else
-				return minetest.chat_send_player(sender:get_player_name(), sunos.s("Troca feita"))
+				return minetest.chat_send_player(sender:get_player_name(), sunos.S("Troca feita"))
 			end
 		elseif fields.trocar_vidro then
 			-- Tenta trocar
 			if tror.trocar_plus(sender, {"default:glass"}, {"default:apple 10"}) == false then
 				return minetest.chat_send_player(sender:get_player_name(), sunos.S("Precisa do item para trocar"))
 			else
-				return minetest.chat_send_player(sender:get_player_name(), sunos.s("Troca feita"))
+				return minetest.chat_send_player(sender:get_player_name(), sunos.S("Troca feita"))
 			end
 		end
 	end,

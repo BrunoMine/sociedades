@@ -20,33 +20,33 @@ sunos.tb_menu_casa_comunal = {
 		-- Item a receber (apenas 1 item e 1 unidade)
 		item_add = "sunos:fundamento_casa_pequena", 
 		-- Itens a pagar (de 1 a 14 itens diferentes de qualquer quantidade) 
-		item_rem = {"default:tree 20", "default:cobble 15", "default:stonebrick 15", "xpanes:pane 5", "default:torch 10"} 
+		item_rem = {"default:tree 20", "default:cobble 15", "default:stonebrick 15", "xpanes:pane 5", "default:torch 10", "farming:straw 15"} 
 	},
 	[sunos.S("Casa Mediana")] = {
 		desc = sunos.S("Aumenta a quantidade de moradores da vila"),
 		pop = 5,
 		item_add = "sunos:fundamento_casa_mediana", 
-		item_rem = {"default:tree 25", "default:cobble 30", "default:stonebrick 25", "xpanes:pane 15", "default:torch 10"}
+		item_rem = {"default:tree 25", "default:cobble 30", "default:stonebrick 25", "xpanes:pane 15", "default:torch 10", "farming:straw 20"}
 	},
 	[sunos.S("Casa Grande")] = {
 		desc = sunos.S("Aumenta bastante a quantidade de moradores da vila"),
 		pop = 5,
 		item_add = "sunos:fundamento_casa_grande", 
-		item_rem = {"default:tree 40", "default:cobble 45", "default:stonebrick 35", "xpanes:pane 20", "default:torch 15"}
+		item_rem = {"default:tree 40", "default:cobble 45", "default:stonebrick 35", "xpanes:pane 20", "default:torch 15", "farming:straw 25"}
 	},
 	-- Kit Reparador
 	[sunos.S("Kit Reparador")] = {
 		desc = sunos.S("Esse Kit pode ser usado para reconstruir uma estrutura da vila dos Sunos"),
 		pop = 5,
 		item_add = "sunos:kit_reparador", 
-		item_rem = {"default:tree 20", "default:cobble 20", "wool:yellow 5", "xpanes:pane 15"}
+		item_rem = {"default:tree 20", "default:cobble 20", "wool:yellow 5", "xpanes:pane 15", "farming:straw 20"}
 	},
 	-- Fundamento de Loja
 	[sunos.S("Feirinha")] = {
 		desc = sunos.S("Uma feirinha simples para trocar itens"),
 		pop = 7,
 		item_add = "sunos:fundamento_loja", 
-		item_rem = {"default:tree 20", "default:stonebrick 40", "default:torch 10", "xpanes:pane 25"}
+		item_rem = {"default:tree 10", "default:cobble 20", "default:torch 4", "farming:straw 15"}
 	},
 }
 

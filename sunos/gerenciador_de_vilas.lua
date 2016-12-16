@@ -17,12 +17,17 @@ local tempo_decadencia = 10--300
 
 local verificar_fundamento = function(pos)
 	if not pos then return end
+	
+	local node = minetest.get_node(pos)
+	
+	if node.name ~= "sunos:fundamento" then return end
+	
 	local meta = minetest.get_meta(pos)
 	local vila = meta:get_string("vila")
 	local tipo = meta:get_string("tipo")
 	local dist = meta:get_string("dist")
 	
-	if not dist then return end
+	if not vila then return end
 	
 	-- Verificar mapa carregado antes de verificar estruturas
 	if sunos.verif_carregamento(pos, tonumber(dist)) == false then

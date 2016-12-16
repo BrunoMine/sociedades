@@ -162,5 +162,6 @@ Comando invalido =
 # Nodes
 
 Bancada dos Sunos = 
+Craftador = 
 
 Bancada de Trabalho dos Sunos = 

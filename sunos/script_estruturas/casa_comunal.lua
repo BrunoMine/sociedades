@@ -129,6 +129,8 @@ end
 minetest.register_node("sunos:fundamento_casa_comunal", {
 	description = sunos.S("Fundamento de Casa Comunal dos Sunos"),
 	tiles = {"default_tree_top.png^sunos_fundamento.png", "default_tree_top.png", "default_tree.png"},
+	inventory_image = "sunos_inv_fundamento.png^sunos_inv_fundamento_casa_comunal.png",
+	wield_image = "sunos_inv_fundamento.png^sunos_inv_fundamento_casa_comunal.png",
 	paramtype2 = "facedir",
 	is_ground_content = false,
 	groups = {tree = 1, choppy = 2, oddly_breakable_by_hand = 1, flammable = 2},

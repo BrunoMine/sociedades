@@ -77,7 +77,7 @@ sunos.construir_casa_comunal = function(pos, vila, nivel, n_estrutura, force_are
 	
 	-- Criar casa comunal
 	-- Caminho do arquivo da estrutura
-	local arquivo = modpath.."/estruturas/casa_comunal/casa_comunal_nivel_"..nivel..".13.mts"
+	local arquivo = modpath.."/estruturas/casa_comunal/nivel_"..nivel..".13.mts"
 	
 	-- Criar estrutura
 	minetest.place_schematic({x=pos.x-dist,y=pos.y,z=pos.z-dist}, arquivo, nil, nil, true)

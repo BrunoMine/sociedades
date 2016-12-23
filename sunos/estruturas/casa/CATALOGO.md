@@ -5,6 +5,7 @@
 Estruturas:
 	barraco_moderado.5.mts
 	barraco_modesto.5.mts
+	casinha_com_quintal.5.mts
 	edificio_moderado.9.mts
 	edificio_modesto.9.mts
 	sobrado_moderado.7.mts

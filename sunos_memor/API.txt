@@ -1,0 +1,99 @@
+Mod Memor para Minetest
+Memor v1.2 Copyright (C) 2016 BrunoMine (https://github.com/BrunoMine)
+
+Recebeste uma cópia da GNU Lesser General
+Public License junto com esse software,
+se não, veja em <http://www.gnu.org/licenses/>. 
+
+API
+
+===================================> Montar um banco de dados rápido <===================================
+Esse banco de dados fica em uma subpasta com o nome do mod especificado portanto não deve existir nenhum 
+arquivo ou pasta com o nome do mod dentro da pasta do mundo pois isso ocasionaria um conflito de nomes
+
+memor.montar_bd(<nome do mod>) -- Função que retorna uma tabela de funções para gerenciar o banco de 
+							dados do mod
+
+	 <nome do mod> OPCIONAL é o nome do mod que usará o banco de dados 
+	 		Se nulo, fica sendo o nome do mod que executar a função
+
+Chamadas de função para o banco de dados criado
+
+	salvar(tb, index, valor) -- Salva um valor no banco de dados (cria as tabelas se não existirem)
+	
+		<tb> é o nome da tabela (exemplo: players, nodes, casas)
+		<index> é o endereço do valor (exemplo: fome, altura, dono)
+		<valor> é o valor armazenado (exemplo: 6, 30, "Caio")
+
+	pegar(index, valor) -- Retorna o valor armazenado (ou nulo caso seja inexistente)
+	
+		<tb> é o nome da tabela (exemplo: players, nodes, casas)
+		<index> é o endereço do valor (exemplo: fome, altura, dono)
+
+	verif(index, valor) -- Verifica se um determinado registro existe (retorna 'true' se existir)
+	
+		<tb> é o nome da tabela (exemplo: players, nodes, casas)
+		<index> é o endereço do valor (exemplo: fome, altura, dono)
+		
+	remover(tb, index) -- Remove um valor da tabela (apaga o dado armazenado)
+	
+		<tb> é o nome da tabela (exemplo: players, nodes, casas)
+		<index> é o endereço do valor (exemplo: fome, altura, dono)
+		
+	drop_tb(tb) -- Remove uma tabela (apagando todos os seus dados)
+	
+		<tb> é o nome da tabela (exemplo: players, nodes, casas)
+		
+	listar(tb) -- Retorna uma tabela ordenada com strings dos nomes de tabelas ou indices
+		
+		<tb> OPICIONAL é uma tabela a qual desejar listar os sues indices
+		        ^ Se nulo, retorna as listagem das tabelas do banco de dados
+	
+Exemplo de uso:
+
+-- Montar um banco de dados na variavel 'registro'
+local registro = memor.montar_bd(minetest.get_current_modname())
+
+-- Criar uma tabela de "medalhas" onde "Maria" terá 15
+registro:salvar("medalhas", "Maria", 15)
+
+-- Verifica se "Maria" existe na tabela de "Medalhas"
+if registro:verif("medalhas", "Maria") then
+
+	-- Consulta quantas "medalhas" "Maria" tem
+	local medalhas = registro:pegar("medalhas", "Maria") -- retorna 15
+
+	minetest.chat_send_all("Maria tem " .. medalhas .. " medalhas")
+
+end
+
+-- Remover "Maria" da tabela "medalhas"
+registro:remover("medalhas", "Maria")
+
+-- Remove a tabela "medalhas"
+registro:drop_tb("medalhas")
+
+=========================================================================================================
+
+=====================================> Tabela de jogadores online <======================================
+
+memor.online(<nome do mod>) -- Retorna uma tabela desordenada com índices com nomes dos jogadores online
+							^ A tabela só mantém dados dos índices de jogadores online
+							^ Caso um nome de jogador que não esteja online for inserido, ele vai 
+								ser apagado assim que algum jogador sair do servidor
+
+	<nome do mod> OPCIONAL é uma string com o nome do mod dono da tabela (o que opera a tabela)
+	 		Se nulo, fica sendo o nome do mod que executar a função
+
+Exemplo de uso:
+
+-- Tabela que guarda quem é o convidado de um jogador (controlada para manter apenas jogadores online)
+local convidados = memor.online()
+
+-- Jogador "Arnaldo" tem "Luiz" como convidado
+convidados["Arnaldo"] = "Luiz"
+
+-- Quando o jogador "Arnaldo" sair do servidor, esse dado será apagado da memória
+
+=========================================================================================================
+

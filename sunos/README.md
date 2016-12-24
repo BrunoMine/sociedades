@@ -49,7 +49,7 @@ funcionalidades:
 ## Configurações
 
 Essas configurações são colocadas em minetest.conf
-- `sunos_raridade = 3` (quanto maior, mais raro)
+- `sunos_raridade = 33` (em porcentagem, apenas numeros inteiros)
 
 ## Criar estruturas
 Todas as estruturas desse mod devem obedecer aos seguintes parametros:

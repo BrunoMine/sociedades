@@ -111,6 +111,10 @@ sunos.construir_loja = function(pos, dist, force, vila)
 			.."image[0,0;3,3;sunos.png]"
 			.."label[3,0;"..sunos.S("Bau de Venda dos Sunos").."]"
 			.."label[3,1;"..sunos.S("Troque alguns itens aqui").."]"
+			.."image[7.5,-0.2;2,2;default_apple.png]"
+			.."image[6.6,0;2,2;default_apple.png]"
+			.."image[6.6,1;2,2;default_apple.png]"
+			.."image[7.5,0.8;2,2;default_apple.png]"
 			-- Botoes de trocas
 			.."item_image_button[0,3;3,3;default:tree;trocar_madeira;2]"
 			.."item_image_button[0,6;3,3;default:stonebrick;trocar_pedra;2]"

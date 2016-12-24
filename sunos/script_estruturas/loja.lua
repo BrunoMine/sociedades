@@ -24,7 +24,7 @@ local modpath = minetest.get_modpath("sunos")
 		<vila> é o numero da vila a qual a loja pertence
 		<dist> distancia centro a borda da nova estrutura
   ]]
-sunos.construir_loja = function(pos, dist)
+sunos.construir_loja = function(pos, dist, force, vila)
 	-- Validar argumentos de entrada
 	if pos == nil then
 		minetest.log("error", "[Sunos] Tabela pos nula (sunos.construir_loja)")
@@ -38,42 +38,47 @@ sunos.construir_loja = function(pos, dist)
 	-- Variaveis auxiliares
 	local largura = (dist*2)+1
 	
-	-- Verificar Vila e pegar dados (buscando por um fundamento proximo)
-	local pos_fund_prox = minetest.find_node_near(pos, 25, {"sunos:fundamento"})
-	if pos_fund_prox == nil then 
-		return sunos.S("Nenhuma vila por perto")
-	end
+	if not vila then
+		-- Verificar Vila e pegar dados (buscando por um fundamento proximo)
+		local pos_fund_prox = minetest.find_node_near(pos, 25, {"sunos:fundamento"})
+		if pos_fund_prox == nil then 
+			return sunos.S("Nenhuma vila por perto")
+		end
 	
-	-- Pegar dados da vila encontrada
-	local meta_fund_prox = minetest.get_meta(pos_fund_prox)
-	local vila = meta_fund_prox:get_string("vila")
-	
-	-- Verificar se ainda existe um banco de dados da vila
-	if sunos.bd:verif("vila_"..vila, "numero") == false then
-		return sunos.S("Vila abandonada")
+		-- Pegar dados da vila encontrada
+		local meta_fund_prox = minetest.get_meta(pos_fund_prox)
+		vila = meta_fund_prox:get_string("vila")
 	end
 	
 	-- Verificações de area
-	-- Verificar se o local esta limpo, gramado e plano (contando o entorno da estrutura)
-	local nodes_solo = minetest.find_nodes_in_area(
-		{x=pos.x-dist-1, y=pos.y, z=pos.z-dist-1}, 
-		{x=pos.x+dist+1, y=pos.y, z=pos.z+dist+1}, 
-		{"default:dirt_with_grass", "default:dirt"}
-	)
-	local nodes_acima_solo = minetest.find_nodes_in_area(
-		{x=pos.x-dist-1, y=pos.y+1, z=pos.z-dist-1}, 
-		{x=pos.x+dist+1, y=pos.y+1, z=pos.z+dist+1}, 
-		{"air"}
-	)
-	if table.maxn(nodes_solo) < ((2*(dist+1))+1)^2
-		or table.maxn(nodes_acima_solo) < (((2*(dist+1))+1)^2)-1
-	then
-		return sunos.S("O local precisa estar limpo, gramado e plano para uma estrutura com @1x@1 blocos da largura", largura)
-	end
+	if not force or force == false then
+	
+		-- Verificar se ainda existe um banco de dados da vila
+		if sunos.bd:verif("vila_"..vila, "numero") == false then
+			return sunos.S("Vila abandonada")
+		end
+		
+		-- Verificar se o local esta limpo, gramado e plano (contando o entorno da estrutura)
+		local nodes_solo = minetest.find_nodes_in_area(
+			{x=pos.x-dist-1, y=pos.y, z=pos.z-dist-1}, 
+			{x=pos.x+dist+1, y=pos.y, z=pos.z+dist+1}, 
+			{"default:dirt_with_grass", "default:dirt"}
+		)
+		local nodes_acima_solo = minetest.find_nodes_in_area(
+			{x=pos.x-dist-1, y=pos.y+1, z=pos.z-dist-1}, 
+			{x=pos.x+dist+1, y=pos.y+1, z=pos.z+dist+1}, 
+			{"air"}
+		)
+		if table.maxn(nodes_solo) < ((2*(dist+1))+1)^2
+			or table.maxn(nodes_acima_solo) < (((2*(dist+1))+1)^2)-1
+		then
+			return sunos.S("O local precisa estar limpo, gramado e plano para uma estrutura com @1x@1 blocos da largura", largura)
+		end
 
-	-- Verificar se tem outra estrutura de suno interferindo na area da nova estrutura
-	if sunos.verif_fundamento(pos, dist) == false then
-		return sunos.S("Muito perto de outra estrutura dos Sunos (afaste um pouco)")
+		-- Verificar se tem outra estrutura de suno interferindo na area da nova estrutura
+		if sunos.verif_fundamento(pos, dist) == false then
+			return sunos.S("Muito perto de outra estrutura dos Sunos (afaste um pouco)")
+		end
 	end
 	
 	-- Criar loja
@@ -106,6 +111,10 @@ sunos.construir_loja = function(pos, dist)
 			.."image[0,0;3,3;sunos.png]"
 			.."label[3,0;"..sunos.S("Bau de Venda dos Sunos").."]"
 			.."label[3,1;"..sunos.S("Troque alguns itens aqui").."]"
+			.."image[7.5,-0.2;2,2;default_apple.png]"
+			.."image[6.6,0;2,2;default_apple.png]"
+			.."image[6.6,1;2,2;default_apple.png]"
+			.."image[7.5,0.8;2,2;default_apple.png]"
 			-- Botoes de trocas
 			.."item_image_button[0,3;3,3;default:tree;trocar_madeira;2]"
 			.."item_image_button[0,6;3,3;default:stonebrick;trocar_pedra;2]"
@@ -149,7 +158,7 @@ minetest.register_node("sunos:bau_loja", {
 	drop = "default:chest",
 	
 	-- Nao pode ser escavado/quebrado por jogadores
-	on_dig = function() end,
+	--on_dig = function() end,
 	
 	-- Receptor dos botos
 	on_receive_fields = function(pos, formname, fields, sender)
@@ -158,42 +167,42 @@ minetest.register_node("sunos:bau_loja", {
 			if tror.trocar_plus(sender, {"default:tree"}, {"default:apple 2"}) == false then
 				return minetest.chat_send_player(sender:get_player_name(), sunos.S("Precisa do item para trocar"))
 			else
-				return minetest.chat_send_player(sender:get_player_name(), sunos.s("Troca feita"))
+				return minetest.chat_send_player(sender:get_player_name(), sunos.S("Troca feita"))
 			end
 		elseif fields.trocar_pedra then
 			-- Tenta trocar
 			if tror.trocar_plus(sender, {"default:stonebrick"}, {"default:apple 2"}) == false then
 				return minetest.chat_send_player(sender:get_player_name(), sunos.S("Precisa do item para trocar"))
 			else
-				return minetest.chat_send_player(sender:get_player_name(), sunos.s("Troca feita"))
+				return minetest.chat_send_player(sender:get_player_name(), sunos.S("Troca feita"))
 			end
 		elseif fields.trocar_ouro then
 			-- Tenta trocar
 			if tror.trocar_plus(sender, {"default:gold_ingot"}, {"default:apple 10"}) == false then
 				return minetest.chat_send_player(sender:get_player_name(), sunos.S("Precisa do item para trocar"))
 			else
-				return minetest.chat_send_player(sender:get_player_name(), sunos.s("Troca feita"))
+				return minetest.chat_send_player(sender:get_player_name(), sunos.S("Troca feita"))
 			end
 		elseif fields.trocar_ferro then
 			-- Tenta trocar
 			if tror.trocar_plus(sender, {"default:steel_ingot"}, {"default:apple 6"}) == false then
 				return minetest.chat_send_player(sender:get_player_name(), sunos.S("Precisa do item para trocar"))
 			else
-				return minetest.chat_send_player(sender:get_player_name(), sunos.s("Troca feita"))
+				return minetest.chat_send_player(sender:get_player_name(), sunos.S("Troca feita"))
 			end
 		elseif fields.trocar_carvao then
 			-- Tenta trocar
 			if tror.trocar_plus(sender, {"default:coal_lump"}, {"default:apple 1"}) == false then
 				return minetest.chat_send_player(sender:get_player_name(), sunos.S("Precisa do item para trocar"))
 			else
-				return minetest.chat_send_player(sender:get_player_name(), sunos.s("Troca feita"))
+				return minetest.chat_send_player(sender:get_player_name(), sunos.S("Troca feita"))
 			end
 		elseif fields.trocar_vidro then
 			-- Tenta trocar
 			if tror.trocar_plus(sender, {"default:glass"}, {"default:apple 10"}) == false then
 				return minetest.chat_send_player(sender:get_player_name(), sunos.S("Precisa do item para trocar"))
 			else
-				return minetest.chat_send_player(sender:get_player_name(), sunos.s("Troca feita"))
+				return minetest.chat_send_player(sender:get_player_name(), sunos.S("Troca feita"))
 			end
 		end
 	end,
@@ -203,6 +212,8 @@ minetest.register_node("sunos:bau_loja", {
 minetest.register_node("sunos:fundamento_loja", {
 	description = sunos.S("Fundamento de Loja dos Sunos"),
 	tiles = {"default_tree_top.png^sunos_fundamento.png", "default_tree_top.png", "default_tree.png"},
+	inventory_image = "sunos_inv_fundamento.png^sunos_inv_fundamento_loja.png",
+	wield_image = "sunos_inv_fundamento.png^sunos_inv_fundamento_loja.png",
 	paramtype2 = "facedir",
 	is_ground_content = false,
 	groups = {tree = 1, choppy = 2, oddly_breakable_by_hand = 1, flammable = 2},

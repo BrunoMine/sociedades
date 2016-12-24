@@ -121,7 +121,7 @@ sunos.construir_casa_comum = function(pos, dist, vila, force_area, itens_repo)
 	
 	-- Recoloca itens reais (apartir dos itens de reposição)
 	if itens_repo then
-		sunos.decor_repo({x=pos.x+((param4-1)/2),y=pos.y,z=pos.z+((param4-1)/2)}, ((param4-1)/2), itens_repo)
+		sunos.decor_repo(pos, dist, itens_repo)
 	end
 	
 	-- Numero da estrutura da nova casa
@@ -181,6 +181,8 @@ end
 minetest.register_node("sunos:fundamento_casa_pequena", {
 	description = sunos.S("Fundamento Suno de Casa Pequena"),
 	tiles = {"default_tree_top.png^sunos_fundamento.png", "default_tree_top.png", "default_tree.png"},
+	inventory_image = "sunos_inv_fundamento.png^sunos_inv_fundamento_casa.png",
+	wield_image = "sunos_inv_fundamento.png^sunos_inv_fundamento_casa.png",
 	paramtype2 = "facedir",
 	is_ground_content = false,
 	groups = {tree = 1, choppy = 2, oddly_breakable_by_hand = 1, flammable = 2},
@@ -190,7 +192,7 @@ minetest.register_node("sunos:fundamento_casa_pequena", {
 	-- Colocar uma casa
 	on_place = function(itemstack, placer, pointed_thing)
 		
-		local r = sunos.construir_casa_comum(pointed_thing.under, 2, nil, nil, sunos.gerar_itens_repo_casa_pequena)
+		local r = sunos.construir_casa_comum(pointed_thing.under, 2, nil, nil, sunos.gerar_itens_repo_casa_pequena())
 		if r == true then
 			
 			-- Retorna mensagem de montagem concluida
@@ -223,6 +225,8 @@ end
 minetest.register_node("sunos:fundamento_casa_mediana", {
 	description = sunos.S("Fundamento Suno de Casa Mediana"),
 	tiles = {"default_tree_top.png^sunos_fundamento.png", "default_tree_top.png", "default_tree.png"},
+	inventory_image = "sunos_inv_fundamento.png^sunos_inv_fundamento_casa.png",
+	wield_image = "sunos_inv_fundamento.png^sunos_inv_fundamento_casa.png",
 	paramtype2 = "facedir",
 	is_ground_content = false,
 	groups = {tree = 1, choppy = 2, oddly_breakable_by_hand = 1, flammable = 2},
@@ -232,7 +236,7 @@ minetest.register_node("sunos:fundamento_casa_mediana", {
 	-- Colocar uma casa
 	on_place = function(itemstack, placer, pointed_thing)
 		
-		local r = sunos.construir_casa_comum(pointed_thing.under, 3, nil, nil, sunos.gerar_itens_repo_casa_mediana)
+		local r = sunos.construir_casa_comum(pointed_thing.under, 3, nil, nil, sunos.gerar_itens_repo_casa_mediana())
 		if r == true then
 			
 			-- Retorna mensagem de montagem concluida
@@ -268,6 +272,8 @@ end
 minetest.register_node("sunos:fundamento_casa_grande", {
 	description = sunos.S("Fundamento Suno de Casa Grande"),
 	tiles = {"default_tree_top.png^sunos_fundamento.png", "default_tree_top.png", "default_tree.png"},
+	inventory_image = "sunos_inv_fundamento.png^sunos_inv_fundamento_casa.png",
+	wield_image = "sunos_inv_fundamento.png^sunos_inv_fundamento_casa.png",
 	paramtype2 = "facedir",
 	is_ground_content = false,
 	groups = {tree = 1, choppy = 2, oddly_breakable_by_hand = 1, flammable = 2},
@@ -277,7 +283,7 @@ minetest.register_node("sunos:fundamento_casa_grande", {
 	-- Colocar uma casa
 	on_place = function(itemstack, placer, pointed_thing)
 		
-		local r = sunos.construir_casa_comum(pointed_thing.under, 4, nil, nil, sunos.gerar_itens_repo_casa_grande)
+		local r = sunos.construir_casa_comum(pointed_thing.under, 4, nil, nil, sunos.gerar_itens_repo_casa_grande())
 		if r == true then
 			
 			-- Retorna mensagem de montagem concluida

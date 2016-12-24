@@ -1,0 +1,88 @@
+#API do Tror
+
+=======================================> Trocar PLUS itens <========================================
+
+tror.trocar_plus(<player>, <item_rem>, <item_add>, <msg>) -- Função que troca item com um jogador
+	^ Retorna true para troca bem sucedida e false para caso o jogador nao possuir os itens requeridos
+	
+	<player> é o jogador como objeto
+	
+	<item_rem> é uma tabela de itens que serão removidos do jogador (pode ser nula "{}")
+	
+	<item_add> é uma tabela de itens que serão adicionados ao jogador (pode ser nula "{}")
+	
+====================================================================================================
+
+
+
+==========================================> Trocar itens <==========================================
+
+tror.trocar(<player>, <item_rem>, <item_add>, <msg>) -- Função que troca item com um jogador
+	^ Pode retornar 3 valos diferentes:
+		^ booleano 'true' caso a troca seja feita com sucesso
+		^ numerico 1 se o jogador nao possir os itens necessarios para a troca em seu inventario
+		^ numerico 2 se o inventario do jogador nao tiver lugar para o item a ser adicionado
+	 
+	
+	<player> é o jogador como objeto
+	
+	<item_rem> é uma string do item a ser removido do inventario do jogador
+				^ Exemplo "default:dirt"
+				^ Caso seja mais de uma unidade colocasse o numero na frente separado por espaço
+					^ Exemplo "default:stone 8"
+	
+	<item_add> é uma string do item a ser adicionado ao inventario do jogador
+				^ Segue os mesmo critérios do <item_rem>
+				
+	<msg> OPCIONAL é uma tabela de mensagens com duas strings msg.ins, msg.lot e msg.ok
+			^ Essas mensagens são enviadas ao console do jogador caso ocorra um dos casos
+			^ Exemplo: {ins="Precisa conseguir os itens para a troca", lot="Inventario lotado"}
+			^ Nenhuma das tres string e obrigatoria (pode usar apenas uma ou duas)
+			
+				 
+Exemplo de uso:
+
+teste = function(player)
+
+	local msg = { -- Mensagens
+		ins = "Faltou item para trocar",
+		lot = "Inventario lotado",
+		ok = "Troca feita"
+	}
+	
+	if tror.trocar(player, "default:dirt", "default:stone", msg) == true then
+		return 
+	else 
+		-- Tenta trocar novamente apos 3 segundos
+		return minetest.after(3, teste, player) 
+	end
+end
+
+minetest.register_on_joinplayer(function(player)
+	minetest.after(3, teste, player)
+end)
+
+=========================================================================================================
+
+
+========================================> Verificar viabilidade <========================================
+
+tror.verificar(<player>, <item_rem>, <item_add>)
+	^ Pode retornar 3 valos diferentes:
+		^ booleano 'true' caso a troca pode ser feita
+		^ numerico 1 se o jogador nao possir os itens necessarios para a troca em seu inventario
+		^ numerico 2 se o inventario do jogador nao tiver lugar para o item a ser adicionado
+
+	<player> é o jogador como objeto
+	
+	<item_rem> é uma string do item a ser removido do inventario do jogador
+				^ Exemplo "default:dirt"
+				^ Caso seja mais de uma unidade colocasse o numero na frente separado por espaço
+					^ Exemplo "default:stone 8"
+	
+	<item_add> é uma string do item a ser adicionado ao inventario do jogador
+				^ Segue os mesmo critérios do <item_rem>
+
+end
+
+=========================================================================================================

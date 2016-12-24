@@ -1,10 +1,12 @@
+memor?
+sunos_memor
+mobs
+sunos_tror
+tror?
+intllib?
 default
-memor
 vessels
 flowers
 xpanes
 stairs
 doors
-mobs
-tror
-intllib?

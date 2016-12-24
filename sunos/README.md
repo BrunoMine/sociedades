@@ -45,6 +45,14 @@ os arquivos de mídia correspondentes.
 funcionalidades:
 
 - Salvar uma estrutura: `s <tipo> <nome> <largura>`
+- Carrega uma estrutura: `c <tipo> <nome> <largura>`
+
+## Configurações
+
+Essas configurações são colocadas em minetest.conf
+- `sunos_raridade = 33` (em porcentagem, apenas numeros inteiros, padrão é 33)
+- `sunos_verif_fundamento = 10` (tempo em segundos para cada verificação de um fundamento ativo no mapa, padrão é 10)
+- `sunos_casa_comunal_decadencia = 300` (tempo em segundos que a casa comunal pode ficar em decadencia, padrão é 300)
 
 ## Criar estruturas
 Todas as estruturas desse mod devem obedecer aos seguintes parametros:

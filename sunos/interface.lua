@@ -62,8 +62,8 @@ sunos.acessar_npc = function(ent, player, fields)
 				..default.gui_bg_img
 				.."label[0,0;"..sunos.S("Oi. Ajude essa vila a \nmontar uma Casa Comunal").."]"
 				.."item_image_button[0,1;1,1;default:tree 20;item1;]" -- Item 1
-				.."item_image_button[1,1;1,1;default:cobble 30;item1;]" -- Item 2
-				.."item_image_button[2,1;1,1;wool:yellow 10;item1;]" -- Item 3
+				.."item_image_button[1,1;1,1;default:stone 70;item1;]" -- Item 2
+				.."item_image_button[2,1;1,1;farming:straw 30;item1;]" -- Item 3
 				.."item_image_button[5,1;1,1;sunos:fundamento_casa_comunal;fundamento;]" -- Fundamento de Casa Comunal
 				.."button_exit[0,2;6,1;trocar;"..sunos.S("Trocar por Fundamento").."]"
 			return minetest.show_formspec(player:get_player_name(), "sunos:npc", formspec)
@@ -84,7 +84,7 @@ sunos.acessar_npc = function(ent, player, fields)
 		end
 		
 		-- Coletar dados da vila
-		local habitantes = sunos.bd:pegar("vila_"..ent.vila, "pop") or "Erro interno"
+		local habitantes = sunos.bd:pegar("vila_"..ent.vila, "pop_total") or "Erro interno"
 		
 		-- Formspec de NPC da casa comunal
 		local formspec = "size[12,8.3]"
@@ -176,7 +176,7 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 			
 			-- Tenta trocar pelo fundamento de casa comunal
 			if tror.trocar_plus(player, 
-				{"default:tree 20", "default:cobble 30", "wool:yellow 10"}, 
+				{"default:tree 20", "default:stone 70", "farming:straw 30"}, 
 				{"sunos:fundamento_casa_comunal"}
 			) == false 
 			then
@@ -208,7 +208,7 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 			-- Verifica se tem os habitantes necessarios
 			-- Atualizar banco de dados da vila
 			sunos.atualizar_bd_vila(ent.vila)
-			local pop_atual = sunos.bd:pegar("vila_"..ent.vila, "pop")
+			local pop_atual = sunos.bd:pegar("vila_"..ent.vila, "pop_total")
 			if pop_atual == nil or pop_atual < dados.pop then
 				return avisar(player, sunos.S("A vila precisa de mais habitantes para isso"))
 			end   

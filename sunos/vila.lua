@@ -298,6 +298,12 @@ sunos.criar_vila = function(pos, vpos)
 		ciclo = ciclo + 1
 	end
 	
+	-- Variavel que verifica se ja colocou ao menos uma casa
+	local tem_casa = false
+	
+	-- Variavel que verifica se tem uma feirinha
+	local tem_loja = false
+	
 	-- Montar estruturas nos assentamentos criados
 	if assentamentos then
 		
@@ -313,8 +319,12 @@ sunos.criar_vila = function(pos, vpos)
 			-- Largura
 			local largura = dados.dist*2+1
 			
+			-- Verifica se deve colocar uma feirinha
+			if largura == 5 and tem_casa and tem_loja == false then tipo = "loja" end
+			
 			-- Troca o tipo para decor caso a largura seja 3
 			if largura == 3 then tipo = "decor" end
+			
 			
 			if tipo == "casa" then
 				
@@ -324,13 +334,22 @@ sunos.criar_vila = function(pos, vpos)
 				-- Recoloca itens reais (apartir dos itens de reposição)
 				sunos.decor_repo(dados.pos, dados.dist, sunos.tb_repo_casas[tostring(dados.dist)]())
 				
+				tem_casa = true
 				
 			elseif tipo == "decor" then
 				
 				-- Montar estrutura decorativa
 				sunos.construir_decor(dados.pos, dados.dist, vila, true)
 				
+			elseif tipo == "loja" then
+				
+				sunos.construir_loja(dados.pos, dados.dist, true, vila)
+				
+				tem_loja = true
 			end
 		end
+		
+		-- Atualizar banco de dados
+		sunos.atualizar_bd_vila(vila)
 	end
 end

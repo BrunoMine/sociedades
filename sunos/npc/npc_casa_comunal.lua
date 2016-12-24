@@ -123,6 +123,9 @@ local verificar_bau_casa_comunal = function(pos)
 	local meta = minetest.get_meta(pos) -- Pegar os metadados
 	local pos_fund = minetest.deserialize(meta:get_string("pos_fundamento")) -- Pegar pos do fundamento
 	
+	-- Cercifica se esta ativo
+	if not pos_fund then return end
+	
 	-- Verificar se o fundamento ainda existe
 	local node_fund = minetest.get_node(pos_fund)
 	if node_fund.name ~= "sunos:fundamento" then

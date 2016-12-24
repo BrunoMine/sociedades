@@ -77,7 +77,7 @@ sunos.construir_casa_comunal = function(pos, vila, nivel, n_estrutura, force_are
 	
 	-- Criar casa comunal
 	-- Caminho do arquivo da estrutura
-	local arquivo = modpath.."/estruturas/casa_comunal/casa_comunal_nivel_"..nivel..".13.mts"
+	local arquivo = modpath.."/estruturas/casa_comunal/nivel_"..nivel..".13.mts"
 	
 	-- Criar estrutura
 	minetest.place_schematic({x=pos.x-dist,y=pos.y,z=pos.z-dist}, arquivo, nil, nil, true)
@@ -129,6 +129,8 @@ end
 minetest.register_node("sunos:fundamento_casa_comunal", {
 	description = sunos.S("Fundamento de Casa Comunal dos Sunos"),
 	tiles = {"default_tree_top.png^sunos_fundamento.png", "default_tree_top.png", "default_tree.png"},
+	inventory_image = "sunos_inv_fundamento.png^sunos_inv_fundamento_casa_comunal.png",
+	wield_image = "sunos_inv_fundamento.png^sunos_inv_fundamento_casa_comunal.png",
 	paramtype2 = "facedir",
 	is_ground_content = false,
 	groups = {tree = 1, choppy = 2, oddly_breakable_by_hand = 1, flammable = 2},

@@ -50,6 +50,8 @@ funcionalidades:
 
 Essas configurações são colocadas em minetest.conf
 - `sunos_raridade = 33` (em porcentagem, apenas numeros inteiros)
+- `sunos_verif_fundamento = 5` (tempo em segundos para cada verificação de um fundamento ativo no mapa)
+- `sunos_casa_comunal_decadencia = 300` (tempo em segundos que a casa comunal pode ficar em decadencia)
 
 ## Criar estruturas
 Todas as estruturas desse mod devem obedecer aos seguintes parametros:

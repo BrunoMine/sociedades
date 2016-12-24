@@ -348,5 +348,8 @@ sunos.criar_vila = function(pos, vpos)
 				tem_loja = true
 			end
 		end
+		
+		-- Atualizar banco de dados
+		sunos.atualizar_bd_vila(vila)
 	end
 end

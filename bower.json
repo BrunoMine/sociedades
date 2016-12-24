@@ -10,9 +10,9 @@
         "https://raw.githubusercontent.com/BrunoMine/sociedades/master/screenshot.png"
     ],
     "license": "GNU v3",
-    "dependencies": {
+    "dependencies": [
         "mobs": "+1.32",
-    },
+    ],
     "authors": [
         "BrunoMine"
     ]

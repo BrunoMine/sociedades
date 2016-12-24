@@ -124,7 +124,7 @@ end
 	extração de posições de chão plano.
 	Deve-se ter cuidado para evitar alto uso de memoria nas verificações
   ]]
-minetest.register_on_generated(function(minp, maxp, seed)
+local verificar_mapa_gerado = function(minp, maxp)
 	
 	-- Verificar altura
 	if minp.y < -70 or minp.y > 120 then return end
@@ -132,6 +132,9 @@ minetest.register_on_generated(function(minp, maxp, seed)
 	-- Verificar se tem terra com grama no centro do bloco gerado
 	local solo_central = pegar_solo({x=minp.x+40, y=maxp.y, z=minp.z+40}) -- Solo encontrado no centro
 	if solo_central == nil then return end
+	
+	-- Evitar outras vilas dos sunos
+	if minetest.find_node_near(solo_central, 100, {"group:sunos"}) ~= nil then return end 
 	
 	-- Evitar florestas
 	--[[
@@ -186,4 +189,10 @@ minetest.register_on_generated(function(minp, maxp, seed)
 	
 	-- Criar vila
 	sunos.criar_vila(pos, vpos)
+end
+
+minetest.register_on_generated(function(minp, maxp, seed)
+	
+	-- A verificação é feita apos um intervalo de tempo para garantir que o mapa foi corretamente gerado
+	minetest.after(1.5, verificar_mapa_gerado, minp, maxp)
 end)

@@ -11,7 +11,7 @@
   
 -- Variaveis do sistema
 -- Tempo (em segundos) entre as verificações de estrutura obstruida
-local tempo_verif_estruturas = tonumber(minetest.setting_get("sunos_verif_fundamento") or 5)
+local tempo_verif_estruturas = tonumber(minetest.setting_get("sunos_verif_fundamento") or 7)
 -- Tempo (em segundos) em que uma casa comunal pode ficar em decadencia antes de perder o fundamento
 local tempo_decadencia = tonumber(minetest.setting_get("sunos_casa_comunal_decadencia") or 300)
 
@@ -227,7 +227,7 @@ minetest.register_abm({
 	interval = tempo_verif_estruturas,
 	chance = 1,
 	action = function(pos)
-		minetest.after(5, verificar_fundamento, {x=pos.x, y=pos.y, z=pos.z})	
+		minetest.after(1, verificar_fundamento, {x=pos.x, y=pos.y, z=pos.z})	
 	end,
 })
 

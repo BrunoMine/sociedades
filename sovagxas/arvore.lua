@@ -333,7 +333,7 @@ sovagxas.montar_arvore = function(pos)
 		minetest.set_node({x=slots_mobilia[i][1].x-1, y=slots_mobilia[i][1].y+3, z=slots_mobilia[i][1].z}, {name="default:jungleleaves"})
 		
 		-- Realiza procedimento para spawnar um NPC no bau
-		minetest.after(2, sunos.verif_bau_sovagxa, slots_mobilia[i][1])
+		minetest.after(2, sovagxas.verif_bau_sovagxa, slots_mobilia[i][1])
 		
 		table.remove(slots_mobilia, i)
 	end

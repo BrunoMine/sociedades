@@ -109,7 +109,7 @@ mobs:register_mob("sovagxas:npc", {
 })
 
 -- Verifica se tem um npc
-sunos.verif_bau_sovagxa = function(pos)
+sovagxas.verif_bau_sovagxa = function(pos)
 	
 	-- Pegar e verificar mobs em uma area
 	local r = false
@@ -143,7 +143,7 @@ minetest.register_abm({
 	interval = tempo_verif_npc,
 	chance = 1,
 	action = function(pos)
-		minetest.after(2, sunos.verif_bau_sovagxa, pos)
+		minetest.after(2, sovagxas.verif_bau_sovagxa, pos)
 	end,
 })
 

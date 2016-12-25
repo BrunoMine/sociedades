@@ -1,7 +1,8 @@
 Sovagxas
 ===============
 
-São povos selvagens
+Esse mod adiciona os Sovagxas ao jogo que aparecem aleatoriamente em selvas pelo mapa.
+Os sovagxas (do esperanto, "selvagens") são pessoas simplistas que adoram viver em meio a natureza. Leia mais sobre os sovagxas no [wiki do projeto](https://github.com/BrunoMine/sociedades/wiki/Sovagxas)
 
 ## Configurações
 

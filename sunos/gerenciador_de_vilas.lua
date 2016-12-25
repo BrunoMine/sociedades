@@ -227,7 +227,7 @@ minetest.register_abm({
 	interval = tempo_verif_estruturas,
 	chance = 1,
 	action = function(pos)
-		minetest.after(1, verificar_fundamento, {x=pos.x, y=pos.y, z=pos.z})	
+		minetest.after(2.5, verificar_fundamento, {x=pos.x, y=pos.y, z=pos.z})	
 	end,
 })
 

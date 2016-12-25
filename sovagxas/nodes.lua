@@ -70,7 +70,7 @@ minetest.register_node("sovagxas:bau", {
 		local meta = minetest.get_meta(pos)
 		meta:set_string("itens", minetest.serialize(sortear_bau()))
 		meta:set_string("data", os.date("%Y %m %d %H"))
-		meta:set_string("arvore", minetest.serialize({x=0,y=0,z=0}))
+		meta:set_string("arvore", minetest.serialize(pos))
 		meta:set_string("infotext", "Bau dos Sovagxas")
 		local formspec = "size[8,8.5]".. 
 				default.gui_bg..
@@ -172,10 +172,10 @@ minetest.register_abm({
 		local folhas = minetest.find_nodes_in_area(
 			{x=p_arv.x-8, y=p_arv.y-3, z=p_arv.z-8}, 
 			{x=p_arv.x+8, y=p_arv.y+3, z=p_arv.z+8}, {"default:jungleleaves"})
-		if folhas[1] and table.maxn(folhas) < 700 then
+		if table.maxn(folhas) < 800 then
 			local node = minetest.get_node(pos)
 			minetest.set_node(pos, {name="default:chest", param2 = node.param2})
-			return true
+			return
 		end
 		
 		-- Renovar itens

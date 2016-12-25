@@ -15,7 +15,7 @@ local notificar = function(msg)
 	end
 end
 
-local modpath = minetest.get_modpath("sunos_tror")
+local modpath = minetest.get_modpath("sociedades_tror")
 
 -- Variavel global
 tror = {}

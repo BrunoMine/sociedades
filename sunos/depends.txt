@@ -1,7 +1,7 @@
 memor?
-sunos_memor
+sociedades_memor
 mobs
-sunos_tror
+sociedades_tror
 tror?
 intllib?
 default

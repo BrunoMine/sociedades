@@ -20,7 +20,7 @@ local notificar = function(msg)
 	end
 end
 
-local modpath = minetest.get_modpath("sunos_memor")
+local modpath = minetest.get_modpath("sociedades_memor")
 
 -- Variavel global
 memor = {}

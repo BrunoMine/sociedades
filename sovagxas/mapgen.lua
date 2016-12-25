@@ -31,7 +31,7 @@ local function pegar_solo(pos)
 	local r = nil
 	while y <= 79 do
 		local node = pegar_node({x=pos.x, y=pos.y-y, z=pos.z})
-		if node.name == "default:dirt_with_grass" then
+		if node.name == "default:dirt" then
 			r = {x=pos.x, y=pos.y-y, z=pos.z}
 			break
 		end
@@ -129,51 +129,20 @@ local verificar_mapa_gerado = function(minp, maxp)
 	-- Verificar altura
 	if minp.y < -70 or minp.y > 120 then return end
 	
-	-- Verificar se tem terra com grama no centro do bloco gerado
-	local solo_central = pegar_solo({x=minp.x+40, y=maxp.y, z=minp.z+40}) -- Solo encontrado no centro
-	if solo_central == nil then return end
+	-- Procura um tronco de arvore selvagem no bloco de mapa gerado
+	local t = minetest.find_node_near({x=minp.x+20, y=minp.y+40, z=minp.z+20}, 8, {"default:jungletree"})
 	
-	-- Verifica se tem arvores selvagens
-	if minetest.find_node_near({x=minp.x+40, y=minp.y+40, z=minp.z+40}, 40, {"default:jungletree"}) == nil then return end 
+	-- Verifica se encontrou um tronco
+	if not t then return end
 	
-	-- Pegar malha
-	local malha = pegar_malha(minp, maxp)
+	-- Pega a coordenada do solo do tronco encontrado
+	local pos = pegar_solo(t)
 	
-	-- Verificar quantidade de pontos em areas planos
-	--[[
-		Isso é uma analize de pontos da malha
-	  ]]
-	local rel = {nul=0,bom=0,ruim=0}
-	local min = nil
-	local pos = nil
-	local vpos = {}
-	for x,_ in ipairs(malha) do
-		for z,_ in ipairs(malha[x]) do
-			local po = malha[x][z]
-			if po.var == nil then
-				rel.nul = rel.nul + 1
-			elseif po.var <= 3 then
-				rel.bom = rel.bom + 1
-				if malha[x][z].p then 
-					table.insert(vpos, malha[x][z].p) 
-				end
-			else
-				rel.ruim = rel.ruim + 1
-			end
-			if malha[x][z].p then
-				if malha[x][z].var and min ~= comparar_min(min, malha[x][z].var) then
-					min = comparar_min(min, malha[x][z].var)
-					pos = malha[x][z].p
-				elseif pos == nil then
-					pos = malha[x][z].p
-				end
-			end
-			
-		end
-	end
+	-- Verifica se encontrou um solo
+	if not pos then return end
 	
-	-- Verifica quantidade aceitavel de areas planas
-	if rel.bom < 5 then return end
+	-- Verifica se tem terra ou pedra no local onde vai ficar a copa da arvore
+	if minetest.find_node_near({x=pos.x, y=pos.y+15, z=pos.z}, 10, {"group:stone", "group:dirt", "group:sand"}) then return end
 	
 	-- Sortear chance de criar arvore
 	if math.random(1, 100) > sovagxas.RARIDADE then return end
@@ -185,7 +154,7 @@ end
 minetest.register_on_generated(function(minp, maxp, seed)
 	
 	-- A verificação é feita apos um intervalo de tempo para garantir que o mapa foi corretamente gerado
-	minetest.after(1.5, verificar_mapa_gerado, minp, maxp)
+	minetest.after(2, verificar_mapa_gerado, minp, maxp)
 end)
 
 

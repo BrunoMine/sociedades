@@ -40,84 +40,6 @@ local function pegar_solo(pos)
 	return r
 end
 
-
--- Verifica se um ponto existe na malha
-local function verificar_ponto(x, z)
-	if x < 1 or x > 7 or z < 1 or z > 7 then 
-		return false
-	else
-		return true
-	end
-end
-
--- Comparar valor max
-local function comparar_max(max, n)
-	if max == nil then
-		return n
-	elseif max < n then
-		return n
-	else
-		return max
-	end
-end
-
--- Comparar valor min
-local function comparar_min(min, n)
-	if min == nil then
-		return n
-	elseif min > n then
-		return n
-	else
-		return min
-	end
-end
-
--- Montar malha e coletar dados nos pontos
-local pegar_malha = function(minp, maxp)	
-	local vetor = {}
-	
-	-- Vetor de dados
-	for x=1, 7 do
-		vetor[x] = {}
-		for z=1, 7 do
-			vetor[x][z] = {}
-		end
-	end
-	
-	-- Pegando dados para cada posicao
-	for x,_ in ipairs(vetor) do
-		for z,_ in ipairs(vetor[x]) do
-		
-			-- Pegar solo
-			vetor[x][z].p = pegar_solo({x=minp.x+(10*x), y=maxp.y, z=minp.z+(10*z)})
-			
-			-- Calcular variacao dos pontos adjacentes
-			local max, min = nil, nil
-			local div = 0
-			for xi=-1, 1 do
-				for zi=-1, 1 do
-					local xn, zn = x+xi, z+zi
-					if verificar_ponto(xn, zn) then
-						if vetor[xn][zn].p then
-							max = comparar_max(max, vetor[xn][zn].p.y)
-							min = comparar_min(min, vetor[xn][zn].p.y)
-							div = div + 1
-						end
-					end
-				end
-			end
-			if div >= 5 then
-				vetor[x][z].var = max - min
-			else
-				vetor[x][z].var = nil
-			end
-		end
-	end
-	
-	return vetor
-end
-
-
 -- Chamada de função para verificar mapa gerado
 --[[
 	São feita algumas verificações prévias importantes e 
@@ -134,6 +56,9 @@ local verificar_mapa_gerado = function(minp, maxp)
 	
 	-- Verifica se encontrou um tronco
 	if not t then return end
+	
+	-- Verifica se etá muito perto de outra árvore mãe (varredura do tamanho de um bloco de mapa)
+	if minetest.find_node_near(t, 80, {"sovagxas:bau"}) then return end
 	
 	-- Pega a coordenada do solo do tronco encontrado
 	local pos = pegar_solo(t)

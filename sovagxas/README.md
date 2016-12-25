@@ -1,5 +1,5 @@
 Sovagxas
-===============
+========
 
 Esse mod adiciona os Sovagxas ao jogo que aparecem aleatoriamente em selvas pelo mapa.
 Os sovagxas (do esperanto, "selvagens") são pessoas simplistas que adoram viver em meio a natureza. Leia mais sobre os sovagxas no [wiki do projeto](https://github.com/BrunoMine/sociedades/wiki/Sovagxas)
@@ -7,7 +7,7 @@ Os sovagxas (do esperanto, "selvagens") são pessoas simplistas que adoram viver
 ## Configurações
 
 Essas configurações são colocadas em minetest.conf
-- `sovagxas_raridade = 15` (em porcentagem, apenas numeros inteiros, padrão é 15)
+- `sovagxas_raridade = 75` (em porcentagem, apenas numeros inteiros, padrão é 75)
 
 ## Licença
 Veja LICENSE.txt para informações detalhadas da licença LGPL 3.0

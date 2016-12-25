@@ -9,7 +9,7 @@ Essas configurações são colocadas em minetest.conf
 - `sovagxas_raridade = 15` (em porcentagem, apenas numeros inteiros, padrão é 15)
 
 ## Licença
-Veja LICENCE.txt para informações detalhadas da licença LGPL 3.0
+Veja LICENSE.txt para informações detalhadas da licença LGPL 3.0
 
 Autores do código fonte
 -----------------------

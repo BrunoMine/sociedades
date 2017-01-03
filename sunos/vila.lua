@@ -96,6 +96,7 @@ local criar_assent = function(pos, dist)
 		end
 		y = y - 1
 	end
+	return true
 end
 
 

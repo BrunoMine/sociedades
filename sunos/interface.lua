@@ -45,7 +45,7 @@ end
 sunos.acessar_npc = function(ent, player, fields)
 	
 	-- Verifica se NPC ainda existe
-	if not ent then
+	if not ent or not player then
 		return
 	end
 	

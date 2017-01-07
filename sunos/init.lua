@@ -45,6 +45,7 @@ dofile(modpath.."/estruturador.lua")
 dofile(modpath.."/vila.lua")
 dofile(modpath.."/mapgen.lua")
 -- Nodes
+dofile(modpath.."/nodes/rua.lua")
 dofile(modpath.."/nodes/fundamento.lua")
 dofile(modpath.."/nodes/bau.lua")
 dofile(modpath.."/nodes/decor_repo.lua")

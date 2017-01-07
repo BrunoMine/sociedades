@@ -1,0 +1,40 @@
+#API do Plagen
+
+O Métodos abaixo é usado para planificar uma area do mapa e gerar degrais ao redor para suavizar a topografia 
+do local deixando-o menos acidentado. Caso ocorra algum problema durante o processo, ele retorna 'false', mas 
+se tudo ocorrer bem ele retorna 'true'
+
+plagen.planificar(
+
+	<pos>, -- Coordenada do centro da area a ser planificada
+	
+	<tipo>, -- String do tipo de planagem
+			^ "quadrada" => Uma area quadrada plana
+	<largura>, -- Largura em blocos da area plana
+	
+	<amplitude>, -- Distância em blocos da area plana até em cima e da area plana até em baixo a ser considerada
+				^ Essa é a distância onde os blocos são alterados para deixar a area plana (recomendado 25)
+	
+	{	-- Tabela de tipos de nodes a serem usados
+		solo = <solo>, -- String da id do node que compõe o solo (exemplo: "default:dirt_with_grass")
+	
+		subsolo = <subsolo>, -- String da id do node que compõe os 2 blocos de subsolo (exemplo: "default:dirt") 
+	
+		rocha = <rocha> -- String da id do node que compõe o que fica abaixo do subsolo (exemplo: "default:stone")
+	}, 
+	
+	<borda>, -- Distância de blocos de escadaria ao redor da area planificada
+			^ Esses degrais tendem a suavizar a topografia da região em torno da area planificada
+			^ Se 'nil' (nulo) ou 0 (zero), ele não monta nenhum degrau
+	
+	<calc_media>, -- Booleano para realizar calculo de altura média da area a ser planificada
+				^ Se 'true', ele calcula a média dos blocos de "solo" especificados e arredonda para o 
+					próximo inteiro ajudando a manter uma altura suave
+				^ Se 'false', ele utiliza a altura de "pos" definida (pos.y)
+	
+	<verif_mapa>, -- Booleano para verificação de mapa gerado
+				^ Se 'true', ele verifica se tem um bloco que ainda não foi gerado e retorna false caso exista
+				^ Se 'false', ele não verifica no entanto, se existir um bloco não gerado na area de operação
+					ele provavelmente derruba o servidor
+					
+)

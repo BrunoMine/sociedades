@@ -198,11 +198,16 @@ local verif_obs_dir = function(pos, dir, dist)
 		-- Evitar que a rua fique colada em estruturas e outros
 		or table.maxn(minetest.find_nodes_in_area({x=npos.x-1, y=npos.y-3, z=npos.z-1}, {x=npos.x+1, y=npos.y+3, z=npos.z+1}, {"group:spreading_dirt_type"})) ~= 9
 		-- Verifica outros assentamentos perto
-		or minetest.find_node_near(npos, 2, {"sunos:assentamento_3"})
-		or minetest.find_node_near(npos, 3, {"sunos:assentamento_5"})
-		or minetest.find_node_near(npos, 4, {"sunos:assentamento_7"})
-		or minetest.find_node_near(npos, 5, {"sunos:assentamento_9"})
-		or minetest.find_node_near(npos, 6, {"sunos:assentamento_11"})
+		--[[
+			Considera-se uma area onde não deve existir determinado assentamentos
+				+2 solo livre entre rua e assentamento
+				+<distancia de deslocamento de cada centro:1,2,3,4 e 5>
+		  ]]
+		or minetest.find_node_near(npos, 3, {"sunos:assentamento_3"})
+		or minetest.find_node_near(npos, 4, {"sunos:assentamento_5"})
+		or minetest.find_node_near(npos, 5, {"sunos:assentamento_7"})
+		or minetest.find_node_near(npos, 6, {"sunos:assentamento_9"})
+		or minetest.find_node_near(npos, 7, {"sunos:assentamento_11"})
 	then
 		return false
 	else
@@ -235,16 +240,22 @@ local verif_obs_assent = function(pos, dir, dist)
 		--[[ 
 			Inicialmente supoe-se que o assentamento seja de largura 3
 			sendo assim deve-se deslocar da rua 
-				+2 (vai até o primeiro bloco do assentamento deixando 1 bloco livre entre assentamento e rua)
+				+3 (vai até o primeiro bloco do assentamento deixando 2 bloco livre entre assentamento e rua)
 				+d (vai ao centro do assentamento)
 		  ]]
-		local npos = sunos.ir_dir(pos, dir, (2+d))
+		local npos = sunos.ir_dir(pos, dir, (3+d))
 		
 		-- Verifica se tem blocos de solo nas faixas de terra aceitavel para a estrutura
 		if table.maxn(minetest.find_nodes_in_area({x=npos.x-d, y=npos.y-1, z=npos.z-d}, {x=npos.x+d, y=npos.y+1, z=npos.z+d}, {"group:spreading_dirt_type"})) == (d*2+1)^2 
 			-- Verifica se tem rua perto demais
-			and minetest.find_node_near(npos, 1+d, {"sunos:rua_calcetada"}) == nil
+			and minetest.find_node_near(npos, 2+d, {"sunos:rua_calcetada"}) == nil
 			-- Verifica outros assentamentos perto
+			--[[
+				Considera-se uma area onde não deve existir determinado assentamentos
+					+2 solo livre entre rua e assentamento
+					+<distancia de deslocamento de cada centro:1,2,3,4 e 5>
+					+d
+			  ]]
 			and minetest.find_node_near(npos, 3+d, {"sunos:assentamento_3"}) == nil
 			and minetest.find_node_near(npos, 4+d, {"sunos:assentamento_5"}) == nil
 			and minetest.find_node_near(npos, 5+d, {"sunos:assentamento_7"}) == nil
@@ -264,7 +275,7 @@ local verif_obs_assent = function(pos, dir, dist)
 		return dv
 	else
 		-- Calcula o centro do assentamento final validado
-		local np = sunos.ir_dir(pos, dir, (2+dv))
+		local np = sunos.ir_dir(pos, dir, (3+dv))
 		return dv, np
 	end
 	
@@ -287,6 +298,15 @@ sunos.criar_vila = function(pos_ref)
 		x=pos_ref.x,
 		y=pos_ref.y,
 		z=pos_ref.z
+	}
+	
+	-- Quantidades de assentamentos de acordo com suas larguras
+	local larg_assent = {
+		0, -- 3
+		0, -- 5
+		0, -- 7
+		0, -- 9
+		0  -- 11
 	}
 	
 	-- Vetor de coordenada que se movimenta sempre na faixa de altura do solo
@@ -345,9 +365,9 @@ sunos.criar_vila = function(pos_ref)
 			
 			-- Planifica assentamento
 			if d_assent ~= 0 then
-				plagen.planificar(p_assent, "quadrada", (d_assent*2+1), 10, {solo="default:dirt_with_grass", subsolo="default:dirt", rocha="default:stone"}, 0, true, true)
+				plagen.planificar(p_assent, "quadrada", (d_assent*2+1), 10, {solo="default:dirt_with_grass", subsolo="default:dirt", rocha="default:stone"}, 1, true, true)
 				-- Atualiza a coordenada do solo
-				p_assent = sunos.pegar_solo(p_assent, 10, 5) or p_assent
+				p_assent = sunos.pegar_solo(p_assent, 8, 4) or p_assent
 			end
 			
 			-- Verifica se o assentamento foi validade
@@ -372,13 +392,19 @@ sunos.criar_vila = function(pos_ref)
 			-- Salva coordenada do assentamento
 			if d_assent ~= 0 then
 				table.insert(assent, {pos=p_assent,dist=d_assent})
+				
+				-- Salva o numero de assentamentos com a largura atual
+				larg_assent[d_assent] = larg_assent[d_assent]+1
 			end
 			
 		end
 	end
 	
 	-- Montar estruturas nos assentamentos criados
-	if table.maxn(assent) > 4 then
+	--[[
+		Nessa etapa é verificado se os assentamentos são aceitaveis para uma vila
+	  ]]
+	if larg_assent[2]+larg_assent[3]+larg_assent[4]+larg_assent[5] >= 3 then
 	
 		-- Variavel que verifica se ja colocou ao menos uma casa
 		local tem_casa = false
@@ -430,5 +456,13 @@ sunos.criar_vila = function(pos_ref)
 		
 		-- Atualizar banco de dados
 		sunos.atualizar_bd_vila(vila)
+	
+	else -- Assentamentos rejeitados. Montar ruinas nos lugares dos assentamentos
+		
+		-- Montar estrutura de ruina
+		for _, dados in ipairs(assent) do
+			sunos.montar_estrutura(dados.pos, dados.dist, "ruina")
+		end
+		
 	end
 end

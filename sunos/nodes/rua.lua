@@ -9,7 +9,7 @@
 	Ruas das vilas
   ]]
   
--- Rua Ralcetada
+-- Rua Calcetada
 minetest.register_node("sunos:rua_calcetada", {
 	description = sunos.S("Rua Calcetada"),
 	tiles = {"default_grass.png^sunos_rua_calcetada_cima.png", "default_dirt.png",
@@ -22,3 +22,20 @@ minetest.register_node("sunos:rua_calcetada", {
 	}),
 })
 
+-- Placa de Rua Calcetada
+stairs.register_stair_and_slab(
+	"rua_calcetada",
+	"sunos:rua_calcetada",
+	{crumbly = 3, soil = 1, spreading_dirt_type = 1},
+	{"default_grass.png^sunos_rua_calcetada_cima.png", "default_dirt.png",
+		{
+			name = "default_dirt.png^default_grass_side.png^sunos_rua_calcetada_lado.png",
+			tileable_vertical = false
+		}
+	},
+	"Degrau de Rua Calcetada",
+	"Placa de Rua Calcetada",
+	default.node_sound_dirt_defaults({
+		footstep = {name = "default_hard_footstep", gain = 0.4},
+	})
+)

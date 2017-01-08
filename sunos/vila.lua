@@ -115,8 +115,12 @@ minetest.register_abm({
 -- Colocar rua
 local colocar_rua = function(pos)
 	-- Evita colocar sobre outro
-	if minetest.get_node({x=pos.x,y=pos.y-1,z=pos.z}).name == "sunos:rua_calcetada" then return end
-	if minetest.get_node({x=pos.x,y=pos.y+1,z=pos.z}).name == "sunos:rua_calcetada" then return end
+	local n1 = minetest.get_node({x=pos.x,y=pos.y-1,z=pos.z}).name
+	local n2 = minetest.get_node({x=pos.x,y=pos.y+1,z=pos.z}).name
+	local n3 = minetest.get_node({x=pos.x,y=pos.y,z=pos.z}).name
+	if n1 == "sunos:rua_calcetada" or n1 == "stairs:slab_rua_calcetada" then return end
+	if n2 == "sunos:rua_calcetada" or n2 == "stairs:slab_rua_calcetada" then return end
+	if n3 == "sunos:rua_calcetada" or n3 == "stairs:slab_rua_calcetada" then return end
 	
 	if minetest.get_node({x=pos.x+1,y=pos.y,z=pos.z}).name == "air"
 		or minetest.get_node({x=pos.x-1,y=pos.y,z=pos.z}).name == "air"
@@ -262,22 +266,22 @@ local verif_obs_assent = function(pos, dir, dist)
 		  ]]
 		local npos = sunos.ir_dir(pos, dir, (4+d))
 		
-		-- Verifica se tem blocos de solo nas faixas de terra aceitavel para a estrutura +3 de borda
-		if table.maxn(minetest.find_nodes_in_area({x=npos.x-d-3, y=npos.y-1, z=npos.z-d-3}, {x=npos.x+d+3, y=npos.y+1, z=npos.z+d+3}, {"group:spreading_dirt_type"})) == (d*2+1+6)^2 
+		-- Verifica se tem blocos de solo nas faixas de terra aceitavel para a estrutura +4 de borda
+		if table.maxn(minetest.find_nodes_in_area({x=npos.x-d-4, y=npos.y-1, z=npos.z-d-4}, {x=npos.x+d+4, y=npos.y+1, z=npos.z+d+4}, {"group:spreading_dirt_type"})) == (d*2+1+8)^2 
 			-- Verifica se tem rua perto demais
 			and minetest.find_node_near(npos, 3+d, {"sunos:rua_calcetada"}) == nil
 			-- Verifica outros assentamentos perto
 			--[[
 				Considera-se uma area onde não deve existir determinado assentamentos
 					+4 solo livre entre rua e assentamento
-					+<distancia de deslocamento de cada centro:1,2,3,4 e 5>
+					+<distancia de deslocamento de cada centro:1,2,3,4 e 5> (+1 de teste)
 					+d
 			  ]]
-			and minetest.find_node_near(npos, 5+d, {"sunos:assentamento_3"}) == nil
-			and minetest.find_node_near(npos, 6+d, {"sunos:assentamento_5"}) == nil
-			and minetest.find_node_near(npos, 7+d, {"sunos:assentamento_7"}) == nil
-			and minetest.find_node_near(npos, 8+d, {"sunos:assentamento_9"}) == nil
-			and minetest.find_node_near(npos, 9+d, {"sunos:assentamento_11"}) == nil
+			and minetest.find_node_near(npos, 6+d, {"sunos:assentamento_3"}) == nil
+			and minetest.find_node_near(npos, 7+d, {"sunos:assentamento_5"}) == nil
+			and minetest.find_node_near(npos, 8+d, {"sunos:assentamento_7"}) == nil
+			and minetest.find_node_near(npos, 9+d, {"sunos:assentamento_9"}) == nil
+			and minetest.find_node_near(npos, 10+d, {"sunos:assentamento_11"}) == nil
 		then
 			dv = d
 		else
@@ -534,7 +538,7 @@ sunos.criar_vila = function(pos_ref)
 	--[[
 		Nessa etapa é verificado se os assentamentos são aceitaveis para uma vila
 	  ]]
-	if larg_assent[2]+larg_assent[3]+larg_assent[4]+larg_assent[5] >= 3 then
+	if larg_assent[2]+larg_assent[3]+larg_assent[4]+larg_assent[5] >= 1 then
 	
 		-- Variavel que verifica se ja colocou ao menos uma casa
 		local tem_casa = false

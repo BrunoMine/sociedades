@@ -112,6 +112,23 @@ minetest.register_abm({
 	end,
 })
 
+-- Colocar rua
+local colocar_rua = function(pos)
+	-- Evita colocar sobre outro
+	if minetest.get_node({x=pos.x,y=pos.y-1,z=pos.z}).name == "sunos:rua_calcetada" then return end
+	if minetest.get_node({x=pos.x,y=pos.y+1,z=pos.z}).name == "sunos:rua_calcetada" then return end
+	
+	if minetest.get_node({x=pos.x+1,y=pos.y,z=pos.z}).name == "air"
+		or minetest.get_node({x=pos.x-1,y=pos.y,z=pos.z}).name == "air"
+		or minetest.get_node({x=pos.x,y=pos.y,z=pos.z+1}).name == "air"
+		or minetest.get_node({x=pos.x,y=pos.y,z=pos.z-1}).name == "air"
+	then
+		minetest.set_node(pos,{name="stairs:slab_rua_calcetada"})
+	else
+		minetest.set_node(pos,{name="sunos:rua_calcetada"})
+	end
+end
+
 -- Verifica se o node é e retorna a altura y do degrau aceitavel
 local ver_node_degrau = function(pos)
 	-- Verifica se deve manter a altura
@@ -137,7 +154,7 @@ local montar_rua = function(p1, p2)
 		if p1.z < p2.z then -- Movimento baseado em somas
 			while v.z <= p2.z do
 				v.y = ver_node_degrau(v) -- Atualiza a melhor altura do bloco de rua
-				minetest.set_node(v, {name="sunos:rua_calcetada"})
+				colocar_rua(v)
 				v.z = v.z + 1
 			end
 			-- Arruma a coordenada v para corresponder corretamente à ultima coordenada de rua no solo
@@ -146,7 +163,7 @@ local montar_rua = function(p1, p2)
 		else -- Movimento baseado em subtrações
 			while v.z >= p2.z do
 				v.y = ver_node_degrau(v) -- Atualiza a melhor altura do bloco de rua
-				minetest.set_node(v, {name="sunos:rua_calcetada"})
+				colocar_rua(v)
 				v.z = v.z - 1
 			end
 			-- Arruma a coordenada v para corresponder corretamente à ultima coordenada de rua no solo
@@ -156,7 +173,7 @@ local montar_rua = function(p1, p2)
 		if p1.x < p2.x then -- Movimento baseado em somas
 			while v.x <= p2.x do
 				v.y = ver_node_degrau(v) -- Atualiza a melhor altura do bloco de rua
-				minetest.set_node(v, {name="sunos:rua_calcetada"})
+				colocar_rua(v)
 				v.x = v.x + 1
 			end
 			-- Arruma a coordenada v para corresponder corretamente à ultima coordenada de rua no solo
@@ -165,7 +182,7 @@ local montar_rua = function(p1, p2)
 		else -- Movimento baseado em subtrações
 			while v.x >= p2.x do
 				v.y = ver_node_degrau(v) -- Atualiza a melhor altura do bloco de rua
-				minetest.set_node(v, {name="sunos:rua_calcetada"})
+				colocar_rua(v)
 				v.x = v.x - 1
 			end
 			-- Arruma a coordenada v para corresponder corretamente à ultima coordenada de rua no solo
@@ -240,27 +257,27 @@ local verif_obs_assent = function(pos, dir, dist)
 		--[[ 
 			Inicialmente supoe-se que o assentamento seja de largura 3
 			sendo assim deve-se deslocar da rua 
-				+3 (vai até o primeiro bloco do assentamento deixando 2 bloco livre entre assentamento e rua)
+				+4 (vai até o primeiro bloco do assentamento deixando 3 bloco livre entre assentamento e rua)
 				+d (vai ao centro do assentamento)
 		  ]]
-		local npos = sunos.ir_dir(pos, dir, (3+d))
+		local npos = sunos.ir_dir(pos, dir, (4+d))
 		
-		-- Verifica se tem blocos de solo nas faixas de terra aceitavel para a estrutura
-		if table.maxn(minetest.find_nodes_in_area({x=npos.x-d, y=npos.y-1, z=npos.z-d}, {x=npos.x+d, y=npos.y+1, z=npos.z+d}, {"group:spreading_dirt_type"})) == (d*2+1)^2 
+		-- Verifica se tem blocos de solo nas faixas de terra aceitavel para a estrutura +3 de borda
+		if table.maxn(minetest.find_nodes_in_area({x=npos.x-d-3, y=npos.y-1, z=npos.z-d-3}, {x=npos.x+d+3, y=npos.y+1, z=npos.z+d+3}, {"group:spreading_dirt_type"})) == (d*2+1+6)^2 
 			-- Verifica se tem rua perto demais
-			and minetest.find_node_near(npos, 2+d, {"sunos:rua_calcetada"}) == nil
+			and minetest.find_node_near(npos, 3+d, {"sunos:rua_calcetada"}) == nil
 			-- Verifica outros assentamentos perto
 			--[[
 				Considera-se uma area onde não deve existir determinado assentamentos
-					+2 solo livre entre rua e assentamento
+					+4 solo livre entre rua e assentamento
 					+<distancia de deslocamento de cada centro:1,2,3,4 e 5>
 					+d
 			  ]]
-			and minetest.find_node_near(npos, 3+d, {"sunos:assentamento_3"}) == nil
-			and minetest.find_node_near(npos, 4+d, {"sunos:assentamento_5"}) == nil
-			and minetest.find_node_near(npos, 5+d, {"sunos:assentamento_7"}) == nil
-			and minetest.find_node_near(npos, 6+d, {"sunos:assentamento_9"}) == nil
-			and minetest.find_node_near(npos, 7+d, {"sunos:assentamento_11"}) == nil
+			and minetest.find_node_near(npos, 5+d, {"sunos:assentamento_3"}) == nil
+			and minetest.find_node_near(npos, 6+d, {"sunos:assentamento_5"}) == nil
+			and minetest.find_node_near(npos, 7+d, {"sunos:assentamento_7"}) == nil
+			and minetest.find_node_near(npos, 8+d, {"sunos:assentamento_9"}) == nil
+			and minetest.find_node_near(npos, 9+d, {"sunos:assentamento_11"}) == nil
 		then
 			dv = d
 		else
@@ -280,6 +297,119 @@ local verif_obs_assent = function(pos, dir, dist)
 	end
 	
 end
+
+-- Montar rua em volta de estrutura
+--[[
+	O objetivo é criar umafaixa de rua em volta da estrutura 
+	com 1 bloco livre
+	Argumentos:
+		<pos> coordenada do centro do solo da estrutura
+		<dist> distancia de centro a borda da estrutura
+  ]]
+local montar_rua_estrutura = function(pos, dist)
+
+	-- Movimentação no eixo z
+	-- Vetor z é variavel e inicia na parte mais negaiva com um desconto de 1 bloco livre mais 1 da propria faixa
+	do
+		local z = pos.z - dist - 2
+		while z <= pos.z+dist+2 do
+		
+			-- Pega a coordenada do solo
+			local p1a = sunos.f_pegar_solo({x=pos.x-dist-2, y=pos.y, z=z}, false, 6, 3) -- com x-
+			local p1b = sunos.f_pegar_solo({x=pos.x-dist-3, y=pos.y, z=z}, false, 6, 3) -- com x--
+			local p2a = sunos.f_pegar_solo({x=pos.x+dist+2, y=pos.y, z=z}, false, 6, 3) -- com x+
+			local p2b = sunos.f_pegar_solo({x=pos.x+dist+3, y=pos.y, z=z}, false, 6, 3) -- com x++
+			
+			-- Troca o node
+			if p1a then colocar_rua(p1a) end
+			if p1b then colocar_rua(p1b) end
+			if p2a then colocar_rua(p2a) end
+			if p2b then colocar_rua(p2b) end
+		
+			z = z + 1
+		end
+	end
+	
+	-- Movimentação no eixo x
+	-- Vetor x é variavel e inicia na parte mais negaiva com um desconto de 1 bloco livre mais 1 da propria faixa
+	do
+		local x = pos.x - dist - 2
+		while x <= pos.x+dist+2 do
+		
+			-- Pega a coordenada do solo
+			local p1a = sunos.f_pegar_solo({x=x, y=pos.y, z=pos.z-dist-2}, false, 5, 2) -- com z-
+			local p1b = sunos.f_pegar_solo({x=x, y=pos.y, z=pos.z-dist-3}, false, 5, 2) -- com z--
+			local p2a = sunos.f_pegar_solo({x=x, y=pos.y, z=pos.z+dist+2}, false, 5, 2) -- com z+
+			local p2b = sunos.f_pegar_solo({x=x, y=pos.y, z=pos.z+dist+3}, false, 5, 2) -- com z++
+			
+			-- Troca o node
+			if p1a then colocar_rua(p1a) end
+			if p1b then colocar_rua(p1b) end
+			if p2a then colocar_rua(p2a) end
+			if p2b then colocar_rua(p2b) end
+		
+			x = x + 1
+		end
+	end
+end
+
+-- Coloca uma rua calcetada na porta para rua de uma estrutura
+--[[
+	Argumentos:
+		<pos> coordenada do centro do solo da estrutura
+		<dist> distancia de centro a borda da estrutura
+  ]]
+local porta_para_rua = function(pos, dist)
+	
+	-- Localiza todas as portas da estrutura
+	local portas = minetest.find_nodes_in_area(
+		{x=pos.x-dist, y=pos.y, z=pos.z-dist}, 
+		{x=pos.x+dist, y=pos.y+14, z=pos.z+dist}, 
+		{"doors:door_wood_a"}
+	)
+	
+	minetest.chat_send_all("aaaa")
+	
+	-- Separar portas para a rua
+	do
+		-- Coordenadas das portas para a rua
+		local pr = {}
+	
+		for _,p in ipairs(portas) do
+		
+			-- Procura node de rua perto da porta (do solo da porta para pegar a rua caso ela esteja mais para baixo)
+			local r =  minetest.find_node_near({x=p.x, y=p.y-1, z=p.z}, 2, {"sunos:rua_calcetada"})
+			if r then
+				table.insert(pr, p)
+			end
+		end
+		
+		-- Atualiza lista de portas analizadas
+		portas = pr
+	end
+	
+	-- Coloca nodes para a rua nas portas para a rua
+	for _,p in ipairs(portas) do
+		
+		-- Pega a altura da rua para os verificadores posteriores acertarem a altura do node desejado
+		local y = minetest.find_node_near({x=p.x, y=p.y-1, z=p.z}, 2, {"sunos:rua_calcetada"}).y
+		
+		-- Verifica para que lado está a rua
+		if minetest.get_node({x=p.x+2, y=y, z=p.z}).name then -- X+
+			colocar_rua({x=p.x+1, y=p.y-1, z=p.z})
+			
+		elseif minetest.get_node({x=p.x-2, y=y, z=p.z}).name then -- X-
+			colocar_rua({x=p.x-1, y=p.y-1, z=p.z})
+			
+		elseif minetest.get_node({x=p.x, y=y, z=p.z+2}).name then -- Z+
+			colocar_rua({x=p.x, y=p.y-1, z=p.z+1})
+			
+		elseif minetest.get_node({x=p.x, y=y, z=p.z-2}).name then -- Z-
+			colocar_rua({x=p.x, y=p.y-1, z=p.z-1})
+		end
+	end
+end
+
 
 -- Montar uma vila
 --[[
@@ -365,7 +495,7 @@ sunos.criar_vila = function(pos_ref)
 			
 			-- Planifica assentamento
 			if d_assent ~= 0 then
-				plagen.planificar(p_assent, "quadrada", (d_assent*2+1), 10, {solo="default:dirt_with_grass", subsolo="default:dirt", rocha="default:stone"}, 1, true, true)
+				plagen.planificar(p_assent, "quadrada", (d_assent*2+1), 10, {solo="default:dirt_with_grass", subsolo="default:dirt", rocha="default:stone"}, 3, true, true)
 				-- Atualiza a coordenada do solo
 				p_assent = sunos.pegar_solo(p_assent, 8, 4) or p_assent
 			end
@@ -452,6 +582,13 @@ sunos.criar_vila = function(pos_ref)
 				
 				tem_loja = true
 			end
+			
+			-- Colocar rua em volta da estrutura montada
+			montar_rua_estrutura(dados.pos, dados.dist)
+			
+			-- Levar rua até as portas para a rua da estrutura
+			porta_para_rua(dados.pos, dados.dist)
+			
 		end
 		
 		-- Atualizar banco de dados

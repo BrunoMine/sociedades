@@ -102,7 +102,7 @@ sunos.pegar_solo = function(pos, dist, subir)
 	local r = nil
 	while y <= dist do
 		local node = sunos.pegar_node({x=np.x, y=np.y-y, z=np.z})
-		if node.name == "default:dirt_with_grass" then
+		if node.name == "default:dirt_with_grass" or node.name == "sunos:rua_calcetada" then
 			r = {x=np.x, y=np.y-y, z=np.z}
 			break
 		end

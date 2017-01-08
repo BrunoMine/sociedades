@@ -194,5 +194,5 @@ end
 minetest.register_on_generated(function(minp, maxp, seed)
 	
 	-- A verificação é feita apos um intervalo de tempo para garantir que o mapa foi corretamente gerado
-	minetest.after(3, verificar_mapa_gerado, minp, maxp)
+	minetest.after(5, verificar_mapa_gerado, minp, maxp)
 end)

@@ -19,7 +19,7 @@ funcionalidades:
 ## Configurações
 
 Essas configurações são colocadas em minetest.conf
-- `sunos_raridade = 25` (em porcentagem, apenas numeros inteiros, padrão é 25)
+- `sunos_raridade = 100` (em porcentagem, apenas numeros inteiros, padrão é 100)
 - `sunos_verif_fundamento = 10` (tempo em segundos para cada verificação de um fundamento ativo no mapa, padrão é 10)
 - `sunos_casa_comunal_decadencia = 300` (tempo em segundos que a casa comunal pode ficar em decadencia, padrão é 300)
 

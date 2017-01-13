@@ -14,7 +14,7 @@ sovagxas = {}
 
 -- DIRETRIZES
 -- Raridade de arvores de sovagxas (chance de 1 em N definido) (numero inteiro maior que zero)
-sovagxas.RARIDADE = tonumber(minetest.setting_get("sovagxas_raridade") or 75)
+sovagxas.CHANCE = tonumber(minetest.setting_get("sovagxas_CHANCE") or 75)
 
 -- Itens que aparecem no bau
 sovagxas.itens_bau = {

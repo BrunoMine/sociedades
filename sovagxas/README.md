@@ -7,7 +7,7 @@ Os sovagxas (do esperanto, "selvagens") são pessoas simplistas que adoram viver
 ## Configurações
 
 Essas configurações são colocadas em minetest.conf
-- `sovagxas_raridade = 75` (em porcentagem, apenas numeros inteiros, padrão é 75)
+- `sovagxas_chance = 75` (em porcentagem, apenas numeros inteiros, padrão é 75)
 
 ## Licença
 Veja LICENSE.txt para informações detalhadas da licença LGPL 3.0

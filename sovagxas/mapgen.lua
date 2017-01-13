@@ -70,7 +70,7 @@ local verificar_mapa_gerado = function(minp, maxp)
 	if minetest.find_node_near({x=pos.x, y=pos.y+15, z=pos.z}, 10, {"group:stone", "group:dirt", "group:sand"}) then return end
 	
 	-- Sortear chance de criar arvore
-	if math.random(1, 100) > sovagxas.RARIDADE then return end
+	if math.random(1, 100) > sovagxas.CHANCE then return end
 	
 	-- gerar arvore no local
 	sovagxas.montar_arvore(pos)

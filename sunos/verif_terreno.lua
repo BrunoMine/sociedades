@@ -18,7 +18,7 @@
 		'0' sem obtrucoes
 		'1' em cima da faixa de solo existem obstrucoes (nao esta limpo e plano)
 		'2' faixa de solo (superficial) falta blocos de terra
-		'3' fixa de subsolo (considerando 2 faixas) falta blocos de terra
+		'3' faixa de subsolo (considerando 2 faixas) falta blocos de terra
   ]]
 sunos.verif_terreno = function(pos, dist)
 	if not pos then
@@ -75,33 +75,3 @@ sunos.verif_terreno = function(pos, dist)
 	-- Retorna sem erros
 	return 0
 end
-
--- Node test
-minetest.register_node("sunos:test", {
-	description = "Node test",
-	tiles = {"default_stone.png^default_apple.png"},
-	is_ground_content = true,
-	groups = {cracky=1},
-	drop = 'default:cobble',
-	legacy_mineral = true,
-	sounds = default.node_sound_stone_defaults(),
-	
-	on_place = function(itemstack, placer, pointed_thing)
-		if pointed_thing.above then
-			local p = pointed_thing.above
-			
-			p.y = p.y-1
-			
-			local r = sunos.verif_terreno(p, 3)
-			if r == 0 then
-				minetest.chat_send_all("terreno ok")
-			elseif r == 1 then
-				minetest.chat_send_all("em cima da faixa de solo existem obstrucoes")
-			elseif r == 2 then
-				minetest.chat_send_all("falta blocos de terra no solo superficial")
-			elseif r == 3 then
-				minetest.chat_send_all("falta blocos de terra no subsolo")
-			end
-		end
-	end,
-})

@@ -58,26 +58,20 @@ sunos.construir_loja = function(pos, dist, force, vila)
 			return sunos.S("Vila abandonada")
 		end
 		
-		-- Verificar se o local esta limpo, gramado e plano (contando o entorno da estrutura)
-		local nodes_solo = minetest.find_nodes_in_area(
-			{x=pos.x-dist-1, y=pos.y, z=pos.z-dist-1}, 
-			{x=pos.x+dist+1, y=pos.y, z=pos.z+dist+1}, 
-			{"default:dirt_with_grass", "default:dirt"}
-		)
-		local nodes_acima_solo = minetest.find_nodes_in_area(
-			{x=pos.x-dist-1, y=pos.y+1, z=pos.z-dist-1}, 
-			{x=pos.x+dist+1, y=pos.y+1, z=pos.z+dist+1}, 
-			{"air"}
-		)
-		if table.maxn(nodes_solo) < ((2*(dist+1))+1)^2
-			or table.maxn(nodes_acima_solo) < (((2*(dist+1))+1)^2)-1
-		then
-			return sunos.S("O local precisa estar limpo, gramado e plano para uma estrutura com @1x@1 blocos da largura", largura)
-		end
-
-		-- Verificar se tem outra estrutura de suno interferindo na area da nova estrutura
-		if sunos.verif_fundamento(pos, dist) == false then
-			return sunos.S("Muito perto de outra estrutura dos Sunos (afaste um pouco)")
+		-- Verifica status do terreno
+		local st = sunos.verif_terreno(pos, dist)
+		
+		-- Problema: em cima da faixa de solo existem obstrucoes (nao esta limpo e plano)
+		if st == 1 then
+			return sunos.S("O local precisa estar limpo e plano em uma area de @1x@1 blocos da largura", (largura+2))
+		
+		-- Problema: faixa de solo (superficial) falta blocos de terra
+		elseif st == 2 then
+			return sunos.S("O solo precisa estar plano e gramado em uma area de @1x@1 blocos da largura", (largura+2))
+		
+		-- Problema: faixa de subsolo (considerando 2 faixas) falta blocos de terra
+		elseif st == 3 then
+			return sunos.S("O subsolo precisa estar preenchido (ao menos 2 blocos de profundidade) em uma area de @1x@1 blocos da largura", (largura+2))
 		end
 	end
 	

@@ -16,7 +16,7 @@ local modpath = minetest.get_modpath("sunos")
 local nodes_estruturais = {"default:wood", "default:cobble", "default:stonebrick", "group:stair", "farming:straw"}
 
 -- Nodes removidos na montagem de ruinas
-local nodes_rem_ruinas = {"sunos:bau", "sunos:bau_loja", "default:wood", "group:stair", "group:glass", "group:fence", "group:ladder", "group:flower", "group:vessel", "default:torch", "group:pane", "default:ladder_wood", "default:ladder_steel", "group:leaves", "group:wool", "group:door", "farming:straw", "group:sunos", "default:bookshelf", "vessels:shelf", "flowers:mushroom_brown"}
+local nodes_rem_ruinas = {"default:apple", "sunos:bau", "sunos:bau_loja", "default:wood", "group:stair", "group:glass", "group:fence", "group:ladder", "group:flower", "group:vessel", "default:torch", "group:pane", "default:ladder_wood", "default:ladder_steel", "group:leaves", "group:wool", "group:door", "farming:straw", "group:sunos", "default:bookshelf", "vessels:shelf", "flowers:mushroom_brown"}
 
 -- Pegar direcao oposta
 sunos.pegar_dir_oposta = function(dir)
@@ -481,16 +481,23 @@ sunos.verificar_blocos_estruturais = function(pos)
 		return false
 	end
 	
+	-- Acessar metadados do fundamento
 	local meta = minetest.get_meta(pos)
+	
+	-- Pegar distancia centro a borda da estrutura
 	local dist = meta:get_string("dist")
+	
+	-- Pegar numero de nodes estruturais que a estrutura deve ter
 	local nodes_reg = tonumber(meta:get_string("nodes"))
 	
+	-- Pega todos os nodes estruturais presentes na estrutura atual
 	local nodes = minetest.find_nodes_in_area(
 		{x=pos.x-dist, y=pos.y, z=pos.z-dist}, 
 		{x=pos.x+dist, y=pos.y+14, z=pos.z+dist}, 
 		nodes_estruturais
 	)
 	
+	-- Compara o numero de nodes que tem na estrutura padrão com o numero atual presente na estrutura
 	if table.maxn(nodes) < nodes_reg - 10 then -- Permite ate 10 blocos serem removidos
 		return false
 	end

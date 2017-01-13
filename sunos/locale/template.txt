@@ -33,7 +33,9 @@ Kit Reparador de estrutura dos Sunos =
 # Colocação de fundamentos
 # Building of foundations
 
-O local precisa estar limpo, gramado e plano para uma estrutura com @1x@1 blocos da largura = 
+O local precisa estar limpo e plano em uma area de @1x@1 blocos da largura = 
+O solo precisa estar plano e gramado em uma area de @1x@1 blocos da largura = 
+O subsolo precisa estar preenchido (ao menos 2 blocos de profundidade) em uma area de @1x@1 blocos da largura = 
 
 Muito perto de outra estrutura dos Sunos (afaste um pouco) = 
 

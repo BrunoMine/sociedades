@@ -18,7 +18,7 @@ sunos = {}
 	Quanto maior, mais raro (Minimo é 1).
 	The larger, more rare (Minimo is 1).
   ]]
-sunos.RARIDADE = tonumber(minetest.setting_get("sunos_raridade") or 25)
+sunos.CHANCE = tonumber(minetest.setting_get("sunos_chance") or 100)
 
 
 -- Notificador de Inicializador

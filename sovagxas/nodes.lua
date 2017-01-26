@@ -100,28 +100,28 @@ minetest.register_node("sovagxas:bau", {
 		local player_inv = sender:get_inventory()
 		local itens = minetest.deserialize(meta:get_string("itens"))
 		
-		if fields.item1 then
+		if fields.item1 and itens[1] ~= false then
 			if player_inv:room_for_item("main", itens[1][1].." "..itens[1][2]) then
 				player_inv:add_item("main", itens[1][1].." "..itens[1][2])
 				itens[1] = false
 			else
 				minetest.send_chat_player(sender:get_player_name(), "Inventario lotado. Esvazie um pouco.")
 			end
-		elseif fields.item2 then
+		elseif fields.item2 and itens[2] ~= false then
 			if player_inv:room_for_item("main", itens[2][1].." "..itens[2][2]) then
 				player_inv:add_item("main", itens[2][1].." "..itens[2][2])
 				itens[2] = false
 			else
 				minetest.send_chat_player(sender:get_player_name(), "Inventario lotado. Esvazie um pouco.")
 			end
-		elseif fields.item3 then
+		elseif fields.item3 and itens[3] ~= false  then
 			if player_inv:room_for_item("main", itens[3][1].." "..itens[3][2]) then
 				player_inv:add_item("main", itens[3][1].." "..itens[3][2])
 				itens[3] = false
 			else
 				minetest.send_chat_player(sender:get_player_name(), "Inventario lotado. Esvazie um pouco.")
 			end
-		elseif fields.item4 then
+		elseif fields.item4 and itens[4] ~= false then
 			if player_inv:room_for_item("main", itens[4][1].." "..itens[4][2]) then
 				player_inv:add_item("main", itens[4][1].." "..itens[4][2])
 				itens[4] = false

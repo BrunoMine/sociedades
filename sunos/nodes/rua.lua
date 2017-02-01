@@ -39,3 +39,7 @@ stairs.register_stair_and_slab(
 		footstep = {name = "default_hard_footstep", gain = 0.4},
 	})
 )
+
+-- Remover receitas pois nao deve ser montado
+minetest.clear_craft({output = 'stairs:slab_rua_calcetada'})
+minetest.clear_craft({output = 'stairs:stair_rua_calcetada'})

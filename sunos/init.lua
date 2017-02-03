@@ -44,6 +44,7 @@ dofile(modpath.."/verif_terreno.lua")
 dofile(modpath.."/estruturador.lua")
 dofile(modpath.."/vila.lua")
 dofile(modpath.."/mapgen.lua")
+dofile(modpath.."/gerenciador_de_vilas.lua")
 -- Nodes
 dofile(modpath.."/nodes/rua.lua")
 dofile(modpath.."/nodes/fundamento.lua")
@@ -51,16 +52,17 @@ dofile(modpath.."/nodes/bau.lua")
 dofile(modpath.."/nodes/decor_repo.lua")
 dofile(modpath.."/nodes/bancada.lua")
 dofile(modpath.."/nodes/bancada_de_trabalho.lua")
+-- Outros Recursos
 dofile(modpath.."/craftitens.lua")
 dofile(modpath.."/comandos.lua")
+-- NPCs e interface basica
 dofile(modpath.."/interface.lua")
 dofile(modpath.."/npc/npc.lua")
--- Recusos básicos
-dofile(modpath.."/estruturas/casa_comunal.lua")
 dofile(modpath.."/npc/npc_casa_comunal.lua")
-dofile(modpath.."/gerenciador_de_vilas.lua")
--- Estruturas adicionadas
+-- Estruturas básicas
+dofile(modpath.."/estruturas/casa_comunal.lua")
 dofile(modpath.."/estruturas/casa.lua")
 dofile(modpath.."/estruturas/decor.lua")
+-- Estruturas adicionais
 dofile(modpath.."/estruturas/loja.lua")
 notificar("[OK]!")

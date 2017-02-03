@@ -32,14 +32,14 @@ sunos.verif_terreno = function(pos, dist)
 	
 	-- Verificar faixa de solo superficial
 	do
-		-- Pegar nodes da faixa de terra
+		-- Pegar nodes de toda a area acima do solo onde ficara a estrutura
 		local superf = minetest.find_nodes_in_area(
 			{x=pos.x-dist, y=pos.y+1, z=pos.z-dist}, 
-			{x=pos.x+dist, y=pos.y+1, z=pos.z+dist}, 
+			{x=pos.x+dist, y=pos.y+14, z=pos.z+dist}, 
 			{"air", "group:flower", "group:grass"}
 		)
 	
-		if table.maxn(superf) < ((2*dist+1)^2) then
+		if table.maxn(superf) < ((2*dist+1)^2)*14 then
 			return 1
 		end
 	end
@@ -64,7 +64,7 @@ sunos.verif_terreno = function(pos, dist)
 		local subsolo = minetest.find_nodes_in_area(
 			{x=pos.x-dist, y=pos.y-2, z=pos.z-dist}, 
 			{x=pos.x+dist, y=pos.y-1, z=pos.z+dist}, 
-			{"group:stone", "group:cobble", "default:dirt", "group:spreading_dirt_type"}
+			{"group:stone", "group:cobble", "default:dirt", "group:spreading_dirt_type", "default:stone_with_coal", "default:gravel"}
 		)
 	
 		if table.maxn(subsolo) < ( ((2*dist+1)^2) * 2) then

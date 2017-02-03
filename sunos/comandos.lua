@@ -35,7 +35,7 @@ minetest.register_chatcommand("sunos", {
 				-- Coordenadas dos extremos
 				local p1 = pos
 				local p2 = {x=pos.x+largura-1, y=pos.y+15, z=pos.z+largura-1}
-				local arquivo = modpath .. "/estruturas/"..param2.."/"..param3.."."..largura..".mts"
+				local arquivo = modpath .. "/schems/"..param2.."/"..param3.."."..largura..".mts"
 				
 				if param1 == "s" then
 					-- Serializando a estrutura

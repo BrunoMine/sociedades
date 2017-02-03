@@ -30,7 +30,7 @@ sunos.montar_estrutura = function(cpos, dist, tipo)
 	local largura = 2*dist+1
 	
 	-- Caminho do arquivo da estrutura
-	local arquivo = modpath.."/estruturas/"..tipo.."/"..sunos.pegar_arquivo(largura, tipo).."."..largura..".mts"
+	local arquivo = modpath.."/schems/"..tipo.."/"..sunos.pegar_arquivo(largura, tipo).."."..largura..".mts"
 	
 	-- Criar estrutura
 	minetest.place_schematic(pos, arquivo, nil, nil, true)

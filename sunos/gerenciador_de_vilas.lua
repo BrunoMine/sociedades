@@ -9,11 +9,6 @@
 	Gerenciador de Vilas
   ]]
   
--- Variaveis do sistema
--- Tempo (em segundos) entre as verificações de estrutura obstruida
-local tempo_verif_estruturas = tonumber(minetest.setting_get("sunos_verif_fundamento") or 7)
--- Tempo (em segundos) em que uma casa comunal pode ficar em decadencia antes de perder o fundamento
-local tempo_decadencia = tonumber(minetest.setting_get("sunos_casa_comunal_decadencia") or 300)
 
 -- Pega ignore apenas se bloco nao foi gerado
 local function pegar_node(pos)
@@ -27,6 +22,7 @@ end
 
 -- Diretorio do mundo
 local worldpath = minetest.get_worldpath()
+
 -- Atualizar banco de dados da vila
 sunos.atualizar_bd_vila = function(vila)
 	if vila == nil then
@@ -50,61 +46,52 @@ sunos.atualizar_bd_vila = function(vila)
 		-- Separa os termos de cada arquivo a ser analizado
 		local v = string.split(arq, "_")
 		
-		-- Caso o arquivo seja de uma casa
-		if v[1] == "casa" and tonumber(v[2]) then
+		-- Correção para estrutura "casa_comunal" por ter "_" no termo
+		if v[2] == "comunal" then v[1] = "casa_comunal" end
 		
-			-- Pegar dados do arquivo
-			local reg = sunos.bd:pegar("vila_"..vila, arq)
+		-- Verifica se o arquivo é de uma estrutura registrada
+		if sunos.estruturas[v[1]] then
 			
-			-- Verifica se o fundamento ainda existe
-			local n = pegar_node(reg.estrutura.pos)
 			
-			if n.name ~= "sunos:fundamento" then
+			-- Caso o arquivo seja de uma estrutura com população
+			if sunos.estruturas[v[1]].pop then
+		
+				-- Pegar dados do arquivo
+				local reg = sunos.bd:pegar("vila_"..vila, arq)
 				
-				-- Elimina o arquivo
-				sunos.bd:remover("vila_"..vila, arq)
+				-- Verifica se o fundamento ainda existe
+				local n = pegar_node(reg.estrutura.pos)
+			
+				if n.name ~= "sunos:fundamento" then
 				
-			else
-				-- Verifica se os metadados estao correspondendo ao banco de dados
-				local meta = minetest.get_meta(reg.estrutura.pos)
-				
-				if not meta:get_string("vila") or tonumber(meta:get_string("vila")) ~= tonumber(vila) then
-				
-					--Elimina o arquivo
+					-- Elimina o arquivo
 					sunos.bd:remover("vila_"..vila, arq)
-					
+				
 				else
+					-- Verifica se os metadados estao correspondendo ao banco de dados
+					local meta = minetest.get_meta(reg.estrutura.pos)
+				
+					if not meta:get_string("vila") or tonumber(meta:get_string("vila")) ~= tonumber(vila) then
+				
+						--Elimina o arquivo
+						sunos.bd:remover("vila_"..vila, arq)
 					
-					-- Contabiliza a população
-					pop_total = pop_total + reg.pop	
+					else
 					
+						-- Contabiliza a população
+						pop_total = pop_total + reg.pop	
+					
+					end
 				end
 			end
 		
-		-- Caso o arquivo seja de uma casa comunal
-		elseif v[1] == "casa_comunal" then
+			-- Executa funções personalizadas
+			if sunos.estruturas[v[1]].atualizando_vila then
 			
-			-- Pegar dados do arquivo
-			local reg = sunos.bd:pegar("vila_"..vila, arq)
-			
-			-- Verifica se o fundamento ainda existe
-			local n = pegar_node(reg.estrutura.pos)
-			if n.name ~= "sunos:fundamento" then
-			
-				-- Elimina o arquivo
-				sunos.bd:remover("vila_"..vila, arq)
+				-- Pegar dados do arquivo
+				local reg = sunos.bd:pegar("vila_"..vila, arq)
 				
-			else
-				
-				-- Verifica se os metadados estao correspondendo ao banco
-				local meta = minetest.get_meta(reg.estrutura.pos)
-				
-				if not meta:get_string("vila") or tonumber(meta:get_string("vila")) ~= vila then
-				
-					--Elimina o arquivo
-					sunos.bd:remover("vila_"..vila, arq)
-					
-				end
+				sunos.estruturas[v[1]].atualizando_vila(vila, arq, reg)
 				
 			end
 		end
@@ -156,64 +143,9 @@ local verificar_fundamento = function(pos)
 	end
 	
 	-- Verificação de casa comunal
-	if tipo == "casa_comunal" then
-		local status = meta:get_string("status")
+	if sunos.estruturas[tipo] then
 		
-		-- Caso esteja ativa
-		if status == "ativa" then
-			if sunos.verificar_blocos_estruturais(pos) == false then -- Verificar Estrutura danificada
-			
-				-- Tornar estrutura em ruinas
-				sunos.montar_ruinas(pos, dist)
-			
-				-- Inicia processo de decadencia da casa comunal
-				meta:set_string("status", "destruida")
-				meta:set_string("tempo", 0) -- Tempo de decadencia (em segundos)
-			end
-		
-		-- Caso esteja em decadencia
-		else
-			local tempo = tonumber(meta:get_string("tempo")) + tempo_verif_estruturas
-			
-			if tempo > tempo_decadencia then
-				
-				-- Verifica se ainda tem habitantes mantem a decadencia
-				local pop = sunos.bd:pegar("vila_"..vila, "pop")
-				if pop > 0 then
-					meta:set_string("tempo", 0)
-				else
-					-- Remove casa comunal de vez
-					-- Remove do banco de dados
-					sunos.bd:remover("vila_"..vila, "casa_comunal")
-					
-					-- Trocar bloco de fundamento por madeira
-					minetest.set_node(pos, {name="default:tree"})
-					
-					-- Atualizar banco de dados da vila
-					sunos.atualizar_bd_vila(vila)
-				end
-			else
-				meta:set_string("tempo", tempo) -- Salva o tempo que passou e continua a decadencia
-			end
-		end
-		
-	-- Verificação de estrutura comum
-	elseif tipo == "casa" or tipo == "decor" or tipo == "loja" then
-		
-		if sunos.verificar_blocos_estruturais(pos) == false then -- Verificar Estrutura danificada
-		
-			-- Montar ruinas no local da antiga casa
-			sunos.montar_ruinas(pos, dist)
-			
-			-- Exclui o arquivo da estrutura do banco de dados
-			sunos.bd:remover("vila_"..meta:get_string("vila"), tipo.."_"..meta:get_string("estrutura"))
-			
-			-- Trocar bloco de fundamento por madeira
-			minetest.set_node(pos, {name="default:tree"})
-			
-			-- Atualizar banco de dados da vila
-			sunos.atualizar_bd_vila(vila)
-		end
+		sunos.estruturas[tipo].verif_fund(pos)
 		
 	-- Caso nao seja de nenhum tipo encontrado
 	else
@@ -224,7 +156,7 @@ end
 -- Atualiza as estruturas verificando se estao obstruidas
 minetest.register_abm({
 	nodenames = {"sunos:fundamento"},
-	interval = tempo_verif_estruturas,
+	interval = sunos.var.tempo_verif_estruturas,
 	chance = 1,
 	action = function(pos)
 		minetest.after(4, verificar_fundamento, {x=pos.x, y=pos.y, z=pos.z})	

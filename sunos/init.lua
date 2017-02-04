@@ -31,8 +31,19 @@ end
 -- Modpath
 local modpath = minetest.get_modpath("sunos")
 
+-- Salvar dados variaveis
+sunos.var = {}
+-- Tempo (em segundos) entre as verificações de estrutura obstruida
+sunos.var.tempo_verif_estruturas = tonumber(minetest.setting_get("sunos_verif_fundamento") or 7)
+-- Tempo (em segundos) em que uma casa comunal pode ficar em decadencia antes de perder o fundamento
+sunos.var.tempo_decadencia = tonumber(minetest.setting_get("sunos_casa_comunal_decadencia") or 300)
+
+
 -- Banco de dados (Memor)
 sunos.bd = memor.montar_bd()
+
+-- Tabela de estruturas e funções
+sunos.estruturas = {}
 
 -- Carregar scripts
 notificar("Carregando...")
@@ -60,9 +71,9 @@ dofile(modpath.."/interface.lua")
 dofile(modpath.."/npc/npc.lua")
 dofile(modpath.."/npc/npc_casa_comunal.lua")
 -- Estruturas básicas
-dofile(modpath.."/estruturas/casa_comunal.lua")
-dofile(modpath.."/estruturas/casa.lua")
-dofile(modpath.."/estruturas/decor.lua")
+dofile(modpath.."/estruturas/casa_comunal/init.lua")
+dofile(modpath.."/estruturas/casa/init.lua")
+dofile(modpath.."/estruturas/decor/init.lua")
 -- Estruturas adicionais
-dofile(modpath.."/estruturas/loja.lua")
+dofile(modpath.."/estruturas/loja/init.lua")
 notificar("[OK]!")

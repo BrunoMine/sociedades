@@ -130,7 +130,7 @@ sunos.pegar_arquivo = function(largura, tipo)
 		return nil
 	end
 	
-	local estruturas = minetest.get_dir_list(modpath.."/estruturas/"..tipo)
+	local estruturas = minetest.get_dir_list(modpath.."/schems/"..tipo)
 	
 	local validos = {}
 	if estruturas ~= nil then

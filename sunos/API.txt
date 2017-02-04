@@ -1,0 +1,8 @@
+API do Mod Sunos v1.4-dev
+
+
+Criar uma estrutura
+
+Indicador de que existe população na estrtura. Isso faz o verificador contabilizar a população para a vila.
+sunos.estruturas[<NomeEstrutura>].pop = <true>
+

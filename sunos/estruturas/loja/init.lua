@@ -13,6 +13,9 @@
 -- Caminho do diretório do mod
 local modpath = minetest.get_modpath("sunos")
 
+-- Tabela global de Loja
+sunos.estruturas.loja = {}
+
 -- Construir loja de sunos
 --[[
 	Essa função construi uma loja de sunos e configura o fundamento
@@ -24,14 +27,14 @@ local modpath = minetest.get_modpath("sunos")
 		<vila> é o numero da vila a qual a loja pertence
 		<dist> distancia centro a borda da nova estrutura
   ]]
-sunos.construir_loja = function(pos, dist, force, vila)
+sunos.estruturas.loja.construir = function(pos, dist, force, vila)
 	-- Validar argumentos de entrada
 	if pos == nil then
-		minetest.log("error", "[Sunos] Tabela pos nula (sunos.construir_loja)")
+		minetest.log("error", "[Sunos] Tabela pos nula (em sunos.estruturas.loja.construir)")
 		return "Erro interno (pos nula)"
 	end
 	if dist == nil then
-		minetest.log("error", "[Sunos] variavel dist nula (em sunos.construir_loja)")
+		minetest.log("error", "[Sunos] variavel dist nula (em sunos.estruturas.loja.construir)")
 		return "Erro interno (tamanho de loja inexistente)"
 	end
 	
@@ -202,6 +205,32 @@ minetest.register_node("sunos:bau_loja", {
 	end,
 })
 
+-- Verificação do fundamento
+sunos.estruturas.loja.verif_fund = function(pos)
+	local meta = minetest.get_meta(pos)
+	local vila = meta:get_string("vila")
+	if not vila then return end
+	vila = tonumber(vila)
+	local tipo = meta:get_string("tipo")
+	local dist = tonumber(meta:get_string("dist"))
+	
+	-- Verificar Estrutura danificada
+	if sunos.verificar_blocos_estruturais(pos) == false then 
+	
+		-- Montar ruinas no local da antiga casa
+		sunos.montar_ruinas(pos, dist)
+		
+		-- Exclui o arquivo da estrutura do banco de dados
+		sunos.bd:remover("vila_"..meta:get_string("vila"), tipo.."_"..meta:get_string("estrutura"))
+		
+		-- Trocar bloco de fundamento por madeira
+		minetest.set_node(pos, {name="default:tree"})
+		
+		-- Atualizar banco de dados da vila
+		sunos.atualizar_bd_vila(vila)
+	end
+end
+
 -- Fundamento de loja
 minetest.register_node("sunos:fundamento_loja", {
 	description = sunos.S("Fundamento de Loja dos Sunos"),
@@ -217,7 +246,7 @@ minetest.register_node("sunos:fundamento_loja", {
 	-- Colocar uma loja
 	on_place = function(itemstack, placer, pointed_thing)
 		
-		local r = sunos.construir_loja(pointed_thing.under, 3)
+		local r = sunos.estruturas.loja.construir(pointed_thing.under, 3)
 		if r == true then
 			
 			-- Retorna mensagem de montagem concluida

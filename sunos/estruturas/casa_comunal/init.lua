@@ -12,6 +12,18 @@
 -- Caminho do diretório do mod
 local modpath = minetest.get_modpath("sunos")
 
+-- Tabela global de Casa Comunal
+sunos.estruturas.casa_comunal = {}
+
+local function pegar_node(pos)
+	local node = minetest.get_node(pos)
+	if node.name == "ignore" then
+		minetest.get_voxel_manip():read_from_map(pos, pos)
+		node = minetest.get_node(pos)
+	end
+	return node
+end
+
 -- Construir casa comunal
 --[[
 	Essa função construi uma casa comunal e configura o fundamento
@@ -25,22 +37,22 @@ local modpath = minetest.get_modpath("sunos")
 		<n_estrutura> é o numero da estrutura da casa comunal
 		<force_area> OPCIONAL | Para ignorar as verificações de area limpa
   ]]
-sunos.construir_casa_comunal = function(pos, vila, nivel, n_estrutura, force_area)
+sunos.estruturas.casa_comunal.construir = function(pos, vila, nivel, n_estrutura, force_area)
 	-- Validar argumentos de entrada
 	if pos == nil then
-		minetest.log("error", "[Sunos] Tabela pos nula (construir_casa_comunal)")
+		minetest.log("error", "[Sunos] Tabela pos nula (sunos.estruturas.casa_comunal.construir)")
 		return "Erro interno (pos nula)"
 	end
 	if nivel == nil then
-		minetest.log("error", "[Sunos] variavel nivel nula (em construir_casa_comunal)")
+		minetest.log("error", "[Sunos] variavel nivel nula (em sunos.estruturas.casa_comunal.construir)")
 		return "Erro interno (nivel nulo)"
 	end
 	if vila == nil then
-		minetest.log("error", "[Sunos] variavel vila nula (em construir_casa_comunal)")
+		minetest.log("error", "[Sunos] variavel vila nula (em sunos.estruturas.casa_comunal.construir)")
 		return "Erro interno (vila inexistente)"
 	end
 	if n_estrutura == nil then
-		minetest.log("error", "[Sunos] variavel n_estrutura nula (em construir_casa_comunal)")
+		minetest.log("error", "[Sunos] variavel n_estrutura nula (em sunos.estruturas.casa_comunal.construir)")
 		return "Erro interno (Numero de estrutura inexistente)"
 	end
 	
@@ -73,7 +85,7 @@ sunos.construir_casa_comunal = function(pos, vila, nivel, n_estrutura, force_are
 	
 	-- Criar casa comunal
 	-- Caminho do arquivo da estrutura
-	local arquivo = modpath.."/estruturas/casa_comunal/nivel_"..nivel..".13.mts"
+	local arquivo = modpath.."/schems/casa_comunal/nivel_"..nivel..".13.mts"
 	
 	-- Criar estrutura
 	minetest.place_schematic({x=pos.x-dist,y=pos.y,z=pos.z-dist}, arquivo, nil, nil, true)
@@ -87,15 +99,20 @@ sunos.construir_casa_comunal = function(pos, vila, nivel, n_estrutura, force_are
 	meta:set_string("nivel", nivel) -- Nivel da casa comunal
 	meta:set_string("dist", dist) -- Distancia centro a borda da estrutra
 	meta:set_string("status", "ativa") -- Status da casa comunal
+	meta:set_string("tempo", 0) -- Tempo de decadencia (em segundos)
 	sunos.contabilizar_blocos_estruturais(pos) -- Armazena quantidade de nodes estruturais
 	
 	-- Salvar nova dados da estrutura no banco de dados da vila
-	local dados_casa_comunal = {
-		pos = pos, -- Pos do fundamento
+	local registros = {
 		vila = vila, -- Numero da vila
 		nivel = nivel, -- Nivel da Casa Comunal
+		estrutura = {
+			dist = dist,
+			largura = largura,
+			pos = pos
+		}
 	}
-	sunos.bd:salvar("vila_"..vila, "casa_comunal", dados_casa_comunal)
+	sunos.bd:salvar("vila_"..vila, "casa_comunal", registros)
 	
 	-- Ajustar nodes da estrutura
 	
@@ -116,6 +133,135 @@ sunos.construir_casa_comunal = function(pos, vila, nivel, n_estrutura, force_are
 	end
 	
 	return true
+end
+
+-- Verificação do fundamento
+sunos.estruturas.casa_comunal.verif_fund = function(pos)
+	local meta = minetest.get_meta(pos)
+	local vila = meta:get_string("vila")
+	if not vila then return end
+	vila = tonumber(vila)
+	local tipo = meta:get_string("tipo")
+	local dist = tonumber(meta:get_string("dist"))
+	
+	-- Caso esteja ativa
+	if status == "ativa" then
+		if sunos.verificar_blocos_estruturais(pos) == false then -- Verificar Estrutura danificada
+	
+			-- Tornar estrutura em ruinas
+			sunos.montar_ruinas(pos, dist)
+	
+			-- Inicia processo de decadencia da casa comunal
+			meta:set_string("status", "destruida")
+			meta:set_string("tempo", 0) -- Tempo de decadencia (em segundos)
+		end
+
+	-- Caso esteja em decadencia
+	else
+	
+		local tempo = tonumber(meta:get_string("tempo")) + sunos.var.tempo_verif_estruturas
+	
+		if tempo > sunos.var.tempo_decadencia then
+		
+			-- Verifica se ainda tem habitantes mantem a decadencia
+			local pop = sunos.bd:pegar("vila_"..vila, "pop_total")
+			if pop > 0 then
+				meta:set_string("tempo", 0)
+			else
+				-- Remove casa comunal de vez
+				-- Remove do banco de dados
+				sunos.bd:remover("vila_"..vila, "casa_comunal")
+			
+				-- Trocar bloco de fundamento por madeira
+				minetest.set_node(pos, {name="default:tree"})
+			
+				-- Atualizar banco de dados da vila
+				sunos.atualizar_bd_vila(vila)
+			end
+		else
+			meta:set_string("tempo", tempo) -- Salva o tempo que passou e continua a decadencia
+		end
+	end
+end
+
+-- Chamada de on_rightclick de fundamento colocado
+sunos.estruturas.casa_comunal.fund_on_rightclick = function(pos, node, player, itemstack, pointed_thing)
+	local meta = minetest.get_meta(pos)
+	local vila = meta:get_string("vila")
+	local tipo = meta:get_string("tipo")
+		
+	if meta:get_string("status") == "destruida" then
+		if itemstack:get_name() == "sunos:kit_reparador" then
+			local n_estrutura = meta:get_string("estrutura")
+		
+			-- Obter dados do fundamento
+			local nivel = meta:get_string("nivel")
+			local n_estrutura = meta:get_string("estrutura")
+		
+			-- Alterar o status para permitir que seja destruido para ser remontada
+			meta:set_string("status", "recon") 
+		
+			-- Construir casa comunal nova
+			local r = sunos.construir_casa_comunal(pos, vila, nivel, n_estrutura, true)
+		
+			if r == true then
+				-- Salvar novo total de estruturas da vila
+				sunos.bd:salvar("vila_"..vila, "estruturas", n_estrutura)
+
+				-- Retorna mensagem de montagem concluida
+				minetest.chat_send_player(player:get_player_name(), sunos.S("Casa Comunal reconstruida"))
+				itemstack:take_item()
+				return itemstack
+			else
+				-- Retorna mensagem de falha
+				minetest.chat_send_player(player:get_player_name(), r)
+				return itemstack
+			end
+		else
+			minetest.chat_send_player(player:get_player_name(), sunos.S("Casa Comunal em decadencia. Use o Kit de Reparo"))
+		end
+	end
+end
+
+-- Chamada on_destruct personalizada
+sunos.estruturas.casa_comunal.fund_on_destruct = function(pos)
+	local meta = minetest.get_meta(pos)
+	local vila = meta:get_string("vila")
+	local tipo = meta:get_string("tipo")
+	local dist = meta:get_string("dist")
+	
+	local status = meta:get_string("status")
+	
+	if status ~= "recon" then
+		sunos.montar_ruinas(pos, dist)
+		sunos.bd:remover("vila_"..meta:get_string("vila"), "casa_comunal")
+	end
+end
+
+-- Chamada personalizada para momento de atualização da vila
+sunos.estruturas.casa_comunal.atualizando_vila = function(vila, arq, reg)
+	
+	-- Verifica se o fundamento ainda existe
+	local n = pegar_node(reg.estrutura.pos)
+	if n.name ~= "sunos:fundamento" then
+
+		-- Elimina o arquivo
+		sunos.bd:remover("vila_"..vila, arq)
+	
+	else
+	
+		-- Verifica se os metadados estao correspondendo ao banco
+		local meta = minetest.get_meta(reg.estrutura.pos)
+	
+		if not meta:get_string("vila") or tonumber(meta:get_string("vila")) ~= vila then
+	
+			--Elimina o arquivo
+			sunos.bd:remover("vila_"..vila, arq)
+		
+		end
+	
+	end
+
 end
 
 -- Fundamento de casa comunal
@@ -162,7 +308,7 @@ minetest.register_node("sunos:fundamento_casa_comunal", {
 			return minetest.chat_send_player(placer:get_player_name(), sunos.S("Ja existe uma Casa Comunal nessa vila"))
 		end
 		
-		local r = sunos.construir_casa_comunal(pointed_thing.under, vila, 1, n_estrutura)
+		local r = sunos.estruturas.casa_comunal.construir(pointed_thing.under, vila, 1, n_estrutura)
 		if r == true then
 			-- Salvar novo total de estruturas da vila
 			sunos.bd:salvar("vila_"..vila, "estruturas", n_estrutura)

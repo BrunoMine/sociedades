@@ -12,6 +12,9 @@
 -- Caminho do diretório do mod
 local modpath = minetest.get_modpath("sunos")
 
+-- Tabela global de Decorativos (estruturas)
+sunos.estruturas.decor = {}
+
 -- Construir estrutura decorativa
 --[[
 	Essa função construi uma estrutura decorativa de sunos e configura o fundamento
@@ -24,14 +27,14 @@ local modpath = minetest.get_modpath("sunos")
 		<vila> OPCIONAL | é o numero da vila a qual a estrutura decorativa pertence
 		<force_area> OPCIONAL | true para ignorar verificadores de area
   ]]
-sunos.construir_decor = function(pos, dist, vila, force_area)
+sunos.estruturas.decor.construir = function(pos, dist, vila, force_area)
 	-- Validar argumentos de entrada
 	if pos == nil then
-		minetest.log("error", "[Sunos] Tabela pos nula (sunos.construir_decor)")
+		minetest.log("error", "[Sunos] Tabela pos nula (sunos.estruturas.decor.construir)")
 		return "Erro interno (pos nula)"
 	end
 	if dist == nil then
-		minetest.log("error", "[Sunos] variavel dist nula (em sunos.construir_decor)")
+		minetest.log("error", "[Sunos] variavel dist nula (em sunos.estruturas.decor.construir)")
 		return "Erro interno (tamanho de estrutura decorativa inexistente)"
 	end
 	
@@ -108,5 +111,31 @@ sunos.construir_decor = function(pos, dist, vila, force_area)
 	sunos.bd:salvar("vila_"..vila, "estruturas", n_estrutura)
 	
 	return true
+end
+
+-- Verificação do fundamento
+sunos.estruturas.decor.verif_fund = function(pos)
+	local meta = minetest.get_meta(pos)
+	local vila = meta:get_string("vila")
+	if not vila then return end
+	vila = tonumber(vila)
+	local tipo = meta:get_string("tipo")
+	local dist = tonumber(meta:get_string("dist"))
+	
+	-- Verificar Estrutura danificada
+	if sunos.verificar_blocos_estruturais(pos) == false then 
+	
+		-- Montar ruinas no local da antiga casa
+		sunos.montar_ruinas(pos, dist)
+		
+		-- Exclui o arquivo da estrutura do banco de dados
+		sunos.bd:remover("vila_"..meta:get_string("vila"), tipo.."_"..meta:get_string("estrutura"))
+		
+		-- Trocar bloco de fundamento por madeira
+		minetest.set_node(pos, {name="default:tree"})
+		
+		-- Atualizar banco de dados da vila
+		sunos.atualizar_bd_vila(vila)
+	end
 end
 

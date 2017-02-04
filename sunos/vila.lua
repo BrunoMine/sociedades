@@ -648,7 +648,7 @@ sunos.criar_vila = function(pos_ref)
 			if tipo == "casa" then
 				
 				-- Montar casa
-				sunos.construir_casa_comum(dados.pos, dados.dist, vila, true)
+				sunos.estruturas.casa.construir(dados.pos, dados.dist, vila, true)
 				
 				-- Recoloca itens reais (apartir dos itens de reposição)
 				sunos.decor_repo(dados.pos, dados.dist, sunos.tb_repo_casas[tostring(dados.dist)]())
@@ -658,7 +658,7 @@ sunos.criar_vila = function(pos_ref)
 			elseif tipo == "decor" then
 				
 				-- Montar estrutura decorativa
-				sunos.construir_decor(dados.pos, dados.dist, vila, true)
+				sunos.estruturas.decor.construir(dados.pos, dados.dist, vila, true)
 				
 				-- Preencher o entorno com ruas
 				preencher_com_rua(minetest.find_nodes_in_area(
@@ -669,7 +669,7 @@ sunos.criar_vila = function(pos_ref)
 				
 			elseif tipo == "loja" then
 				
-				sunos.construir_loja(dados.pos, dados.dist, true, vila)
+				sunos.estruturas.loja.construir(dados.pos, dados.dist, true, vila)
 				
 				tem_loja = true
 			end

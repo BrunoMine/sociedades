@@ -25,9 +25,9 @@ sunos.estruturas.decor = {}
 		<pos> é a coordenada do fundamento da estrutura
 		<dist> distancia centro a borda da nova estrutura
 		<vila> OPCIONAL | é o numero da vila a qual a estrutura decorativa pertence
-		<force_area> OPCIONAL | true para ignorar verificadores de area
+		<verif_area> OPCIONAL | true verificar a area antes de montar a estrutura (retorna strings dos erros)
   ]]
-sunos.estruturas.decor.construir = function(pos, dist, vila, force_area)
+sunos.estruturas.decor.construir = function(pos, dist, vila, verif_area)
 	-- Validar argumentos de entrada
 	if pos == nil then
 		minetest.log("error", "[Sunos] Tabela pos nula (sunos.estruturas.decor.construir)")
@@ -59,7 +59,7 @@ sunos.estruturas.decor.construir = function(pos, dist, vila, force_area)
 	end
 	
 	-- Verificações de area
-	if force_area ~= true then
+	if verif_area == true then
 	
 		-- Verifica status do terreno
 		local st = sunos.verif_terreno(pos, dist)
@@ -81,61 +81,7 @@ sunos.estruturas.decor.construir = function(pos, dist, vila, force_area)
 	-- Criar estrutura decorativa
 	sunos.montar_estrutura(pos, dist, "decor")
 	
-	-- Numero da estrutura da nova estrutura decorativa comunal
-	local n_estrutura = sunos.bd:pegar("vila_"..vila, "estruturas")+1 -- Numero da nova estrutura
-	
-	-- Criar fundamento e configurar
-	minetest.set_node(pos, {name="sunos:fundamento"})
-	local meta = minetest.get_meta(pos)
-	meta:set_string("vila", vila) -- Numero da vila
-	meta:set_string("tipo", "decor") -- Tipo da estrutura
-	meta:set_string("estrutura", n_estrutura) -- Numero da estrutura
-	meta:set_string("dist", dist) -- Distancia centro a borda da estrutura
-	sunos.contabilizar_blocos_estruturais(pos) -- Armazena quantidade de nodes estruturais
-	
-	-- Registros a serem salvos
-	local registros = {
-		numero = n_estrutura,
-		tipo = "decor",
-		estrutura = {
-			dist = dist,
-			largura = largura,
-			pos = pos
-		}
-	}
-	
-	-- Salva no banco de dados
-	sunos.bd:salvar("vila_"..vila, "decor_"..n_estrutura, registros)
-	
-	-- Salvar novo total de estruturas da vila
-	sunos.bd:salvar("vila_"..vila, "estruturas", n_estrutura)
-	
 	return true
 end
 
--- Verificação do fundamento
-sunos.estruturas.decor.verif_fund = function(pos)
-	local meta = minetest.get_meta(pos)
-	local vila = meta:get_string("vila")
-	if not vila then return end
-	vila = tonumber(vila)
-	local tipo = meta:get_string("tipo")
-	local dist = tonumber(meta:get_string("dist"))
-	
-	-- Verificar Estrutura danificada
-	if sunos.verificar_blocos_estruturais(pos) == false then 
-	
-		-- Montar ruinas no local da antiga casa
-		sunos.montar_ruinas(pos, dist)
-		
-		-- Exclui o arquivo da estrutura do banco de dados
-		sunos.bd:remover("vila_"..meta:get_string("vila"), tipo.."_"..meta:get_string("estrutura"))
-		
-		-- Trocar bloco de fundamento por madeira
-		minetest.set_node(pos, {name="default:tree"})
-		
-		-- Atualizar banco de dados da vila
-		sunos.atualizar_bd_vila(vila)
-	end
-end
 

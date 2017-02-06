@@ -23,24 +23,48 @@ if sunos.bd:verif("geral", "vilas") ~= true then
 end
 
 -- Registrar nova vila (retorna o numero da vila registrada)
-local registrar_vila = function(n_estruturas)
-	if n_estruturas == nil then n_estruturas = tonumber(0) end
+local registrar_vila = function()
 	
 	-- Pegar quantidade vilas
-	local qtd = tonumber(sunos.bd:pegar("geral", "vilas"))
+	local n = tonumber(sunos.bd:pegar("geral", "vilas"))
 	
-	qtd = qtd + 1
+	n = n + 1
 	
 	-- Criar registro
-	sunos.bd:salvar("vila_"..qtd, "numero", qtd)
+	sunos.bd:salvar("vila_"..n, "numero", n)
 	
 	-- Salvar numero incial de estruturas
-	sunos.bd:salvar("vila_"..qtd, "estruturas", n_estruturas)
+	sunos.bd:salvar("vila_"..n, "estruturas", 0)
 	
 	-- Atualizar quantidade de vilas
-	sunos.bd:salvar("geral", "vilas", qtd)
+	sunos.bd:salvar("geral", "vilas", n)
 	
-	return qtd
+	return n
+end
+
+-- Registrar nova estrutura (retorna o numero da estrutura registrada)
+sunos.nova_estrutura = function(vila)
+	if not vila then
+		minetest.log("error", "[Sunos] vila nula (em sunos.nova_estrutura)")
+		return false
+	end
+	-- Verificar se a vila ainda existe no banco de dados
+	if sunos.bd:verif("vila_"..vila, "estruturas") ~= true then
+		minetest.log("error", "[Sunos] A vila não existe no banco de dados (em sunos.nova_estrutura)")
+		return false
+	end
+	
+	-- Pega o numero atual de estruturas
+	local n = sunos.bd:pegar("vila_"..vila, "estruturas")
+	
+	-- Soma 1
+	n = n + 1
+	
+	-- Salva o novo numero de estruturas
+	sunos.bd:salvar("vila_"..vila, "estruturas", n)
+	
+	-- Retorna o novo total
+	return n
 end
 
 -- Node de assentamentos
@@ -546,7 +570,7 @@ sunos.criar_vila = function(pos_ref)
 			-- Verifica quais lados estão disponíveis para a rua seguir
 			local dir_ok = {} -- É uma tabela ordenada que pode conter todas ou nenhuma direção possivel
 			for i,d in ipairs(dirs) do
-				if verif_obs_dir(pos, d, dist) then
+				if verif_obs_dir(pos, d, 5) then
 					table.insert(dir_ok, d)
 				end
 			end
@@ -648,17 +672,14 @@ sunos.criar_vila = function(pos_ref)
 			if tipo == "casa" then
 				
 				-- Montar casa
-				sunos.estruturas.casa.construir(dados.pos, dados.dist, vila, true)
-				
-				-- Recoloca itens reais (apartir dos itens de reposição)
-				sunos.decor_repo(dados.pos, dados.dist, sunos.tb_repo_casas[tostring(dados.dist)]())
+				sunos.estruturas.casa.construir(dados.pos, dados.dist, vila, nil, true)
 				
 				tem_casa = true
 				
 			elseif tipo == "decor" then
 				
 				-- Montar estrutura decorativa
-				sunos.estruturas.decor.construir(dados.pos, dados.dist, vila, true)
+				sunos.estruturas.decor.construir(dados.pos, dados.dist, vila)
 				
 				-- Preencher o entorno com ruas
 				preencher_com_rua(minetest.find_nodes_in_area(
@@ -669,7 +690,7 @@ sunos.criar_vila = function(pos_ref)
 				
 			elseif tipo == "loja" then
 				
-				sunos.estruturas.loja.construir(dados.pos, dados.dist, true, vila)
+				sunos.estruturas.loja.construir(dados.pos, dados.dist, vila)
 				
 				tem_loja = true
 			end

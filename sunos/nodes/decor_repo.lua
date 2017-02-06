@@ -57,6 +57,12 @@ minetest.register_node("sunos:simples_repo", {
 	Argumentos:
 		<pos> do centro do chao
 		<dist> em brocos do centro a borda (exemplo: 2 para uma largura total de 5 blocos)
+		<itens> tabela de itens no formato do exemplo: 
+			Exemplo: itens = {
+				bancadas = {{"mod:item_A", 4}, {"mod:item_B", 1}},
+				sobrebancadas = {{"mod:item_C", 1}, {"mod:item_D", 7}},
+				simples = {{"mod:item_E", 3}, {"mod:item_F", 4}},
+			}
   ]]
 sunos.decor_repo = function(pos, dist, itens)
 	if itens == nil then

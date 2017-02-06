@@ -1,8 +1,32 @@
 API do Mod Sunos v1.4-dev
 
 
-Criar uma estrutura
+===================> Registrar uma estrutura
+Isso significa que você deve criar variaveis dentro de uma 
+tabela que servirão para definir vários parâmetros
+
+Tabela geral de uma estrutura
+sunos.estruturas[<NomeEstrutura>]
 
 Indicador de que existe população na estrtura. Isso faz o verificador contabilizar a população para a vila.
 sunos.estruturas[<NomeEstrutura>].pop = <true>
 
+Executa uma função quando um jogador acessa o fundamento com o clique direito
+sunos.estruturas[<NomeEstrutura>].fund_on_rightclick = function(pos, node, player, itemstack, pointed_thing) end
+
+Executa uma função quando o fundamento da estrutura é destruido
+sunos.estruturas[<NomeEstrutura>].fund_on_destruct = function(pos) end
+
+Função que avalia a estrutura quando todas as estruturas da vila estão sendo atualizadas
+sunos.estruturas.casa_comunal.atualizando_vila = function(vila, arq, reg) end
+	^ 'vila' (variável numérica) é um numero da vila
+	^ 'arq' (variável string) é o nome do arquivo responsável por armazenar os dados da estrutura a ser atualizada
+	^ 'reg' (tabela) são os dados salvos no banco de dados referentes à estrutura
+
+===================> Sistema de registros
+Alguns dados devem ser organizados de maneiras específicas.
+
+Metadados do fundamento de uma estrutura (todos são armazenados no formato de strings)
+"vila" ---> numero da vila correspondente (exemplo: "12")
+"tipo" ---> nome do tipo de estrutura (exemplo: "casa")
+"dist" ---> distância do centro até a borda em blocos (exemplo: "3")

@@ -37,6 +37,19 @@ sunos.var = {}
 sunos.var.tempo_verif_estruturas = tonumber(minetest.setting_get("sunos_verif_fundamento") or 7)
 -- Tempo (em segundos) em que uma casa comunal pode ficar em decadencia antes de perder o fundamento
 sunos.var.tempo_decadencia = tonumber(minetest.setting_get("sunos_casa_comunal_decadencia") or 300)
+-- Lista de nodes estruturais
+--[[
+	Esses nodes são considerados importantes nas estruturas pois, 
+	caso eles sejam removidos pelo jogador, a estrutura deve ser limpa
+  ]]
+sunos.var.nodes_estruturais = {
+	"default:wood", 
+	"default:cobble", 
+	"default:stonebrick", 
+	"group:stair", 
+	"farming:straw"
+}
+
 
 
 -- Banco de dados (Memor)
@@ -52,6 +65,7 @@ dofile(modpath.."/diretrizes.lua")
 dofile(modpath.."/comum.lua")
 dofile(modpath.."/estrutural.lua")
 dofile(modpath.."/verif_terreno.lua")
+dofile(modpath.."/verif_estrutura.lua")
 dofile(modpath.."/estruturador.lua")
 dofile(modpath.."/vila.lua")
 dofile(modpath.."/mapgen.lua")

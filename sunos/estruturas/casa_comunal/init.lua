@@ -34,10 +34,10 @@ end
 		<pos> é a coordenada do fundamento da estrutura
 		<vila> é o numero da vila a qual a casa comunal pertence
 		<nivel> é o nível da casa comunal a ser construida
-		<n_estrutura> é o numero da estrutura da casa comunal
-		<force_area> OPCIONAL | Para ignorar as verificações de area limpa
+		<verif_area> OPCIONAL | Para ignorar as verificações de area limpa
+		<update> OPCIONAL | Informa que se trata de uma atualização de uma estrutura que ja existe
   ]]
-sunos.estruturas.casa_comunal.construir = function(pos, vila, nivel, n_estrutura, force_area)
+sunos.estruturas.casa_comunal.construir = function(pos, vila, nivel, verif_area)
 	-- Validar argumentos de entrada
 	if pos == nil then
 		minetest.log("error", "[Sunos] Tabela pos nula (sunos.estruturas.casa_comunal.construir)")
@@ -51,10 +51,6 @@ sunos.estruturas.casa_comunal.construir = function(pos, vila, nivel, n_estrutura
 		minetest.log("error", "[Sunos] variavel vila nula (em sunos.estruturas.casa_comunal.construir)")
 		return "Erro interno (vila inexistente)"
 	end
-	if n_estrutura == nil then
-		minetest.log("error", "[Sunos] variavel n_estrutura nula (em sunos.estruturas.casa_comunal.construir)")
-		return "Erro interno (Numero de estrutura inexistente)"
-	end
 	
 	-- Distancia centro a borda padrão
 	local dist = 6 
@@ -63,7 +59,7 @@ sunos.estruturas.casa_comunal.construir = function(pos, vila, nivel, n_estrutura
 	local largura = 13
 	
 	-- Verificações de area
-	if force_area ~= true then
+	if verif_area ~= true then
 	
 		-- Verifica status do terreno
 		local st = sunos.verif_terreno(pos, dist)
@@ -89,6 +85,17 @@ sunos.estruturas.casa_comunal.construir = function(pos, vila, nivel, n_estrutura
 	
 	-- Criar estrutura
 	minetest.place_schematic({x=pos.x-dist,y=pos.y,z=pos.z-dist}, arquivo, nil, nil, true)
+	
+	-- Numero da estrutura
+	local n_estrutura = 0
+	if update then
+		-- Pega o antigo numero de estrutura
+		n_estrutura = sunos.bd.pegar("vila_"..vila, "estruturas")
+	else
+		-- Pega um novo numero de estrutura
+		n_estrutura = sunos.nova_estrutura(vila) -- Numero da estrutura da nova casa comunal
+	end
+	
 	
 	-- Criar fundamento e configurar
 	minetest.set_node(pos, {name="sunos:fundamento"})
@@ -143,6 +150,7 @@ sunos.estruturas.casa_comunal.verif_fund = function(pos)
 	vila = tonumber(vila)
 	local tipo = meta:get_string("tipo")
 	local dist = tonumber(meta:get_string("dist"))
+	local status = meta:get_string("status")
 	
 	-- Caso esteja ativa
 	if status == "ativa" then
@@ -184,85 +192,6 @@ sunos.estruturas.casa_comunal.verif_fund = function(pos)
 	end
 end
 
--- Chamada de on_rightclick de fundamento colocado
-sunos.estruturas.casa_comunal.fund_on_rightclick = function(pos, node, player, itemstack, pointed_thing)
-	local meta = minetest.get_meta(pos)
-	local vila = meta:get_string("vila")
-	local tipo = meta:get_string("tipo")
-		
-	if meta:get_string("status") == "destruida" then
-		if itemstack:get_name() == "sunos:kit_reparador" then
-			local n_estrutura = meta:get_string("estrutura")
-		
-			-- Obter dados do fundamento
-			local nivel = meta:get_string("nivel")
-			local n_estrutura = meta:get_string("estrutura")
-		
-			-- Alterar o status para permitir que seja destruido para ser remontada
-			meta:set_string("status", "recon") 
-		
-			-- Construir casa comunal nova
-			local r = sunos.construir_casa_comunal(pos, vila, nivel, n_estrutura, true)
-		
-			if r == true then
-				-- Salvar novo total de estruturas da vila
-				sunos.bd:salvar("vila_"..vila, "estruturas", n_estrutura)
-
-				-- Retorna mensagem de montagem concluida
-				minetest.chat_send_player(player:get_player_name(), sunos.S("Casa Comunal reconstruida"))
-				itemstack:take_item()
-				return itemstack
-			else
-				-- Retorna mensagem de falha
-				minetest.chat_send_player(player:get_player_name(), r)
-				return itemstack
-			end
-		else
-			minetest.chat_send_player(player:get_player_name(), sunos.S("Casa Comunal em decadencia. Use o Kit de Reparo"))
-		end
-	end
-end
-
--- Chamada on_destruct personalizada
-sunos.estruturas.casa_comunal.fund_on_destruct = function(pos)
-	local meta = minetest.get_meta(pos)
-	local vila = meta:get_string("vila")
-	local tipo = meta:get_string("tipo")
-	local dist = meta:get_string("dist")
-	
-	local status = meta:get_string("status")
-	
-	if status ~= "recon" then
-		sunos.montar_ruinas(pos, dist)
-		sunos.bd:remover("vila_"..meta:get_string("vila"), "casa_comunal")
-	end
-end
-
--- Chamada personalizada para momento de atualização da vila
-sunos.estruturas.casa_comunal.atualizando_vila = function(vila, arq, reg)
-	
-	-- Verifica se o fundamento ainda existe
-	local n = pegar_node(reg.estrutura.pos)
-	if n.name ~= "sunos:fundamento" then
-
-		-- Elimina o arquivo
-		sunos.bd:remover("vila_"..vila, arq)
-	
-	else
-	
-		-- Verifica se os metadados estao correspondendo ao banco
-		local meta = minetest.get_meta(reg.estrutura.pos)
-	
-		if not meta:get_string("vila") or tonumber(meta:get_string("vila")) ~= vila then
-	
-			--Elimina o arquivo
-			sunos.bd:remover("vila_"..vila, arq)
-		
-		end
-	
-	end
-
-end
 
 -- Fundamento de casa comunal
 --[[
@@ -292,8 +221,12 @@ minetest.register_node("sunos:fundamento_casa_comunal", {
 		local meta_fund_prox = minetest.get_meta(pos_fund_prox)
 		local vila = meta_fund_prox:get_string("vila")
 		
-		-- Numero da estrutura da nova casa comunal
-		local n_estrutura = sunos.bd:pegar("vila_"..vila, "estruturas")+1 -- Numero da nova estrutura
+		if vila == "" or not vila then return minetest.chat_send_player(placer:get_player_name(), sunos.S("Vila abandonada")) end
+		
+		-- Verificar se a vila está abandonada
+		if not sunos.bd:pegar("vila_"..vila, "estruturas") then
+			return minetest.chat_send_player(placer:get_player_name(), sunos.S("Vila abandonada"))
+		end
 		
 		-- Verificar se a vila pode criar uma nova casa comunal
 		sunos.atualizar_bd_vila(vila) -- Atualizar o banco de dados
@@ -308,10 +241,8 @@ minetest.register_node("sunos:fundamento_casa_comunal", {
 			return minetest.chat_send_player(placer:get_player_name(), sunos.S("Ja existe uma Casa Comunal nessa vila"))
 		end
 		
-		local r = sunos.estruturas.casa_comunal.construir(pointed_thing.under, vila, 1, n_estrutura)
+		local r = sunos.estruturas.casa_comunal.construir(pointed_thing.under, vila, 1, true)
 		if r == true then
-			-- Salvar novo total de estruturas da vila
-			sunos.bd:salvar("vila_"..vila, "estruturas", n_estrutura)
 			
 			-- Retorna mensagem de montagem concluida
 			minetest.chat_send_player(placer:get_player_name(), sunos.S("Casa Comunal construida"))

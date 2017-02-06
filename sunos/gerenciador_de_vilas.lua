@@ -47,49 +47,60 @@ sunos.atualizar_bd_vila = function(vila)
 		local v = string.split(arq, "_")
 		
 		-- Correção para estrutura "casa_comunal" por ter "_" no termo
-		if v[2] == "comunal" then v[1] = "casa_comunal" end
+		if arq == "casa_comunal" then v[1] = "casa_comunal" end
 		
 		-- Verifica se o arquivo é de uma estrutura registrada
 		if sunos.estruturas[v[1]] then
 			
+			-- Status do registro (para caso seja deletado durante a verificação)
+			local stdata = true
 			
-			-- Caso o arquivo seja de uma estrutura com população
-			if sunos.estruturas[v[1]].pop then
-		
-				-- Pegar dados do arquivo
-				local reg = sunos.bd:pegar("vila_"..vila, arq)
-				
-				-- Verifica se o fundamento ainda existe
+			-- Pegar dados do arquivo
+			local reg = sunos.bd:pegar("vila_"..vila, arq)
+			
+			-- Verifica se o fundamento ainda existe
+			do
+				-- Pega o node
 				local n = pegar_node(reg.estrutura.pos)
-			
-				if n.name ~= "sunos:fundamento" then
 				
+				-- Verifica se é um fundamento
+				if n.name ~= "sunos:fundamento" then
+					
+					stdata = false
+					
 					-- Elimina o arquivo
 					sunos.bd:remover("vila_"..vila, arq)
 				
-				else
-					-- Verifica se os metadados estao correspondendo ao banco de dados
-					local meta = minetest.get_meta(reg.estrutura.pos)
-				
-					if not meta:get_string("vila") or tonumber(meta:get_string("vila")) ~= tonumber(vila) then
-				
-						--Elimina o arquivo
-						sunos.bd:remover("vila_"..vila, arq)
-					
-					else
-					
-						-- Contabiliza a população
-						pop_total = pop_total + reg.pop	
-					
-					end
 				end
+			end
+			
+			-- Verificar metadados
+			if stdata == true then
+			
+				-- Pega matadados
+				local meta = minetest.get_meta(reg.estrutura.pos)
+				
+				-- Verificar numero da vila
+				if meta:get_string("vila") == "" or tonumber(meta:get_string("vila")) ~= tonumber(vila) then
+				
+					stdata = false
+					
+					-- Elimina o arquivo
+					sunos.bd:remover("vila_"..vila, arq)
+				
+				end
+			end
+			
+			-- Caso o arquivo seja de uma estrutura com população
+			if stdata == true and sunos.estruturas[v[1]].pop then
+	
+				-- Contabiliza a população
+				pop_total = pop_total + reg.pop	
+				
 			end
 		
 			-- Executa funções personalizadas
-			if sunos.estruturas[v[1]].atualizando_vila then
-			
-				-- Pegar dados do arquivo
-				local reg = sunos.bd:pegar("vila_"..vila, arq)
+			if stdata == true and sunos.estruturas[v[1]].atualizando_vila then
 				
 				sunos.estruturas[v[1]].atualizando_vila(vila, arq, reg)
 				
@@ -100,8 +111,8 @@ sunos.atualizar_bd_vila = function(vila)
 	-- Salva a população atual
 	sunos.bd:salvar("vila_"..vila, "pop_total", pop_total)
 	
-	-- Remove banco de dados da vila caso esteja deserta e sem casa comunal
-	if pop_total == 0 and sunos.bd:verif("vila_"..vila, "casa_comunal") == false then
+	-- Sem população a vila está abandonada
+	if pop_total == 0 then
 		
 		sunos.bd:drop_tb("vila_"..vila)
 	end

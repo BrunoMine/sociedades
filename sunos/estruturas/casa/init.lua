@@ -62,10 +62,10 @@ local decor_simples = {
 		<pos> é a coordenada do fundamento da estrutura
 		<dist> distancia centro a borda da nova estrutura
 		<vila> OPCIONAL | é o numero da vila a qual a casa pertence
-		<force_area> OPCIONAL | true para ignorar verificadores de area
+		<verif_area> OPCIONAL | para verificar a area a ser usada
 		<itens_repo> OPCIONAL | Repassado ao comando sunos.decor_repo para substituir itens de reposição
   ]]
-sunos.estruturas.casa.construir = function(pos, dist, vila, force_area, itens_repo)
+sunos.estruturas.casa.construir = function(pos, dist, vila, verif_area, itens_repo)
 	-- Validar argumentos de entrada
 	if pos == nil then
 		minetest.log("error", "[Sunos] Tabela pos nula (sunos.estruturas.casa.construir)")
@@ -97,7 +97,7 @@ sunos.estruturas.casa.construir = function(pos, dist, vila, force_area, itens_re
 	end
 	
 	-- Verificações de area
-	if force_area ~= true then
+	if verif_area == true then
 		
 		-- Verifica status do terreno
 		local st = sunos.verif_terreno(pos, dist)
@@ -121,11 +121,11 @@ sunos.estruturas.casa.construir = function(pos, dist, vila, force_area, itens_re
 	
 	-- Recoloca itens reais (apartir dos itens de reposição)
 	if itens_repo then
-		sunos.decor_repo(pos, dist, itens_repo)
+		sunos.decor_repo(pos, dist, gerar_itens_repo[tostring(dist)]())
 	end
 	
 	-- Numero da estrutura da nova casa
-	local n_estrutura = sunos.bd:pegar("vila_"..vila, "estruturas")+1 -- Numero da nova estrutura
+	local n_estrutura = sunos.nova_estrutura(vila) -- Numero da nova estrutura
 	
 	-- Criar fundamento e configurar
 	minetest.set_node(pos, {name="sunos:fundamento"})
@@ -186,14 +186,9 @@ sunos.estruturas.casa.verif_fund = function(pos)
 	end
 end
 
-
-
--- Fundamento de casa comum
---[[
-	Esse é o node usado para construir uma casa comum
-]]
+-- Funções para geração de tabelas de itens de reposição
 -- Gerar itens de reposição
-sunos.gerar_itens_repo_casa_pequena = function()
+local gerar_itens_repo_casa_pequena = function()
 	return {
 		bancadas = {
 			{"sunos:bau", 1},
@@ -205,6 +200,45 @@ sunos.gerar_itens_repo_casa_pequena = function()
 		},
 	}
 end
+-- Gerar itens de reposição
+local gerar_itens_repo_casa_mediana = function()
+	return {
+		bancadas = {
+			{"sunos:bau", 1},
+			{"sunos:bancada_de_trabalho", 1, true},
+		},
+		simples = {
+			{decor_simples[math.random(1, table.maxn(decor_simples))], math.random(1, 2)},
+			{decor_simples[math.random(1, table.maxn(decor_simples))], math.random(1, 2)}
+		},
+	}
+end
+-- Gerar itens de reposição
+local gerar_itens_repo_casa_grande = function()
+	return {
+		bancadas = {
+			{"sunos:bau", 1},
+			{"sunos:bancada_de_trabalho", 1, true},
+		},
+		simples = {
+			{decor_simples[math.random(1, table.maxn(decor_simples))], math.random(1, 2)},
+			{decor_simples[math.random(1, table.maxn(decor_simples))], math.random(1, 2)},
+			{decor_simples[math.random(1, table.maxn(decor_simples))], math.random(1, 2)},
+			{decor_simples[math.random(1, table.maxn(decor_simples))], math.random(1, 2)}
+		},
+	}
+end
+-- Criar tabela que relaciona disttancia centra a borda com funcões de geração de tabela de reposição
+gerar_itens_repo = {}
+gerar_itens_repo["2"] = gerar_itens_repo_casa_pequena
+gerar_itens_repo["3"] = gerar_itens_repo_casa_mediana
+gerar_itens_repo["4"] = gerar_itens_repo_casa_grande
+
+-- Fundamento de casa comum
+--[[
+	Esse é o node usado para construir uma casa comum
+]]
+
 -- Fundamento de casa pequena
 minetest.register_node("sunos:fundamento_casa_pequena", {
 	description = sunos.S("Fundamento Suno de Casa Pequena"),
@@ -220,7 +254,7 @@ minetest.register_node("sunos:fundamento_casa_pequena", {
 	-- Colocar uma casa
 	on_place = function(itemstack, placer, pointed_thing)
 		
-		local r = sunos.estruturas.casa.construir(pointed_thing.under, 2, nil, nil, sunos.gerar_itens_repo_casa_pequena())
+		local r = sunos.estruturas.casa.construir(pointed_thing.under, 2, nil, nil, gerar_itens_repo_casa_pequena())
 		if r == true then
 			
 			-- Retorna mensagem de montagem concluida
@@ -236,19 +270,6 @@ minetest.register_node("sunos:fundamento_casa_pequena", {
 	end,
 })
 
--- Gerar itens de reposição
-sunos.gerar_itens_repo_casa_mediana = function()
-	return {
-		bancadas = {
-			{"sunos:bau", 1},
-			{"sunos:bancada_de_trabalho", 1, true},
-		},
-		simples = {
-			{decor_simples[math.random(1, table.maxn(decor_simples))], math.random(1, 2)},
-			{decor_simples[math.random(1, table.maxn(decor_simples))], math.random(1, 2)}
-		},
-	}
-end
 -- Fundamento de casa mediana
 minetest.register_node("sunos:fundamento_casa_mediana", {
 	description = sunos.S("Fundamento Suno de Casa Mediana"),
@@ -264,7 +285,7 @@ minetest.register_node("sunos:fundamento_casa_mediana", {
 	-- Colocar uma casa
 	on_place = function(itemstack, placer, pointed_thing)
 		
-		local r = sunos.estruturas.casa.construir(pointed_thing.under, 3, nil, nil, sunos.gerar_itens_repo_casa_mediana())
+		local r = sunos.estruturas.casa.construir(pointed_thing.under, 3, nil, nil, gerar_itens_repo_casa_mediana())
 		if r == true then
 			
 			-- Retorna mensagem de montagem concluida
@@ -281,21 +302,7 @@ minetest.register_node("sunos:fundamento_casa_mediana", {
 })
 
 
--- Gerar itens de reposição
-sunos.gerar_itens_repo_casa_grande = function()
-	return {
-		bancadas = {
-			{"sunos:bau", 1},
-			{"sunos:bancada_de_trabalho", 1, true},
-		},
-		simples = {
-			{decor_simples[math.random(1, table.maxn(decor_simples))], math.random(1, 2)},
-			{decor_simples[math.random(1, table.maxn(decor_simples))], math.random(1, 2)},
-			{decor_simples[math.random(1, table.maxn(decor_simples))], math.random(1, 2)},
-			{decor_simples[math.random(1, table.maxn(decor_simples))], math.random(1, 2)}
-		},
-	}
-end
+
 -- Fundamento de casa grande
 minetest.register_node("sunos:fundamento_casa_grande", {
 	description = sunos.S("Fundamento Suno de Casa Grande"),
@@ -311,7 +318,7 @@ minetest.register_node("sunos:fundamento_casa_grande", {
 	-- Colocar uma casa
 	on_place = function(itemstack, placer, pointed_thing)
 		
-		local r = sunos.estruturas.casa.construir(pointed_thing.under, 4, nil, nil, sunos.gerar_itens_repo_casa_grande())
+		local r = sunos.estruturas.casa.construir(pointed_thing.under, 4, nil, nil, gerar_itens_repo_casa_grande())
 		if r == true then
 			
 			-- Retorna mensagem de montagem concluida
@@ -327,8 +334,4 @@ minetest.register_node("sunos:fundamento_casa_grande", {
 	end,
 })
 
--- Criar tabela que relaciona disttancia centra a borda com funcões de geração de tabela de reposição
-sunos.tb_repo_casas = {}
-sunos.tb_repo_casas["2"] = sunos.gerar_itens_repo_casa_pequena
-sunos.tb_repo_casas["3"] = sunos.gerar_itens_repo_casa_mediana
-sunos.tb_repo_casas["4"] = sunos.gerar_itens_repo_casa_grande
+

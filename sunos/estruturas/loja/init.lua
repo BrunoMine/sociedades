@@ -24,10 +24,11 @@ sunos.estruturas.loja = {}
 		^ string de erro caso algo de errado
 	Argumentos:
 		<pos> é a coordenada do fundamento da estrutura
-		<vila> é o numero da vila a qual a loja pertence
 		<dist> distancia centro a borda da nova estrutura
-  ]]
-sunos.estruturas.loja.construir = function(pos, dist, force, vila)
+		<vila> OPCIONAL | é o numero da vila a qual a estrutura decorativa pertence
+		<verif_area> OPCIONAL | true verificar a area antes de montar a estrutura (retorna strings dos erros)
+]]
+sunos.estruturas.loja.construir = function(pos, dist, vila, verif_area)
 	-- Validar argumentos de entrada
 	if pos == nil then
 		minetest.log("error", "[Sunos] Tabela pos nula (em sunos.estruturas.loja.construir)")
@@ -54,7 +55,7 @@ sunos.estruturas.loja.construir = function(pos, dist, force, vila)
 	end
 	
 	-- Verificações de area
-	if not force or force == false then
+	if verif_area == true then
 	
 		-- Verificar se ainda existe um banco de dados da vila
 		if sunos.bd:verif("vila_"..vila, "numero") == false then
@@ -82,7 +83,7 @@ sunos.estruturas.loja.construir = function(pos, dist, force, vila)
 	sunos.montar_estrutura(pos, dist, "loja")
 	
 	-- Numero da estrutura da nova loja
-	local n_estrutura = sunos.bd:pegar("vila_"..vila, "estruturas")+1 -- Numero da nova estrutura
+	local n_estrutura = sunos.nova_estrutura(vila) -- Numero da nova estrutura
 	
 	-- Criar fundamento e configurar
 	minetest.set_node(pos, {name="sunos:fundamento"})

@@ -33,6 +33,8 @@ local modpath = minetest.get_modpath("sunos")
 
 -- Salvar dados variaveis
 sunos.var = {}
+-- Intervalo de tempo (em segundos) de verificação dos rastreadores de jogadores perto de fundamentos dos sunos
+sunos.var.tempo_atualizar_jogadores_perto = 5
 -- Tempo (em segundos) entre as verificações de estrutura obstruida
 sunos.var.tempo_verif_estruturas = tonumber(minetest.setting_get("sunos_verif_fundamento") or 7)
 -- Tempo (em segundos) em que uma casa comunal pode ficar em decadencia antes de perder o fundamento
@@ -61,6 +63,7 @@ sunos.estruturas = {}
 -- Carregar scripts
 notificar("Carregando...")
 dofile(modpath.."/intllib.lua")
+dofile(modpath.."/rollback.lua")
 dofile(modpath.."/diretrizes.lua")
 dofile(modpath.."/comum.lua")
 dofile(modpath.."/estrutural.lua")
@@ -70,6 +73,9 @@ dofile(modpath.."/estruturador.lua")
 dofile(modpath.."/vila.lua")
 dofile(modpath.."/mapgen.lua")
 dofile(modpath.."/gerenciador_de_vilas.lua")
+dofile(modpath.."/inimigos.lua")
+dofile(modpath.."/verif_guarda.lua")
+dofile(modpath.."/verif_ataques.lua")
 -- Nodes
 dofile(modpath.."/nodes/rua.lua")
 dofile(modpath.."/nodes/fundamento.lua")

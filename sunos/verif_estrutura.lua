@@ -42,7 +42,7 @@ end
 	do fundamento da pos informada e compara com a quatidade
 	armazenada para verificar obstrução
 	Retorno:
-		<booleano> (true == aceitavel | false == obstruida)
+		numero de nodes encontrados
 	Argumentos:
 		<pos> é a coordenada do fundamento da estrutura
   ]]
@@ -68,9 +68,5 @@ sunos.verificar_blocos_estruturais = function(pos)
 		sunos.var.nodes_estruturais
 	)
 	
-	-- Compara o numero de nodes que tem na estrutura padrão com o numero atual presente na estrutura
-	if table.maxn(nodes) < nodes_reg - 10 then -- Permite ate 10 blocos serem removidos
-		return false
-	end
-	return true
+	return table.maxn(nodes)
 end

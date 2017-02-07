@@ -168,22 +168,28 @@ sunos.estruturas.casa.verif_fund = function(pos)
 	vila = tonumber(vila)
 	local tipo = meta:get_string("tipo")
 	local dist = tonumber(meta:get_string("dist"))
+	local nd = tonumber(meta:get_string("nodes")) -- numero de nodes inicial
 	
-	-- Verificar Estrutura danificada
-	if sunos.verificar_blocos_estruturais(pos) == false then 
+	-- Pega o numero de nodes real
+	local ndrl = sunos.verificar_blocos_estruturais(pos)
 	
+	-- Verifica se a casa está muito destruida
+	if ndrl < nd - 10 then
 		-- Montar ruinas no local da antiga casa
 		sunos.montar_ruinas(pos, dist)
-		
+	
 		-- Exclui o arquivo da estrutura do banco de dados
 		sunos.bd:remover("vila_"..meta:get_string("vila"), tipo.."_"..meta:get_string("estrutura"))
-		
+	
 		-- Trocar bloco de fundamento por madeira
 		minetest.set_node(pos, {name="default:tree"})
-		
+	
 		-- Atualizar banco de dados da vila
 		sunos.atualizar_bd_vila(vila)
+		
+		return
 	end
+	
 end
 
 -- Funções para geração de tabelas de itens de reposição

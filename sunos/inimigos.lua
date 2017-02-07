@@ -44,7 +44,6 @@ sunos.novo_inimigo = function(vila, name)
 	
 	-- Remove o nome da lista após um tempo
 	minetest.after(60, remover_inimigo, tostring(vila), tostring(name))
-	minetest.chat_send_all("viro inimigo")
 	
 end
 

@@ -102,7 +102,6 @@ minetest.register_abm({
 	action = function(pos)
 		-- Verifica se o fundamento pertence a uma vila
 		if minetest.get_meta(pos):get_string("vila") == "" then return end
-		minetest.chat_send_all("rastrando")
 		local all_objects = minetest.get_objects_inside_radius(pos, 25)
 		local players = {}
 		for _,obj in ipairs(all_objects) do

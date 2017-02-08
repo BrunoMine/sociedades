@@ -46,10 +46,13 @@ local verif_pos = function(pos, name)
 			and p.maxp.z >= pos.z
 		then
 			
-			-- Registra o novo inimigo
-			sunos.novo_inimigo(minetest.get_meta(pos):get_string("vila"), name)
+			-- Mexeu dentro de uma das areas (retorna a coordenada do fundamento)
+			return true, {x=np.x, y=np.y, z=np.z}
 		end
 	end
+	
+	-- Nao foi dentro de nenhuma das areas
+	return false
 end
 
 
@@ -68,7 +71,13 @@ local novo_rastreado = function(name)
 	-- Verifica todas as ultimas coordenadas do rollback
 	for _,p in ipairs(postb) do
 		
-		verif_pos(p, name)
+		local r, fp = verif_pos(p, name)
+		if r == true then
+			local vila = minetest.get_meta(fp):get_string("vila")
+			minetest.log("action", "Vila "..vila.." dos sunos passou a ser inimiga de "..name.." (modo 2)")
+			-- Registra um novo inimigo
+			sunos.novo_inimigo(vila, name)
+		end
 	end
 	
 end
@@ -123,7 +132,13 @@ function minetest.is_protected(pos, name)
 	-- Verifica se o jogador está sendo rastreado
 	if rastreados[name] then
 		-- Verificar se a area que o jogador mexer seria de uma estrutura dos sunos
-		verif_pos(pos, name)
+		local r, fp = verif_pos(pos, name)
+		if r == true then
+			local vila = minetest.get_meta(fp):get_string("vila")
+			minetest.log("action", "Vila "..vila.." dos sunos passou a ser inimiga de "..name.." (modo 1)")
+			-- Registra um novo inimigo
+			sunos.novo_inimigo(vila, name)
+		end
 	end
 	
 	-- Executar antigas verificações (de outros mods)
@@ -195,7 +210,13 @@ minetest.register_on_leaveplayer(function(player)
 	-- Verifica todas as ultimas coordenadas do rollback
 	for _,p in ipairs(postb) do
 		
-		verif_pos(p, name)
+		local r, fp = verif_pos(p, name)
+		if r == true then
+			local vila = minetest.get_meta(fp):get_string("vila")
+			minetest.log("action", "Vila "..vila.." dos sunos passou a ser inimiga de "..name.." (modo 3)")
+			-- Registra um novo inimigo
+			sunos.novo_inimigo(vila, name)
+		end
 	end
 	
 end)

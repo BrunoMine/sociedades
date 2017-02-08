@@ -643,7 +643,7 @@ sunos.criar_vila = function(pos_ref)
 		Nessa etapa é verificado se os assentamentos são aceitaveis para uma vila
 	  ]]
 	if larg_assent[2]+larg_assent[3]+larg_assent[4]+larg_assent[5] >= 3 then
-	
+		
 		-- Variavel que verifica se ja colocou ao menos uma casa
 		local tem_casa = false
 	

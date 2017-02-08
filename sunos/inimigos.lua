@@ -13,12 +13,20 @@
 local inimigos = {}
 
 -- Remover um inimigo da lista de inimigos de uma vila
-local remover_inimigo = function(vila, name)
+sunos.atualizar_inimigo = function(vila, name, tempo)
 	
 	-- Verifica se ainda existe a tabela
 	if not inimigos[vila] then return end 
 	
-	-- Remove o nome da listagem
+	-- Atualiza o tempo que ja passou e reinicia o loop para passar mais tempo
+	if inimigos[vila][name] > tempo then 
+		inimigos[vila][name] = inimigos[vila][name] - 60
+		-- reinicia o loop
+		minetest.after(60, sunos.atualizar_inimigo, vila, name, 60)
+		return
+	end
+	
+	-- Encerra o processo pois ja passou o tempo
 	inimigos[vila][name] = nil
 	
 	-- verifica se tem algum outro nome na lista para destrui-la
@@ -32,18 +40,30 @@ local remover_inimigo = function(vila, name)
 	
 end
 
--- Armazenar novo inimigo de uma vila
+-- Armazenar novo inimigo de uma vila (retorna false caso ja esteja como inimigo, o tempo é reajustado nesse caso)
 sunos.novo_inimigo = function(vila, name)
 	if not vila or not name then return end
 	
+	-- Serializa index de tabelas pois não sao ordenadas
+	vila = tostring(vila)
+	name = tostring(name) -- um jogador pode ter nome baseado em numeros
+	
 	-- Verifica se a vila está na tabela
-	if not inimigos[tostring(vila)] then inimigos[tostring(vila)] = {} end
+	if not inimigos[vila] then inimigos[vila] = {} end
 	
-	-- Armazena nome do inimigo
-	inimigos[tostring(vila)][tostring(name)] = true
+	-- Apenas restaura o tempo que resta caso ja esteja em loop
+	if inimigos[vila][name] then
+		-- repor tempo
+		inimigos[vila][name] = sunos.var.tempo_inimigo
+		return false
+	end 
 	
-	-- Remove o nome da lista após um tempo
-	minetest.after(60, remover_inimigo, tostring(vila), tostring(name))
+	-- Armazena nome do inimigo e o tempo que deve ser mantido como inimigo
+	inimigos[vila][name] = sunos.var.tempo_inimigo
+	
+	-- Conta um tempo para tentar remover o inimigo
+	minetest.after(60, sunos.atualizar_inimigo, vila, name, 60)
+	return true
 	
 end
 

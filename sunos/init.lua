@@ -33,6 +33,8 @@ local modpath = minetest.get_modpath("sunos")
 
 -- Salvar dados variaveis
 sunos.var = {}
+-- Intervalo de tempo (em segundos) que uma vila se mantem inimigo de um jogador apos ser atacada
+sunos.var.tempo_inimigo = 300
 -- Intervalo de tempo (em segundos) de verificação dos rastreadores de jogadores perto de fundamentos dos sunos
 sunos.var.tempo_atualizar_jogadores_perto = 5
 -- Tempo (em segundos) entre as verificações de estrutura obstruida

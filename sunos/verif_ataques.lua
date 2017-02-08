@@ -68,15 +68,18 @@ local novo_rastreado = function(name)
 	-- Pega as coordenadas dos ultimos tirados/colocados
 	local postb = sunos.rollback(name, minetest.get_player_by_name(name):getpos())
 	
+	minetest.log("info", "[Sunos] "..name.." passou a ser rastrado no verificador de ataques")
+	
 	-- Verifica todas as ultimas coordenadas do rollback
 	for _,p in ipairs(postb) do
 		
 		local r, fp = verif_pos(p, name)
 		if r == true then
 			local vila = minetest.get_meta(fp):get_string("vila")
-			minetest.log("action", "Vila "..vila.." dos sunos passou a ser inimiga de "..name.." (modo 2)")
 			-- Registra um novo inimigo
-			sunos.novo_inimigo(vila, name)
+			if sunos.novo_inimigo(vila, name) == true then
+				minetest.log("action", "Vila "..vila.." dos sunos passou a ser inimiga de "..name.." (modo 2)")
+			end
 		end
 	end
 	
@@ -135,9 +138,10 @@ function minetest.is_protected(pos, name)
 		local r, fp = verif_pos(pos, name)
 		if r == true then
 			local vila = minetest.get_meta(fp):get_string("vila")
-			minetest.log("action", "Vila "..vila.." dos sunos passou a ser inimiga de "..name.." (modo 1)")
 			-- Registra um novo inimigo
-			sunos.novo_inimigo(vila, name)
+			if sunos.novo_inimigo(vila, name) == true then
+				minetest.log("action", "Vila "..vila.." dos sunos passou a ser inimiga de "..name.." (modo 1)")
+			end
 		end
 	end
 	
@@ -213,9 +217,10 @@ minetest.register_on_leaveplayer(function(player)
 		local r, fp = verif_pos(p, name)
 		if r == true then
 			local vila = minetest.get_meta(fp):get_string("vila")
-			minetest.log("action", "Vila "..vila.." dos sunos passou a ser inimiga de "..name.." (modo 3)")
 			-- Registra um novo inimigo
-			sunos.novo_inimigo(vila, name)
+			if sunos.novo_inimigo(vila, name) == true then
+				minetest.log("action", "Vila "..vila.." dos sunos passou a ser inimiga de "..name.." (modo 3)")
+			end
 		end
 	end
 	

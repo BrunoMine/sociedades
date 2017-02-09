@@ -36,6 +36,9 @@ local tbp = {}
 local verif_pos = function(pos, name)
 	if not rastreados[name] then return end
 	
+	local r = false -- Verifica se está dentro da area de ao menos uma estrutura
+	local f = {} -- Tabela de fundamentos das areas que abrangem a coordenada 'pos'
+	
 	for np,p in pairs(rastreados[name]) do
 		-- Verificar se a coordenada está dentro dos limites da area
 		if p.minp.x <= pos.x
@@ -47,12 +50,14 @@ local verif_pos = function(pos, name)
 		then
 			
 			-- Mexeu dentro de uma das areas (retorna a coordenada do fundamento)
-			return true, {x=np.x, y=np.y, z=np.z}
+			r = true
+			-- Armazena o local do fundamento
+			table.insert(f, {x=(p.minp.x+p.maxp.x)/2, y=p.minp.y, z=(p.minp.z+p.maxp.z)/2})
 		end
 	end
 	
 	-- Nao foi dentro de nenhuma das areas
-	return false
+	return r, f
 end
 
 
@@ -73,12 +78,14 @@ local novo_rastreado = function(name)
 	-- Verifica todas as ultimas coordenadas do rollback
 	for _,p in ipairs(postb) do
 		
-		local r, fp = verif_pos(p, name)
+		local r, f = verif_pos(p, name)
 		if r == true then
-			local vila = minetest.get_meta(fp):get_string("vila")
-			-- Registra um novo inimigo
-			if sunos.novo_inimigo(vila, name) == true then
-				minetest.log("action", "Vila "..vila.." dos sunos passou a ser inimiga de "..name.." (modo 2)")
+			for _,pf in ipairs(f) do
+				local vila = minetest.get_meta(pf):get_string("vila")
+				-- Verifica se já é inimigo nessa vila
+				if sunos.verif_inimigo(vila, name) == false then
+					minetest.log("action", "Vila "..vila.." dos sunos passou a ser inimiga de "..name.." (modo 1)")
+				end
 			end
 		end
 	end
@@ -135,13 +142,20 @@ function minetest.is_protected(pos, name)
 	-- Verifica se o jogador está sendo rastreado
 	if rastreados[name] then
 		-- Verificar se a area que o jogador mexer seria de uma estrutura dos sunos
-		local r, fp = verif_pos(pos, name)
+		local r, f = verif_pos(pos, name)
 		if r == true then
-			local vila = minetest.get_meta(fp):get_string("vila")
-			-- Registra um novo inimigo
-			if sunos.novo_inimigo(vila, name) == true then
-				minetest.log("action", "Vila "..vila.." dos sunos passou a ser inimiga de "..name.." (modo 1)")
+			-- Declara o jogador inimigo das vilas envolvidas 
+			for _,pf in ipairs(f) do
+				local vila = minetest.get_meta(pf):get_string("vila")
+				-- Verifica se já é inimigo nessa vila
+				if sunos.verif_inimigo(vila, name) == false then
+					minetest.log("action", "Vila "..vila.." dos sunos passou a ser inimiga de "..name.." (modo 1)")
+				end
 			end
+			
+			-- Verifica se estava defendida (caso esteja funciona como se fosse uma area protegida normal)
+			if sunos.verificar_defesa(pos) == true then return true	end
+			
 		end
 	end
 	
@@ -214,12 +228,14 @@ minetest.register_on_leaveplayer(function(player)
 	-- Verifica todas as ultimas coordenadas do rollback
 	for _,p in ipairs(postb) do
 		
-		local r, fp = verif_pos(p, name)
+		local r, f = verif_pos(p, name)
 		if r == true then
-			local vila = minetest.get_meta(fp):get_string("vila")
-			-- Registra um novo inimigo
-			if sunos.novo_inimigo(vila, name) == true then
-				minetest.log("action", "Vila "..vila.." dos sunos passou a ser inimiga de "..name.." (modo 3)")
+			for _,pf in ipairs(f) do
+				local vila = minetest.get_meta(pf):get_string("vila")
+				-- Verifica se já é inimigo nessa vila
+				if sunos.verif_inimigo(vila, name) == false then
+					minetest.log("action", "Vila "..vila.." dos sunos passou a ser inimiga de "..name.." (modo 1)")
+				end
 			end
 		end
 	end

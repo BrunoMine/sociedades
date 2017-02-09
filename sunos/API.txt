@@ -14,7 +14,11 @@ sunos.estruturas[<NomeEstrutura>].pop = <true>
 Executa uma função quando um jogador acessa o fundamento com o clique direito
 sunos.estruturas[<NomeEstrutura>].fund_on_rightclick = function(pos, node, player, itemstack, pointed_thing) end
 
-Executa uma função quando o fundamento da estrutura é destruido
+Executa uma função quando o fundamento da estrutura é destruido (caso retornar true é porque está defendido). 
+Impede que jogadores mexam na area
+sunos.estruturas[<NomeEstrutura>].defendido = function(pos) end
+
+Executa verificação do fundamento para saber se a casa está defendida, se retornar true é porque algo está defendendo.
 sunos.estruturas[<NomeEstrutura>].fund_on_destruct = function(pos) end
 
 Função que avalia a estrutura quando todas as estruturas da vila estão sendo atualizadas

@@ -76,7 +76,7 @@ dofile(modpath.."/vila.lua")
 dofile(modpath.."/mapgen.lua")
 dofile(modpath.."/gerenciador_de_vilas.lua")
 dofile(modpath.."/inimigos.lua")
-dofile(modpath.."/verif_guarda.lua")
+dofile(modpath.."/verif_defesa.lua")
 dofile(modpath.."/verif_ataques.lua")
 -- Nodes
 dofile(modpath.."/nodes/rua.lua")

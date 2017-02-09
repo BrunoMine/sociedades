@@ -71,7 +71,8 @@ end
 sunos.verif_inimigo = function(vila, name)
 	if not vila or not name then return end
 	
-	if not inimigos[tostring(vila)] or not inimigos[tostring(vila)][tostring(name)] then return true end
+	if inimigos[tostring(vila)] and inimigos[tostring(vila)][tostring(name)] then return true end
 	
+	return false
 end
 

@@ -25,9 +25,19 @@ local verif_bau_casa = function(pos)
 		-- Coordenada do fundamento
 		local pf = minetest.deserialize(meta:get_string("pos_fundamento"))
 		
-		-- Distancia centro a borda da estrutura
-		local dist = tonumber(minetest.get_meta(pf):get_string("dist"))
+		-- Verificar se o fundamento ainda esta no lugar
+		if minetest.get_node(pf).name ~= "sunos:fundamento" then 
+			minetest.set_node(pos, {name="default:chest", param2=minetest.get_node(pos).param2})
+			return 
+		end
 		
+		-- Distancia centro a borda da estrutura
+		local dist = minetest.get_meta(pf):get_string("dist")
+		if dist == "" then
+			minetest.log("error", "[Sunos] dist invalida ("..dump(dist)..") (em verif_bau_casa em estruturas/casa/npc.lua)")
+			return 
+		end
+		dist = tonumber(dist)
 		-- Verificar se ja tem npc perto
 		
 		-- Analizar objetos (possiveis npcs) perto

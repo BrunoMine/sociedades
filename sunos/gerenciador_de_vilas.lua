@@ -170,9 +170,6 @@ minetest.register_abm({
 	interval = sunos.var.tempo_verif_estruturas,
 	chance = 1,
 	action = function(pos)
-		if minetest.get_meta(pos):get_string("vila") ~= sunos.versao then
-			minetest.set_node(pos, {name = "default:tree"})
-		end
 		minetest.after(4, verificar_fundamento, {x=pos.x, y=pos.y, z=pos.z})	
 	end,
 })

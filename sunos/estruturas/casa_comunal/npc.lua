@@ -23,6 +23,12 @@ local verif_bau_casa_comunal = function(pos)
 		-- Coordenada do fundamento
 		local pf = minetest.deserialize(meta:get_string("pos_fundamento"))
 		
+		-- Verificar se o fundamento ainda esta no lugar
+		if minetest.get_node(pf).name ~= "sunos:fundamento" then 
+			minetest.set_node(pos, {name="default:chest", param2=minetest.get_node(pos).param2})
+			return 
+		end
+		
 		-- Distancia centro a borda da estrutura
 		local dist = tonumber(minetest.get_meta(pf):get_string("dist"))
 		

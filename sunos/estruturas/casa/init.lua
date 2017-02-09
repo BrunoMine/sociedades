@@ -125,6 +125,7 @@ sunos.estruturas.casa.construir = function(pos, dist, vila, verif_area, itens_re
 	-- Criar fundamento e configurar
 	minetest.set_node(pos, {name="sunos:fundamento"})
 	local meta = minetest.get_meta(pos)
+	meta:set_string("versao", sunos.versao) -- Salva a versão atual do projeto
 	meta:set_string("vila", vila) -- Numero da vila
 	meta:set_string("tipo", "casa") -- Tipo da estrutura
 	meta:set_string("estrutura", n_estrutura) -- Numero da estrutura

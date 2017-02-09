@@ -47,9 +47,15 @@ minetest.register_node("sunos:fundamento", {
 	-- Remover do banco de dados caso o bloco seja removido
 	on_destruct = function(pos)
 		local meta = minetest.get_meta(pos)
+		local versao = meta:get_string("versao")
+		
+		-- Verificar versao antes de tudo
+		if versao == "" or sunos.verif_comp(versao) ~= true then return end
+		
 		local vila = meta:get_string("vila")
 		local tipo = meta:get_string("tipo")
 		local dist = meta:get_string("dist")
+		
 		
 		if vila == "" or tipo == "" then return end
 		

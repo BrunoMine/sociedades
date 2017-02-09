@@ -18,6 +18,10 @@ sunos.montar_estrutura = function(cpos, dist, tipo)
 		minetest.log("error", "[Sunos] Tabela cpos nula (em sunos.montar_estrutura)")
 		return false
 	end
+	if dist == nil then
+		minetest.log("error", "[Sunos] dist nula (em sunos.montar_estrutura)")
+		return false
+	end
 	if tipo == nil then
 		minetest.log("error", "[Sunos] Tipo de estrutura nula (em sunos.montar_estrutura)")
 		return nil

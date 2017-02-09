@@ -12,6 +12,11 @@
 -- Tabela global
 sunos = {}
 
+-- Versão do projeto
+sunos.versao = "1.4"
+
+-- Versoes compativeis
+sunos.versao_comp = {}
 
 -- Configurações / Settings
 --[[ 
@@ -81,6 +86,7 @@ dofile(modpath.."/gerenciador_de_vilas.lua")
 dofile(modpath.."/inimigos.lua")
 dofile(modpath.."/verif_defesa.lua")
 dofile(modpath.."/verif_ataques.lua")
+dofile(modpath.."/compatibilidade.lua")
 -- Nodes
 dofile(modpath.."/nodes/rua.lua")
 dofile(modpath.."/nodes/fundamento.lua")

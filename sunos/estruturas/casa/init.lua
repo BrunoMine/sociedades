@@ -1,6 +1,6 @@
 --[[
 	Mod Sunos para Minetest
-	Copyright (C) 2016 BrunoMine (https://github.com/BrunoMine)
+	Copyright (C) 2017 BrunoMine (https://github.com/BrunoMine)
 	
 	Recebeste uma cópia da GNU Lesser General
 	Public License junto com esse software,
@@ -19,13 +19,22 @@ sunos.estruturas.casa.pop = true
 -- Métodos para gerar tabelas de itens para reposição de nodes (carregamento de script)
 dofile(minetest.get_modpath("sunos").."/estruturas/casa/repo_nodes.lua") 
 
+-- Registros do NPC da casa (carregamento de script)
+dofile(minetest.get_modpath("sunos").."/estruturas/casa/npc.lua") 
+
+-- Registros do NPC da casa (carregamento de script)
+dofile(minetest.get_modpath("sunos").."/estruturas/casa/interface.lua") 
+
+-- Bau de casa dos sunos (carregamento de script)
+dofile(minetest.get_modpath("sunos").."/estruturas/casa/bau.lua") 
+
 local set_bau = function(pos, vila, n_estrutura, dist)
 
 	-- Verifica se tem baus na estrutura montada
 	local baus = minetest.find_nodes_in_area(
 		{x=pos.x-dist, y=pos.y, z=pos.z-dist}, 
 		{x=pos.x+dist, y=pos.y+14, z=pos.z+dist}, 
-		{"sunos:bau"}
+		{"sunos:bau_casa"}
 	)
 	-- Salva dados da estrutura no bau dela
 	for _,pos_bau in ipairs(baus) do
@@ -35,7 +44,6 @@ local set_bau = function(pos, vila, n_estrutura, dist)
 		meta:set_string("pos_fundamento", minetest.serialize(pos)) -- Pos do fundamento
 		meta:set_string("infotext", sunos.S("Bau dos Sunos"))
 	end
-
 
 end
 

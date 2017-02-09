@@ -1,20 +1,20 @@
 --[[
 	Mod Sunos para Minetest
-	Copyright (C) 2016 BrunoMine (https://github.com/BrunoMine)
+	Copyright (C) 2017 BrunoMine (https://github.com/BrunoMine)
 	
 	Recebeste uma cópia da GNU Lesser General
 	Public License junto com esse software,
 	se não, veja em <http://www.gnu.org/licenses/>. 
 	
-	Bau dos sunos
+	Bau da casa comunal dos sunos
   ]]
 
 -- Bau dos sunos
 --[[
 	Esse é o node que tem nas casas dos sunos
 ]]
-minetest.register_node("sunos:bau", {
-	description = sunos.S("Bau dos Sunos"),
+minetest.register_node("sunos:bau_casa_comunal", {
+	description = sunos.S("Bau da Casa Comunal dos Sunos"),
 	tiles = {"default_chest_top.png^sunos_bau_topo.png", "default_chest_top.png", "default_chest_side.png^sunos_bau_lado.png",
 		"default_chest_side.png^sunos_bau_lado.png", "default_chest_side.png^sunos_bau_lado.png", "default_chest_lock.png^sunos_bau_frente.png"},
 	paramtype2 = "facedir",
@@ -25,7 +25,7 @@ minetest.register_node("sunos:bau", {
 	drop = "default:chest",
 	
 	-- Nao pode ser escavado/quebrado por jogadores
-	--on_dig = function() end,
+	on_dig = function() end,
 })
 
 

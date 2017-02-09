@@ -1,6 +1,6 @@
 --[[
 	Mod Sunos para Minetest
-	Copyright (C) 2016 BrunoMine (https://github.com/BrunoMine)
+	Copyright (C) 2017 BrunoMine (https://github.com/BrunoMine)
 	
 	Recebeste uma cópia da GNU Lesser General
 	Public License junto com esse software,
@@ -30,7 +30,7 @@ sunos.estruturas.casa.gerar_itens_repo = {}
 sunos.estruturas.casa.gerar_itens_repo["2"] = function()
 	return {
 		bancadas = {
-			{"sunos:bau", 1},
+			{"sunos:bau_casa", 1},
 			{"sunos:bancada_de_trabalho", 1, true},
 		},
 		simples = {
@@ -43,7 +43,7 @@ end
 sunos.estruturas.casa.gerar_itens_repo["3"] = function()
 	return {
 		bancadas = {
-			{"sunos:bau", 1},
+			{"sunos:bau_casa", 1},
 			{"sunos:bancada_de_trabalho", 1, true},
 		},
 		simples = {
@@ -56,7 +56,7 @@ end
 sunos.estruturas.casa.gerar_itens_repo["4"] = function()
 	return {
 		bancadas = {
-			{"sunos:bau", 1},
+			{"sunos:bau_casa", 1},
 			{"sunos:bancada_de_trabalho", 1, true},
 		},
 		simples = {

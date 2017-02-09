@@ -27,6 +27,19 @@ sunos.estruturas.casa_comunal.atualizando_vila = function(vila, arq, reg) end
 	^ 'arq' (variável string) é o nome do arquivo responsável por armazenar os dados da estrutura a ser atualizada
 	^ 'reg' (tabela) são os dados salvos no banco de dados referentes à estrutura
 
+===================> Registrar um NPC comum
+Esse NPC obedece possui algumas configurações preliminares para facilitar a criação
+
+Registrar npc comum
+sunos.npcs.npc.registrar = function("tipo", def) end
+	^ 'tipo' = "casa", ---> Nome do tipo de npc suno
+	^ 'def' ---> Tabela de parametros
+		^ Nenhum parametro ainda
+
+Função on_rightclick padrão (isso é executado dessa forma, mas você pode reproduzi-lo com mais argumentos #3, #4, ...)
+sunos.npcs.npc.registrados["tipo"].on_rightclick(self, player)
+
+
 ===================> Sistema de registros
 Alguns dados devem ser organizados de maneiras específicas.
 
@@ -34,3 +47,13 @@ Metadados do fundamento de uma estrutura (todos são armazenados no formato de s
 "vila" ---> numero da vila correspondente (exemplo: "12")
 "tipo" ---> nome do tipo de estrutura (exemplo: "casa")
 "dist" ---> distância do centro até a borda em blocos (exemplo: "3")
+
+Entidades
+*variaveis da engine* ---> Variaveis que a engine mobs_redo precisar (veja a documentação da engine)
+tipo ---> Nome do tipo de npc suno
+loop ---> Controle de temporizador
+temp ---> Temporizador gerenciado pelo mod sunos
+mypos ---> Coordenada do node de origem
+mynode ---> Nome do node onde o npc spawnou
+
+

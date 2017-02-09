@@ -20,7 +20,7 @@ sunos.tb_menu_casa_comunal = {
 		-- Item a receber (apenas 1 item e 1 unidade)
 		item_add = "sunos:fundamento_casa_pequena", 
 		-- Itens a pagar (de 1 a 14 itens diferentes de qualquer quantidade) 
-		item_rem = {"default:tree 20", "default:cobble 15", "default:stonebrick 15", "xpanes:pane_flat 5", "default:torch 10", "farming:straw 15"} 
+		item_rem = {"default:dirt"} 
 	},
 	[sunos.S("Casa Mediana")] = {
 		desc = sunos.S("Aumenta a quantidade de moradores da vila"),

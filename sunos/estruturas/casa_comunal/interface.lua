@@ -9,8 +9,6 @@
 	Interface
   ]]
 
--- Tabela de entidade acessada na casa comunal
-sunos.acesso = memor.online()
 
 -- Lista que relaciona numero com titulo od item
 local tb_itens_menu_casa_comunal = {}
@@ -42,38 +40,21 @@ local avisar = function(player, texto)
 end
 
 -- Acessar NPC
-sunos.acessar_npc = function(ent, player, fields)
+sunos.npcs.npc.registrados.comunal.on_rightclick = function(ent, player, fields)
 	
 	-- Verifica se NPC ainda existe
 	if not ent or not player then
 		return
 	end
 	
-	-- Salva a entidade acessada
-	sunos.acesso[player:get_player_name()].ent = ent
+	-- Verifica a tabela volatil de 'casa'
+	if not sunos.online[player:get_player_name()].casa_comunal then sunos.online[player:get_player_name()].casa_comunal = {} end
 	
-	-- NPC suno comum
-	if ent.name == "sunos:npc" then
-		
-		-- Verifica se nao tem casa comunal e oferece para construir
-		if sunos.bd:verif("vila_"..ent.vila, "casa_comunal") == false then
-			local formspec = "size[6,3]"
-				..default.gui_bg
-				..default.gui_bg_img
-				.."label[0,0;"..sunos.S("Oi. Ajude essa vila a \nmontar uma Casa Comunal").."]"
-				.."item_image_button[0,1;1,1;default:tree 20;item1;]" -- Item 1
-				.."item_image_button[1,1;1,1;default:stone 70;item1;]" -- Item 2
-				.."item_image_button[2,1;1,1;farming:straw 30;item1;]" -- Item 3
-				.."item_image_button[5,1;1,1;sunos:fundamento_casa_comunal;fundamento;]" -- Fundamento de Casa Comunal
-				.."button_exit[0,2;6,1;trocar;"..sunos.S("Trocar por Fundamento").."]"
-			return minetest.show_formspec(player:get_player_name(), "sunos:npc", formspec)
-		end
-		
-		-- Avisa para ir ate a casa comunal
-		return minetest.chat_send_player(player:get_player_name(), sunos.S("Nenhuma atividade disponivel"))
+	-- Salva a entidade acessada
+	sunos.online[player:get_player_name()].casa_comunal.ent_acesso = ent
 	
 	-- NPC da casa Comunal
-	elseif ent.name == "sunos:npc_casa_comunal" then
+	if ent.name == "sunos:npc" and ent.tipo == "comunal" then
 		
 		-- Atualizar banco de dados da vila
 		sunos.atualizar_bd_vila(ent.vila)
@@ -105,7 +86,7 @@ sunos.acessar_npc = function(ent, player, fields)
 			local dados = sunos.tb_menu_casa_comunal[titulo]
 			
 			-- Armazena o item escolhido
-			sunos.acesso[player:get_player_name()].item = titulo
+			sunos.online[player:get_player_name()].casa_comunal.item = titulo
 			
 			-- Titulo do item
 			formspec = formspec .."label[5,3;"..titulo.."]"
@@ -159,50 +140,27 @@ sunos.acessar_npc = function(ent, player, fields)
 			formspec = formspec .."label[6,5;"..sunos.S("Escolha algo da lista").."]"
 		end
 		
-		return minetest.show_formspec(player:get_player_name(), "sunos:npc_casa_comunal", formspec)
+		return minetest.show_formspec(player:get_player_name(), "sunos:npcs_npc_comunal", formspec)
 	end
 end
 
 -- Receptor de botoes
 minetest.register_on_player_receive_fields(function(player, formname, fields)
-
-	-- NPC suno comum
-	if formname == "sunos:npc" then 
-		-- Validar entidade acessada
-		local ent = sunos.acesso[player:get_player_name()].ent
-		if not ent then return end
-		
-		if fields.trocar then -- Trocar fundamento de casa comunal
-			
-			-- Tenta trocar pelo fundamento de casa comunal
-			if tror.trocar_plus(player, 
-				{"default:tree 20", "default:stone 70", "farming:straw 30"}, 
-				{"sunos:fundamento_casa_comunal"}
-			) == false 
-			then
-				return minetest.chat_send_player(player:get_player_name(), sunos.S("Faltou itens para trocar pelo fundamento de Casa Comunal"))
-			else
-				minetest.chat_send_player(player:get_player_name(), sunos.S("Recebeste um Fundamento de Casa Comunal"))
-				minetest.chat_send_player(player:get_player_name(), sunos.S("Coloque em um local adequado para que seja construida"))
-				return
-			end
-		end
-	end
+	if formname == "sunos:npcs_npc_comunal" then
 	
-	if formname == "sunos:npc_casa_comunal" then
 		-- Validar entidade acessada
-		local ent = sunos.acesso[player:get_player_name()].ent
+		local ent = sunos.online[player:get_player_name()].casa_comunal.ent_acesso
 		if not ent then return end
 		
 		if fields.menu then		
 			-- Retorna o acesso
-			sunos.acessar_npc(ent, player, fields)
+			sunos.npcs.npc.registrados.comunal.on_rightclick(ent, player, fields)
 		end
 		
 		if fields.trocar then
 		
 			-- Dados do item escolhido
-			local titulo = sunos.acesso[player:get_player_name()].item
+			local titulo = sunos.online[player:get_player_name()].casa_comunal.item
 			local dados = sunos.tb_menu_casa_comunal[titulo]
 			
 			-- Verifica se tem os habitantes necessarios

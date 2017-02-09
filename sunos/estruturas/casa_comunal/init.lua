@@ -9,11 +9,20 @@
 	Casa comunal
   ]]
 
--- Caminho do diretório do mod
+-- Diretorio do mod
 local modpath = minetest.get_modpath("sunos")
 
 -- Tabela global de Casa Comunal
 sunos.estruturas.casa_comunal = {}
+
+-- Registros do NPC da casa (carregamento de script)
+dofile(minetest.get_modpath("sunos").."/estruturas/casa_comunal/npc.lua") 
+
+-- Interface de atendimento da casa comunal (carregamento de script)
+dofile(minetest.get_modpath("sunos").."/estruturas/casa_comunal/interface.lua") 
+
+-- Bau de casa dos sunos (carregamento de script)
+dofile(minetest.get_modpath("sunos").."/estruturas/casa_comunal/bau.lua") 
 
 local function pegar_node(pos)
 	local node = minetest.get_node(pos)
@@ -59,7 +68,7 @@ sunos.estruturas.casa_comunal.construir = function(pos, vila, nivel, verif_area)
 	local largura = 13
 	
 	-- Verificações de area
-	if verif_area ~= true then
+	if verif_area == true then
 	
 		-- Verifica status do terreno
 		local st = sunos.verif_terreno(pos, dist)
@@ -210,7 +219,7 @@ minetest.register_node("sunos:fundamento_casa_comunal", {
 	
 	-- Colocar uma casa comunal
 	on_place = function(itemstack, placer, pointed_thing)
-		
+	
 		-- Verificar Vila e pegar dados (buscando por um fundamento proximo)
 		local pos_fund_prox = minetest.find_node_near(pointed_thing.under, 25, {"sunos:fundamento"})
 		if pos_fund_prox == nil then 
@@ -255,21 +264,5 @@ minetest.register_node("sunos:fundamento_casa_comunal", {
 			return itemstack
 		end
 	end,
-})
-
--- Bau da casa comunal (para spawnar atendentes)
---[[
-	Esse é o node usado para construir uma casa comunal
-]]
-minetest.register_node("sunos:bau_casa_comunal", {
-	description = sunos.S("Bau da Casa Comunal dos Sunos"),
-	tiles = {"default_chest_top.png^sunos_bau_topo.png", "default_chest_top.png", "default_chest_side.png^sunos_bau_lado.png",
-		"default_chest_side.png^sunos_bau_lado.png", "default_chest_side.png^sunos_bau_lado.png", "default_chest_lock.png^sunos_bau_frente.png"},
-	paramtype2 = "facedir",
-	is_ground_content = false,
-	groups = {tree = 1, choppy = 2, oddly_breakable_by_hand = 1, flammable = 2},
-	sounds = default.node_sound_wood_defaults(),
-	stack_max = 1,
-	drop = "default:chest",
 })
 

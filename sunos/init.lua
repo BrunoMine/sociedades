@@ -1,6 +1,6 @@
 --[[
 	Mod Sunos para Minetest
-	Copyright (C) 2016 BrunoMine (https://github.com/BrunoMine)
+	Copyright (C) 2017 BrunoMine (https://github.com/BrunoMine)
 	
 	Recebeste uma cópia da GNU Lesser General
 	Public License junto com esse software,
@@ -59,6 +59,9 @@ sunos.var.nodes_estruturais = {
 -- Banco de dados (Memor)
 sunos.bd = memor.montar_bd()
 
+-- Tabela de dados volateis para jogadores online
+sunos.online = memor.online()
+
 -- Tabela de estruturas e funções
 sunos.estruturas = {}
 
@@ -81,7 +84,6 @@ dofile(modpath.."/verif_ataques.lua")
 -- Nodes
 dofile(modpath.."/nodes/rua.lua")
 dofile(modpath.."/nodes/fundamento.lua")
-dofile(modpath.."/nodes/bau.lua")
 dofile(modpath.."/nodes/decor_repo.lua")
 dofile(modpath.."/nodes/bancada.lua")
 dofile(modpath.."/nodes/bancada_de_trabalho.lua")
@@ -89,9 +91,8 @@ dofile(modpath.."/nodes/bancada_de_trabalho.lua")
 dofile(modpath.."/craftitens.lua")
 dofile(modpath.."/comandos.lua")
 -- NPCs e interface basica
-dofile(modpath.."/interface.lua")
+sunos.npcs = {} -- Tabela global de NPCs
 dofile(modpath.."/npc/npc.lua")
-dofile(modpath.."/npc/npc_casa_comunal.lua")
 -- Estruturas básicas
 dofile(modpath.."/estruturas/casa_comunal/init.lua")
 dofile(modpath.."/estruturas/casa/init.lua")

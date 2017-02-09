@@ -175,7 +175,14 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 			if tror.trocar_plus(player, dados.item_rem, {dados.item_add}) == false then
 				return avisar(player, sunos.S("Precisa dos itens exigidos para a trocar por \n@1", titulo))
 			else
-				return avisar(player, sunos.S("Recebeste um @1", titulo))
+				-- Pegar descrição do item
+				local desc_item = "fail" 
+				if minetest.registered_nodes[dados.item_add] then desc_item = minetest.registered_nodes[dados.item_add].description
+				elseif minetest.registered_tools[dados.item_add] then desc_item = minetest.registered_tools[dados.item_add].description
+				elseif minetest.registered_items[dados.item_add] then desc_item = minetest.registered_items[dados.item_add].description
+				elseif minetest.registered_craftitems[dados.item_add] then desc_item = minetest.registered_craftitems[dados.item_add].description
+				end
+				return avisar(player, sunos.S("Recebeste um @1", desc_item))
 			end
 		end
 	end

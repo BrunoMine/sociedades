@@ -8,15 +8,16 @@
 	
 	Casa dos sunos
   ]]
-
--- Caminho do diretório do mod
-local modpath = minetest.get_modpath("sunos")
+  
 
 -- Tabela global de Casa
 sunos.estruturas.casa = {}
 
 -- Esse tipo de estrutura tem população
 sunos.estruturas.casa.pop = true
+
+-- Métodos para gerar tabelas de itens para reposição de nodes (carregamento de script)
+dofile(minetest.get_modpath("sunos").."/estruturas/casa/repo_nodes.lua") 
 
 local set_bau = function(pos, vila, n_estrutura, dist)
 
@@ -37,20 +38,6 @@ local set_bau = function(pos, vila, n_estrutura, dist)
 
 
 end
-
--- Itens simples decorativos para casas
-local decor_simples = {
-	"default:apple",
-	"flowers:rose",
-	"flowers:tulip",
-	"flowers:dandelion_yellow",
-	"flowers:geranium",
-	"flowers:viola",
-	"flowers:dandelion_white",
-	"flowers:mushroom_brown",
-	"vessels:glass_bottle",
-	"vessels:drinking_glass"
-}
 
 -- Construir casa de sunos
 --[[
@@ -121,7 +108,7 @@ sunos.estruturas.casa.construir = function(pos, dist, vila, verif_area, itens_re
 	
 	-- Recoloca itens reais (apartir dos itens de reposição)
 	if itens_repo then
-		sunos.decor_repo(pos, dist, gerar_itens_repo[tostring(dist)]())
+		sunos.decor_repo(pos, dist, sunos.estruturas.casa.gerar_itens_repo[tostring(dist)]())
 	end
 	
 	-- Numero da estrutura da nova casa
@@ -192,152 +179,30 @@ sunos.estruturas.casa.verif_fund = function(pos)
 	
 end
 
--- Funções para geração de tabelas de itens de reposição
--- Gerar itens de reposição
-local gerar_itens_repo_casa_pequena = function()
-	return {
-		bancadas = {
-			{"sunos:bau", 1},
-			{"sunos:bancada_de_trabalho", 1, true},
-		},
-		simples = {
-			{decor_simples[math.random(1, table.maxn(decor_simples))], 1},
-			{decor_simples[math.random(1, table.maxn(decor_simples))], 1}
-		},
-	}
-end
--- Gerar itens de reposição
-local gerar_itens_repo_casa_mediana = function()
-	return {
-		bancadas = {
-			{"sunos:bau", 1},
-			{"sunos:bancada_de_trabalho", 1, true},
-		},
-		simples = {
-			{decor_simples[math.random(1, table.maxn(decor_simples))], math.random(1, 2)},
-			{decor_simples[math.random(1, table.maxn(decor_simples))], math.random(1, 2)}
-		},
-	}
-end
--- Gerar itens de reposição
-local gerar_itens_repo_casa_grande = function()
-	return {
-		bancadas = {
-			{"sunos:bau", 1},
-			{"sunos:bancada_de_trabalho", 1, true},
-		},
-		simples = {
-			{decor_simples[math.random(1, table.maxn(decor_simples))], math.random(1, 2)},
-			{decor_simples[math.random(1, table.maxn(decor_simples))], math.random(1, 2)},
-			{decor_simples[math.random(1, table.maxn(decor_simples))], math.random(1, 2)},
-			{decor_simples[math.random(1, table.maxn(decor_simples))], math.random(1, 2)}
-		},
-	}
-end
--- Criar tabela que relaciona disttancia centra a borda com funcões de geração de tabela de reposição
-gerar_itens_repo = {}
-gerar_itens_repo["2"] = gerar_itens_repo_casa_pequena
-gerar_itens_repo["3"] = gerar_itens_repo_casa_mediana
-gerar_itens_repo["4"] = gerar_itens_repo_casa_grande
-
--- Fundamento de casa comum
---[[
-	Esse é o node usado para construir uma casa comum
-]]
-
--- Fundamento de casa pequena
-minetest.register_node("sunos:fundamento_casa_pequena", {
-	description = sunos.S("Fundamento Suno de Casa Pequena"),
-	tiles = {"default_tree_top.png^sunos_fundamento.png", "default_tree_top.png", "default_tree.png"},
-	inventory_image = "sunos_inv_fundamento.png^sunos_inv_fundamento_casa.png",
-	wield_image = "sunos_inv_fundamento.png^sunos_inv_fundamento_casa.png",
-	paramtype2 = "facedir",
-	is_ground_content = false,
-	groups = {tree = 1, choppy = 2, oddly_breakable_by_hand = 1, flammable = 2},
-	sounds = default.node_sound_wood_defaults(),
-	stack_max = 1,
+-- Verificação de estrutura de casa defendida
+sunos.estruturas.casa.defendido = function(pos)
 	
-	-- Colocar uma casa
-	on_place = function(itemstack, placer, pointed_thing)
-		
-		local r = sunos.estruturas.casa.construir(pointed_thing.under, 2, nil, nil, gerar_itens_repo_casa_pequena())
-		if r == true then
-			
-			-- Retorna mensagem de montagem concluida
-			minetest.chat_send_player(placer:get_player_name(), sunos.S("Casa construida"))
-			itemstack:take_item()
-			return itemstack
-			
-		else
-			-- Retorna mensagem de falha
-			minetest.chat_send_player(placer:get_player_name(), r)
-			return itemstack
-		end
-	end,
-})
-
--- Fundamento de casa mediana
-minetest.register_node("sunos:fundamento_casa_mediana", {
-	description = sunos.S("Fundamento Suno de Casa Mediana"),
-	tiles = {"default_tree_top.png^sunos_fundamento.png", "default_tree_top.png", "default_tree.png"},
-	inventory_image = "sunos_inv_fundamento.png^sunos_inv_fundamento_casa.png",
-	wield_image = "sunos_inv_fundamento.png^sunos_inv_fundamento_casa.png",
-	paramtype2 = "facedir",
-	is_ground_content = false,
-	groups = {tree = 1, choppy = 2, oddly_breakable_by_hand = 1, flammable = 2},
-	sounds = default.node_sound_wood_defaults(),
-	stack_max = 1,
+	-- Verificar se tem um mob dos sunos comum por perto pertencente à mesma vila
 	
-	-- Colocar uma casa
-	on_place = function(itemstack, placer, pointed_thing)
-		
-		local r = sunos.estruturas.casa.construir(pointed_thing.under, 3, nil, nil, gerar_itens_repo_casa_mediana())
-		if r == true then
-			
-			-- Retorna mensagem de montagem concluida
-			minetest.chat_send_player(placer:get_player_name(), sunos.S("Casa construida"))
-			itemstack:take_item()
-			return itemstack
-			
-		else
-			-- Retorna mensagem de falha
-			minetest.chat_send_player(placer:get_player_name(), r)
-			return itemstack
-		end
-	end,
-})
-
-
-
--- Fundamento de casa grande
-minetest.register_node("sunos:fundamento_casa_grande", {
-	description = sunos.S("Fundamento Suno de Casa Grande"),
-	tiles = {"default_tree_top.png^sunos_fundamento.png", "default_tree_top.png", "default_tree.png"},
-	inventory_image = "sunos_inv_fundamento.png^sunos_inv_fundamento_casa.png",
-	wield_image = "sunos_inv_fundamento.png^sunos_inv_fundamento_casa.png",
-	paramtype2 = "facedir",
-	is_ground_content = false,
-	groups = {tree = 1, choppy = 2, oddly_breakable_by_hand = 1, flammable = 2},
-	sounds = default.node_sound_wood_defaults(),
-	stack_max = 1,
+	-- Verificar vila do fundamento
+	local vila = minetest.get_meta(pos):get_string("vila")
 	
-	-- Colocar uma casa
-	on_place = function(itemstack, placer, pointed_thing)
-		
-		local r = sunos.estruturas.casa.construir(pointed_thing.under, 4, nil, nil, gerar_itens_repo_casa_grande())
-		if r == true then
-			
-			-- Retorna mensagem de montagem concluida
-			minetest.chat_send_player(placer:get_player_name(), sunos.S("Casa construida"))
-			itemstack:take_item()
-			return itemstack
-			
-		else
-			-- Retorna mensagem de falha
-			minetest.chat_send_player(placer:get_player_name(), r)
-			return itemstack
+	-- Analizar objetos (possiveis npcs) perto
+	for _,obj in ipairs(minetest.get_objects_inside_radius(pos, (tonumber(minetest.get_meta(pos):get_string("dist"))))) do
+		local ent = obj:get_luaentity() or {}
+		if ent 
+			and ent.name == "sunos:npc" -- Verifica se for npc comum
+			and tonumber(ent.vila) == tonumber(vila) -- Verifica se é da mesma vila
+		then 
+			return true
 		end
-	end,
-})
+	end
+	
+	return false
+	
+end
+
+-- Nodes criadores de vilas (carregamento de script)
+dofile(minetest.get_modpath("sunos").."/estruturas/casa/nodes.lua") 
 
 

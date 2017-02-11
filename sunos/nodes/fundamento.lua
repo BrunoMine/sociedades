@@ -50,7 +50,7 @@ minetest.register_node("sunos:fundamento", {
 		local versao = meta:get_string("versao")
 		
 		-- Verificar versao antes de tudo
-		if versao == "" or sunos.verif_comp(versao) ~= true then return end
+		if sunos.verif_comp(versao) == false then return end
 		
 		local vila = meta:get_string("vila")
 		local tipo = meta:get_string("tipo")

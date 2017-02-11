@@ -33,6 +33,9 @@ local registrar_vila = function()
 	-- Criar registro
 	sunos.bd:salvar("vila_"..n, "numero", n)
 	
+	-- Salvar versao
+	sunos.bd:salvar("vila_"..n, "versao", sunos.versao)
+	
 	-- Salvar numero incial de estruturas
 	sunos.bd:salvar("vila_"..n, "estruturas", 0)
 	

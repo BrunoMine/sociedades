@@ -37,6 +37,10 @@ sunos.atualizar_bd_vila = function(vila)
 		return false
 	end
 	
+	-- Verifica versão do mod sunos para essa vila
+	if sunos.bd:verif("vila_"..vila, "versao") ~= true then return false end
+	if sunos.verif_comp(sunos.bd:pegar("vila_"..vila, "versao")) == false then return false end
+	
 	-- População total
 	local pop_total = 0
 	

@@ -12,6 +12,8 @@
 
 -- Verifica se a versao informada é compativel com a versao atual
 sunos.verif_comp = function(versao)
+	if versao == "" then return false end
+	if versao == sunos.versao then return true end
 	for _,v in ipairs(sunos.versao_comp) do
 		if versao == v then return true end
 	end 
@@ -26,13 +28,22 @@ minetest.register_lbm({
 	nodenames = {"sunos:fundamento"},
 	action = function(pos, node)
 		local v = minetest.get_meta(pos):get_string("versao")
-		if v == "" or sunos.verif_comp(v) ~= true then
+		if sunos.verif_comp(v) == false then
 			-- Pega distancia do centro a borda
 			local dist = minetest.get_meta(pos):get_string("dist")
 			if dist == "" then dist = 1 end
-			-- Monta uma ruina no local
-			sunos.montar_estrutura(pos, tonumber(dist), "ruina")
+			-- Remover fundamento
+			minetest.set_node(pos, {name="default:tree"})
 		end
+	end,
+})
+
+-- LBM para remover nodes obsoletos
+minetest.register_lbm({
+	name = "sunos:remove_oldnodes_1dot4",
+	nodenames = {"sunos:bau", "sunos:bau_casa_comunal", "sunos:bau_loja"},
+	action = function(pos, node)
+		minetest.remove_node(pos)
 	end,
 })
 

@@ -84,6 +84,7 @@ local novo_rastreado = function(name)
 				local vila = minetest.get_meta(pf):get_string("vila")
 				-- Verifica se já é inimigo nessa vila
 				if sunos.verif_inimigo(vila, name) == false then
+					sunos.novo_inimigo(vila, name)
 					minetest.log("action", "Vila "..vila.." dos sunos passou a ser inimiga de "..name.." (modo 1)")
 				end
 			end
@@ -149,6 +150,7 @@ function minetest.is_protected(pos, name)
 				local vila = minetest.get_meta(pf):get_string("vila")
 				-- Verifica se já é inimigo nessa vila
 				if sunos.verif_inimigo(vila, name) == false then
+					sunos.novo_inimigo(vila, name)
 					minetest.log("action", "Vila "..vila.." dos sunos passou a ser inimiga de "..name.." (modo 1)")
 				end
 			end
@@ -236,6 +238,7 @@ minetest.register_on_leaveplayer(function(player)
 				local vila = minetest.get_meta(pf):get_string("vila")
 				-- Verifica se já é inimigo nessa vila
 				if sunos.verif_inimigo(vila, name) == false then
+					sunos.novo_inimigo(vila, name)
 					minetest.log("action", "Vila "..vila.." dos sunos passou a ser inimiga de "..name.." (modo 1)")
 				end
 			end

@@ -41,7 +41,7 @@ local verif_dist_pos = function(pos1, pos2)
 end
 
 -- Spawnar um NPC
-sunos.npcs.npc.spawn = function(tipo, vila, pos)
+sunos.npcs.npc.spawn = function(tipo, vila, pos, spos)
 	if not tipo then
 		minetest.log("error", "[Sunos] tipo nulo (em sunos.npcs.npc.spawn)")
 		return false
@@ -58,6 +58,10 @@ sunos.npcs.npc.spawn = function(tipo, vila, pos)
 		minetest.log("error", "[Sunos] pos nula (em sunos.npcs.npc.spawn)")
 		return false
 	end
+	if not spos then
+		minetest.log("error", "[Sunos] faltou coordenada para spawnar (em sunos.npcs.npc.spawn)")
+		return false
+	end
 	
 	-- Verifica o node para spawn
 	local node = minetest.get_node(pos)
@@ -72,18 +76,7 @@ sunos.npcs.npc.spawn = function(tipo, vila, pos)
 		return false
 	end
 	
-	local p = minetest.facedir_to_dir(node.param2) -- Mover para a frente do node
-	
-	-- Verifica se o local para o mob aparecer está ocupado
-	if minetest.get_node({x=pos.x-p.x,y=pos.y+1,z=pos.z-p.z}).name ~= "air"
-		or minetest.get_node({x=pos.x-p.x,y=pos.y,z=pos.z-p.z}).name ~= "air"
-	then
-		local pos_string = pos.x.." "..pos.y.." "..pos.z
-		minetest.log("error", "[Sunos] sem espaco para colocar mob em frente ao node de spawn pretendido ("..pos_string..") (em sunos.npcs.npc.spawn)")
-		return false
-	end
-	
-	local obj = minetest.add_entity({x=pos.x-p.x,y=pos.y+1.5,z=pos.z-p.z}, "sunos:npc") -- Cria o mob
+	local obj = minetest.add_entity(spos, "sunos:npc") -- Cria o mob
 	
 	-- Salva alguns dados na entidade inicialmente
 	if obj then
@@ -95,10 +88,10 @@ sunos.npcs.npc.spawn = function(tipo, vila, pos)
 		ent.mypos = pos
 		ent.mynode = node.name
 		
-		return true
+		-- Retorna a entidade
+		return ent
 	else
 		local pos_string = pos.x.." "..pos.y.." "..pos.z
-		minetest.log("error", "[Sunos] Falha ao spawnar npc em frente ao node de spawn pretendido ("..pos_string..") (em sunos.npcs.npc.spawn)")
 		return false
 	end
 	
@@ -118,6 +111,7 @@ sunos.npcs.npc.registrar = function(tipo, def)
 	
 	-- Cria o registro na tabela global
 	sunos.npcs.npc.registrados[tipo] = def
+	sunos.npcs.npc.registrados[tipo].max_dist = def.max_dist or 10
 	
 	-- Registrar um mob
 	mobs:register_mob("sunos:npc", {
@@ -193,6 +187,17 @@ sunos.npcs.npc.registrar = function(tipo, def)
 						return
 					end
 				end 
+				
+				-- Verificar se está muito longe do bau
+				if verif_dist_pos(self.object:getpos(), self.mypos) > sunos.npcs.npc.registrados[tipo].max_dist then
+					self.object:remove()
+					return
+				end
+				
+				-- Realiza procedimento personalizado
+				if sunos.npcs.npc.registrados[self.tipo].on_step then
+					sunos.npcs.npc.registrados[self.tipo].on_step(self)
+				end
 			end
 		
 		end,

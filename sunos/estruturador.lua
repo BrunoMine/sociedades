@@ -13,7 +13,7 @@
 local modpath = minetest.get_modpath("sunos")
 
 -- Montar uma estrutura
-sunos.montar_estrutura = function(cpos, dist, tipo)
+sunos.montar_estrutura = function(cpos, dist, tipo, rotat)
 	if cpos == nil then
 		minetest.log("error", "[Sunos] Tabela cpos nula (em sunos.montar_estrutura)")
 		return false
@@ -33,11 +33,14 @@ sunos.montar_estrutura = function(cpos, dist, tipo)
 	-- Largura
 	local largura = 2*dist+1
 	
+	-- Nome do arquivo esquematico da estrutura
+	local schem = sunos.pegar_arquivo(largura, tipo).."."..largura..".mts"
+	
 	-- Caminho do arquivo da estrutura
-	local arquivo = modpath.."/schems/"..tipo.."/"..sunos.pegar_arquivo(largura, tipo).."."..largura..".mts"
+	local caminho_arquivo = modpath.."/schems/"..tipo.."/"..schem
 	
 	-- Criar estrutura
-	minetest.place_schematic(pos, arquivo, nil, nil, true)
+	minetest.place_schematic(pos, caminho_arquivo, rotat, nil, true)
 	
-	return true
+	return true, schem
 end

@@ -61,6 +61,9 @@ sunos.novo_inimigo = function(vila, name)
 	-- Armazena nome do inimigo e o tempo que deve ser mantido como inimigo
 	inimigos[vila][name] = sunos.var.tempo_inimigo
 	
+	-- Envia mensagem de aviso
+	minetest.chat_send_player(name, "Acabaste de se tornar inimigo de uma vila dos Sunos")
+	
 	-- Conta um tempo para tentar remover o inimigo
 	minetest.after(60, sunos.atualizar_inimigo, vila, name, 60)
 	return true

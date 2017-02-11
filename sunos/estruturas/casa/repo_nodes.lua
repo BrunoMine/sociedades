@@ -12,7 +12,6 @@
 
 -- Itens simples decorativos para casas
 local decor_simples = {
-	"default:apple",
 	"flowers:rose",
 	"flowers:tulip",
 	"flowers:dandelion_yellow",

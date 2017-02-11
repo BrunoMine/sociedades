@@ -39,6 +39,7 @@ local set_bau = function(pos, vila, n_estrutura, dist)
 	-- Salva dados da estrutura no bau dela
 	for _,pos_bau in ipairs(baus) do
 		local meta = minetest.get_meta(pos_bau)
+		meta:set_string("obs", "n") -- Verifica se esta obstruido
 		meta:set_string("vila", vila) -- Numero da vila
 		meta:set_string("estrutura", n_estrutura) -- Numero da estrutura
 		meta:set_string("pos_fundamento", minetest.serialize(pos)) -- Pos do fundamento
@@ -46,6 +47,9 @@ local set_bau = function(pos, vila, n_estrutura, dist)
 	end
 
 end
+
+-- Tabela para valores de rotação
+local tb_rotat = {"0", "90", "180", "270"}
 
 -- Construir casa de sunos
 --[[
@@ -111,8 +115,11 @@ sunos.estruturas.casa.construir = function(pos, dist, vila, verif_area, itens_re
 		end
 	end
 	
-	-- Criar casa
-	sunos.montar_estrutura(pos, dist, "casa")
+	-- Escolhe uma rotação aleatória
+	local rotat = tb_rotat[math.random(1, 4)]
+	
+	-- Criar casa e pega o nome do arquivo da estrutura
+	local rm, schem = sunos.montar_estrutura(pos, dist, "casa", rotat)
 	
 	-- Recoloca itens reais (apartir dos itens de reposição)
 	if itens_repo then
@@ -126,6 +133,8 @@ sunos.estruturas.casa.construir = function(pos, dist, vila, verif_area, itens_re
 	minetest.set_node(pos, {name="sunos:fundamento"})
 	local meta = minetest.get_meta(pos)
 	meta:set_string("versao", sunos.versao) -- Salva a versão atual do projeto
+	meta:set_string("schem", schem) -- Nome do arquivo da esquematico da estrutura
+	meta:set_string("rotat", rotat) -- Rotação da estrutura
 	meta:set_string("vila", vila) -- Numero da vila
 	meta:set_string("tipo", "casa") -- Tipo da estrutura
 	meta:set_string("estrutura", n_estrutura) -- Numero da estrutura
@@ -170,7 +179,7 @@ sunos.estruturas.casa.verif_fund = function(pos)
 	local ndrl = sunos.verificar_blocos_estruturais(pos)
 	
 	-- Verifica se a casa está muito destruida
-	if ndrl < nd - 10 then
+	if ndrl < nd - 4 then
 		-- Montar ruinas no local da antiga casa
 		sunos.montar_ruinas(pos, dist)
 	

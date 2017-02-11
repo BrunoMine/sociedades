@@ -143,10 +143,14 @@ sunos.estruturas.casa_comunal.construir = function(pos, vila, nivel, verif_area)
 	-- Salva dados da estrutura no bau dela
 	for _,pos_bau in ipairs(baus) do
 		local meta = minetest.get_meta(pos_bau)
+		meta:set_string("obs", "n") -- Verifica se o bau está obstruido
 		meta:set_string("vila", vila) -- Numero da vila
 		meta:set_string("estrutura", n_estrutura) -- Numero da estrutura
 		meta:set_string("pos_fundamento", minetest.serialize(pos)) -- Pos do fundamento
 		meta:set_string("infotext", sunos.S("Bau da Casa Comunal dos Sunos"))
+		
+		-- Inicia temporizador
+		minetest.get_node_timer(pos_bau):set(2, 0)
 	end
 	
 	return true

@@ -25,7 +25,7 @@ minetest.register_lbm({
 	name = "sunos:update_1dot4",
 	nodenames = {"sunos:fundamento"},
 	action = function(pos, node)
-		local v = minetest.get_meta(pos):get_string("vila")
+		local v = minetest.get_meta(pos):get_string("versao")
 		if v == "" or sunos.verif_comp(v) ~= true then
 			-- Pega distancia do centro a borda
 			local dist = minetest.get_meta(pos):get_string("dist")

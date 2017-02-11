@@ -34,11 +34,13 @@ Registrar npc comum
 sunos.npcs.npc.registrar = function("tipo", def) end
 	^ 'tipo' = "casa", ---> Nome do tipo de npc suno
 	^ 'def' ---> Tabela de parametros
-		^ Nenhum parametro ainda
+		^ max_dist = 15, ---> Distancia maxima que o mob pode ficar da coordenada de origem
 
 Função on_rightclick padrão (isso é executado dessa forma, mas você pode reproduzi-lo com mais argumentos #3, #4, ...)
 sunos.npcs.npc.registrados["tipo"].on_rightclick(self, player)
 
+Função executada a cada certo periodo de segundos no npc
+sunos.npcs.npc.registrados["tipo"].on_step(self)
 
 ===================> Sistema de registros
 Alguns dados devem ser organizados de maneiras específicas.

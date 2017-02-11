@@ -45,7 +45,7 @@ sunos.var.tempo_atualizar_jogadores_perto = 5
 -- Tempo (em segundos) entre as verificações de estrutura obstruida
 sunos.var.tempo_verif_estruturas = tonumber(minetest.setting_get("sunos_verif_fundamento") or 7)
 -- Tempo (em segundos) em que uma casa comunal pode ficar em decadencia antes de perder o fundamento
-sunos.var.tempo_decadencia = tonumber(minetest.setting_get("sunos_casa_comunal_decadencia") or 300)
+sunos.var.tempo_decadencia = tonumber(minetest.setting_get("sunos_comunal_decadencia") or 300)
 -- Lista de nodes estruturais
 --[[
 	Esses nodes são considerados importantes nas estruturas pois, 
@@ -100,7 +100,7 @@ dofile(modpath.."/comandos.lua")
 sunos.npcs = {} -- Tabela global de NPCs
 dofile(modpath.."/npc/npc.lua")
 -- Estruturas básicas
-dofile(modpath.."/estruturas/casa_comunal/init.lua")
+dofile(modpath.."/estruturas/comunal/init.lua")
 dofile(modpath.."/estruturas/casa/init.lua")
 dofile(modpath.."/estruturas/decor/init.lua")
 -- Estruturas adicionais

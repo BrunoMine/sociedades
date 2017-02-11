@@ -42,7 +42,7 @@ sunos.npcs.npc.registrados.caseiro.on_rightclick = function(ent, player)
 	sunos.online[player:get_player_name()].casa.ent_acesso = ent
 	
 	-- Verifica se nao tem casa comunal e oferece para construir
-	if sunos.bd:verif("vila_"..ent.vila, "casa_comunal") == false then
+	if sunos.bd:verif("vila_"..ent.vila, "comunal") == false then
 		local formspec = "size[6,3]"
 			..default.gui_bg
 			..default.gui_bg_img
@@ -50,7 +50,7 @@ sunos.npcs.npc.registrados.caseiro.on_rightclick = function(ent, player)
 			.."item_image_button[0,1;1,1;default:tree 20;item1;]" -- Item 1
 			.."item_image_button[1,1;1,1;default:stone 70;item1;]" -- Item 2
 			.."item_image_button[2,1;1,1;farming:straw 30;item1;]" -- Item 3
-			.."item_image_button[5,1;1,1;sunos:fundamento_casa_comunal;fundamento;]" -- Fundamento de Casa Comunal
+			.."item_image_button[5,1;1,1;sunos:fundamento_comunal;fundamento;]" -- Fundamento de Casa Comunal
 			.."button_exit[0,2;6,1;trocar;"..sunos.S("Trocar por Fundamento").."]"
 		return minetest.show_formspec(player:get_player_name(), "sunos:npcs_npc_caseiro", formspec)
 	end
@@ -75,7 +75,7 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 			-- Tenta trocar pelo fundamento de casa comunal
 			if tror.trocar_plus(player, 
 				{"default:tree 20", "default:stone 70", "farming:straw 30"}, 
-				{"sunos:fundamento_casa_comunal"}
+				{"sunos:fundamento_comunal"}
 			) == false 
 			then
 				return minetest.chat_send_player(name, sunos.S("Faltou itens para trocar pelo fundamento de Casa Comunal"))

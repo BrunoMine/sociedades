@@ -46,9 +46,6 @@ sunos.atualizar_bd_vila = function(vila)
 		-- Separa os termos de cada arquivo a ser analizado
 		local v = string.split(arq, "_")
 		
-		-- Correção para estrutura "casa_comunal" por ter "_" no termo
-		if arq == "casa_comunal" then v[1] = "casa_comunal" end
-		
 		-- Verifica se o arquivo é de uma estrutura registrada
 		if sunos.estruturas[v[1]] then
 			

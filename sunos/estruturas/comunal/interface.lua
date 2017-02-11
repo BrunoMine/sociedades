@@ -11,14 +11,14 @@
 
 
 -- Lista que relaciona numero com titulo od item
-local tb_itens_menu_casa_comunal = {}
+local tb_itens_menu_comunal = {}
 
 -- Lista de itens do menu da casa comunal em formato de string
-local string_menu_casa_comunal = ""
-for item,_ in pairs(sunos.tb_menu_casa_comunal) do
-	if string_menu_casa_comunal ~= "" then string_menu_casa_comunal = string_menu_casa_comunal .. "," end
-	string_menu_casa_comunal = string_menu_casa_comunal .. item
-	table.insert(tb_itens_menu_casa_comunal, item)
+local string_menu_comunal = ""
+for item,_ in pairs(sunos.tb_menu_comunal) do
+	if string_menu_comunal ~= "" then string_menu_comunal = string_menu_comunal .. "," end
+	string_menu_comunal = string_menu_comunal .. item
+	table.insert(tb_itens_menu_comunal, item)
 end
 
 -- Envia uma formspec simples de aviso
@@ -48,10 +48,10 @@ sunos.npcs.npc.registrados.comunal.on_rightclick = function(ent, player, fields)
 	end
 	
 	-- Verifica a tabela volatil de 'casa'
-	if not sunos.online[player:get_player_name()].casa_comunal then sunos.online[player:get_player_name()].casa_comunal = {} end
+	if not sunos.online[player:get_player_name()].comunal then sunos.online[player:get_player_name()].comunal = {} end
 	
 	-- Salva a entidade acessada
-	sunos.online[player:get_player_name()].casa_comunal.ent_acesso = ent
+	sunos.online[player:get_player_name()].comunal.ent_acesso = ent
 	
 	-- NPC da casa Comunal
 	if ent.name == "sunos:npc" and ent.tipo == "comunal" then
@@ -60,7 +60,7 @@ sunos.npcs.npc.registrados.comunal.on_rightclick = function(ent, player, fields)
 		sunos.atualizar_bd_vila(ent.vila)
 		
 		-- Verifica se existe casa comunal na vila
-		if sunos.bd:verif("vila_"..ent.vila, "casa_comunal") == false then
+		if sunos.bd:verif("vila_"..ent.vila, "comunal") == false then
 			return minetest.chat_send_player(player:get_player_name(), sunos.S("Nenhuma Casa Comunal nessa vila"))
 		end
 		
@@ -74,7 +74,7 @@ sunos.npcs.npc.registrados.comunal.on_rightclick = function(ent, player, fields)
 			.."image[0,0;3,3;sunos.png]"
 			.."label[3,0;"..sunos.S("Bem vindo a Casa Comunal").."]"
 			.."label[3,0.5;"..sunos.S("Habitantes atuais: @1", habitantes).."]"
-			.."textlist[0,3;4.8,5.3;menu;"..string_menu_casa_comunal.."]"
+			.."textlist[0,3;4.8,5.3;menu;"..string_menu_comunal.."]"
 			
 		-- Painel do item escolhido
 		if fields and fields.menu then
@@ -82,11 +82,11 @@ sunos.npcs.npc.registrados.comunal.on_rightclick = function(ent, player, fields)
 			local escolha = n[2] or 1
 			
 			-- Dados do item escolhido
-			local titulo = tb_itens_menu_casa_comunal[tonumber(escolha)]
-			local dados = sunos.tb_menu_casa_comunal[titulo]
+			local titulo = tb_itens_menu_comunal[tonumber(escolha)]
+			local dados = sunos.tb_menu_comunal[titulo]
 			
 			-- Armazena o item escolhido
-			sunos.online[player:get_player_name()].casa_comunal.item = titulo
+			sunos.online[player:get_player_name()].comunal.item = titulo
 			
 			-- Titulo do item
 			formspec = formspec .."label[5,3;"..titulo.."]"
@@ -149,7 +149,7 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 	if formname == "sunos:npcs_npc_comunal" then
 	
 		-- Validar entidade acessada
-		local ent = sunos.online[player:get_player_name()].casa_comunal.ent_acesso
+		local ent = sunos.online[player:get_player_name()].comunal.ent_acesso
 		if not ent then return end
 		
 		if fields.menu then		
@@ -160,8 +160,8 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 		if fields.trocar then
 		
 			-- Dados do item escolhido
-			local titulo = sunos.online[player:get_player_name()].casa_comunal.item
-			local dados = sunos.tb_menu_casa_comunal[titulo]
+			local titulo = sunos.online[player:get_player_name()].comunal.item
+			local dados = sunos.tb_menu_comunal[titulo]
 			
 			-- Verifica se tem os habitantes necessarios
 			-- Atualizar banco de dados da vila

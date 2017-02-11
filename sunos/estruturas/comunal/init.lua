@@ -13,16 +13,16 @@
 local modpath = minetest.get_modpath("sunos")
 
 -- Tabela global de Casa Comunal
-sunos.estruturas.casa_comunal = {}
+sunos.estruturas.comunal = {}
 
 -- Registros do NPC da casa (carregamento de script)
-dofile(minetest.get_modpath("sunos").."/estruturas/casa_comunal/npc.lua") 
+dofile(minetest.get_modpath("sunos").."/estruturas/comunal/npc.lua") 
 
 -- Interface de atendimento da casa comunal (carregamento de script)
-dofile(minetest.get_modpath("sunos").."/estruturas/casa_comunal/interface.lua") 
+dofile(minetest.get_modpath("sunos").."/estruturas/comunal/interface.lua") 
 
 -- Bau de casa dos sunos (carregamento de script)
-dofile(minetest.get_modpath("sunos").."/estruturas/casa_comunal/bau.lua") 
+dofile(minetest.get_modpath("sunos").."/estruturas/comunal/bau.lua") 
 
 local function pegar_node(pos)
 	local node = minetest.get_node(pos)
@@ -46,18 +46,18 @@ end
 		<verif_area> OPCIONAL | Para ignorar as verificações de area limpa
 		<update> OPCIONAL | Informa que se trata de uma atualização de uma estrutura que ja existe
   ]]
-sunos.estruturas.casa_comunal.construir = function(pos, vila, nivel, verif_area)
+sunos.estruturas.comunal.construir = function(pos, vila, nivel, verif_area)
 	-- Validar argumentos de entrada
 	if pos == nil then
-		minetest.log("error", "[Sunos] Tabela pos nula (sunos.estruturas.casa_comunal.construir)")
+		minetest.log("error", "[Sunos] Tabela pos nula (sunos.estruturas.comunal.construir)")
 		return "Erro interno (pos nula)"
 	end
 	if nivel == nil then
-		minetest.log("error", "[Sunos] variavel nivel nula (em sunos.estruturas.casa_comunal.construir)")
+		minetest.log("error", "[Sunos] variavel nivel nula (em sunos.estruturas.comunal.construir)")
 		return "Erro interno (nivel nulo)"
 	end
 	if vila == nil then
-		minetest.log("error", "[Sunos] variavel vila nula (em sunos.estruturas.casa_comunal.construir)")
+		minetest.log("error", "[Sunos] variavel vila nula (em sunos.estruturas.comunal.construir)")
 		return "Erro interno (vila inexistente)"
 	end
 	
@@ -90,7 +90,7 @@ sunos.estruturas.casa_comunal.construir = function(pos, vila, nivel, verif_area)
 	
 	-- Criar casa comunal
 	-- Caminho do arquivo da estrutura
-	local arquivo = modpath.."/schems/casa_comunal/nivel_"..nivel..".13.mts"
+	local arquivo = modpath.."/schems/comunal/nivel_"..nivel..".13.mts"
 	
 	-- Criar estrutura
 	minetest.place_schematic({x=pos.x-dist,y=pos.y,z=pos.z-dist}, arquivo, nil, nil, true)
@@ -111,7 +111,7 @@ sunos.estruturas.casa_comunal.construir = function(pos, vila, nivel, verif_area)
 	local meta = minetest.get_meta(pos)
 	meta:set_string("versao", sunos.versao) -- Salva a versão atual do projeto
 	meta:set_string("vila", vila) -- Numero da vila
-	meta:set_string("tipo", "casa_comunal") -- Numero da vila
+	meta:set_string("tipo", "comunal") -- Numero da vila
 	meta:set_string("estrutura", n_estrutura) -- Numero da estrutura
 	meta:set_string("nivel", nivel) -- Nivel da casa comunal
 	meta:set_string("dist", dist) -- Distancia centro a borda da estrutra
@@ -129,7 +129,7 @@ sunos.estruturas.casa_comunal.construir = function(pos, vila, nivel, verif_area)
 			pos = pos
 		}
 	}
-	sunos.bd:salvar("vila_"..vila, "casa_comunal", registros)
+	sunos.bd:salvar("vila_"..vila, "comunal", registros)
 	
 	-- Ajustar nodes da estrutura
 	
@@ -138,7 +138,7 @@ sunos.estruturas.casa_comunal.construir = function(pos, vila, nivel, verif_area)
 	local baus = minetest.find_nodes_in_area(
 		{x=pos.x-dist, y=pos.y, z=pos.z-dist}, 
 		{x=pos.x+dist, y=pos.y+15, z=pos.z+dist}, 
-		{"sunos:bau_casa_comunal"}
+		{"sunos:bau_comunal"}
 	)
 	-- Salva dados da estrutura no bau dela
 	for _,pos_bau in ipairs(baus) do
@@ -157,7 +157,7 @@ sunos.estruturas.casa_comunal.construir = function(pos, vila, nivel, verif_area)
 end
 
 -- Verificação do fundamento
-sunos.estruturas.casa_comunal.verif_fund = function(pos)
+sunos.estruturas.comunal.verif_fund = function(pos)
 	local meta = minetest.get_meta(pos)
 	local vila = meta:get_string("vila")
 	if not vila then return end
@@ -192,7 +192,7 @@ sunos.estruturas.casa_comunal.verif_fund = function(pos)
 			else
 				-- Remove casa comunal de vez
 				-- Remove do banco de dados
-				sunos.bd:remover("vila_"..vila, "casa_comunal")
+				sunos.bd:remover("vila_"..vila, "comunal")
 			
 				-- Trocar bloco de fundamento por madeira
 				minetest.set_node(pos, {name="default:tree"})
@@ -211,11 +211,11 @@ end
 --[[
 	Esse é o node usado para construir uma casa comunal
 ]]
-minetest.register_node("sunos:fundamento_casa_comunal", {
+minetest.register_node("sunos:fundamento_comunal", {
 	description = sunos.S("Fundamento de Casa Comunal dos Sunos"),
 	tiles = {"default_tree_top.png^sunos_fundamento.png", "default_tree_top.png", "default_tree.png"},
-	inventory_image = "sunos_inv_fundamento.png^sunos_inv_fundamento_casa_comunal.png",
-	wield_image = "sunos_inv_fundamento.png^sunos_inv_fundamento_casa_comunal.png",
+	inventory_image = "sunos_inv_fundamento.png^sunos_inv_fundamento_comunal.png",
+	wield_image = "sunos_inv_fundamento.png^sunos_inv_fundamento_comunal.png",
 	paramtype2 = "facedir",
 	is_ground_content = false,
 	groups = {tree = 1, choppy = 2, oddly_breakable_by_hand = 1, flammable = 2},
@@ -251,11 +251,11 @@ minetest.register_node("sunos:fundamento_casa_comunal", {
 		end
 		
 		-- Verificar se ja existe uma casa comunal
-		if sunos.bd:verif("vila_"..vila, "casa_comunal") == true then
+		if sunos.bd:verif("vila_"..vila, "comunal") == true then
 			return minetest.chat_send_player(placer:get_player_name(), sunos.S("Ja existe uma Casa Comunal nessa vila"))
 		end
 		
-		local r = sunos.estruturas.casa_comunal.construir(pointed_thing.under, vila, 1, true)
+		local r = sunos.estruturas.comunal.construir(pointed_thing.under, vila, 1, true)
 		if r == true then
 			
 			-- Retorna mensagem de montagem concluida

@@ -10,7 +10,7 @@
   ]]
 
 -- Tabela do menu da casa comunal 
-sunos.tb_menu_casa_comunal = {
+sunos.tb_menu_comunal = {
 	-- Casas
 	[sunos.S("Casa Pequena")] = { -- Nome do items
 		-- Texto descritivo do item

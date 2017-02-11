@@ -16,7 +16,7 @@ local timeout_bau = 180
 --[[
 	Esse é o node que tem nas casas dos sunos
 ]]
-minetest.register_node("sunos:bau_casa_comunal", {
+minetest.register_node("sunos:bau_comunal", {
 	description = sunos.S("Bau da Casa Comunal dos Sunos"),
 	tiles = {"default_chest_top.png^sunos_bau_topo.png", "default_chest_top.png", "default_chest_side.png^sunos_bau_lado.png",
 		"default_chest_side.png^sunos_bau_lado.png", "default_chest_side.png^sunos_bau_lado.png", "default_chest_lock.png^sunos_bau_frente.png"},
@@ -33,6 +33,9 @@ minetest.register_node("sunos:bau_casa_comunal", {
 	-- Ao terminar temporizador
 	on_timer = function(pos, elapsed)
 		local meta = minetest.get_meta(pos)
+		
+		-- Verifica se esta com registros de vila
+		if meta:get_string("vila") == "" then return end
 		
 		-- Pega a coordenada do fundamento
 		local pf = minetest.deserialize(meta:get_string("pos_fundamento"))
@@ -82,7 +85,7 @@ minetest.register_node("sunos:bau_casa_comunal", {
 		
 		-- Spawnar um novo npc
 		do
-			local ent = sunos.npcs.npc.spawn("caseiro", minetest.get_meta(pos):get_string("vila"), pos, spos)
+			local ent = sunos.npcs.npc.spawn("comunal", minetest.get_meta(pos):get_string("vila"), pos, spos)
 			-- Salva o hash
 			local hash = os.date("%Y%m%d%H%M%S") -- Gera um hash numerico com a data
 			ent.myhash = hash -- Salva no npc
@@ -98,8 +101,8 @@ minetest.register_node("sunos:bau_casa_comunal", {
 
 -- LBM para iniciar nodetimer caso ainda nao tenha
 minetest.register_lbm({
-	name = "sunos:casa_comunal_start_nodetimer",
-	nodenames = {"sunos:bau_casa_comunal"},
+	name = "sunos:comunal_start_nodetimer",
+	nodenames = {"sunos:bau_comunal"},
 	run_at_every_load = true,
 	action = function(pos, node)
 		if minetest.get_node_timer(pos):is_started() == false then

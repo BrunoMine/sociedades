@@ -165,9 +165,15 @@ sunos.npcs.npc.registrar = function(tipo, def)
 		do_custom = function(self, dtime)
 			
 			-- Verifica se esta perto do bau de origem
-			self.temp = self.temp + dtime
+			self.temp = (self.temp or 0) + dtime
 			if self.temp >= tempo_verif_bau then
-		
+			
+				-- Verifica se ainda tem os dados internos
+				if not self.tipo then
+					self.object:remove()
+					return
+				end
+				
 				self.temp = 0
 				self.loop = self.loop + 1
 			

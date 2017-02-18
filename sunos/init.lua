@@ -87,6 +87,7 @@ dofile(modpath.."/inimigos.lua")
 dofile(modpath.."/verif_defesa.lua")
 dofile(modpath.."/verif_ataques.lua")
 dofile(modpath.."/compatibilidade.lua")
+dofile(modpath.."/editor_schems.lua")
 -- Nodes
 dofile(modpath.."/nodes/rua.lua")
 dofile(modpath.."/nodes/fundamento.lua")

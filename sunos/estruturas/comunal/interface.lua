@@ -15,7 +15,7 @@ local tb_itens_menu_comunal = {}
 
 -- Lista de itens do menu da casa comunal em formato de string
 local string_menu_comunal = ""
-for item,_ in pairs(sunos.tb_menu_comunal) do
+for item,_ in pairs(sunos.estruturas.comunal.tb_menu_comunal) do
 	if string_menu_comunal ~= "" then string_menu_comunal = string_menu_comunal .. "," end
 	string_menu_comunal = string_menu_comunal .. item
 	table.insert(tb_itens_menu_comunal, item)
@@ -83,7 +83,7 @@ sunos.npcs.npc.registrados.comunal.on_rightclick = function(ent, player, fields)
 			
 			-- Dados do item escolhido
 			local titulo = tb_itens_menu_comunal[tonumber(escolha)]
-			local dados = sunos.tb_menu_comunal[titulo]
+			local dados = sunos.estruturas.comunal.tb_menu_comunal[titulo]
 			
 			-- Armazena o item escolhido
 			sunos.online[player:get_player_name()].comunal.item = titulo
@@ -161,7 +161,7 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 		
 			-- Dados do item escolhido
 			local titulo = sunos.online[player:get_player_name()].comunal.item
-			local dados = sunos.tb_menu_comunal[titulo]
+			local dados = sunos.estruturas.comunal.tb_menu_comunal[titulo]
 			
 			-- Verifica se tem os habitantes necessarios
 			-- Atualizar banco de dados da vila

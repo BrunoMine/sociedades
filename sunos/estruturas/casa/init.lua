@@ -16,6 +16,9 @@ sunos.estruturas.casa = {}
 -- Esse tipo de estrutura tem população
 sunos.estruturas.casa.pop = true
 
+-- Diretrizes das casas (carregamento de script)
+dofile(minetest.get_modpath("sunos").."/estruturas/casa/diretrizes.lua") 
+
 -- Métodos para gerar tabelas de itens para reposição de nodes (carregamento de script)
 dofile(minetest.get_modpath("sunos").."/estruturas/casa/repo_nodes.lua") 
 
@@ -148,7 +151,7 @@ sunos.estruturas.casa.construir = function(pos, dist, vila, verif_area, itens_re
 	local registros = {
 		numero = n_estrutura,
 		tipo = "casa",
-		pop = sunos.tb_pop_casa[tostring(largura)] or 1,
+		pop = sunos.estruturas.casa.tb_pop_casa[tostring(largura)] or 1,
 		estrutura = {
 			dist = dist,
 			largura = largura,

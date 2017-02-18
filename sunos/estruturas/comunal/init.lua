@@ -15,6 +15,9 @@ local modpath = minetest.get_modpath("sunos")
 -- Tabela global de Casa Comunal
 sunos.estruturas.comunal = {}
 
+-- Diretrizes
+dofile(minetest.get_modpath("sunos").."/estruturas/comunal/diretrizes.lua") 
+
 -- Registros do NPC da casa (carregamento de script)
 dofile(minetest.get_modpath("sunos").."/estruturas/comunal/npc.lua") 
 

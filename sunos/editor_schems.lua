@@ -170,7 +170,7 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 			minetest.create_schematic(
 				{x=pos.x+8-dist, y=pos.y, z=pos.z-dist}, 
 				{x=pos.x+8+dist, y=pos.y+14, z=pos.z+dist}, {}, 
-				minetest.get_modpath("sunos").."/schems/"..arq
+				minetest.get_modpath("sunos").."/schems"..arq
 			)
 			
 			-- Avisa o bug do minetest

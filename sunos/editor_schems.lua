@@ -185,6 +185,10 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 				minetest.chat_send_player(name, "Defina um nome da estrutura.")
 				return
 			end
+			if string.match(fields.novo_nome, " ") ~= nil then
+				minetest.chat_send_player(name, "Use apenas letras e sublinhado (_)")
+				return
+			end
 			
 			-- Verificar tipo
 			local tipo = minetest.get_meta(acessos[name].pos):get_string("tipo_nome")
@@ -240,6 +244,12 @@ minetest.register_node("sunos:editor_schems", {
 	
 	on_rightclick = function(pos, node, player, itemstack, pointed_thing)
 		local name = player:get_player_name()
+		
+		-- Verifica se tem privilegios
+		if minetest.check_player_privs(name, {server=true}) ~= true then
+			return
+		end
+		
 		if not acessos[name] then
 			acessos[name] = {}
 		end

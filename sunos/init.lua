@@ -56,6 +56,7 @@ sunos.var.nodes_estruturais = {
 	"default:cobble", 
 	"default:stonebrick", 
 	"group:stair", 
+	"group:slab", 
 	"farming:straw"
 }
 

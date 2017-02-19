@@ -11,17 +11,7 @@
 
 
 -- Itens simples decorativos para casas
-local decor_simples = {
-	"flowers:rose",
-	"flowers:tulip",
-	"flowers:dandelion_yellow",
-	"flowers:geranium",
-	"flowers:viola",
-	"flowers:dandelion_white",
-	"flowers:mushroom_brown",
-	"vessels:glass_bottle",
-	"vessels:drinking_glass"
-}
+local decor_simples = sunos.estruturas.casa.var.decor_simples
 
 -- Funções para geração de tabelas de itens de reposição
 sunos.estruturas.casa.gerar_itens_repo = {}

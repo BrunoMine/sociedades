@@ -16,6 +16,41 @@ local modpath = minetest.get_modpath("sunos")
 -- Tabela global de Loja
 sunos.estruturas.loja = {}
 
+
+-- Nodes estruturais
+local nodes_estruturais = {
+	-- Palha
+	"farming:straw", 
+	"stairs:stair_straw", 
+	"stairs:slab_straw", 
+	-- Madeiras
+	"default:wood", 
+	"default:fence_wood", 
+	"stairs:stair_wood",
+	-- Pedrosos
+	"default:cobble", 
+	"stairs:stair_cobble",
+	"walls:cobble",
+	"default:stonebrick",
+	"default:furnace",
+	"default:furnace_active",
+	-- Moveis domesticos
+	"vessels:shelf",
+	"default:bookshelf",
+	"sunos:bancada",
+	"sunos:bancada_de_trabalho",
+	-- Vidro
+	"xpanes:pane",
+	"xpanes:pane_flat",
+	-- Portas
+	"doors:door_wood_a",
+	"doors:door_wood_b",
+	-- Iluminação
+	"default:torch",
+	"default:torch_wall",
+	"default:torch_ceiling"
+}
+
 -- Construir loja de sunos
 --[[
 	Essa função construi uma loja de sunos e configura o fundamento
@@ -93,7 +128,7 @@ sunos.estruturas.loja.construir = function(pos, dist, vila, verif_area)
 	meta:set_string("tipo", "loja") -- Tipo da estrutura
 	meta:set_string("estrutura", n_estrutura) -- Numero da estrutura
 	meta:set_string("dist", dist) -- Distancia centro a borda da estrutura
-	sunos.contabilizar_blocos_estruturais(pos) -- Armazena quantidade de nodes estruturais
+	sunos.contabilizar_blocos_estruturais(pos, nodes_estruturais) -- Armazena quantidade de nodes estruturais
 	
 	-- Verifica se tem baus na estrutura montada
 	local baus = minetest.find_nodes_in_area(
@@ -215,9 +250,13 @@ sunos.estruturas.loja.verif_fund = function(pos)
 	vila = tonumber(vila)
 	local tipo = meta:get_string("tipo")
 	local dist = tonumber(meta:get_string("dist"))
+	local nd = tonumber(meta:get_string("nodes")) -- numero de nodes inicial
 	
-	-- Verificar Estrutura danificada
-	if sunos.verificar_blocos_estruturais(pos) == false then 
+	-- Pega o numero de nodes real
+	local ndrl = sunos.verificar_blocos_estruturais(pos, nodes_estruturais)
+	
+	-- Verifica se a loja está muito destruida
+	if ndrl < nd - 4 then
 	
 		-- Montar ruinas no local da antiga casa
 		sunos.montar_ruinas(pos, dist)

@@ -8,7 +8,7 @@
 	
 	Casa dos sunos
   ]]
-  
+
 
 -- Tabela global de Casa
 sunos.estruturas.casa = {}
@@ -30,6 +30,9 @@ dofile(minetest.get_modpath("sunos").."/estruturas/casa/interface.lua")
 
 -- Bau de casa dos sunos (carregamento de script)
 dofile(minetest.get_modpath("sunos").."/estruturas/casa/bau.lua") 
+
+-- Nodes estruturais de uma casa
+local nodes_estruturais = sunos.estruturas.casa.var.nodes_estruturais
 
 local set_bau = function(pos, vila, n_estrutura, dist)
 
@@ -142,7 +145,7 @@ sunos.estruturas.casa.construir = function(pos, dist, vila, verif_area, itens_re
 	meta:set_string("tipo", "casa") -- Tipo da estrutura
 	meta:set_string("estrutura", n_estrutura) -- Numero da estrutura
 	meta:set_string("dist", dist) -- Distancia centro a borda da estrutura
-	sunos.contabilizar_blocos_estruturais(pos) -- Armazena quantidade de nodes estruturais
+	sunos.contabilizar_blocos_estruturais(pos, nodes_estruturais) -- Armazena quantidade de nodes estruturais
 	
 	-- Configurar bau de casas
 	minetest.after(1, set_bau, {x=pos.x,y=pos.y,z=pos.z}, vila, n_estrutura, dist)
@@ -151,7 +154,7 @@ sunos.estruturas.casa.construir = function(pos, dist, vila, verif_area, itens_re
 	local registros = {
 		numero = n_estrutura,
 		tipo = "casa",
-		pop = sunos.estruturas.casa.tb_pop_casa[tostring(largura)] or 1,
+		pop = sunos.estruturas.casa.var.tb_pop_casa[tostring(largura)] or 1,
 		estrutura = {
 			dist = dist,
 			largura = largura,
@@ -179,10 +182,11 @@ sunos.estruturas.casa.verif_fund = function(pos)
 	local nd = tonumber(meta:get_string("nodes")) -- numero de nodes inicial
 	
 	-- Pega o numero de nodes real
-	local ndrl = sunos.verificar_blocos_estruturais(pos)
+	local ndrl = sunos.verificar_blocos_estruturais(pos, nodes_estruturais)
 	
 	-- Verifica se a casa está muito destruida
 	if ndrl < nd - 4 then
+		
 		-- Montar ruinas no local da antiga casa
 		sunos.montar_ruinas(pos, dist)
 	

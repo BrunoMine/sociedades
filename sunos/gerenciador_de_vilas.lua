@@ -154,7 +154,7 @@ local verificar_fundamento = function(pos)
 		return
 	end
 	
-	-- Verificação de casa comunal
+	-- Verificação da estrutura
 	if sunos.estruturas[tipo] then
 		
 		sunos.estruturas[tipo].verif_fund(pos)

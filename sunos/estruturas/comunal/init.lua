@@ -27,6 +27,9 @@ dofile(minetest.get_modpath("sunos").."/estruturas/comunal/interface.lua")
 -- Bau de casa dos sunos (carregamento de script)
 dofile(minetest.get_modpath("sunos").."/estruturas/comunal/bau.lua") 
 
+-- Nodes estruturais
+local nodes_estruturais = sunos.estruturas.comunal.var.nodes_estruturais
+
 local function pegar_node(pos)
 	local node = minetest.get_node(pos)
 	if node.name == "ignore" then
@@ -120,7 +123,7 @@ sunos.estruturas.comunal.construir = function(pos, vila, nivel, verif_area)
 	meta:set_string("dist", dist) -- Distancia centro a borda da estrutra
 	meta:set_string("status", "ativa") -- Status da casa comunal
 	meta:set_string("tempo", 0) -- Tempo de decadencia (em segundos)
-	sunos.contabilizar_blocos_estruturais(pos) -- Armazena quantidade de nodes estruturais
+	sunos.contabilizar_blocos_estruturais(pos, nodes_estruturais) -- Armazena quantidade de nodes estruturais
 	
 	-- Salvar nova dados da estrutura no banco de dados da vila
 	local registros = {
@@ -171,7 +174,7 @@ sunos.estruturas.comunal.verif_fund = function(pos)
 	
 	-- Caso esteja ativa
 	if status == "ativa" then
-		if sunos.verificar_blocos_estruturais(pos) == false then -- Verificar Estrutura danificada
+		if sunos.verificar_blocos_estruturais(pos, nodes_estruturais) == false then -- Verificar Estrutura danificada
 	
 			-- Tornar estrutura em ruinas
 			sunos.montar_ruinas(pos, dist)

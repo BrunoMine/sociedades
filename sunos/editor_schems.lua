@@ -131,7 +131,7 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 			local dist = ((largura-1)/2)
 			-- Pegar nome do caminho do arquivo
 			local arq = "/"..tipo.."/"..estrutura.."."..largura..".mts"
-			minetest.place_schematic({x=pos.x+8-dist, y=pos.y, z=pos.z-dist}, minetest.get_modpath("sunos").."/schems/"..arq, 0, nil, true)
+			minetest.place_schematic({x=pos.x+8-dist, y=pos.y, z=pos.z-dist}, minetest.get_modpath("sunos").."/schems"..arq, 0, nil, true)
 			
 			minetest.chat_send_player(name, "Estrutura carregada.")
 			return

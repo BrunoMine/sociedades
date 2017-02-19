@@ -9,24 +9,33 @@
 	Intes de decoração para serem repostos
   ]]
 
--- SobreBancada comum (item com aspecto parecido com o bau)
-minetest.register_node("sunos:sobrebancada_repo", {
-	description = "bloco para ficar em cima de bancada (reposicao de gerador)",
-	tiles = {"default_chest_top.png", "default_chest_top.png", "default_chest_side.png",
-		"default_chest_side.png", "default_chest_side.png", "default_chest_lock.png^sunos_repo.png"},
+-- Bancada comum (normalmente convertido para bancada normal)
+minetest.register_node("sunos:bancada_repo", {
+	description = "bancada (reposicao de gerador)",
+	tiles = {"sunos_repo_bancada_cima.png", "sunos_repo_liso.png", "sunos_repo_bancada_lado.png^[transformFX",
+		"sunos_repo_bancada_lado.png", "sunos_repo_liso.png", "sunos_repo_bancada_frente.png"},
 	paramtype2 = "facedir",
-	groups = {dig_immediate = 3, sunos_repo=1},
+	groups = {oddly_breakable_by_hand = 2, sunos_repo=1},
 	legacy_facedir_simple = true,
 	is_ground_content = false,
 	sounds = default.node_sound_wood_defaults(),
 })
 
--- Bancada comum (normalmente convertido para bancada normal)
-minetest.register_node("sunos:bancada_repo", {
-	description = "bancada (reposicao de gerador)",
-	tiles = {"default_chest_top.png^sunos_repo.png", "default_chest_top.png", "default_chest_side.png",
-		"default_chest_side.png", "default_chest_side.png", "default_chest_lock.png^sunos_repo.png"},
+-- SobreBancada comum (item com aspecto parecido com o bau)
+minetest.register_node("sunos:sobrebancada_repo", {
+	description = "bloco para ficar em cima de bancada (reposicao de gerador)",
+	tiles = {"sunos_repo_bancada_cima.png", "sunos_repo_liso.png", "sunos_repo_bancada_lado.png^[transformFX",
+		"sunos_repo_bancada_lado.png", "sunos_repo_liso.png", "sunos_repo_bancada_frente.png"},
 	paramtype2 = "facedir",
+	paramtype = "light",
+	drawtype = "nodebox",
+	node_box = {
+		type = "fixed",
+		fixed = {
+			{-0.5, -0.5, -0.5, 0.5, -0.4375, 0.5}, -- NodeBox1
+			{-0.375, -0.5, -0.375, 0.375, 0.0625, 0.375}, -- NodeBox2
+		}
+	},
 	groups = {dig_immediate = 3, sunos_repo=1},
 	legacy_facedir_simple = true,
 	is_ground_content = false,
@@ -37,8 +46,8 @@ minetest.register_node("sunos:bancada_repo", {
 minetest.register_node("sunos:simples_repo", {
 	description = "Decoracao simples (tipo vaso, totem e etc)",
 	drawtype = "plantlike",
-	tiles = {"sunos_repo.png"},
-	inventory_image = "sunos_repo.png",
+	tiles = {"sunos_repo_simples.png"},
+	inventory_image = "sunos_repo_simples.png",
 	wield_image = "sunos_repo.png",
 	paramtype = "light",
 	is_ground_content = false,

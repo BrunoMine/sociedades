@@ -52,3 +52,9 @@ minetest.register_node("sunos:bancada_de_trabalho", {
 		)
 	end,
 })
+
+minetest.register_node("sunos:bancada_de_trabalho_nodrop", minetest.registered_nodes["sunos:bancada_de_trabalho"])
+minetest.override_item("sunos:bancada_de_trabalho_nodrop", {
+	description=minetest.registered_nodes["sunos:bancada_de_trabalho"].description .. " (Sem Drop)",
+	drop = ""
+})

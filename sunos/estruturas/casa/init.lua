@@ -31,8 +31,10 @@ dofile(minetest.get_modpath("sunos").."/estruturas/casa/interface.lua")
 -- Bau de casa dos sunos (carregamento de script)
 dofile(minetest.get_modpath("sunos").."/estruturas/casa/bau.lua") 
 
+
 -- Nodes estruturais de uma casa
 local nodes_estruturais = sunos.estruturas.casa.var.nodes_estruturais
+
 
 local set_bau = function(pos, vila, n_estrutura, dist)
 

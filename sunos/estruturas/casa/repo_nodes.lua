@@ -20,7 +20,7 @@ sunos.estruturas.casa.gerar_itens_repo["2"] = function()
 	return {
 		bancadas = {
 			{"sunos:bau_casa", 1},
-			{"sunos:bancada_de_trabalho", 1, true},
+			{"sunos:bancada_de_trabalho_nodrop", 1, true},
 		},
 		simples = {
 			{decor_simples[math.random(1, table.maxn(decor_simples))], 1},
@@ -33,7 +33,7 @@ sunos.estruturas.casa.gerar_itens_repo["3"] = function()
 	return {
 		bancadas = {
 			{"sunos:bau_casa", 1},
-			{"sunos:bancada_de_trabalho", 1, true},
+			{"sunos:bancada_de_trabalho_nodrop", 1, true},
 		},
 		simples = {
 			{decor_simples[math.random(1, table.maxn(decor_simples))], math.random(1, 2)},
@@ -46,7 +46,7 @@ sunos.estruturas.casa.gerar_itens_repo["4"] = function()
 	return {
 		bancadas = {
 			{"sunos:bau_casa", 1},
-			{"sunos:bancada_de_trabalho", 1, true},
+			{"sunos:bancada_de_trabalho_nodrop", 1, true},
 		},
 		simples = {
 			{decor_simples[math.random(1, table.maxn(decor_simples))], math.random(1, 2)},

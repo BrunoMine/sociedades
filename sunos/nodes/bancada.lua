@@ -35,3 +35,9 @@ minetest.register_node("sunos:bancada", {
 	},
 })
 
+-- Criar cópia sem Drop (para evitar furtos em estruturas dos sunos)
+minetest.register_node("sunos:bancada_nodrop", minetest.registered_nodes["sunos:bancada"])
+minetest.override_item("sunos:bancada_nodrop", {
+	description=minetest.registered_nodes["sunos:bancada"].description .. " (Sem Drop)",
+	drop = ""
+})

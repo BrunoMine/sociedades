@@ -128,7 +128,7 @@ sunos.decor_repo = function(pos, dist, itens)
 	)
 	for _,p in ipairs(bancadas) do
 		local n = minetest.get_node(p)
-		minetest.set_node(p, {name="sunos:bancada",param2=n.param2})
+		minetest.set_node(p, {name="sunos:bancada_nodrop",param2=n.param2})
 	end
 	
 	if itens.sobrebancadas then

@@ -37,8 +37,8 @@ local nodes_estruturais = {
 	-- Moveis domesticos
 	"vessels:shelf",
 	"default:bookshelf",
-	"sunos:bancada",
-	"sunos:bancada_de_trabalho",
+	"sunos:bancada_nodrop",
+	"sunos:bancada_de_trabalho_nodrop",
 	-- Vidro
 	"xpanes:pane",
 	"xpanes:pane_flat",

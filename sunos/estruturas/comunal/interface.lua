@@ -47,6 +47,11 @@ sunos.npcs.npc.registrados.comunal.on_rightclick = function(ent, player, fields)
 		return
 	end
 	
+	-- Verifica se o jogador é inimigo da vila
+	if sunos.verif_inimigo(ent.vila, player:get_player_name()) == true then
+		return
+	end
+	
 	-- Verifica a tabela volatil de 'casa'
 	if not sunos.online[player:get_player_name()].comunal then sunos.online[player:get_player_name()].comunal = {} end
 	
@@ -151,6 +156,11 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 		-- Validar entidade acessada
 		local ent = sunos.online[player:get_player_name()].comunal.ent_acesso
 		if not ent then return end
+		
+		-- Verifica se o jogador é inimigo da vila
+		if sunos.verif_inimigo(ent.vila, player:get_player_name()) == true then
+			return
+		end
 		
 		if fields.menu then		
 			-- Retorna o acesso

@@ -84,10 +84,11 @@ minetest.register_node("sunos:bau_casa", {
 			end
 			-- Verifica se achou algum
 			if not nok[1] then 
-				-- Bau esta obstruido
-				meta:set_string("obs", "s")
+				-- Reinicia o ciclo com um tempo definido
+				minetest.get_node_timer(pos):set(timeout_bau, 0)
 				return false
 			end
+			
 			-- Sorteia uma coordenada
 			spos = nok[math.random(1, table.maxn(nok))]
 		end

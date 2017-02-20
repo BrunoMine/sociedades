@@ -66,7 +66,6 @@ minetest.register_node("sunos:fundamento", {
 		if sunos.estruturas[tipo].fund_on_destruct then
 			sunos.estruturas[tipo].fund_on_destruct(pos)
 		else
-			sunos.montar_ruinas(pos, dist)
 			sunos.bd:remover("vila_"..meta:get_string("vila"), "casa_"..meta:get_string("estrutura"))
 		end
 		

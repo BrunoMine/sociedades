@@ -145,9 +145,6 @@ local verificar_fundamento = function(pos)
 	
 	-- Verifica se o registro da vila ainda existe no banco de dados
 	if table.maxn(minetest.get_dir_list(worldpath.."/sunos/vila_"..vila)) == 0 then
-	
-		-- Montar ruinas no local
-		sunos.montar_ruinas(pos, dist)
 		
 		-- Trocar bloco de fundamento por madeira
 		minetest.set_node(pos, {name="default:tree"})
@@ -169,7 +166,7 @@ end
 minetest.register_abm({
 	nodenames = {"sunos:fundamento"},
 	interval = sunos.var.tempo_verif_estruturas,
-	chance = 1,
+	chance = 2,
 	action = function(pos)
 		minetest.after(4, verificar_fundamento, {x=pos.x, y=pos.y, z=pos.z})	
 	end,

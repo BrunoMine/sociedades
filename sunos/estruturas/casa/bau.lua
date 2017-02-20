@@ -36,7 +36,19 @@ minetest.register_node("sunos:bau_casa", {
 		local meta = minetest.get_meta(pos)
 		
 		-- Pega a coordenada do fundamento
-		local pf = minetest.deserialize(meta:get_string("pos_fundamento"))
+		local pf = meta:get_string("pos_fundamento")
+		if pf == "" then
+			minetest.set_node(pos, {name="default:chest", param2=minetest.get_node(pos).param2})
+			return
+		end
+		pf = minetest.deserialize(pf)
+		
+		-- Verificar se o fundamento ainda existe
+		if minetest.get_node(pf).name ~= "sunos:fundamento" then
+			minetest.set_node(pos, {name="default:chest", param2=minetest.get_node(pos).param2})
+			return
+		end
+		
 		local dist = tonumber(minetest.get_meta(pf):get_string("dist"))
 		
 		-- Analizar objetos (possiveis npcs) perto

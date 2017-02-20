@@ -186,20 +186,16 @@ sunos.estruturas.casa.verif_fund = function(pos)
 	
 	-- Verifica se a casa está muito destruida
 	if ndrl < nd - 4 then
-		
-		-- Montar ruinas no local da antiga casa
-		sunos.montar_ruinas(pos, dist)
 	
 		-- Exclui o arquivo da estrutura do banco de dados
 		sunos.bd:remover("vila_"..meta:get_string("vila"), tipo.."_"..meta:get_string("estrutura"))
-	
+		
 		-- Trocar bloco de fundamento por madeira
 		minetest.set_node(pos, {name="default:tree"})
 	
 		-- Atualizar banco de dados da vila
 		sunos.atualizar_bd_vila(vila)
 		
-		return
 	end
 	
 end

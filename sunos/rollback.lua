@@ -71,6 +71,7 @@ else
 	
 	-- Contabiliza coordenada de blocos tirados
 	minetest.register_on_dignode(function(pos, oldnode, digger)
+		if not digger then return end
 		local name = digger:get_player_name()
 		-- Insere a nova coordenada
 		table.insert(sunos.rollback_list[name], pos)
@@ -82,6 +83,7 @@ else
 	
 	-- Contabiliza coordenada de blocos colocados
 	minetest.register_on_placenode(function(pos, newnode, placer)
+		if not placer then return end
 		local name = placer:get_player_name()
 		-- Insere a nova coordenada
 		table.insert(sunos.rollback_list[name], pos)

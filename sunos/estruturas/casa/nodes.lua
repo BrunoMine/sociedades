@@ -25,7 +25,9 @@ minetest.register_node("sunos:fundamento_casa_pequena", {
 	-- Colocar uma casa
 	on_place = function(itemstack, placer, pointed_thing)
 		
-		local r = sunos.estruturas.casa.construir(pointed_thing.under, 2, nil, nil, sunos.estruturas.casa.gerar_itens_repo["2"]())
+		sunos.criar_caixa_de_area(pointed_thing.under, 2+1)
+		
+		local r = sunos.estruturas.casa.construir(pointed_thing.under, 2, nil, true, sunos.estruturas.casa.gerar_itens_repo["2"]())
 		if r == true then
 			
 			-- Retorna mensagem de montagem concluida
@@ -56,7 +58,9 @@ minetest.register_node("sunos:fundamento_casa_mediana", {
 	-- Colocar uma casa
 	on_place = function(itemstack, placer, pointed_thing)
 		
-		local r = sunos.estruturas.casa.construir(pointed_thing.under, 3, nil, nil, sunos.estruturas.casa.gerar_itens_repo["3"]())
+		sunos.criar_caixa_de_area(pointed_thing.under, 3+1)
+		
+		local r = sunos.estruturas.casa.construir(pointed_thing.under, 3, nil, true, sunos.estruturas.casa.gerar_itens_repo["3"]())
 		if r == true then
 			
 			-- Retorna mensagem de montagem concluida
@@ -89,7 +93,9 @@ minetest.register_node("sunos:fundamento_casa_grande", {
 	-- Colocar uma casa
 	on_place = function(itemstack, placer, pointed_thing)
 		
-		local r = sunos.estruturas.casa.construir(pointed_thing.under, 4, nil, nil, sunos.estruturas.casa.gerar_itens_repo["4"]())
+		sunos.criar_caixa_de_area(pointed_thing.under, 4+1)
+		
+		local r = sunos.estruturas.casa.construir(pointed_thing.under, 4, nil, true, sunos.estruturas.casa.gerar_itens_repo["4"]())
 		if r == true then
 			
 			-- Retorna mensagem de montagem concluida

@@ -134,7 +134,7 @@ sunos.estruturas.loja.construir = function(pos, dist, vila, verif_area)
 		end
 		
 		-- Verifica status do terreno
-		local st = sunos.verif_terreno(pos, dist)
+		local st = sunos.verif_terreno(pos, dist+1)
 		
 		-- Problema: em cima da faixa de solo existem obstrucoes (nao esta limpo e plano)
 		if st == 1 then
@@ -241,6 +241,8 @@ minetest.register_node("sunos:fundamento_loja", {
 	
 	-- Colocar uma loja
 	on_place = function(itemstack, placer, pointed_thing)
+		
+		sunos.criar_caixa_de_area(pointed_thing.under, 3+1)
 		
 		local r = sunos.estruturas.loja.construir(pointed_thing.under, 3)
 		if r == true then

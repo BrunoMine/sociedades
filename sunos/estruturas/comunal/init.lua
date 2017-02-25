@@ -99,7 +99,7 @@ sunos.estruturas.comunal.construir = function(pos, vila, nivel, verif_area)
 	if verif_area == true then
 	
 		-- Verifica status do terreno
-		local st = sunos.verif_terreno(pos, dist)
+		local st = sunos.verif_terreno(pos, dist+2)
 		
 		-- Problema: em cima da faixa de solo existem obstrucoes (nao esta limpo e plano)
 		if st == 1 then
@@ -235,7 +235,7 @@ minetest.register_node("sunos:fundamento_comunal", {
 	
 	-- Colocar uma casa comunal
 	on_place = function(itemstack, placer, pointed_thing)
-	
+		
 		-- Verificar Vila e pegar dados (buscando por um fundamento proximo)
 		local pos_fund_prox = minetest.find_node_near(pointed_thing.under, 25, {"sunos:fundamento"})
 		if pos_fund_prox == nil then 
@@ -265,6 +265,8 @@ minetest.register_node("sunos:fundamento_comunal", {
 		if sunos.bd:verif("vila_"..vila, "comunal") == true then
 			return minetest.chat_send_player(placer:get_player_name(), sunos.S("Ja existe uma Casa Comunal nessa vila"))
 		end
+		
+		sunos.criar_caixa_de_area(pointed_thing.under, 6+2)
 		
 		local r = sunos.estruturas.comunal.construir(pointed_thing.under, vila, 1, true)
 		if r == true then

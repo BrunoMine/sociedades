@@ -106,7 +106,7 @@ sunos.estruturas.casa.construir = function(pos, dist, vila, verif_area, itens_re
 	if verif_area == true then
 		
 		-- Verifica status do terreno
-		local st = sunos.verif_terreno(pos, dist)
+		local st = sunos.verif_terreno(pos, dist+1)
 		
 		-- Problema: em cima da faixa de solo existem obstrucoes (nao esta limpo e plano)
 		if st == 1 then

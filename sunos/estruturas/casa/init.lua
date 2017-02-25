@@ -173,7 +173,7 @@ sunos.estruturas.casa.construir = function(pos, dist, vila, verif_area, itens_re
 end
 
 -- Verificação do fundamento
-sunos.estruturas.casa.verif_fund = function(pos)
+sunos.estruturas.casa.verificar = function(pos)
 	local meta = minetest.get_meta(pos)
 	local vila = meta:get_string("vila")
 	if not vila then return end

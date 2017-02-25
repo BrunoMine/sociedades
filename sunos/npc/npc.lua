@@ -112,6 +112,8 @@ sunos.npcs.npc.registrar = function(tipo, def)
 	-- Cria o registro na tabela global
 	sunos.npcs.npc.registrados[tipo] = def
 	sunos.npcs.npc.registrados[tipo].max_dist = def.max_dist or 10
+	sunos.npcs.npc.registrados[tipo].on_step = def.on_step
+	sunos.npcs.npc.registrados[tipo].on_rightclick = def.on_rightclick
 	
 	-- Registrar um mob
 	mobs:register_mob("sunos:npc", {

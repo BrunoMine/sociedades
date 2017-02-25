@@ -9,7 +9,35 @@
 	NPC das casas
   ]]
 
-sunos.npcs.npc.registrar("comunal", {})
+sunos.npcs.npc.registrar("comunal", {
+	
+	
+	-- Chamadas no npc para verificar hash
+	on_step = function(self)
+
+		-- Verifica se o hash esta atual
+		if minetest.get_meta(self.mypos):get_string("npc_hash") ~= self.myhash then
+			-- Remove npc
+			self.object:remove()
+		end
+	
+		-- Verifica se algum dos jogadores proximos é um inimigo
+		if self.state ~= "attack" then -- Verifica se ja não está em um ataque
+			for _,obj in ipairs(minetest.get_objects_inside_radius(self.object:getpos(), 13)) do
+				if obj:is_player() then
+				
+					-- Verifica se o jogador é inimigo
+					if sunos.verif_inimigo(self.vila, obj:get_player_name()) == true then
+						self.attack = obj
+						self.state = "attack"
+						return
+					end
+			
+				end
+			end
+		end
+	end
+})
 
 -- Chamadas no npc para verificar hash
 sunos.npcs.npc.registrados.comunal.on_step = function(self)

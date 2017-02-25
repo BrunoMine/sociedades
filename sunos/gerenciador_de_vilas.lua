@@ -1,6 +1,6 @@
 --[[
 	Mod Sunos para Minetest
-	Copyright (C) 2016 BrunoMine (https://github.com/BrunoMine)
+	Copyright (C) 2017 BrunoMine (https://github.com/BrunoMine)
 	
 	Recebeste uma cópia da GNU Lesser General
 	Public License junto com esse software,
@@ -99,13 +99,7 @@ sunos.atualizar_bd_vila = function(vila)
 				pop_total = pop_total + reg.pop	
 				
 			end
-		
-			-- Executa funções personalizadas
-			if stdata == true and sunos.estruturas[v[1]].atualizando_vila then
-				
-				sunos.estruturas[v[1]].atualizando_vila(vila, arq, reg)
-				
-			end
+			
 		end
 	end
 	
@@ -154,7 +148,7 @@ local verificar_fundamento = function(pos)
 	-- Verificação da estrutura
 	if sunos.estruturas[tipo] then
 		
-		sunos.estruturas[tipo].verif_fund(pos)
+		sunos.estruturas[tipo].verificar(pos)
 		
 	-- Caso nao seja de nenhum tipo encontrado
 	else

@@ -1,61 +1,64 @@
-API do Mod Sunos v1.4-dev
+API do Mod Sunos v1.4
+
+Estruturas
+----------
+Devem ser criadas dentro da tabela `sunos.estruturas`. Alguns valores dentro 
+do índice da estrutura na tabela são para propositos especificos.
+
+sunos.estruturas.estrut : armazenara todos os dados da estrutura.
+	índices padrões para estruturas
+	{
+		pop = [true] : Define que a estrutura possui população.
+		
+		fund_on_rightclick = function(...) end : chamada `on_rightclick` do node de fundamento.
+		
+		fund_on_destruct = function(...) end : chamada `on_destruct` do node de fundamento.
+		
+		defendido = function(pos) end : função que verifica se a estrutura está defendida.
+			* `pos` é a coordenada do fundamento da estrutura.
+			* Deve retornar `true` caso a estrutura esteja defendida.
+			
+		verificar = function(pos) end : verifica se uma estrutura está destruida e toma as providencias caso esteja.
+			* `pos` é a coordenada do fundamento da estrutura.	
+	}
 
 
-===================> Registrar uma estrutura
-Isso significa que você deve criar variaveis dentro de uma 
-tabela que servirão para definir vários parâmetros
+NPCs
+----
 
-Tabela geral de uma estrutura
-sunos.estruturas[<NomeEstrutura>]
+### Registro de NPC
+* `sunos.npcs.npc.registrar(tipo, Definições de NPC)` : Registrar um NPC comum
+	* `tipo` é o nome da tipagem particular do npc (exemplo: "casa", "comunal")
 
-Indicador de que existe população na estrtura. Isso faz o verificador contabilizar a população para a vila.
-sunos.estruturas[<NomeEstrutura>].pop = <true>
+### Definições de NPC
+	{
+		max_dist = 15,
+		^ Distancia maxima que o mob pode ficar da coordenada de origem
+		
+		on_step = function(self),
+		^ O tempo entre cada iteração é o valor definido em `tempo_verif_bau` (não documentado)
+		
+		on_rightclick(self, player)
+		^ função on_rightclick padrão (você pode atribuir argumentos extras #3, #4, ...)
+	}
 
-Executa uma função quando um jogador acessa o fundamento com o clique direito
-sunos.estruturas[<NomeEstrutura>].fund_on_rightclick = function(pos, node, player, itemstack, pointed_thing) end
 
-Executa uma função quando o fundamento da estrutura é destruido (caso retornar true é porque está defendido). 
-Impede que jogadores mexam na area
-sunos.estruturas[<NomeEstrutura>].defendido = function(pos) end
+Registros
+---------
+Essa seção busca informar alguns dados de registro que não devem ser mexidos em códigos contribuidos
 
-Executa verificação do fundamento para saber se a casa está defendida, se retornar true é porque algo está defendendo.
-sunos.estruturas[<NomeEstrutura>].fund_on_destruct = function(pos) end
-
-Função que avalia a estrutura quando todas as estruturas da vila estão sendo atualizadas
-sunos.estruturas.casa_comunal.atualizando_vila = function(vila, arq, reg) end
-	^ 'vila' (variável numérica) é um numero da vila
-	^ 'arq' (variável string) é o nome do arquivo responsável por armazenar os dados da estrutura a ser atualizada
-	^ 'reg' (tabela) são os dados salvos no banco de dados referentes à estrutura
-
-===================> Registrar um NPC comum
-Esse NPC obedece possui algumas configurações preliminares para facilitar a criação
-
-Registrar npc comum
-sunos.npcs.npc.registrar = function("tipo", def) end
-	^ 'tipo' = "casa", ---> Nome do tipo de npc suno
-	^ 'def' ---> Tabela de parametros
-		^ max_dist = 15, ---> Distancia maxima que o mob pode ficar da coordenada de origem
-
-Função on_rightclick padrão (isso é executado dessa forma, mas você pode reproduzi-lo com mais argumentos #3, #4, ...)
-sunos.npcs.npc.registrados["tipo"].on_rightclick(self, player)
-
-Função executada a cada certo periodo de segundos no npc
-sunos.npcs.npc.registrados["tipo"].on_step(self)
-
-===================> Sistema de registros
-Alguns dados devem ser organizados de maneiras específicas.
-
+### Metadados do node de fundamento
 Metadados do fundamento de uma estrutura (todos são armazenados no formato de strings)
-"vila" ---> numero da vila correspondente (exemplo: "12")
-"tipo" ---> nome do tipo de estrutura (exemplo: "casa")
-"dist" ---> distância do centro até a borda em blocos (exemplo: "3")
+* "vila" : numero da vila correspondente (exemplo: "12")
+* "tipo" : nome do tipo de estrutura (exemplo: "casa")
+* "dist" : distância do centro até a borda em blocos (exemplo: "3")
 
-Entidades
-*variaveis da engine* ---> Variaveis que a engine mobs_redo precisar (veja a documentação da engine)
-tipo ---> Nome do tipo de npc suno
-loop ---> Controle de temporizador
-temp ---> Temporizador gerenciado pelo mod sunos
-mypos ---> Coordenada do node de origem
-mynode ---> Nome do node onde o npc spawnou
+### Dados estáticos de entidades
+* variaveis da engine : Variaveis reservadas pela engine mobs_redo (veja a documentação da engine)
+* `tipo` : Nome do tipo de npc suno
+* `loop` : Controle de temporizador
+* `temp` : Temporizador gerenciado pelo mod sunos
+* `mypos` : Coordenada do node de origem
+* `mynode` : Nome do node onde o npc spawnou
 
 

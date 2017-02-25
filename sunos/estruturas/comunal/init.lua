@@ -1,6 +1,6 @@
 --[[
 	Mod Sunos para Minetest
-	Copyright (C) 2016 BrunoMine (https://github.com/BrunoMine)
+	Copyright (C) 2017 BrunoMine (https://github.com/BrunoMine)
 	
 	Recebeste uma cópia da GNU Lesser General
 	Public License junto com esse software,
@@ -168,7 +168,7 @@ sunos.estruturas.comunal.construir = function(pos, vila, nivel, verif_area)
 end
 
 -- Verificação do fundamento
-sunos.estruturas.comunal.verif_fund = function(pos)
+sunos.estruturas.comunal.verificar = function(pos)
 	local meta = minetest.get_meta(pos)
 	local vila = meta:get_string("vila")
 	if not vila then return end

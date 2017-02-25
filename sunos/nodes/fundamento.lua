@@ -1,6 +1,6 @@
 --[[
 	Mod Sunos para Minetest
-	Copyright (C) 2016 BrunoMine (https://github.com/BrunoMine)
+	Copyright (C) 2017 BrunoMine (https://github.com/BrunoMine)
 	
 	Recebeste uma cópia da GNU Lesser General
 	Public License junto com esse software,
@@ -44,7 +44,7 @@ minetest.register_node("sunos:fundamento", {
 	
 	end,
 	
-	-- Remover do banco de dados caso o bloco seja removido
+	-- Chamada ao ser removido do mapa
 	on_destruct = function(pos)
 		local meta = minetest.get_meta(pos)
 		local versao = meta:get_string("versao")
@@ -65,9 +65,10 @@ minetest.register_node("sunos:fundamento", {
 		-- Executa on_destruct personalizado
 		if sunos.estruturas[tipo].fund_on_destruct then
 			sunos.estruturas[tipo].fund_on_destruct(pos)
-		else
-			sunos.bd:remover("vila_"..meta:get_string("vila"), "casa_"..meta:get_string("estrutura"))
 		end
+		
+		-- Remover do banco de dados caso o bloco seja removido
+		sunos.bd:remover("vila_"..meta:get_string("vila"), tipo.."_"..meta:get_string("estrutura"))
 		
 		sunos.atualizar_bd_vila(vila)
 	end,

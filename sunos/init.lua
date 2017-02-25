@@ -73,7 +73,7 @@ sunos.estruturas = {}
 
 -- Carregar scripts
 notificar("Carregando...")
-dofile(modpath.."/intllib.lua")
+dofile(modpath.."/tradutor.lua")
 dofile(modpath.."/rollback.lua")
 dofile(modpath.."/diretrizes.lua")
 dofile(modpath.."/comum.lua")

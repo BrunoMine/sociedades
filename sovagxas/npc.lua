@@ -85,10 +85,16 @@ mobs:register_mob("sovagxas:npc", {
 	do_custom = function(self, dtime)
 		
 		-- Verifica se esta perto do bau de origem
-		self.temp = self.temp + dtime
+		self.temp = (self.temp or 0) + dtime
 		if self.temp >= tempo_verif_bau then
 		
 			self.temp = 0
+			
+			-- Verificar se os dados ianda existem (podem sumir por um bug no restauro dos dados estaticos da entidade lua)
+			if not self.pos_bau then
+				self.object:remove()
+				return
+			end
 			
 			-- Verificar se esta perto do bau
 			if verif_dist_pos(self.object:getpos(), self.pos_bau) > dist_verif_npc then

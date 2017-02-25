@@ -51,6 +51,9 @@ local nodes_estruturais = {
 	"default:torch_ceiling"
 }
 
+-- Tabela para valores de rotação
+local tb_rotat = {"0", "90", "180", "270"}
+
 -- Construir loja de sunos
 --[[
 	Essa função construi uma loja de sunos e configura o fundamento
@@ -114,8 +117,11 @@ sunos.estruturas.loja.construir = function(pos, dist, vila, verif_area)
 		end
 	end
 	
+	-- Escolhe uma rotação aleatória
+	local rotat = tb_rotat[math.random(1, 4)]
+	
 	-- Criar loja
-	sunos.montar_estrutura(pos, dist, "loja")
+	local rm, schem = sunos.montar_estrutura(pos, dist, "loja", rotat)
 	
 	-- Numero da estrutura da nova loja
 	local n_estrutura = sunos.nova_estrutura(vila) -- Numero da nova estrutura
@@ -124,6 +130,8 @@ sunos.estruturas.loja.construir = function(pos, dist, vila, verif_area)
 	minetest.set_node(pos, {name="sunos:fundamento"})
 	local meta = minetest.get_meta(pos)
 	meta:set_string("versao", sunos.versao) -- Salva a versão atual do projeto
+	meta:set_string("schem", schem) -- Nome do arquivo da esquematico da estrutura
+	meta:set_string("rotat", rotat) -- Rotação da estrutura
 	meta:set_string("vila", vila) -- Numero da vila
 	meta:set_string("tipo", "loja") -- Tipo da estrutura
 	meta:set_string("estrutura", n_estrutura) -- Numero da estrutura
@@ -299,6 +307,71 @@ minetest.register_node("sunos:fundamento_loja", {
 			-- Retorna mensagem de falha
 			minetest.chat_send_player(placer:get_player_name(), r)
 			return itemstack
+		end
+	end,
+})
+
+-- Caminho do diretório do mod
+local modpath = minetest.get_modpath("sunos")
+
+-- Reforma as casas aleatoriamente
+minetest.register_abm({
+	label = "Reforma da loja",
+	nodenames = {"sunos:fundamento"},
+	interval = 600,
+	chance = 4 ,
+	action = function(pos)
+	
+		local meta = minetest.get_meta(pos)
+		local table = meta:to_table() -- salva metadados numa tabela
+		local vila = meta:get_string("vila")
+		if vila == "" then return end
+		vila = tonumber(vila)
+		local tipo = meta:get_string("tipo")
+		if tipo ~= "loja" then return end
+		local dist = tonumber(meta:get_string("dist"))
+		local schem = meta:get_string("schem")
+		local rotat = meta:get_string("rotat")
+		if schem == "" then return end
+	
+		-- Caminho do arquivo da estrutura
+		local caminho_arquivo = modpath.."/schems/"..tipo.."/"..schem
+	
+		-- Criar estrutura
+		minetest.place_schematic({x=pos.x-dist, y=pos.y, z=pos.z-dist}, caminho_arquivo, rotat, nil, true)
+		
+		sunos.decor_repo(pos, dist, sunos.estruturas.casa.gerar_itens_repo[tostring(dist)]())
+		
+		minetest.set_node(pos, {name="sunos:fundamento"})
+		minetest.get_meta(pos):from_table(table) -- recoloca metadados no novo fumdamento
+		
+		-- Verifica se tem baus na estrutura montada
+		local baus = minetest.find_nodes_in_area(
+			{x=pos.x-dist, y=pos.y, z=pos.z-dist}, 
+			{x=pos.x+dist, y=pos.y+14, z=pos.z+dist}, 
+			{"sunos:bau_loja"}
+		)
+		-- Salva dados da estrutura no bau dela
+		for _,pos_bau in ipairs(baus) do
+			local meta = minetest.get_meta(pos_bau)
+			meta:set_string("infotext", sunos.S("Bau de Venda dos Sunos"))
+			meta:set_string("formspec", "size[9,9]"
+				..default.gui_bg_img
+				.."image[0,0;3,3;sunos.png]"
+				.."label[3,0;"..sunos.S("Bau de Venda dos Sunos").."]"
+				.."label[3,1;"..sunos.S("Troque alguns itens aqui").."]"
+				.."image[7.5,-0.2;2,2;default_apple.png]"
+				.."image[6.6,0;2,2;default_apple.png]"
+				.."image[6.6,1;2,2;default_apple.png]"
+				.."image[7.5,0.8;2,2;default_apple.png]"
+				-- Botoes de trocas
+				.."item_image_button[0,3;3,3;default:tree;trocar_madeira;2]"
+				.."item_image_button[0,6;3,3;default:stonebrick;trocar_pedra;2]"
+				.."item_image_button[3,3;3,3;default:gold_ingot;trocar_ouro;10]"
+				.."item_image_button[3,6;3,3;default:steel_ingot;trocar_ferro;6]"
+				.."item_image_button[6,3;3,3;default:coal_lump;trocar_carvao;1]"
+				.."item_image_button[6,6;3,3;default:glass;trocar_vidro;1]"
+			)
 		end
 	end,
 })

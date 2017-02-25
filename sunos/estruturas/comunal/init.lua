@@ -149,9 +149,7 @@ sunos.estruturas.comunal.construir = function(pos, vila, nivel, verif_area)
 	-- Salva dados da estrutura no bau dela
 	for _,pos_bau in ipairs(baus) do
 		local meta = minetest.get_meta(pos_bau)
-		meta:set_string("obs", "n") -- Verifica se o bau está obstruido
 		meta:set_string("vila", vila) -- Numero da vila
-		meta:set_string("estrutura", n_estrutura) -- Numero da estrutura
 		meta:set_string("pos_fundamento", minetest.serialize(pos)) -- Pos do fundamento
 		meta:set_string("infotext", sunos.S("Bau da Casa Comunal dos Sunos"))
 		
@@ -273,6 +271,56 @@ minetest.register_node("sunos:fundamento_comunal", {
 			-- Retorna mensagem de falha
 			minetest.chat_send_player(placer:get_player_name(), r)
 			return itemstack
+		end
+	end,
+})
+
+-- Caminho do diretório do mod
+local modpath = minetest.get_modpath("sunos")
+
+-- Reforma as casas aleatoriamente
+minetest.register_abm({
+	label = "Reforma da casa comunal",
+	nodenames = {"sunos:fundamento"},
+	interval = 600,
+	chance = 4,
+	action = function(pos)
+	
+		local meta = minetest.get_meta(pos)
+		local table = meta:to_table() -- salva metadados numa tabela
+		local vila = meta:get_string("vila")
+		if vila == "" then return end
+		vila = tonumber(vila)
+		local tipo = meta:get_string("tipo")
+		if tipo ~= "comunal" then return end
+		local dist = tonumber(meta:get_string("dist"))
+		local nivel = meta:get_string("nivel")
+		
+		-- Caminho do arquivo da estrutura
+		local caminho_arquivo = modpath.."/schems/"..tipo.."/nivel_"..nivel..".13.mts"
+		
+		-- Criar estrutura
+		minetest.place_schematic({x=pos.x-dist, y=pos.y, z=pos.z-dist}, caminho_arquivo, nil, nil, true)
+		
+		minetest.set_node(pos, {name="sunos:fundamento"})
+		minetest.get_meta(pos):from_table(table) -- recoloca metadados no novo fumdamento
+		
+		-- Ajustar baus
+		-- Verifica se tem baus na estrutura montada
+		local baus = minetest.find_nodes_in_area(
+			{x=pos.x-dist, y=pos.y, z=pos.z-dist}, 
+			{x=pos.x+dist, y=pos.y+15, z=pos.z+dist}, 
+			{"sunos:bau_comunal"}
+		)
+		-- Salva dados da estrutura no bau dela
+		for _,pos_bau in ipairs(baus) do
+			local meta = minetest.get_meta(pos_bau)
+			meta:set_string("vila", vila) -- Numero da vila
+			meta:set_string("pos_fundamento", minetest.serialize(pos)) -- Pos do fundamento
+			meta:set_string("infotext", sunos.S("Bau da Casa Comunal dos Sunos"))
+		
+			-- Inicia temporizador
+			minetest.get_node_timer(pos_bau):set(2, 0)
 		end
 	end,
 })

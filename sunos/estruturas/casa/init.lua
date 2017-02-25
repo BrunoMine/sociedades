@@ -36,7 +36,7 @@ dofile(minetest.get_modpath("sunos").."/estruturas/casa/bau.lua")
 local nodes_estruturais = sunos.estruturas.casa.var.nodes_estruturais
 
 
-local set_bau = function(pos, vila, n_estrutura, dist)
+local set_bau = function(pos, vila, dist)
 
 	-- Verifica se tem baus na estrutura montada
 	local baus = minetest.find_nodes_in_area(
@@ -49,7 +49,6 @@ local set_bau = function(pos, vila, n_estrutura, dist)
 		local meta = minetest.get_meta(pos_bau)
 		meta:set_string("obs", "n") -- Verifica se esta obstruido
 		meta:set_string("vila", vila) -- Numero da vila
-		meta:set_string("estrutura", n_estrutura) -- Numero da estrutura
 		meta:set_string("pos_fundamento", minetest.serialize(pos)) -- Pos do fundamento
 		meta:set_string("infotext", sunos.S("Bau dos Sunos"))
 	end
@@ -150,7 +149,7 @@ sunos.estruturas.casa.construir = function(pos, dist, vila, verif_area, itens_re
 	sunos.contabilizar_blocos_estruturais(pos, nodes_estruturais) -- Armazena quantidade de nodes estruturais
 	
 	-- Configurar bau de casas
-	minetest.after(1, set_bau, {x=pos.x,y=pos.y,z=pos.z}, vila, n_estrutura, dist)
+	minetest.after(1, set_bau, {x=pos.x,y=pos.y,z=pos.z}, vila, dist)
 	
 	-- Registros a serem salvos
 	local registros = {
@@ -225,7 +224,44 @@ sunos.estruturas.casa.defendido = function(pos)
 	
 end
 
--- Nodes criadores de vilas (carregamento de script)
+-- Nodes (carregamento de script)
 dofile(minetest.get_modpath("sunos").."/estruturas/casa/nodes.lua") 
 
+-- Caminho do diretório do mod
+local modpath = minetest.get_modpath("sunos")
+
+-- Reforma as casas aleatoriamente
+minetest.register_abm({
+	label = "Reforma da casa",
+	nodenames = {"sunos:fundamento"},
+	interval = 600,
+	chance = 4,
+	action = function(pos)
+	
+		local meta = minetest.get_meta(pos)
+		local table = meta:to_table() -- salva metadados numa tabela
+		local vila = meta:get_string("vila")
+		if vila == "" then return end
+		vila = tonumber(vila)
+		local tipo = meta:get_string("tipo")
+		if tipo ~= "casa" then return end
+		local dist = tonumber(meta:get_string("dist"))
+		local schem = meta:get_string("schem")
+		local rotat = meta:get_string("rotat")
+		if schem == "" then return end
+	
+		-- Caminho do arquivo da estrutura
+		local caminho_arquivo = modpath.."/schems/"..tipo.."/"..schem
+	
+		-- Criar estrutura
+		minetest.place_schematic({x=pos.x-dist, y=pos.y, z=pos.z-dist}, caminho_arquivo, rotat, nil, true)
+		
+		sunos.decor_repo(pos, dist, sunos.estruturas.casa.gerar_itens_repo[tostring(dist)]())
+		
+		minetest.set_node(pos, {name="sunos:fundamento"})
+		minetest.get_meta(pos):from_table(table) -- recoloca metadados no novo fumdamento
+		
+		set_bau({x=pos.x,y=pos.y,z=pos.z}, vila, dist)
+	end,
+})
 

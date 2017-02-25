@@ -7,15 +7,6 @@ em planicies. Não possuem muita habilidade técnica e por isso
 só utilizam materiais simples de encontrar 
 (Madeira, Pedras e etc). Leia mais sobre os sunos no [wiki do projeto](https://github.com/BrunoMine/sociedades/wiki/Sunos)
 
-## Comandos
-
-/sunos <func> | Opera algumas funcionalidades
-
-funcionalidades:
-
-- Salvar uma estrutura: `s <tipo> <nome> <largura>`
-- Carrega uma estrutura: `c <tipo> <nome> <largura>`
-
 ## Configurações
 
 Essas configurações são colocadas em minetest.conf

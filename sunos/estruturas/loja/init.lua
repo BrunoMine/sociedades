@@ -51,6 +51,39 @@ local nodes_estruturais = {
 	"default:torch_ceiling"
 }
 
+local set_bau = function(pos, vila, dist)
+
+	-- Verifica se tem baus na estrutura montada
+	local baus = minetest.find_nodes_in_area(
+		{x=pos.x-dist, y=pos.y, z=pos.z-dist}, 
+		{x=pos.x+dist, y=pos.y+14, z=pos.z+dist}, 
+		{"sunos:bau_loja"}
+	)
+	-- Salva dados da estrutura no bau dela
+	for _,pos_bau in ipairs(baus) do
+		local meta = minetest.get_meta(pos_bau)
+		meta:set_string("infotext", sunos.S("Bau de Venda dos Sunos"))
+		meta:set_string("formspec", "size[9,9]"
+			..default.gui_bg_img
+			.."image[0,0;3,3;sunos.png]"
+			.."label[3,0;"..sunos.S("Bau de Venda dos Sunos").."]"
+			.."label[3,1;"..sunos.S("Troque alguns itens aqui").."]"
+			.."image[7.5,-0.2;2,2;default_apple.png]"
+			.."image[6.6,0;2,2;default_apple.png]"
+			.."image[6.6,1;2,2;default_apple.png]"
+			.."image[7.5,0.8;2,2;default_apple.png]"
+			-- Botoes de trocas
+			.."item_image_button[0,3;3,3;default:tree;trocar_madeira;2]"
+			.."item_image_button[0,6;3,3;default:stonebrick;trocar_pedra;2]"
+			.."item_image_button[3,3;3,3;default:gold_ingot;trocar_ouro;10]"
+			.."item_image_button[3,6;3,3;default:steel_ingot;trocar_ferro;6]"
+			.."item_image_button[6,3;3,3;default:coal_lump;trocar_carvao;1]"
+			.."item_image_button[6,6;3,3;default:glass;trocar_vidro;1]"
+		)
+	end
+
+end
+
 -- Tabela para valores de rotação
 local tb_rotat = {"0", "90", "180", "270"}
 
@@ -138,34 +171,8 @@ sunos.estruturas.loja.construir = function(pos, dist, vila, verif_area)
 	meta:set_string("dist", dist) -- Distancia centro a borda da estrutura
 	sunos.contabilizar_blocos_estruturais(pos, nodes_estruturais) -- Armazena quantidade de nodes estruturais
 	
-	-- Verifica se tem baus na estrutura montada
-	local baus = minetest.find_nodes_in_area(
-		{x=pos.x-dist, y=pos.y, z=pos.z-dist}, 
-		{x=pos.x+dist, y=pos.y+14, z=pos.z+dist}, 
-		{"sunos:bau_loja"}
-	)
-	-- Salva dados da estrutura no bau dela
-	for _,pos_bau in ipairs(baus) do
-		local meta = minetest.get_meta(pos_bau)
-		meta:set_string("infotext", sunos.S("Bau de Venda dos Sunos"))
-		meta:set_string("formspec", "size[9,9]"
-			..default.gui_bg_img
-			.."image[0,0;3,3;sunos.png]"
-			.."label[3,0;"..sunos.S("Bau de Venda dos Sunos").."]"
-			.."label[3,1;"..sunos.S("Troque alguns itens aqui").."]"
-			.."image[7.5,-0.2;2,2;default_apple.png]"
-			.."image[6.6,0;2,2;default_apple.png]"
-			.."image[6.6,1;2,2;default_apple.png]"
-			.."image[7.5,0.8;2,2;default_apple.png]"
-			-- Botoes de trocas
-			.."item_image_button[0,3;3,3;default:tree;trocar_madeira;2]"
-			.."item_image_button[0,6;3,3;default:stonebrick;trocar_pedra;2]"
-			.."item_image_button[3,3;3,3;default:gold_ingot;trocar_ouro;10]"
-			.."item_image_button[3,6;3,3;default:steel_ingot;trocar_ferro;6]"
-			.."item_image_button[6,3;3,3;default:coal_lump;trocar_carvao;1]"
-			.."item_image_button[6,6;3,3;default:glass;trocar_vidro;1]"
-		)
-	end
+	-- Ajustar baus
+	set_bau(pos, vila, dist)
 	
 	-- Registros a serem salvos
 	local registros = {
@@ -187,68 +194,8 @@ sunos.estruturas.loja.construir = function(pos, dist, vila, verif_area)
 	return true
 end
 
--- Bau de venda simples
-minetest.register_node("sunos:bau_loja", {
-	description = sunos.S("Bau de Venda dos Sunos"),
-	tiles = {"default_chest_top.png^sunos_bau_topo.png", "default_chest_top.png", "default_chest_side.png^sunos_bau_lado.png",
-		"default_chest_side.png^sunos_bau_lado.png", "default_chest_side.png^sunos_bau_lado.png", "default_chest_lock.png^sunos_bau_frente.png"},
-	paramtype2 = "facedir",
-	groups = {choppy = 2, oddly_breakable_by_hand = 2},
-	legacy_facedir_simple = true,
-	is_ground_content = false,
-	sounds = default.node_sound_wood_defaults(),
-	drop = "default:chest",
-	
-	-- Nao pode ser escavado/quebrado por jogadores
-	--on_dig = function() end,
-	
-	-- Receptor dos botos
-	on_receive_fields = function(pos, formname, fields, sender)
-		if fields.trocar_madeira then
-			-- Tenta trocar
-			if tror.trocar_plus(sender, {"default:tree"}, {"default:apple 2"}) == false then
-				return minetest.chat_send_player(sender:get_player_name(), sunos.S("Precisa do item para trocar"))
-			else
-				return minetest.chat_send_player(sender:get_player_name(), sunos.S("Troca feita"))
-			end
-		elseif fields.trocar_pedra then
-			-- Tenta trocar
-			if tror.trocar_plus(sender, {"default:stonebrick"}, {"default:apple 2"}) == false then
-				return minetest.chat_send_player(sender:get_player_name(), sunos.S("Precisa do item para trocar"))
-			else
-				return minetest.chat_send_player(sender:get_player_name(), sunos.S("Troca feita"))
-			end
-		elseif fields.trocar_ouro then
-			-- Tenta trocar
-			if tror.trocar_plus(sender, {"default:gold_ingot"}, {"default:apple 10"}) == false then
-				return minetest.chat_send_player(sender:get_player_name(), sunos.S("Precisa do item para trocar"))
-			else
-				return minetest.chat_send_player(sender:get_player_name(), sunos.S("Troca feita"))
-			end
-		elseif fields.trocar_ferro then
-			-- Tenta trocar
-			if tror.trocar_plus(sender, {"default:steel_ingot"}, {"default:apple 6"}) == false then
-				return minetest.chat_send_player(sender:get_player_name(), sunos.S("Precisa do item para trocar"))
-			else
-				return minetest.chat_send_player(sender:get_player_name(), sunos.S("Troca feita"))
-			end
-		elseif fields.trocar_carvao then
-			-- Tenta trocar
-			if tror.trocar_plus(sender, {"default:coal_lump"}, {"default:apple 1"}) == false then
-				return minetest.chat_send_player(sender:get_player_name(), sunos.S("Precisa do item para trocar"))
-			else
-				return minetest.chat_send_player(sender:get_player_name(), sunos.S("Troca feita"))
-			end
-		elseif fields.trocar_vidro then
-			-- Tenta trocar
-			if tror.trocar_plus(sender, {"default:glass"}, {"default:apple 10"}) == false then
-				return minetest.chat_send_player(sender:get_player_name(), sunos.S("Precisa do item para trocar"))
-			else
-				return minetest.chat_send_player(sender:get_player_name(), sunos.S("Troca feita"))
-			end
-		end
-	end,
-})
+-- Bau de loja (carregamento de script)
+dofile(minetest.get_modpath("sunos").."/estruturas/loja/bau.lua") 
 
 -- Verificação do fundamento
 sunos.estruturas.loja.verif_fund = function(pos)
@@ -319,7 +266,7 @@ minetest.register_abm({
 	label = "Reforma da loja",
 	nodenames = {"sunos:fundamento"},
 	interval = 600,
-	chance = 4 ,
+	chance = 4,
 	action = function(pos)
 	
 		local meta = minetest.get_meta(pos)
@@ -345,33 +292,7 @@ minetest.register_abm({
 		minetest.set_node(pos, {name="sunos:fundamento"})
 		minetest.get_meta(pos):from_table(table) -- recoloca metadados no novo fumdamento
 		
-		-- Verifica se tem baus na estrutura montada
-		local baus = minetest.find_nodes_in_area(
-			{x=pos.x-dist, y=pos.y, z=pos.z-dist}, 
-			{x=pos.x+dist, y=pos.y+14, z=pos.z+dist}, 
-			{"sunos:bau_loja"}
-		)
-		-- Salva dados da estrutura no bau dela
-		for _,pos_bau in ipairs(baus) do
-			local meta = minetest.get_meta(pos_bau)
-			meta:set_string("infotext", sunos.S("Bau de Venda dos Sunos"))
-			meta:set_string("formspec", "size[9,9]"
-				..default.gui_bg_img
-				.."image[0,0;3,3;sunos.png]"
-				.."label[3,0;"..sunos.S("Bau de Venda dos Sunos").."]"
-				.."label[3,1;"..sunos.S("Troque alguns itens aqui").."]"
-				.."image[7.5,-0.2;2,2;default_apple.png]"
-				.."image[6.6,0;2,2;default_apple.png]"
-				.."image[6.6,1;2,2;default_apple.png]"
-				.."image[7.5,0.8;2,2;default_apple.png]"
-				-- Botoes de trocas
-				.."item_image_button[0,3;3,3;default:tree;trocar_madeira;2]"
-				.."item_image_button[0,6;3,3;default:stonebrick;trocar_pedra;2]"
-				.."item_image_button[3,3;3,3;default:gold_ingot;trocar_ouro;10]"
-				.."item_image_button[3,6;3,3;default:steel_ingot;trocar_ferro;6]"
-				.."item_image_button[6,3;3,3;default:coal_lump;trocar_carvao;1]"
-				.."item_image_button[6,6;3,3;default:glass;trocar_vidro;1]"
-			)
-		end
+		-- Ajustar baus
+		set_bau(pos, vila, dist)
 	end,
 })

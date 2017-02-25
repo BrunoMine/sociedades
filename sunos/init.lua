@@ -43,7 +43,7 @@ sunos.var.tempo_inimigo = 300
 -- Intervalo de tempo (em segundos) de verificação dos rastreadores de jogadores perto de fundamentos dos sunos
 sunos.var.tempo_atualizar_jogadores_perto = 5
 -- Tempo (em segundos) entre as verificações de estrutura obstruida
-sunos.var.tempo_verif_estruturas = tonumber(minetest.setting_get("sunos_verif_fundamento") or 7)
+sunos.var.tempo_verif_estruturas = tonumber(minetest.setting_get("sunos_verif_fundamento") or 60)
 -- Tempo (em segundos) em que uma casa comunal pode ficar em decadencia antes de perder o fundamento
 sunos.var.tempo_decadencia = tonumber(minetest.setting_get("sunos_comunal_decadencia") or 300)
 -- Lista de nodes estruturais

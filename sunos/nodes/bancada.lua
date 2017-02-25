@@ -13,8 +13,14 @@
 -- Bancada dos sunos
 minetest.register_node("sunos:bancada", {
 	description = sunos.S("Bancada dos Sunos"),
-	tiles = {"default_wood.png", "default_wood.png", "default_wood.png^sunos_bancada_lado.png",
-		"default_wood.png^sunos_bancada_lado.png", "default_wood.png^sunos_bancada_lado.png", "default_wood.png^sunos_bancada_lado.png"},
+	tiles = {
+		"default_wood.png", 
+		"default_wood.png", 
+		"default_wood.png^(farming_straw.png^sunos_bancada_lado.png^[makealpha:76,255,0)",
+		"default_wood.png^(farming_straw.png^sunos_bancada_lado.png^[makealpha:76,255,0)", 
+		"default_wood.png^(farming_straw.png^sunos_bancada_lado.png^[makealpha:76,255,0)", 
+		"default_wood.png^(farming_straw.png^sunos_bancada_lado.png^[makealpha:76,255,0)"
+	},
 	paramtype2 = "facedir",
 	groups = {choppy = 2, oddly_breakable_by_hand = 2, sunos=1},
 	legacy_facedir_simple = true,

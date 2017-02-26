@@ -55,8 +55,16 @@ minetest.register_node("sunos:bancada_de_trabalho", {
 	end,
 })
 
-minetest.register_node("sunos:bancada_de_trabalho_nodrop", minetest.registered_nodes["sunos:bancada_de_trabalho"])
-minetest.override_item("sunos:bancada_de_trabalho_nodrop", {
-	description=minetest.registered_nodes["sunos:bancada_de_trabalho"].description .. " ("..S("Sem Drop")..")",
-	drop = ""
-})
+-- Criar cópia sem Drop (para evitar furtos em estruturas dos sunos)
+do
+	-- Copiar tabela de definições
+	local def = {}
+	for n,d in pairs(minetest.registered_nodes["sunos:bancada_de_trabalho"]) do
+		def[n] = d
+	end
+	-- Altera alguns paremetros
+	def.description = def.description .. " ("..S("Sem Drop")..")"
+	def.drop = ""
+	-- Registra o novo node
+	minetest.register_node("sunos:bancada_de_trabalho_nodrop", def)
+end

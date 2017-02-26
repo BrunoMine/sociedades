@@ -44,8 +44,15 @@ minetest.register_node("sunos:bancada", {
 })
 
 -- Criar cópia sem Drop (para evitar furtos em estruturas dos sunos)
-minetest.register_node("sunos:bancada_nodrop", minetest.registered_nodes["sunos:bancada"])
-minetest.override_item("sunos:bancada_nodrop", {
-	description=minetest.registered_nodes["sunos:bancada"].description .. " ("..S("Sem Drop")..")",
-	drop = ""
-})
+do
+	-- Copiar tabela de definições
+	local def = {}
+	for n,d in pairs(minetest.registered_nodes["sunos:bancada"]) do
+		def[n] = d
+	end
+	-- Altera alguns paremetros
+	def.description = def.description .. " ("..S("Sem Drop")..")"
+	def.drop = ""
+	-- Registra o novo node
+	minetest.register_node("sunos:bancada_nodrop", def)
+end

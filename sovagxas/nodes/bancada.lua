@@ -62,9 +62,16 @@ minetest.register_node("sovagxas:bancada", { -- Bancada de Trabalho Sovagxa
 		meta:set_string("formspec",default.crafttable_formspec)
 	end,
 })
--- Criar cópia sem Drop (para evitar furtos em estruturas geradas)
-minetest.register_node("sovagxas:bancada_nodrop", minetest.registered_nodes["sovagxas:bancada"])
-minetest.override_item("sovagxas:bancada_nodrop", {
-	description=minetest.registered_nodes["sovagxas:bancada"].description .. " (Sem Drop)",
-	drop = ""
-})
+-- Criar cópia sem Drop (para evitar furtos em estruturas dos sunos)
+do
+	-- Copiar tabela de definições
+	local def = {}
+	for n,d in pairs(minetest.registered_nodes["sovagxas:bancada"]) do
+		def[n] = d
+	end
+	-- Altera alguns paremetros
+	def.description = def.description .. " (Sem Drop)"
+	def.drop = ""
+	-- Registra o novo node
+	minetest.register_node("sovagxas:bancada_nodrop", def)
+end

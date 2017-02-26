@@ -32,11 +32,18 @@ minetest.register_node("sovagxas:totem", {
 	end,
 	on_place = minetest.rotate_node
 })
--- Criar cópia sem Drop (para evitar furtos em estruturas geradas)
-minetest.register_node("sovagxas:totem_nodrop", minetest.registered_nodes["sovagxas:totem"])
-minetest.override_item("sovagxas:totem_nodrop", {
-	description=minetest.registered_nodes["sovagxas:totem"].description .. " (Sem Drop)",
-	drop = ""
-})
+-- Criar cópia sem Drop (para evitar furtos em estruturas dos sunos)
+do
+	-- Copiar tabela de definições
+	local def = {}
+	for n,d in pairs(minetest.registered_nodes["sovagxas:totem"]) do
+		def[n] = d
+	end
+	-- Altera alguns paremetros
+	def.description = def.description .. " (Sem Drop)"
+	def.drop = ""
+	-- Registra o novo node
+	minetest.register_node("sovagxas:totem_nodrop", def)
+end
 
 

@@ -106,8 +106,10 @@ sunos.atualizar_bd_vila = function(vila)
 	-- Salva a população atual
 	sunos.bd:salvar("vila_"..vila, "pop_total", pop_total)
 	
-	-- Sem população a vila está abandonada
-	if pop_total == 0 then
+	-- Verificar se a vila deve ser apagado do banco de dados
+	if pop_total == 0 -- Sem população
+		and sunos.bd:verif("vila_"..vila, "comunal") ~= true -- Sem casa comunal
+	then
 		
 		sunos.bd:drop_tb("vila_"..vila)
 	end

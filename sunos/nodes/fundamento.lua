@@ -73,6 +73,23 @@ minetest.register_node("sunos:fundamento", {
 		sunos.atualizar_bd_vila(vila)
 	end,
 	
+	-- Chamada de temporizador
+	on_timer = function(pos, elapsed)
+		local meta = minetest.get_meta(pos)
+		local versao = meta:get_string("versao")
+		
+		-- Verificar versao antes de tudo
+		if sunos.verif_comp(versao) == false then return end
+		
+		local tipo = meta:get_string("tipo")
+		if tipo == "" or not sunos.estruturas[tipo] then return end
+		
+		-- Executa on_timer personalizado
+		if sunos.estruturas[tipo].fund_on_timer then
+			sunos.estruturas[tipo].fund_on_timer(pos, elapsed)
+		end
+	end,
+	
 	-- Impede explosão
 	on_blast = function() end,
 })

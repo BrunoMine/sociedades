@@ -167,6 +167,43 @@ sunos.estruturas.comunal.construir = function(pos, vila, nivel, verif_area)
 	return true
 end
 
+sunos.estruturas.comunal.fund_on_timer = function(pos, elapsed)
+	local meta = minetest.get_meta(pos)
+	
+	local vila = meta:get_string("vila")
+	if vila == "" then return end
+	
+	-- Verifica se o node esta em decadencia
+	if meta:get_string("status") == "destruida" then 
+	
+		-- Verifica se ainda tem habitantes
+		
+		-- Atualizar banco de dados da vila
+		sunos.atualizar_bd_vila(vila)
+		
+		local pop = sunos.bd:pegar("vila_"..vila, "pop_total")
+		if pop > 0 then
+			minetest.get_node_timer(pos):set(sunos.var.tempo_decadencia, 0)
+			return
+		else
+			-- Remove casa comunal de vez
+			
+			-- Remove do banco de dados
+			sunos.bd:remover("vila_"..vila, "comunal")
+		
+			-- Trocar bloco de fundamento por madeira
+			minetest.set_node(pos, {name="default:tree"})
+		
+			-- Atualizar banco de dados da vila
+			sunos.atualizar_bd_vila(vila)
+			return
+		end
+	end 
+	
+	
+end
+
+
 -- Verificação do fundamento
 sunos.estruturas.comunal.verificar = function(pos)
 	local meta = minetest.get_meta(pos)
@@ -177,42 +214,23 @@ sunos.estruturas.comunal.verificar = function(pos)
 	local dist = tonumber(meta:get_string("dist"))
 	local status = meta:get_string("status")
 	
-	-- Caso esteja ativa
+	-- Caso esteja ativa (funcionamento normal)
 	if status == "ativa" then
-		if sunos.verificar_blocos_estruturais(pos, nodes_estruturais) == false then -- Verificar Estrutura danificada
+		
+		local nd = tonumber(meta:get_string("nodes")) -- numero de nodes inicial
 	
-			-- Tornar estrutura em ruinas
-			sunos.montar_ruinas(pos, dist)
+		-- Pega o numero de nodes real
+		local ndrl = sunos.verificar_blocos_estruturais(pos, nodes_estruturais)
+		
+		-- Verifica se a casa comunal está muito destruida
+		if ndrl < nd - 10 then
 	
 			-- Inicia processo de decadencia da casa comunal
 			meta:set_string("status", "destruida")
-			meta:set_string("tempo", 0) -- Tempo de decadencia (em segundos)
-		end
-
-	-- Caso esteja em decadencia
-	else
-	
-		local tempo = tonumber(meta:get_string("tempo")) + sunos.var.tempo_verif_estruturas
-	
-		if tempo > sunos.var.tempo_decadencia then
-		
-			-- Verifica se ainda tem habitantes mantem a decadencia
-			local pop = sunos.bd:pegar("vila_"..vila, "pop_total")
-			if pop > 0 then
-				meta:set_string("tempo", 0)
-			else
-				-- Remove casa comunal de vez
-				-- Remove do banco de dados
-				sunos.bd:remover("vila_"..vila, "comunal")
 			
-				-- Trocar bloco de fundamento por madeira
-				minetest.set_node(pos, {name="default:tree"})
-			
-				-- Atualizar banco de dados da vila
-				sunos.atualizar_bd_vila(vila)
-			end
-		else
-			meta:set_string("tempo", tempo) -- Salva o tempo que passou e continua a decadencia
+			-- Dispara um temporizador de decadencia
+			minetest.get_node_timer(pos):set(sunos.var.tempo_decadencia, 0)
+			return
 		end
 	end
 end

@@ -1,6 +1,6 @@
 --[[
 	Mod Sovagxas para Minetest
-	Copyright (C) 2016 BrunoMine (https://github.com/BrunoMine)
+	Copyright (C) 2017 BrunoMine (https://github.com/BrunoMine)
 	
 	Recebeste uma cópia da GNU Lesser General
 	Public License junto com esse software,
@@ -50,7 +50,9 @@ local modpath = minetest.get_modpath("sovagxas")
 
 -- Carregar scripts
 notificar("Carregando...")
-dofile(modpath.."/nodes.lua")
+dofile(modpath.."/nodes/totem.lua")
+dofile(modpath.."/nodes/bancada.lua")
+dofile(modpath.."/nodes/bau.lua")
 dofile(modpath.."/npc.lua")
 dofile(modpath.."/arvore.lua")
 dofile(modpath.."/mapgen.lua")

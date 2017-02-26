@@ -16,16 +16,16 @@ local modpath = minetest.get_modpath("sunos")
 sunos.estruturas.comunal = {}
 
 -- Diretrizes
-dofile(minetest.get_modpath("sunos").."/estruturas/comunal/diretrizes.lua") 
+dofile(modpath.."/estruturas/comunal/diretrizes.lua") 
 
 -- Registros do NPC da casa (carregamento de script)
-dofile(minetest.get_modpath("sunos").."/estruturas/comunal/npc.lua") 
+dofile(modpath.."/estruturas/comunal/npc.lua") 
 
 -- Interface de atendimento da casa comunal (carregamento de script)
-dofile(minetest.get_modpath("sunos").."/estruturas/comunal/interface.lua") 
+dofile(modpath.."/estruturas/comunal/interface.lua") 
 
 -- Bau de casa dos sunos (carregamento de script)
-dofile(minetest.get_modpath("sunos").."/estruturas/comunal/bau.lua") 
+dofile(modpath.."/estruturas/comunal/bau.lua") 
 
 -- Nodes estruturais
 local nodes_estruturais = sunos.estruturas.comunal.var.nodes_estruturais
@@ -167,6 +167,53 @@ sunos.estruturas.comunal.construir = function(pos, vila, nivel, verif_area)
 	return true
 end
 
+-- Chamada on_rightclick do fundamento
+sunos.estruturas.comunal.fund_on_rightclick = function(pos, node, player, itemstack, pointed_thing)
+	local meta = minetest.get_meta(pos)
+	
+	local vila = meta:get_string("vila")
+	if vila == "" then return end
+	
+	-- Verifica se o jogador é inimigo da vila
+	if sunos.verif_inimigo(vila, player:get_player_name()) == true then
+		return
+	end
+	
+	if meta:get_string("status") == "destruida" then
+	
+		-- Restaura a casa comunal
+		if itemstack and itemstack:get_name() == "sunos:kit_reparador" then
+		
+			local table = meta:to_table() -- salva metadados numa tabela
+			vila = tonumber(vila)
+			local tipo = meta:get_string("tipo")
+			local dist = tonumber(meta:get_string("dist"))
+			local nivel = meta:get_string("nivel")
+		
+			-- Caminho do arquivo da estrutura
+			local caminho_arquivo = modpath.."/schems/"..tipo.."/nivel_"..nivel..".13.mts"
+		
+			-- Criar estrutura
+			minetest.place_schematic({x=pos.x-dist, y=pos.y, z=pos.z-dist}, caminho_arquivo, nil, nil, true)
+		
+			minetest.set_node(pos, {name="sunos:fundamento"})
+			minetest.get_meta(pos):from_table(table) -- recoloca metadados no novo fumdamento
+		
+			-- Ajustar baus
+			set_bau(pos, vila, dist)
+			
+			-- Remove o item
+			itemstack:take_item()
+			
+			-- Finaliza
+			minetest.chat_send_player(player:get_player_name(), sunos.S("Casa Comunal restaurada."))
+			return
+		end 
+		
+	end
+end
+
+-- Temporizador do fundamento
 sunos.estruturas.comunal.fund_on_timer = function(pos, elapsed)
 	local meta = minetest.get_meta(pos)
 	
@@ -301,9 +348,6 @@ minetest.register_node("sunos:fundamento_comunal", {
 		end
 	end,
 })
-
--- Caminho do diretório do mod
-local modpath = minetest.get_modpath("sunos")
 
 -- Reforma as casas aleatoriamente
 minetest.register_abm({

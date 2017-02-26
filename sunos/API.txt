@@ -42,6 +42,9 @@ NPCs
 		
 		on_rightclick(self, player)
 		^ função on_rightclick padrão (você pode atribuir argumentos extras #3, #4, ...)
+		
+		drops = {{name = "default:wood", chance = 1, min = 1, max = 3}}
+		^ lista de itens que caem quando o npc morre (conforme definido nos mobs do mobs_redo)
 	}
 
 

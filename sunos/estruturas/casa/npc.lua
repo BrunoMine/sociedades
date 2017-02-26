@@ -55,5 +55,11 @@ sunos.npcs.npc.registrar("caseiro", {
 			end
 		end
 		
-	end
+	end,
+	
+	drops = {
+		{name = "default:wood", chance = 1, min = 1, max = 3},
+		{name = "default:apple", chance = 2, min = 1, max = 2},
+		{name = "default:axe_stone", chance = 5, min = 1, max = 1},
+	},
 })

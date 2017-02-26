@@ -139,11 +139,7 @@ sunos.npcs.npc.registrar = function(tipo, def)
 		walk_velocity = 2,
 		run_velocity = 3,
 		jump = true,
-		drops = {
-			{name = "default:wood", chance = 1, min = 1, max = 3},
-			{name = "default:apple", chance = 2, min = 1, max = 2},
-			{name = "default:axe_stone", chance = 5, min = 1, max = 1},
-		},
+		drops = def.drops,
 		water_damage = 0,
 		lava_damage = 2,
 		light_damage = 0,

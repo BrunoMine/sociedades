@@ -35,7 +35,7 @@ sovagxas.itens_bau = {
 	{	"default:shovel_stone",					1,		1,		20		},
 	{	"default:pick_wood",					1,		1,		20		},
 	{	"default:junglesapling",				2,		5,		15		},
-	{	"farming:seed_algodao",					3,		8,		15		},
+	{	"farming:seed_cotton",					3,		8,		15		},
 }
 
 -- Notificador de Inicializador
@@ -54,4 +54,5 @@ dofile(modpath.."/nodes.lua")
 dofile(modpath.."/npc.lua")
 dofile(modpath.."/arvore.lua")
 dofile(modpath.."/mapgen.lua")
+dofile(modpath.."/craftitens.lua")
 notificar("[OK]!")

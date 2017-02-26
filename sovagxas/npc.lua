@@ -13,7 +13,7 @@
 
 -- Verificador do Bau de Sovagxas
 -- Tempo (em segundos) que demora para um bau verificar se tem um sovagxa dele por perto
-local tempo_verif_npc = 5
+local tempo_verif_npc = 60
 -- Distancia (om blocos) que um bau verifica em sua volta para encontrar seu proprio npc
 local dist_verif_npc = 10
 
@@ -117,29 +117,34 @@ mobs:register_mob("sovagxas:npc", {
 -- Verifica se tem um npc
 sovagxas.verif_bau_sovagxa = function(pos)
 	
-	-- Pegar e verificar mobs em uma area
-	local r = false
-	
+	-- Verifica se ja tem npc
 	for  n,obj in ipairs(minetest.get_objects_inside_radius(pos, dist_verif_npc)) do
 		local ent = obj:get_luaentity() or {}
 		if ent.name == "sovagxas:npc" then -- Verifica se for mob certo
-			r = true
-			break
+			minetest.chat_send_all("tem npc")
+			return
 		end
 	end
 	
-	if r == false then
-		local node = minetest.get_node(pos)
-		local p = minetest.facedir_to_dir(node.param2)
-		local spos = {x=pos.x-p.x,y=pos.y+1.5,z=pos.z-p.z}
-		local obj = minetest.add_entity(spos, "sovagxas:npc") -- Cria o mob
-		
-		-- Salva alguns dados na entidade inicialmente
-		if obj then
-			local ent = obj:get_luaentity()
-			ent.temp = 0 -- Temporizador
-			ent.pos_bau = pos -- Pos do bau
+	-- Verifica se tem jogadores (evitar)
+	for  n,obj in ipairs(minetest.get_objects_inside_radius(pos, dist_verif_npc)) do
+		if obj:is_player() then
+			minetest.chat_send_all("tem jogador")
+			return
 		end
+	end
+	
+	-- Coloca novo npc
+	local node = minetest.get_node(pos)
+	local p = minetest.facedir_to_dir(node.param2)
+	local spos = {x=pos.x-p.x,y=pos.y+1.5,z=pos.z-p.z}
+	local obj = minetest.add_entity(spos, "sovagxas:npc") -- Cria o mob
+	
+	-- Salva alguns dados na entidade inicialmente
+	if obj then
+		local ent = obj:get_luaentity()
+		ent.temp = 0 -- Temporizador
+		ent.pos_bau = pos -- Pos do bau
 	end
 end
 

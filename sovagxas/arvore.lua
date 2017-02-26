@@ -342,14 +342,14 @@ sovagxas.montar_arvore = function(pos)
 	if slots_mobilia[1] then
 		local i = math.random(1, table.maxn(slots_mobilia))
 		minetest.set_node(slots_mobilia[i][1], {name = "default:jungletree", param2 = slots_mobilia[i][2]})
-		minetest.set_node({x=slots_mobilia[i][1].x, y=slots_mobilia[i][1].y+1, z=slots_mobilia[i][1].z}, {name = "sovagxas:totem", param2 = slots_mobilia[i][2]})
+		minetest.set_node({x=slots_mobilia[i][1].x, y=slots_mobilia[i][1].y+1, z=slots_mobilia[i][1].z}, {name = "sovagxas:totem_nodrop", param2 = slots_mobilia[i][2]})
 		table.remove(slots_mobilia, i)
 	end
 	
 	-- colocar Bancada de craftar Sovagxa
 	if slots_mobilia[1] then
 		local i = math.random(1, table.maxn(slots_mobilia))
-		minetest.set_node(slots_mobilia[i][1], {name = "sovagxas:bancada"})
+		minetest.set_node(slots_mobilia[i][1], {name = "sovagxas:bancada_nodrop"})
 		table.remove(slots_mobilia, i)
 	end
 	

@@ -105,28 +105,28 @@ minetest.register_node("sovagxas:bau", {
 				player_inv:add_item("main", itens[1][1].." "..itens[1][2])
 				itens[1] = false
 			else
-				minetest.send_chat_player(sender:get_player_name(), "Inventario lotado. Esvazie um pouco.")
+				minetest.chat_send_player(sender:get_player_name(), "Inventario lotado. Esvazie um pouco.")
 			end
 		elseif fields.item2 and itens[2] ~= false then
 			if player_inv:room_for_item("main", itens[2][1].." "..itens[2][2]) then
 				player_inv:add_item("main", itens[2][1].." "..itens[2][2])
 				itens[2] = false
 			else
-				minetest.send_chat_player(sender:get_player_name(), "Inventario lotado. Esvazie um pouco.")
+				minetest.chat_send_player(sender:get_player_name(), "Inventario lotado. Esvazie um pouco.")
 			end
 		elseif fields.item3 and itens[3] ~= false  then
 			if player_inv:room_for_item("main", itens[3][1].." "..itens[3][2]) then
 				player_inv:add_item("main", itens[3][1].." "..itens[3][2])
 				itens[3] = false
 			else
-				minetest.send_chat_player(sender:get_player_name(), "Inventario lotado. Esvazie um pouco.")
+				minetest.chat_send_player(sender:get_player_name(), "Inventario lotado. Esvazie um pouco.")
 			end
 		elseif fields.item4 and itens[4] ~= false then
 			if player_inv:room_for_item("main", itens[4][1].." "..itens[4][2]) then
 				player_inv:add_item("main", itens[4][1].." "..itens[4][2])
 				itens[4] = false
 			else
-				minetest.send_chat_player(sender:get_player_name(), "Inventario lotado. Esvazie um pouco.")
+				minetest.chat_send_player(sender:get_player_name(), "Inventario lotado. Esvazie um pouco.")
 			end
 		end
 		meta:set_string("itens", minetest.serialize(itens))
@@ -208,6 +208,12 @@ minetest.register_node("sovagxas:totem", {
 	end,
 	on_place = minetest.rotate_node
 })
+-- Criar cópia sem Drop (para evitar furtos em estruturas geradas)
+minetest.register_node("sovagxas:totem_nodrop", minetest.registered_nodes["sovagxas:totem"])
+minetest.override_item("sovagxas:totem_nodrop", {
+	description=minetest.registered_nodes["sovagxas:totem"].description .. " (Sem Drop)",
+	drop = ""
+})
 
 -- Bancada de Trabalho Selvagem
 default.crafttable_formspec = -- Inventario da Bancada de Trabalho
@@ -261,4 +267,10 @@ minetest.register_node("sovagxas:bancada", { -- Bancada de Trabalho Sovagxa
 		local meta = minetest.get_meta(pos)
 		meta:set_string("formspec",default.crafttable_formspec)
 	end,
+})
+-- Criar cópia sem Drop (para evitar furtos em estruturas geradas)
+minetest.register_node("sovagxas:bancada_nodrop", minetest.registered_nodes["sovagxas:bancada"])
+minetest.override_item("sovagxas:bancada_nodrop", {
+	description=minetest.registered_nodes["sovagxas:bancada"].description .. " (Sem Drop)",
+	drop = ""
 })

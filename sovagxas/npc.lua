@@ -121,7 +121,6 @@ sovagxas.verif_bau_sovagxa = function(pos)
 	for  n,obj in ipairs(minetest.get_objects_inside_radius(pos, dist_verif_npc)) do
 		local ent = obj:get_luaentity() or {}
 		if ent.name == "sovagxas:npc" then -- Verifica se for mob certo
-			minetest.chat_send_all("tem npc")
 			return
 		end
 	end
@@ -129,7 +128,6 @@ sovagxas.verif_bau_sovagxa = function(pos)
 	-- Verifica se tem jogadores (evitar)
 	for  n,obj in ipairs(minetest.get_objects_inside_radius(pos, dist_verif_npc)) do
 		if obj:is_player() then
-			minetest.chat_send_all("tem jogador")
 			return
 		end
 	end

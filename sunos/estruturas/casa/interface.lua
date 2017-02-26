@@ -9,6 +9,9 @@
 	Interface
   ]]
 
+-- Tradução de strings
+local S = sunos.S
+
 -- Envia uma formspec simples de aviso
 local avisar = function(player, texto)
 	if not player then
@@ -23,7 +26,7 @@ local avisar = function(player, texto)
 	minetest.show_formspec(player:get_player_name(), "sunos:npc", "size[12,1]"
 		..default.gui_bg
 		..default.gui_bg_img
-		.."label[0.5,0;"..sunos.S("Aviso").." \n"..texto.."]")
+		.."label[0.5,0;"..S("Aviso").." \n"..texto.."]")
 	return true
 end
 
@@ -51,17 +54,17 @@ sunos.npcs.npc.registrados.caseiro.on_rightclick = function(ent, player)
 		local formspec = "size[6,3]"
 			..default.gui_bg
 			..default.gui_bg_img
-			.."label[0,0;"..sunos.S("Oi. Ajude essa vila a \nmontar uma Casa Comunal").."]"
+			.."label[0,0;"..S("Oi. Ajude essa vila a \nmontar uma Casa Comunal").."]"
 			.."item_image_button[0,1;1,1;default:tree 20;item1;]" -- Item 1
 			.."item_image_button[1,1;1,1;default:stone 70;item1;]" -- Item 2
 			.."item_image_button[2,1;1,1;farming:straw 30;item1;]" -- Item 3
 			.."item_image_button[5,1;1,1;sunos:fundamento_comunal;fundamento;]" -- Fundamento de Casa Comunal
-			.."button_exit[0,2;6,1;trocar;"..sunos.S("Trocar por Fundamento").."]"
+			.."button_exit[0,2;6,1;trocar;"..S("Trocar por Fundamento").."]"
 		return minetest.show_formspec(player:get_player_name(), "sunos:npcs_npc_caseiro", formspec)
 	end
 	
 	-- Avisa para ir ate a casa comunal
-	return minetest.chat_send_player(player:get_player_name(), sunos.S("Nenhuma atividade disponivel"))
+	return minetest.chat_send_player(player:get_player_name(), S("Nenhuma atividade disponivel"))
 	
 end
 
@@ -88,10 +91,10 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 				{"sunos:fundamento_comunal"}
 			) == false 
 			then
-				return minetest.chat_send_player(name, sunos.S("Faltou itens para trocar pelo fundamento de Casa Comunal"))
+				return minetest.chat_send_player(name, S("Faltou itens para trocar pelo fundamento de Casa Comunal"))
 			else
-				minetest.chat_send_player(name, sunos.S("Recebeste um Fundamento de Casa Comunal"))
-				minetest.chat_send_player(name, sunos.S("Coloque em um local adequado para que seja construida"))
+				minetest.chat_send_player(name, S("Recebeste um Fundamento de Casa Comunal"))
+				minetest.chat_send_player(name, S("Coloque em um local adequado para que seja construida"))
 				return
 			end
 		end

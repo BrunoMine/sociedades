@@ -8,17 +8,11 @@
 	
 	Internacionalização de strings de texto exibido
 	
-	O arquivo template.txt deve conter as strings originais do código 
-	para serem traduzidas. Evitar o uso de acentos e caracteres especiais.
   ]]
 
--- Clichê para apoiar cadeias localizadas se mod intllib está instalado.
-local S
-if minetest.get_modpath("intllib") then
-    S = intllib.Getter()
-else
-    S = function(s,a,...)if a==nil then return s end a={a,...}return s:gsub("(@?)@(%(?)(%d+)(%)?)",function(e,o,n,c)if e==""then return a[tonumber(n)]..(o==""and c or"")else return"@"..o..n..c end end) end
-end
+-- Carregar suporte de tradução intllib
+local MP = minetest.get_modpath(minetest.get_current_modname())
+local S, NS = dofile(MP.."/lib/intllib.lua")
 
 -- Variavel global do sunos
 sunos.S = S

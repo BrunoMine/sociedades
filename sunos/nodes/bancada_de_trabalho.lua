@@ -9,10 +9,12 @@
 	Bancada de trabalho dos Sunos
   ]]
 
+-- Tradução de strings
+local S = sunos.S
 
 -- Bancada de trabalho dos Sunos
 minetest.register_node("sunos:bancada_de_trabalho", {
-	description = sunos.S("Bancada de Trabalho dos Sunos"),
+	description = S("Bancada de Trabalho dos Sunos"),
 	tiles = {"default_wood.png^sunos_bancada_trabalho_topo.png", "default_wood.png", "default_wood.png",
 		"default_wood.png", "default_wood.png", "default_wood.png"},
 	paramtype2 = "facedir",
@@ -42,7 +44,7 @@ minetest.register_node("sunos:bancada_de_trabalho", {
 			default.gui_bg..
 			default.gui_bg_img..
 			default.gui_slots..
-			"label[1.75,0;"..sunos.S("Craftador").."]"..
+			"label[1.75,0;"..S("Craftador").."]"..
 			"list[current_player;main;0,4.25;8,1;]"..
 			"list[current_player;main;0,5.5;8,3;8]"..
 			"list[current_player;craft;1.75,0.5;3,3;]"..
@@ -55,6 +57,6 @@ minetest.register_node("sunos:bancada_de_trabalho", {
 
 minetest.register_node("sunos:bancada_de_trabalho_nodrop", minetest.registered_nodes["sunos:bancada_de_trabalho"])
 minetest.override_item("sunos:bancada_de_trabalho_nodrop", {
-	description=minetest.registered_nodes["sunos:bancada_de_trabalho"].description .. " (Sem Drop)",
+	description=minetest.registered_nodes["sunos:bancada_de_trabalho"].description .. " ("..S("Sem Drop")..")",
 	drop = ""
 })

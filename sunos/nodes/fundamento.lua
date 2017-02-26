@@ -8,13 +8,16 @@
 	
 	Fundamento dos sunos
   ]]
-  
+
+-- Tradução de strings
+local S = sunos.S
+
 -- Fundamento dos sunos
 --[[
 	Esse é o node de fundamento das estruturas dos sunos
 ]]
 minetest.register_node("sunos:fundamento", {
-	description = sunos.S("Fundamento dos Sunos"),
+	description = S("Fundamento dos Sunos"),
 	tiles = {"default_tree_top.png^sunos_fundamento.png", "default_tree_top.png", "default_tree.png"},
 	paramtype2 = "facedir",
 	is_ground_content = false,

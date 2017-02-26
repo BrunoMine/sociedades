@@ -9,6 +9,9 @@
 	Estrutura decorativa dos sunos
   ]]
 
+-- Tradução de strings
+local S = sunos.S
+
 -- Caminho do diretório do mod
 local modpath = minetest.get_modpath("sunos")
 
@@ -45,7 +48,7 @@ sunos.estruturas.decor.construir = function(pos, dist, vila, verif_area)
 	if not vila then
 		local pos_fund_prox = minetest.find_node_near(pos, 25, {"sunos:fundamento"})
 		if pos_fund_prox == nil then 
-			return sunos.S("Nenhuma vila por perto")
+			return S("Nenhuma vila por perto")
 		end
 	
 		-- Pegar dados da vila encontrada
@@ -54,7 +57,7 @@ sunos.estruturas.decor.construir = function(pos, dist, vila, verif_area)
 	
 		-- Verificar se ainda existe um banco de dados da vila
 		if sunos.bd:verif("vila_"..vila, "numero") == false then
-			return sunos.S("Vila abandonada")
+			return S("Vila abandonada")
 		end
 	end
 	
@@ -66,15 +69,15 @@ sunos.estruturas.decor.construir = function(pos, dist, vila, verif_area)
 		
 		-- Problema: em cima da faixa de solo existem obstrucoes (nao esta limpo e plano)
 		if st == 1 then
-			return sunos.S("O local precisa estar limpo e plano em uma area de @1x@1 blocos da largura", (largura+2))
+			return S("O local precisa estar limpo e plano em uma area de @1x@1 blocos da largura", (largura+2))
 		
 		-- Problema: faixa de solo (superficial) falta blocos de terra
 		elseif st == 2 then
-			return sunos.S("O solo precisa estar plano e gramado em uma area de @1x@1 blocos da largura", (largura+2))
+			return S("O solo precisa estar plano e gramado em uma area de @1x@1 blocos da largura", (largura+2))
 		
 		-- Problema: faixa de subsolo (considerando 2 faixas) falta blocos de terra
 		elseif st == 3 then
-			return sunos.S("O subsolo precisa estar preenchido (ao menos 2 blocos de profundidade) em uma area de @1x@1 blocos da largura", (largura+2))
+			return S("O subsolo precisa estar preenchido (ao menos 2 blocos de profundidade) em uma area de @1x@1 blocos da largura", (largura+2))
 		end
 	end
 	

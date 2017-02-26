@@ -9,9 +9,12 @@
 	Itens de craftação
   ]]
 
+-- Tradução de strings
+local S = sunos.S
+
 -- Kit reparador de estruturas
 minetest.register_craftitem("sunos:kit_reparador", {
-	description = sunos.S("Kit Reparador de estrutura dos Sunos"),
+	description = S("Kit Reparador de estrutura dos Sunos"),
 	inventory_image = "sunos_inv_fundamento.png^sunos_kit_reparador.png",
 	stack_max = 1,
 })

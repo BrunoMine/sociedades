@@ -9,6 +9,9 @@
 	NPC das casas
   ]]
 
+-- Tradução de strings
+local S = sunos.S
+
 sunos.npcs.npc.registrar("comunal", {
 	
 	

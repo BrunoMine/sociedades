@@ -8,10 +8,13 @@
 	
 	Ruas das vilas
   ]]
-  
+
+-- Tradução de strings
+local S = sunos.S
+
 -- Rua Calcetada
 minetest.register_node("sunos:rua_calcetada", {
-	description = sunos.S("Rua Calcetada"),
+	description = S("Rua Calcetada"),
 	tiles = {"default_grass.png^sunos_rua_calcetada_cima.png", "default_dirt.png",
 		{name = "default_dirt.png^default_grass_side.png^sunos_rua_calcetada_lado.png",
 			tileable_vertical = false}},

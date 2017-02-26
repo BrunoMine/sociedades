@@ -9,6 +9,8 @@
 	Interface
   ]]
 
+-- Tradução de strings
+local S = sunos.S
 
 -- Lista que relaciona numero com titulo od item
 local tb_itens_menu_comunal = {}
@@ -35,7 +37,7 @@ local avisar = function(player, texto)
 	minetest.show_formspec(player:get_player_name(), "sunos:npc", "size[12,1]"
 		..default.gui_bg
 		..default.gui_bg_img
-		.."label[0.5,0;"..sunos.S("Aviso").." \n"..texto.."]")
+		.."label[0.5,0;"..S("Aviso").." \n"..texto.."]")
 	return true
 end
 
@@ -66,7 +68,7 @@ sunos.npcs.npc.registrados.comunal.on_rightclick = function(ent, player, fields)
 		
 		-- Verifica se existe casa comunal na vila
 		if sunos.bd:verif("vila_"..ent.vila, "comunal") == false then
-			return minetest.chat_send_player(player:get_player_name(), sunos.S("Nenhuma Casa Comunal nessa vila"))
+			return minetest.chat_send_player(player:get_player_name(), S("Nenhuma Casa Comunal nessa vila"))
 		end
 		
 		-- Coletar dados da vila
@@ -77,8 +79,8 @@ sunos.npcs.npc.registrados.comunal.on_rightclick = function(ent, player, fields)
 			..default.gui_bg
 			..default.gui_bg_img
 			.."image[0,0;3,3;sunos.png]"
-			.."label[3,0;"..sunos.S("Bem vindo a Casa Comunal").."]"
-			.."label[3,0.5;"..sunos.S("Habitantes atuais: @1", habitantes).."]"
+			.."label[3,0;"..S("Bem vindo a Casa Comunal").."]"
+			.."label[3,0.5;"..S("Habitantes atuais: @1", habitantes).."]"
 			.."textlist[0,3;4.8,5.3;menu;"..string_menu_comunal.."]"
 			
 		-- Painel do item escolhido
@@ -97,16 +99,16 @@ sunos.npcs.npc.registrados.comunal.on_rightclick = function(ent, player, fields)
 			formspec = formspec .."label[5,3;"..titulo.."]"
 			
 			-- Botao de trocar
-			formspec = formspec .. "item_image_button[5,3.5;2,2;"..dados.item_add..";trocar;"..sunos.S("Trocar").."]"
+			formspec = formspec .. "item_image_button[5,3.5;2,2;"..dados.item_add..";trocar;"..S("Trocar").."]"
 			
 			-- Texto descritivo
 			formspec = formspec .. "textarea[7.2,3.5;5.1,2.25;desc;;"..dados.desc.."]"
 			
 			-- Requisitos
-			formspec = formspec .."label[5,5.5;"..sunos.S("Requisitos").."]"
+			formspec = formspec .."label[5,5.5;"..S("Requisitos").."]"
 			
 			-- População minima
-			formspec = formspec .."label[5,6;"..sunos.S("Habitantes: @1", dados.pop).."]"
+			formspec = formspec .."label[5,6;"..S("Habitantes: @1", dados.pop).."]"
 			
 			-- Organizando formspec dos itens
 			for n,item in pairs(dados.item_rem) do
@@ -142,7 +144,7 @@ sunos.npcs.npc.registrados.comunal.on_rightclick = function(ent, player, fields)
 			end
 			
 		else
-			formspec = formspec .."label[6,5;"..sunos.S("Escolha algo da lista").."]"
+			formspec = formspec .."label[6,5;"..S("Escolha algo da lista").."]"
 		end
 		
 		return minetest.show_formspec(player:get_player_name(), "sunos:npcs_npc_comunal", formspec)
@@ -178,12 +180,12 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 			sunos.atualizar_bd_vila(ent.vila)
 			local pop_atual = sunos.bd:pegar("vila_"..ent.vila, "pop_total")
 			if pop_atual == nil or pop_atual < dados.pop then
-				return avisar(player, sunos.S("A vila precisa de mais habitantes para isso"))
+				return avisar(player, S("A vila precisa de mais habitantes para isso"))
 			end   
 			
 			-- Tenta trocar
 			if tror.trocar_plus(player, dados.item_rem, {dados.item_add}) == false then
-				return avisar(player, sunos.S("Precisa dos itens exigidos para a trocar por \n@1", titulo))
+				return avisar(player, S("Precisa dos itens exigidos para a trocar por \n@1", titulo))
 			else
 				-- Pegar descrição do item
 				local desc_item = "fail" 
@@ -192,7 +194,7 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 				elseif minetest.registered_items[dados.item_add] then desc_item = minetest.registered_items[dados.item_add].description
 				elseif minetest.registered_craftitems[dados.item_add] then desc_item = minetest.registered_craftitems[dados.item_add].description
 				end
-				return avisar(player, sunos.S("Recebeste um @1", desc_item))
+				return avisar(player, S("Recebeste um @1", desc_item))
 			end
 		end
 	end

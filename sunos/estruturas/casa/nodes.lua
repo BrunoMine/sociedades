@@ -9,10 +9,13 @@
 	Nodes para criar fundamentos
   ]]
 
+-- Tradução de strings
+local S = sunos.S
+
 
 -- Fundamento de casa pequena
 minetest.register_node("sunos:fundamento_casa_pequena", {
-	description = sunos.S("Fundamento Suno de Casa Pequena"),
+	description = S("Fundamento Suno de Casa Pequena"),
 	tiles = {"default_tree_top.png^sunos_fundamento.png", "default_tree_top.png", "default_tree.png"},
 	inventory_image = "sunos_inv_fundamento.png^sunos_inv_fundamento_casa.png",
 	wield_image = "sunos_inv_fundamento.png^sunos_inv_fundamento_casa.png",
@@ -31,7 +34,7 @@ minetest.register_node("sunos:fundamento_casa_pequena", {
 		if r == true then
 			
 			-- Retorna mensagem de montagem concluida
-			minetest.chat_send_player(placer:get_player_name(), sunos.S("Casa construida"))
+			minetest.chat_send_player(placer:get_player_name(), S("Casa construida"))
 			itemstack:take_item()
 			return itemstack
 			
@@ -45,7 +48,7 @@ minetest.register_node("sunos:fundamento_casa_pequena", {
 
 -- Fundamento de casa mediana
 minetest.register_node("sunos:fundamento_casa_mediana", {
-	description = sunos.S("Fundamento Suno de Casa Mediana"),
+	description = S("Fundamento Suno de Casa Mediana"),
 	tiles = {"default_tree_top.png^sunos_fundamento.png", "default_tree_top.png", "default_tree.png"},
 	inventory_image = "sunos_inv_fundamento.png^sunos_inv_fundamento_casa.png",
 	wield_image = "sunos_inv_fundamento.png^sunos_inv_fundamento_casa.png",
@@ -64,7 +67,7 @@ minetest.register_node("sunos:fundamento_casa_mediana", {
 		if r == true then
 			
 			-- Retorna mensagem de montagem concluida
-			minetest.chat_send_player(placer:get_player_name(), sunos.S("Casa construida"))
+			minetest.chat_send_player(placer:get_player_name(), S("Casa construida"))
 			itemstack:take_item()
 			return itemstack
 			
@@ -80,7 +83,7 @@ minetest.register_node("sunos:fundamento_casa_mediana", {
 
 -- Fundamento de casa grande
 minetest.register_node("sunos:fundamento_casa_grande", {
-	description = sunos.S("Fundamento Suno de Casa Grande"),
+	description = S("Fundamento Suno de Casa Grande"),
 	tiles = {"default_tree_top.png^sunos_fundamento.png", "default_tree_top.png", "default_tree.png"},
 	inventory_image = "sunos_inv_fundamento.png^sunos_inv_fundamento_casa.png",
 	wield_image = "sunos_inv_fundamento.png^sunos_inv_fundamento_casa.png",
@@ -99,7 +102,7 @@ minetest.register_node("sunos:fundamento_casa_grande", {
 		if r == true then
 			
 			-- Retorna mensagem de montagem concluida
-			minetest.chat_send_player(placer:get_player_name(), sunos.S("Casa construida"))
+			minetest.chat_send_player(placer:get_player_name(), S("Casa construida"))
 			itemstack:take_item()
 			return itemstack
 			

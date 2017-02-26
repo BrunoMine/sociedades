@@ -9,6 +9,9 @@
 	Bau da casa comunal dos sunos
   ]]
 
+-- Tradução de strings
+local S = sunos.S
+
 -- Tempo para cada ciclo de on_timer
 local timeout_bau = 180
 
@@ -17,7 +20,7 @@ local timeout_bau = 180
 	Esse é o node que tem nas casas dos sunos
 ]]
 minetest.register_node("sunos:bau_comunal", {
-	description = sunos.S("Bau da Casa Comunal dos Sunos"),
+	description = S("Bau da Casa Comunal dos Sunos"),
 	tiles = {"default_chest_top.png^sunos_bau_topo.png", "default_chest_top.png", "default_chest_side.png^sunos_bau_lado.png",
 		"default_chest_side.png^sunos_bau_lado.png", "default_chest_side.png^sunos_bau_lado.png", "default_chest_lock.png^sunos_bau_frente.png"},
 	paramtype2 = "facedir",

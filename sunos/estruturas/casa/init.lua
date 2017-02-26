@@ -9,6 +9,8 @@
 	Casa dos sunos
   ]]
 
+-- Tradução de strings
+local S = sunos.S
 
 -- Tabela global de Casa
 sunos.estruturas.casa = {}
@@ -50,7 +52,7 @@ local set_bau = function(pos, vila, dist)
 		meta:set_string("obs", "n") -- Verifica se esta obstruido
 		meta:set_string("vila", vila) -- Numero da vila
 		meta:set_string("pos_fundamento", minetest.serialize(pos)) -- Pos do fundamento
-		meta:set_string("infotext", sunos.S("Bau dos Sunos"))
+		meta:set_string("infotext", S("Bau da Casa dos Sunos"))
 	end
 
 end
@@ -89,7 +91,7 @@ sunos.estruturas.casa.construir = function(pos, dist, vila, verif_area, itens_re
 	if not vila then
 		local pos_fund_prox = minetest.find_node_near(pos, 25, {"sunos:fundamento"})
 		if pos_fund_prox == nil then 
-			return sunos.S("Nenhuma vila por perto")
+			return S("Nenhuma vila por perto")
 		end
 	
 		-- Pegar dados da vila encontrada
@@ -98,7 +100,7 @@ sunos.estruturas.casa.construir = function(pos, dist, vila, verif_area, itens_re
 	
 		-- Verificar se ainda existe um banco de dados da vila
 		if sunos.bd:verif("vila_"..vila, "numero") == false then
-			return sunos.S("Vila abandonada")
+			return S("Vila abandonada")
 		end
 	end
 	
@@ -110,15 +112,15 @@ sunos.estruturas.casa.construir = function(pos, dist, vila, verif_area, itens_re
 		
 		-- Problema: em cima da faixa de solo existem obstrucoes (nao esta limpo e plano)
 		if st == 1 then
-			return sunos.S("O local precisa estar limpo e plano em uma area de @1x@1 blocos da largura", (largura+2))
+			return S("O local precisa estar limpo e plano em uma area de @1x@1 blocos da largura", (largura+2))
 		
 		-- Problema: faixa de solo (superficial) falta blocos de terra
 		elseif st == 2 then
-			return sunos.S("O solo precisa estar plano e gramado em uma area de @1x@1 blocos da largura", (largura+2))
+			return S("O solo precisa estar plano e gramado em uma area de @1x@1 blocos da largura", (largura+2))
 		
 		-- Problema: faixa de subsolo (considerando 2 faixas) falta blocos de terra
 		elseif st == 3 then
-			return sunos.S("O subsolo precisa estar preenchido (ao menos 2 blocos de profundidade) em uma area de @1x@1 blocos da largura", (largura+2))
+			return S("O subsolo precisa estar preenchido (ao menos 2 blocos de profundidade) em uma area de @1x@1 blocos da largura", (largura+2))
 		end
 	end
 	

@@ -9,10 +9,12 @@
 	Bancada dos sunos
   ]]
 
+-- Tradução de strings
+local S = sunos.S
 
 -- Bancada dos sunos
 minetest.register_node("sunos:bancada", {
-	description = sunos.S("Bancada dos Sunos"),
+	description = S("Bancada dos Sunos"),
 	tiles = {
 		"default_wood.png", 
 		"default_wood.png", 
@@ -44,6 +46,6 @@ minetest.register_node("sunos:bancada", {
 -- Criar cópia sem Drop (para evitar furtos em estruturas dos sunos)
 minetest.register_node("sunos:bancada_nodrop", minetest.registered_nodes["sunos:bancada"])
 minetest.override_item("sunos:bancada_nodrop", {
-	description=minetest.registered_nodes["sunos:bancada"].description .. " (Sem Drop)",
+	description=minetest.registered_nodes["sunos:bancada"].description .. " ("..S("Sem Drop")..")",
 	drop = ""
 })

@@ -9,6 +9,9 @@
 	Editor de estruturas esquematicas dos sunos
   ]]
 
+-- Tradução de strings
+local S = sunos.S
+
 -- Armazena os dados de quem acessa
 local acessos = {}
 
@@ -73,21 +76,21 @@ local acessar_menu = function(name)
 	local formspec = "size[10,10]"
 		..default.gui_bg
 		..default.gui_bg_img
-		.."label[0,0;"..sunos.S("Editor de Estruturas Esquematicas (Schems)").."]"
-		.."label[0,0.5;"..sunos.S("Tipo de estrutura").."]"
+		.."label[0,0;"..S("Editor de Estruturas Esquematicas (Schems)").."]"
+		.."label[0,0.5;"..S("Tipo de estrutura").."]"
 		.."dropdown[0,1;10,1;tipo;"..list_estruturas_string..";"..escolha_tipo.."]"
 		
-		.."label[0,2;"..sunos.S("Manipular estruturas").."]"
-		.."label[0,2.5;"..sunos.S("Nome de estrutura").."]"
+		.."label[0,2;"..S("Manipular estruturas").."]"
+		.."label[0,2.5;"..S("Nome da estrutura").."]"
 		.."dropdown[0,3;10,1;estrutura;"..list_estruturas_strings..";"..escolha_estrutura.."]"
-		.."button_exit[0,3.8;3,1;carregar;"..sunos.S("Carregar").."]"
-		.."button_exit[3,3.8;3,1;salvar;"..sunos.S("Salvar").."]"
+		.."button_exit[0,3.8;3,1;carregar;"..S("Carregar").."]"
+		.."button_exit[3,3.8;3,1;salvar;"..S("Salvar").."]"
 		
-		.."label[0,5.2;"..sunos.S("Criar nova estrutura").."]"
-		.."field[0.3,6.3;8,1;novo_nome;"..sunos.S("Nome da estrutura")..";]"
-		.."label[8,5.5;"..sunos.S("Largura").."]"
+		.."label[0,5.2;"..S("Criar nova estrutura").."]"
+		.."field[0.3,6.3;8,1;novo_nome;"..S("Nome da estrutura")..";]"
+		.."label[8,5.5;"..S("Largura").."]"
 		.."dropdown[8,6;2,1;nova_largura;3,5,7,9,11,13;]"
-		.."button_exit[0,6.8;6,1;criar;"..sunos.S("Salvar nova estrutura").."]"
+		.."button_exit[0,6.8;6,1;criar;"..S("Salvar nova estrutura").."]"
 		
 	
 	return minetest.show_formspec(name, "sunos:editor_schems", formspec)
@@ -108,7 +111,7 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 			-- Verificar estrutura e largura 
 			local estrutura = minetest.get_meta(acessos[name].pos):get_string("estrutura")
 			if tipo == "" or estrutura == "" then 
-				minetest.chat_send_player(name, sunos.S("Defina o tipo e estrutura desejada."))
+				minetest.chat_send_player(name, S("Defina o tipo e estrutura desejada."))
 				return
 			end
 			-- Separar largura
@@ -133,7 +136,7 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 			local arq = "/"..tipo.."/"..estrutura.."."..largura..".mts"
 			minetest.place_schematic({x=pos.x+8-dist, y=pos.y, z=pos.z-dist}, minetest.get_modpath("sunos").."/schems"..arq, 0, nil, true)
 			
-			minetest.chat_send_player(name, sunos.S("Estrutura carregada."))
+			minetest.chat_send_player(name, S("Estrutura carregada."))
 			return
 		end
 		
@@ -144,7 +147,7 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 			-- Verificar estrutura e largura 
 			local estrutura = minetest.get_meta(acessos[name].pos):get_string("estrutura")
 			if tipo == "" or estrutura == "" then 
-				minetest.chat_send_player(name, sunos.S("Defina o tipo e estrutura desejada."))
+				minetest.chat_send_player(name, S("Defina o tipo e estrutura desejada."))
 				return
 			end
 			-- Separar largura
@@ -161,7 +164,7 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 			
 			-- Remove o antigo arquivo schematic
 			if os.remove(minetest.get_modpath("sunos").."/schems/"..arq) == nil then
-				minetest.chat_send_player(name, sunos.S("Falha ao remover arquivo antigo."))
+				minetest.chat_send_player(name, S("Falha ao remover arquivo antigo."))
 				return
 			end
 			
@@ -174,7 +177,7 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 			)
 			
 			-- Avisa o bug do minetest
-			minetest.chat_send_player(name, sunos.S("Estrutura foi salva. Mas precisa reiniciar o minetest para carregar ela novamente."))
+			minetest.chat_send_player(name, S("Estrutura foi salva. Mas precisa reiniciar o minetest para carregar ela novamente."))
 			return
 		end
 		
@@ -182,18 +185,18 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 			
 			-- Verificar nome da nova estrutura
 			if fields.novo_nome == "" then 
-				minetest.chat_send_player(name, sunos.S("Defina um nome da estrutura."))
+				minetest.chat_send_player(name, S("Defina um nome da estrutura."))
 				return
 			end
 			if string.match(fields.novo_nome, " ") ~= nil then
-				minetest.chat_send_player(name, sunos.S("Use apenas letras e sublinhado (_)"))
+				minetest.chat_send_player(name, S("Use apenas letras e sublinhado (_)"))
 				return
 			end
 			
 			-- Verificar tipo
 			local tipo = minetest.get_meta(acessos[name].pos):get_string("tipo_nome")
 			if tipo == "" then
-				minetest.chat_send_player(name, sunos.S("Nenhum tipo definido."))
+				minetest.chat_send_player(name, S("Nenhum tipo definido."))
 				return
 			end
 			
@@ -210,7 +213,7 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 				minetest.get_modpath("sunos").."/schems/"..arq
 			)
 			
-			minetest.chat_send_player(name, sunos.S("Estrutura nova foi salva."))
+			minetest.chat_send_player(name, S("Estrutura nova foi salva."))
 			return
 		end
 		
@@ -234,7 +237,7 @@ end)
 
 -- Node de Acesso
 minetest.register_node("sunos:editor_schems", {
-	description = sunos.S("Editor de estruturas dos Sunos"),
+	description = S("Editor de estruturas dos Sunos"),
 	tiles = {"default_wood.png^sunos_editor_schems.png"},
 	paramtype2 = "facedir",
 	groups = {choppy = 2, oddly_breakable_by_hand = 2},

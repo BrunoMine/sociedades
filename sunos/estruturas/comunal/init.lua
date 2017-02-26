@@ -9,6 +9,9 @@
 	Casa comunal
   ]]
 
+-- Tradução de strings
+local S = sunos.S
+
 -- Diretorio do mod
 local modpath = minetest.get_modpath("sunos")
 
@@ -54,7 +57,7 @@ local set_bau = function(pos, vila, dist)
 		local meta = minetest.get_meta(pos_bau)
 		meta:set_string("vila", vila) -- Numero da vila
 		meta:set_string("pos_fundamento", minetest.serialize(pos)) -- Pos do fundamento
-		meta:set_string("infotext", sunos.S("Bau da Casa Comunal dos Sunos"))
+		meta:set_string("infotext", S("Bau da Casa Comunal dos Sunos"))
 		
 		-- Inicia temporizador
 		minetest.get_node_timer(pos_bau):set(2, 0)
@@ -103,15 +106,15 @@ sunos.estruturas.comunal.construir = function(pos, vila, nivel, verif_area)
 		
 		-- Problema: em cima da faixa de solo existem obstrucoes (nao esta limpo e plano)
 		if st == 1 then
-			return sunos.S("O local precisa estar limpo e plano em uma area de @1x@1 blocos da largura", (largura+2))
+			return S("O local precisa estar limpo e plano em uma area de @1x@1 blocos da largura", (largura+2))
 		
 		-- Problema: faixa de solo (superficial) falta blocos de terra
 		elseif st == 2 then
-			return sunos.S("O solo precisa estar plano e gramado em uma area de @1x@1 blocos da largura", (largura+2))
+			return S("O solo precisa estar plano e gramado em uma area de @1x@1 blocos da largura", (largura+2))
 		
 		-- Problema: faixa de subsolo (considerando 2 faixas) falta blocos de terra
 		elseif st == 3 then
-			return sunos.S("O subsolo precisa estar preenchido (ao menos 2 blocos de profundidade) em uma area de @1x@1 blocos da largura", (largura+2))
+			return S("O subsolo precisa estar preenchido (ao menos 2 blocos de profundidade) em uma area de @1x@1 blocos da largura", (largura+2))
 		end
 		
 	end
@@ -206,7 +209,7 @@ sunos.estruturas.comunal.fund_on_rightclick = function(pos, node, player, itemst
 			itemstack:take_item()
 			
 			-- Finaliza
-			minetest.chat_send_player(player:get_player_name(), sunos.S("Casa Comunal restaurada."))
+			minetest.chat_send_player(player:get_player_name(), S("Casa Comunal restaurada."))
 			return
 		end 
 		
@@ -288,7 +291,7 @@ end
 	Esse é o node usado para construir uma casa comunal
 ]]
 minetest.register_node("sunos:fundamento_comunal", {
-	description = sunos.S("Fundamento de Casa Comunal dos Sunos"),
+	description = S("Fundamento de Casa Comunal dos Sunos"),
 	tiles = {"default_tree_top.png^sunos_fundamento.png", "default_tree_top.png", "default_tree.png"},
 	inventory_image = "sunos_inv_fundamento.png^sunos_inv_fundamento_comunal.png",
 	wield_image = "sunos_inv_fundamento.png^sunos_inv_fundamento_comunal.png",
@@ -304,18 +307,18 @@ minetest.register_node("sunos:fundamento_comunal", {
 		-- Verificar Vila e pegar dados (buscando por um fundamento proximo)
 		local pos_fund_prox = minetest.find_node_near(pointed_thing.under, 25, {"sunos:fundamento"})
 		if pos_fund_prox == nil then 
-			return minetest.chat_send_player(placer:get_player_name(), sunos.S("Nenhuma vila por perto"))
+			return minetest.chat_send_player(placer:get_player_name(), S("Nenhuma vila por perto"))
 		end
 		
 		-- Pegar dados da vila encontrada
 		local meta_fund_prox = minetest.get_meta(pos_fund_prox)
 		local vila = meta_fund_prox:get_string("vila")
 		
-		if vila == "" or not vila then return minetest.chat_send_player(placer:get_player_name(), sunos.S("Vila abandonada")) end
+		if vila == "" or not vila then return minetest.chat_send_player(placer:get_player_name(), S("Vila abandonada")) end
 		
 		-- Verificar se a vila está abandonada
 		if not sunos.bd:pegar("vila_"..vila, "estruturas") then
-			return minetest.chat_send_player(placer:get_player_name(), sunos.S("Vila abandonada"))
+			return minetest.chat_send_player(placer:get_player_name(), S("Vila abandonada"))
 		end
 		
 		-- Verificar se a vila pode criar uma nova casa comunal
@@ -323,12 +326,12 @@ minetest.register_node("sunos:fundamento_comunal", {
 		
 		-- Verificar se ainda existe um banco de dados da vila
 		if sunos.bd:verif("vila_"..vila, "numero") == false then
-			return minetest.chat_send_player(placer:get_player_name(), sunos.S("Vila abandonada"))
+			return minetest.chat_send_player(placer:get_player_name(), S("Vila abandonada"))
 		end
 		
 		-- Verificar se ja existe uma casa comunal
 		if sunos.bd:verif("vila_"..vila, "comunal") == true then
-			return minetest.chat_send_player(placer:get_player_name(), sunos.S("Ja existe uma Casa Comunal nessa vila"))
+			return minetest.chat_send_player(placer:get_player_name(), S("Ja existe uma Casa Comunal nessa vila"))
 		end
 		
 		sunos.criar_caixa_de_area(pointed_thing.under, 6+2)
@@ -337,7 +340,7 @@ minetest.register_node("sunos:fundamento_comunal", {
 		if r == true then
 			
 			-- Retorna mensagem de montagem concluida
-			minetest.chat_send_player(placer:get_player_name(), sunos.S("Casa Comunal construida"))
+			minetest.chat_send_player(placer:get_player_name(), S("Casa Comunal construida"))
 			itemstack:take_item()
 			return itemstack
 			

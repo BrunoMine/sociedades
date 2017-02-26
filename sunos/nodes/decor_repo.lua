@@ -9,9 +9,12 @@
 	Intes de decoração para serem repostos
   ]]
 
+-- Tradução de strings
+local S = sunos.S
+
 -- Bancada comum (normalmente convertido para bancada normal)
 minetest.register_node("sunos:bancada_repo", {
-	description = "bancada (reposicao de gerador)",
+	description = S("Bancada").." ("..S("demarcador")..")",
 	tiles = {"sunos_repo_bancada_cima.png", "sunos_repo_liso.png", "sunos_repo_bancada_lado.png^[transformFX",
 		"sunos_repo_bancada_lado.png", "sunos_repo_liso.png", "sunos_repo_bancada_frente.png"},
 	paramtype2 = "facedir",
@@ -23,7 +26,7 @@ minetest.register_node("sunos:bancada_repo", {
 
 -- SobreBancada comum (item com aspecto parecido com o bau)
 minetest.register_node("sunos:sobrebancada_repo", {
-	description = "bloco para ficar em cima de bancada (reposicao de gerador)",
+	description = S("Sobrebancada").." ("..S("demarcador")..")",
 	tiles = {"sunos_repo_bancada_cima.png", "sunos_repo_liso.png", "sunos_repo_bancada_lado.png^[transformFX",
 		"sunos_repo_bancada_lado.png", "sunos_repo_liso.png", "sunos_repo_bancada_frente.png"},
 	paramtype2 = "facedir",
@@ -44,7 +47,7 @@ minetest.register_node("sunos:sobrebancada_repo", {
 
 -- Decoração simples (tipo vaso, totem e etc)
 minetest.register_node("sunos:simples_repo", {
-	description = "Decoracao simples (tipo vaso, totem e etc)",
+	description = S("Decorativo").." ("..S("demarcador")..")",
 	drawtype = "plantlike",
 	tiles = {"sunos_repo_simples.png"},
 	inventory_image = "sunos_repo_simples.png",

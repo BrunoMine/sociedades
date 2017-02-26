@@ -9,6 +9,9 @@
 	NPC das casas
   ]]
 
+-- Tradução de strings
+local S = sunos.S
+
 -- Envia uma formspec simples de aviso
 local avisar = function(player, texto)
 	if not player then
@@ -23,7 +26,7 @@ local avisar = function(player, texto)
 	minetest.show_formspec(player:get_player_name(), "sunos:npc", "size[12,1]"
 		..default.gui_bg
 		..default.gui_bg_img
-		.."label[0.5,0;"..sunos.S("Aviso").." \n"..texto.."]")
+		.."label[0.5,0;"..S("Aviso").." \n"..texto.."]")
 	return true
 end
 

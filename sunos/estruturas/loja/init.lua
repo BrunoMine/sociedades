@@ -9,6 +9,8 @@
 	Loja dos sunos
   ]]
 
+-- Tradução de strings
+local S = sunos.S
 
 -- Caminho do diretório do mod
 local modpath = minetest.get_modpath("sunos")
@@ -62,12 +64,12 @@ local set_bau = function(pos, vila, dist)
 	-- Salva dados da estrutura no bau dela
 	for _,pos_bau in ipairs(baus) do
 		local meta = minetest.get_meta(pos_bau)
-		meta:set_string("infotext", sunos.S("Bau de Venda dos Sunos"))
+		meta:set_string("infotext", S("Bau de Venda dos Sunos"))
 		meta:set_string("formspec", "size[9,9]"
 			..default.gui_bg_img
 			.."image[0,0;3,3;sunos.png]"
-			.."label[3,0;"..sunos.S("Bau de Venda dos Sunos").."]"
-			.."label[3,1;"..sunos.S("Troque alguns itens aqui").."]"
+			.."label[3,0;"..S("Bau de Venda dos Sunos").."]"
+			.."label[3,1;"..S("Troque alguns itens aqui").."]"
 			.."image[7.5,-0.2;2,2;default_apple.png]"
 			.."image[6.6,0;2,2;default_apple.png]"
 			.."image[6.6,1;2,2;default_apple.png]"
@@ -117,7 +119,7 @@ sunos.estruturas.loja.construir = function(pos, dist, vila, verif_area)
 		-- Verificar Vila e pegar dados (buscando por um fundamento proximo)
 		local pos_fund_prox = minetest.find_node_near(pos, 25, {"sunos:fundamento"})
 		if pos_fund_prox == nil then 
-			return sunos.S("Nenhuma vila por perto")
+			return S("Nenhuma vila por perto")
 		end
 	
 		-- Pegar dados da vila encontrada
@@ -130,7 +132,7 @@ sunos.estruturas.loja.construir = function(pos, dist, vila, verif_area)
 	
 		-- Verificar se ainda existe um banco de dados da vila
 		if sunos.bd:verif("vila_"..vila, "numero") == false then
-			return sunos.S("Vila abandonada")
+			return S("Vila abandonada")
 		end
 		
 		-- Verifica status do terreno
@@ -138,15 +140,15 @@ sunos.estruturas.loja.construir = function(pos, dist, vila, verif_area)
 		
 		-- Problema: em cima da faixa de solo existem obstrucoes (nao esta limpo e plano)
 		if st == 1 then
-			return sunos.S("O local precisa estar limpo e plano em uma area de @1x@1 blocos da largura", (largura+2))
+			return S("O local precisa estar limpo e plano em uma area de @1x@1 blocos da largura", (largura+2))
 		
 		-- Problema: faixa de solo (superficial) falta blocos de terra
 		elseif st == 2 then
-			return sunos.S("O solo precisa estar plano e gramado em uma area de @1x@1 blocos da largura", (largura+2))
+			return S("O solo precisa estar plano e gramado em uma area de @1x@1 blocos da largura", (largura+2))
 		
 		-- Problema: faixa de subsolo (considerando 2 faixas) falta blocos de terra
 		elseif st == 3 then
-			return sunos.S("O subsolo precisa estar preenchido (ao menos 2 blocos de profundidade) em uma area de @1x@1 blocos da largura", (largura+2))
+			return S("O subsolo precisa estar preenchido (ao menos 2 blocos de profundidade) em uma area de @1x@1 blocos da largura", (largura+2))
 		end
 	end
 	
@@ -229,7 +231,7 @@ end
 
 -- Fundamento de loja
 minetest.register_node("sunos:fundamento_loja", {
-	description = sunos.S("Fundamento de Loja dos Sunos"),
+	description = S("Fundamento de Loja dos Sunos"),
 	tiles = {"default_tree_top.png^sunos_fundamento.png", "default_tree_top.png", "default_tree.png"},
 	inventory_image = "sunos_inv_fundamento.png^sunos_inv_fundamento_loja.png",
 	wield_image = "sunos_inv_fundamento.png^sunos_inv_fundamento_loja.png",
@@ -248,7 +250,7 @@ minetest.register_node("sunos:fundamento_loja", {
 		if r == true then
 			
 			-- Retorna mensagem de montagem concluida
-			minetest.chat_send_player(placer:get_player_name(), sunos.S("Loja construida"))
+			minetest.chat_send_player(placer:get_player_name(), S("Loja construida"))
 			itemstack:take_item()
 			return itemstack
 			

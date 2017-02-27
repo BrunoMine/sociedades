@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-02-26 12:33-0300\n"
-"PO-Revision-Date: 2017-02-26 12:30-0300\n"
+"PO-Revision-Date: 2017-02-27 12:04-0300\n"
 "Last-Translator: Bruno <borgesdossantosbruno@gmail.com>\n"
 "Language-Team: English\n"
 "Language: en\n"
@@ -20,7 +20,7 @@ msgstr ""
 
 #: craftitens.lua
 msgid "Kit Reparador de estrutura dos Sunos"
-msgstr "Sunos Structural Repair Kit"
+msgstr "Sune Structural Repair Kit"
 
 #: editor_schems.lua
 msgid "Editor de Estruturas Esquematicas (Schems)"
@@ -95,15 +95,15 @@ msgstr "New structure saved."
 
 #: editor_schems.lua
 msgid "Editor de estruturas dos Sunos"
-msgstr "Editor of Sunos Structures"
+msgstr "Editor of Sunes Structures"
 
 #: inimigos.lua
 msgid "Acabaste de se tornar inimigo de uma vila dos Sunos"
-msgstr "You have just become an enemy of a Sunos village."
+msgstr "You have just become an enemy of a sunean village."
 
 #: nodes/bancada.lua
 msgid "Bancada dos Sunos"
-msgstr "Sunos Bench"
+msgstr "Sunian Bench"
 
 #: nodes/bancada.lua nodes/bancada_de_trabalho.lua
 msgid "Sem Drop"
@@ -111,7 +111,7 @@ msgstr "No Drop"
 
 #: nodes/bancada_de_trabalho.lua
 msgid "Bancada de Trabalho dos Sunos"
-msgstr "Sunos Workbench"
+msgstr "Sunian Workbench"
 
 #: nodes/bancada_de_trabalho.lua
 msgid "Craftador"
@@ -135,7 +135,7 @@ msgstr "Decoration"
 
 #: nodes/fundamento.lua
 msgid "Fundamento dos Sunos"
-msgstr "Structural Basis of Sunos"
+msgstr "Structural Basis of Sunes"
 
 #: nodes/rua.lua
 msgid "Rua Calcetada"
@@ -143,7 +143,7 @@ msgstr "Cobble street"
 
 #: estruturas/casa/bau.lua estruturas/casa/init.lua
 msgid "Bau da Casa dos Sunos"
-msgstr "Chest of Sunos House"
+msgstr "Chest of Sunian House"
 
 #: estruturas/casa/init.lua estruturas/comunal/init.lua
 #: estruturas/decor/init.lua estruturas/loja/init.lua
@@ -211,7 +211,7 @@ msgstr "Place in a suitable place for it to be built"
 
 #: estruturas/casa/nodes.lua
 msgid "Fundamento Suno de Casa Pequena"
-msgstr "Structural Basis of Sunos Small House"
+msgstr "Structural Basis of Sunian Small House"
 
 #: estruturas/casa/nodes.lua
 msgid "Casa construida"
@@ -219,15 +219,15 @@ msgstr "House built"
 
 #: estruturas/casa/nodes.lua
 msgid "Fundamento Suno de Casa Mediana"
-msgstr "Structural Basis of Sunos Median House"
+msgstr "Structural Basis of Sunian Median House"
 
 #: estruturas/casa/nodes.lua
 msgid "Fundamento Suno de Casa Grande"
-msgstr "Structural Basis of Sunos Big House"
+msgstr "Structural Basis of Sunian Big House"
 
 #: estruturas/comunal/bau.lua estruturas/comunal/init.lua
 msgid "Bau da Casa Comunal dos Sunos"
-msgstr "Chest of Sunos Communal House"
+msgstr "Chest of Sunian Communal House"
 
 #: estruturas/comunal/diretrizes.lua
 msgid "Casa Pequena"
@@ -275,7 +275,7 @@ msgstr "Restored Communal House."
 
 #: estruturas/comunal/init.lua
 msgid "Fundamento de Casa Comunal dos Sunos"
-msgstr "Structural Basis of Sunos Communal House"
+msgstr "Structural Basis of Sunian Communal House"
 
 #: estruturas/comunal/init.lua
 msgid "Ja existe uma Casa Comunal nessa vila"
@@ -331,7 +331,7 @@ msgstr "You received a @1"
 
 #: estruturas/loja/bau.lua estruturas/loja/init.lua
 msgid "Bau de Venda dos Sunos"
-msgstr "Sunos Trader"
+msgstr "Sunian Trader"
 
 #: estruturas/loja/bau.lua
 msgid "Precisa do item para trocar"
@@ -347,7 +347,7 @@ msgstr "Exchange some items here"
 
 #: estruturas/loja/init.lua
 msgid "Fundamento de Loja dos Sunos"
-msgstr "Structural Basis of Sunos Small Trade Fair"
+msgstr "Structural Basis of Sunian Small Trade Fair"
 
 #: estruturas/loja/init.lua
 msgid "Loja construida"

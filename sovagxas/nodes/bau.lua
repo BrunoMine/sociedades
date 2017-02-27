@@ -9,6 +9,8 @@
 	Bau
   ]]
 
+-- Tradução de strings
+local S = sovagxas.S
 
 -- sorteia 4 itens em uma tabela ordenada
 local amplitude_de_valores = 0
@@ -52,7 +54,7 @@ end
 
 -- Bau dos Sovagxas
 minetest.register_node("sovagxas:bau", {
-	description = "Bau dos Sovagxas",
+	description = S("Bau Sovagxa"),
 	tiles = {
 		"default_chest_top.png^sovagxas_bau_cima.png", 
 		"default_chest_top.png^sovagxas_bau_cima.png", 
@@ -71,12 +73,12 @@ minetest.register_node("sovagxas:bau", {
 		meta:set_string("itens", minetest.serialize(sortear_bau()))
 		meta:set_string("data", os.date("%Y %m %d %H"))
 		meta:set_string("arvore", minetest.serialize(pos))
-		meta:set_string("infotext", "Bau dos Sovagxas")
+		meta:set_string("infotext", S("Bau Sovagxa"))
 		local formspec = "size[8,8.5]".. 
 				default.gui_bg..
 				default.gui_bg_img..
 				default.gui_slots..
-				"label[0,0;Bau dos sovaxgas]"..
+				"label[0,0;"..S("Bau Sovagxa").."]"..
 				"list[current_player;main;0,4.25;8,1;]"..
 				"list[current_player;main;0,5.5;8,3;8]"..
 				default.get_hotbar_bg(0,4.25)
@@ -105,28 +107,28 @@ minetest.register_node("sovagxas:bau", {
 				player_inv:add_item("main", itens[1][1].." "..itens[1][2])
 				itens[1] = false
 			else
-				minetest.chat_send_player(sender:get_player_name(), "Inventario lotado. Esvazie um pouco.")
+				minetest.chat_send_player(sender:get_player_name(), S("Inventario lotado. Esvazie um pouco."))
 			end
 		elseif fields.item2 and itens[2] ~= false then
 			if player_inv:room_for_item("main", itens[2][1].." "..itens[2][2]) then
 				player_inv:add_item("main", itens[2][1].." "..itens[2][2])
 				itens[2] = false
 			else
-				minetest.chat_send_player(sender:get_player_name(), "Inventario lotado. Esvazie um pouco.")
+				minetest.chat_send_player(sender:get_player_name(), S("Inventario lotado. Esvazie um pouco."))
 			end
 		elseif fields.item3 and itens[3] ~= false  then
 			if player_inv:room_for_item("main", itens[3][1].." "..itens[3][2]) then
 				player_inv:add_item("main", itens[3][1].." "..itens[3][2])
 				itens[3] = false
 			else
-				minetest.chat_send_player(sender:get_player_name(), "Inventario lotado. Esvazie um pouco.")
+				minetest.chat_send_player(sender:get_player_name(), S("Inventario lotado. Esvazie um pouco."))
 			end
 		elseif fields.item4 and itens[4] ~= false then
 			if player_inv:room_for_item("main", itens[4][1].." "..itens[4][2]) then
 				player_inv:add_item("main", itens[4][1].." "..itens[4][2])
 				itens[4] = false
 			else
-				minetest.chat_send_player(sender:get_player_name(), "Inventario lotado. Esvazie um pouco.")
+				minetest.chat_send_player(sender:get_player_name(), S("Inventario lotado. Esvazie um pouco."))
 			end
 		end
 		meta:set_string("itens", minetest.serialize(itens))
@@ -135,7 +137,7 @@ minetest.register_node("sovagxas:bau", {
 				default.gui_bg..
 				default.gui_bg_img..
 				default.gui_slots..
-				"label[0,0;Bau dos sovaxgas]"..
+				"label[0,0;"..S("Bau Sovagxa").."]"..
 				"list[current_player;main;0,4.25;8,1;]"..
 				"list[current_player;main;0,5.5;8,3;8]"..
 				default.get_hotbar_bg(0,4.25)
@@ -153,7 +155,7 @@ minetest.register_node("sovagxas:bau", {
 			formspec = formspec.."item_image_button[6,1;2,2;"..itens[4][1]..";item4;"..itens[4][2].."]"
 		end
 		if itens[1] == false and itens[2] == false and itens[3] == false and itens[4] == false then 
-			formspec = formspec.."label[1.5,1.5;Bau vazio no momento espere ate \nque um sovagxa coloque algo aqui]"
+			formspec = formspec.."label[1.5,1.5;"..S("Bau vazio no momento. Aguarde ate \nque um sovagxa coloque algo aqui").."]"
 		end
 		meta:set_string("formspec", formspec)
 	end,
@@ -161,6 +163,7 @@ minetest.register_node("sovagxas:bau", {
 
 -- atualizar baus periodicamente
 minetest.register_abm({
+	label = "Atualizar itens",
 	nodenames = {"sovagxas:bau"},
 	interval = 600,
 	chance = 1,

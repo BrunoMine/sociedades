@@ -9,11 +9,12 @@
 	Totem
   ]]
 
-
+-- Tradução de strings
+local S = sovagxas.S
 
 -- Totem Sovagxa
 minetest.register_node("sovagxas:totem", {
-	description = "Totem Sovagxa",
+	description = S("Totem Sovagxa"),
 	tiles = {
 		"default_jungletree_top.png", 
 		"default_jungletree_top.png", 
@@ -28,7 +29,7 @@ minetest.register_node("sovagxas:totem", {
 	sounds = default.node_sound_wood_defaults(),
 	on_construct = function(pos)
 		local meta = minetest.get_meta(pos)
-		meta:set_string("infotext", "Totem Sovagxas")
+		meta:set_string("infotext", S("Totem Sovagxa"))
 	end,
 	on_place = minetest.rotate_node
 })
@@ -40,7 +41,7 @@ do
 		def[n] = d
 	end
 	-- Altera alguns paremetros
-	def.description = def.description .. " (Sem Drop)"
+	def.description = def.description .. " ("..S("Sem Drop")..")"
 	def.drop = ""
 	-- Registra o novo node
 	minetest.register_node("sovagxas:totem_nodrop", def)

@@ -26,6 +26,7 @@ local modpath = minetest.get_modpath("sovagxas")
 -- Carregar scripts
 notificar("Carregando...")
 dofile(modpath.."/diretrizes.lua")
+dofile(modpath.."/tradutor.lua")
 dofile(modpath.."/nodes/totem.lua")
 dofile(modpath.."/nodes/bancada.lua")
 dofile(modpath.."/nodes/bau.lua")

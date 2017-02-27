@@ -9,6 +9,9 @@
 	Bancada
   ]]
 
+-- Tradução de strings
+local S = sovagxas.S
+
 -- Bancada de Trabalho Selvagem
 default.crafttable_formspec = -- Inventario da Bancada de Trabalho
 	"size[8,9]"..
@@ -24,7 +27,7 @@ default.crafttable_formspec = -- Inventario da Bancada de Trabalho
 	default.get_hotbar_bg(0,4.25)
 	
 minetest.register_node("sovagxas:bancada", { -- Bancada de Trabalho Sovagxa
-	description = "Bancada de Trabalho Sovagxa",
+	description = S("Bancada de Trabalho Sovagxa"),
 	tiles = {"default_junglewood.png"},
 	paramtype2 = "facedir",
 	paramtype = "light",
@@ -70,7 +73,7 @@ do
 		def[n] = d
 	end
 	-- Altera alguns paremetros
-	def.description = def.description .. " (Sem Drop)"
+	def.description = def.description .. " ("..S("Sem Drop")..")"
 	def.drop = ""
 	-- Registra o novo node
 	minetest.register_node("sovagxas:bancada_nodrop", def)

@@ -135,6 +135,13 @@ sunos.estruturas.casa.construir = function(pos, dist, vila, verif_area, itens_re
 		sunos.decor_repo(pos, dist, sunos.estruturas.casa.gerar_itens_repo[tostring(dist)]())
 	end
 	
+	-- Ajustar fornos
+	sunos.ajustar_fornos(pos, dist)
+	
+	-- Ajustar estantes
+	sunos.ajustar_estantes_livro(pos, dist, sunos.estruturas.casa.var.estante_livros) -- livros
+	sunos.ajustar_estantes_frasco(pos, dist, sunos.estruturas.casa.var.estante_frascos) -- frascos
+	
 	-- Numero da estrutura da nova casa
 	local n_estrutura = sunos.nova_estrutura(vila) -- Numero da nova estrutura
 	
@@ -258,7 +265,10 @@ minetest.register_abm({
 		-- Criar estrutura
 		minetest.place_schematic({x=pos.x-dist, y=pos.y, z=pos.z-dist}, caminho_arquivo, rotat, nil, true)
 		
+		-- Troca os itens de reposição
 		sunos.decor_repo(pos, dist, sunos.estruturas.casa.gerar_itens_repo[tostring(dist)]())
+		
+		-- Estantes e fornos se mantem altomaticamente por sobreposição
 		
 		minetest.set_node(pos, {name="sunos:fundamento"})
 		minetest.get_meta(pos):from_table(table) -- recoloca metadados no novo fumdamento

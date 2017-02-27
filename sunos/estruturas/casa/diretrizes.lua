@@ -65,4 +65,13 @@ sunos.estruturas.casa.var.tb_pop_casa = {
 	["11"] =		6,
 }
 
+-- Itens que aparecem nas estantes de livros
+sunos.estruturas.casa.var.estante_livros = {
+	"default:book",
+}
 
+
+-- Itens que aparecem nas estantes de frascos
+sunos.estruturas.casa.var.estante_frascos = {
+	"vessels:glass_bottle"
+}

@@ -48,8 +48,32 @@ NPCs
 	}
 
 
-Registros
----------
+Tabelas Globais
+-----------------
+Alguns aspectos do mod podem ser dinamicamente alterados sem que haja a necessidade de alteração no código desse mod.
+Para isso basta que mods terceiros modifiquem as tabelas globais que estão aqui mostradas.
+
+* `sunos.estruturas.casa.var.estante_livros`
+	* itens que aparecem aleatóriamente nas estantes de livros das casas
+	* tabela ordenada com itemstacks no formato tabela ou string
+	* podem ser modificadas a qualquer momento
+	* não repete itens na mesma estante
+
+* `sunos.estruturas.casa.var.estante_frascos`
+	* itens que aparecem aleatóriamente nas estantes de frascos das casas
+	* tabela ordenada com itemstacks no formato tabela ou string 
+	* podem ser modificadas a qualquer momento
+	* não repete itens na mesma estante
+	
+### Exemplo
+`
+table.insert(sunos.estruturas.casa.var.estante_livros, {name="monname:book", count=5, wear=0, metadata=""})
+table.insert(sunos.estruturas.casa.var.estante_frascos, "vessels:glass_bottle")
+`
+
+
+Registros Reservados
+--------------------
 Essa seção busca informar alguns dados de registro que não devem ser mexidos em códigos contribuidos
 
 ### Metadados do node de fundamento

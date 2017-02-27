@@ -1,5 +1,5 @@
-Sovagxas 1.0
-============
+Sovagxas v1.0
+=============
 
 Esse mod adiciona os Sovagxas ao jogo que aparecem aleatoriamente em selvas pelo mapa.
 Os sovagxas (do esperanto, "selvagens") são pessoas simplistas que adoram viver em 

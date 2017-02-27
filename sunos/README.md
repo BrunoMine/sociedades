@@ -1,5 +1,5 @@
-Sunos
-===============
+Sunos v1.4
+==========
 
 Esse mod adiciona os povos sunos ao jogo que aparecem aleatoriamente pelo mapa.
 Os sunos (do esperanto, "sol") são povoados humildes que vivem 

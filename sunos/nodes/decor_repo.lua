@@ -51,7 +51,7 @@ minetest.register_node("sunos:simples_repo", {
 	drawtype = "plantlike",
 	tiles = {"sunos_repo_simples.png"},
 	inventory_image = "sunos_repo_simples.png",
-	wield_image = "sunos_repo.png",
+	wield_image = "sunos_repo_simples.png",
 	paramtype = "light",
 	is_ground_content = false,
 	walkable = false,

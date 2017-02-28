@@ -13,3 +13,4 @@ xpanes
 stairs
 doors
 farming
+sunos_compost

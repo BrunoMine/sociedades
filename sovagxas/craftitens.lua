@@ -20,7 +20,7 @@ minetest.register_craftitem("sovagxas:muda_sovagxas", {
 	on_place = function(itemstack, placer, pointed_thing)
 		
 		-- Verifica se tem privilegios
-		if minetest.check_player_privs(name, {server=true}) ~= true then
+		if minetest.check_player_privs(placer:get_player_name(), {server=true}) ~= true then
 			return
 		end
 		

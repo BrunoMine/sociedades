@@ -99,6 +99,7 @@ dofile(modpath.."/nodes/fundamento.lua")
 dofile(modpath.."/nodes/decor_repo.lua")
 dofile(modpath.."/nodes/bancada.lua")
 dofile(modpath.."/nodes/bancada_de_trabalho.lua")
+dofile(modpath.."/nodes/compost.lua")
 -- Outros Recursos
 dofile(modpath.."/craftitens.lua")
 dofile(modpath.."/comandos.lua")

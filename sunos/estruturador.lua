@@ -40,7 +40,7 @@ sunos.montar_estrutura = function(cpos, dist, tipo, rotat)
 	local caminho_arquivo = modpath.."/schems/"..tipo.."/"..schem
 	
 	-- Criar estrutura
-	minetest.place_schematic(pos, caminho_arquivo, rotat, nil, true)
+	minetest.place_schematic(pos, caminho_arquivo, rotat, sunos.var.nodes_trocados, true)
 	
 	return true, schem
 end

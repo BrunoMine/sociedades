@@ -1,5 +1,11 @@
 API do Mod Sunos v1.4
 
+Variaveis Auxiliares
+--------------------
+Essas variaveis ficam armazenadas na tabela global `sunos.var` e podem ser encontradas no arquivo `diretrizes.lua`.
+Não é recomendado modificar essas variaveis manualmente para que seja mantida a reprodução integral do repositório oficial.
+
+
 Estruturas
 ----------
 Devem ser criadas dentro da tabela `sunos.estruturas`. Alguns valores dentro 
@@ -91,3 +97,22 @@ Metadados do fundamento de uma estrutura (todos são armazenados no formato de s
 * `mynode` : Nome do node onde o npc spawnou
 
 
+
+Métodos Auxiliares
+------------------
+
+* `minetest.get_node_light(pos, timeofday)`
+    * Gets the light value at the given position. Note that the light value
+      "inside" the node at the given position is returned, so you usually want
+      to get the light value of a neighbor.
+    * `pos`: The position where to measure the light.
+    * `timeofday`: `nil` for current time, `0` for night, `0.5` for day
+    * Returns a number between `0` and `15` or `nil`
+    
+* `sunos.montar_estrutura(pos, dist, tipo, rotat)`
+	* Monta uma estrutura aleatoria de um `tipo` definido dentre as estruturas salvas no formato esquemático
+	* `pos` é a coordenada do centro do chão da estrutura
+	* `dist` é a distancia do centro até a borda
+	* `rotat` é a rotação opcional da estrutura ("0", "90", "180" ou "270")
+	* Retorna um valor booleano `true` e `arquivo esquemático` se ocorrer corretamente 
+	* Ocorre uma troca de itens durante a montagem da estrutura conforme definido em `sunos.var.nodes_trocados`

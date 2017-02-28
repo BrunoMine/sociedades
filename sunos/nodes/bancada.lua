@@ -52,6 +52,7 @@ do
 	end
 	-- Altera alguns paremetros
 	def.description = def.description .. " ("..S("Sem Drop")..")"
+	def.groups.not_in_creative_inventory = 1
 	def.drop = ""
 	-- Registra o novo node
 	minetest.register_node("sunos:bancada_nodrop", def)

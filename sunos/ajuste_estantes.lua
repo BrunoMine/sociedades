@@ -47,7 +47,7 @@ sunos.ajustar_estantes_livro = function(pos, dist, random_tb)
 	local estantes_livro = minetest.find_nodes_in_area(
 		{x=pos.x-dist, y=pos.y, z=pos.z-dist}, 
 		{x=pos.x+dist, y=pos.y+14, z=pos.z+dist}, 
-		{"default:bookshelf"}
+		{"default:bookshelf", "sunos:default_bookshelf_nodrop"}
 	)
 	
 	-- Ajusta cada estante
@@ -71,7 +71,7 @@ sunos.ajustar_estantes_frasco = function(pos, dist, random_tb)
 	local estantes_frasco = minetest.find_nodes_in_area(
 		{x=pos.x-dist, y=pos.y, z=pos.z-dist}, 
 		{x=pos.x+dist, y=pos.y+14, z=pos.z+dist}, 
-		{"vessels:shelf"}
+		{"vessels:shelf", "sunos:vessels_shelf_nodrop"}
 	)
 	
 	-- Ajusta cada estante

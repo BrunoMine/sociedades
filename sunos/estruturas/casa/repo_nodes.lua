@@ -34,6 +34,7 @@ sunos.estruturas.casa.gerar_itens_repo["3"] = function()
 		bancadas = {
 			{"sunos:bau_casa", 1},
 			{"sunos:bancada_de_trabalho_nodrop", 1, true},
+			{"sunos:wood_barrel_nodrop", 1, true},
 		},
 		simples = {
 			{decor_simples[math.random(1, table.maxn(decor_simples))], math.random(1, 2)},
@@ -47,6 +48,7 @@ sunos.estruturas.casa.gerar_itens_repo["4"] = function()
 		bancadas = {
 			{"sunos:bau_casa", 1},
 			{"sunos:bancada_de_trabalho_nodrop", 1, true},
+			{"sunos:wood_barrel_nodrop", 2, true},
 		},
 		simples = {
 			{decor_simples[math.random(1, table.maxn(decor_simples))], math.random(1, 2)},

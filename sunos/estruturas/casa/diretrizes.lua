@@ -34,6 +34,7 @@ sunos.estruturas.casa.var.nodes_estruturais = {
 	"default:bookshelf",
 	"sunos:bancada_nodrop",
 	"sunos:bancada_de_trabalho_nodrop",
+	"sunos:wood_barrel_nodrop",
 	-- Vidro
 	"xpanes:pane",
 	"xpanes:pane_flat",

@@ -92,6 +92,7 @@ dofile(modpath.."/editor_schems.lua")
 dofile(modpath.."/caixa_de_area.lua")
 dofile(modpath.."/ajuste_fornos.lua")
 dofile(modpath.."/ajuste_estantes.lua")
+dofile(modpath.."/rua_manip.lua")
 -- Nodes
 dofile(modpath.."/nodes/rua.lua")
 dofile(modpath.."/nodes/fundamento.lua")

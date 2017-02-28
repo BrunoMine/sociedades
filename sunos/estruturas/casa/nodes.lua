@@ -33,6 +33,9 @@ minetest.register_node("sunos:fundamento_casa_pequena", {
 		local r = sunos.estruturas.casa.construir(pointed_thing.under, 2, nil, true, sunos.estruturas.casa.gerar_itens_repo["2"]())
 		if r == true then
 			
+			-- Coloca rua em torno
+			sunos.colocar_rua(pointed_thing.under, 2)
+			
 			-- Retorna mensagem de montagem concluida
 			minetest.chat_send_player(placer:get_player_name(), S("Casa construida"))
 			itemstack:take_item()
@@ -65,6 +68,9 @@ minetest.register_node("sunos:fundamento_casa_mediana", {
 		
 		local r = sunos.estruturas.casa.construir(pointed_thing.under, 3, nil, true, sunos.estruturas.casa.gerar_itens_repo["3"]())
 		if r == true then
+			
+			-- Coloca rua em torno
+			sunos.colocar_rua(pointed_thing.under, 3)
 			
 			-- Retorna mensagem de montagem concluida
 			minetest.chat_send_player(placer:get_player_name(), S("Casa construida"))
@@ -100,6 +106,9 @@ minetest.register_node("sunos:fundamento_casa_grande", {
 		
 		local r = sunos.estruturas.casa.construir(pointed_thing.under, 4, nil, true, sunos.estruturas.casa.gerar_itens_repo["4"]())
 		if r == true then
+			
+			-- Coloca rua em torno
+			sunos.colocar_rua(pointed_thing.under, 4)
 			
 			-- Retorna mensagem de montagem concluida
 			minetest.chat_send_player(placer:get_player_name(), S("Casa construida"))

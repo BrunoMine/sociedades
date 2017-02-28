@@ -249,6 +249,9 @@ minetest.register_node("sunos:fundamento_loja", {
 		local r = sunos.estruturas.loja.construir(pointed_thing.under, 3)
 		if r == true then
 			
+			-- Coloca rua em torno
+			sunos.colocar_rua(pointed_thing.under, 2)
+			
 			-- Retorna mensagem de montagem concluida
 			minetest.chat_send_player(placer:get_player_name(), S("Loja construida"))
 			itemstack:take_item()

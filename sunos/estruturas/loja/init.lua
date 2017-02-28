@@ -246,7 +246,7 @@ minetest.register_node("sunos:fundamento_loja", {
 		
 		sunos.criar_caixa_de_area(pointed_thing.under, 3+1)
 		
-		local r = sunos.estruturas.loja.construir(pointed_thing.under, 3)
+		local r = sunos.estruturas.loja.construir(pointed_thing.under, 3, nil, true)
 		if r == true then
 			
 			-- Coloca rua em torno

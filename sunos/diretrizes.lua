@@ -46,4 +46,5 @@ sunos.var.nodes_trocados = {
 	["vessels:shelf"] = "sunos:vessels_shelf_nodrop",
 	["sunos:bancada"] = "sunos:bancada_nodrop",
 	["sunos:bancada_de_trabalho"] = "sunos:bancada_de_trabalho_nodrop",
+	["sunos:carpete_palha"] = "sunos:carpete_palha_nodrop",
 }

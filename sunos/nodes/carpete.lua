@@ -56,3 +56,5 @@ do
 	-- Registra o novo node
 	minetest.register_node("sunos:carpete_palha_nodrop", def)
 end
+
+

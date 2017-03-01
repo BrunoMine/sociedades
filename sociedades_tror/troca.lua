@@ -129,7 +129,7 @@ tror.trocar_plus = function(player, item_rem, item_add)
 			inv:add_item("main", item)
 		else
 			dropou = true
-			minetest.env:add_item({x = pos.x + math.random() * 2 - 1, y = pos.y, z = pos.z + math.random() * 2 - 1}, item)
+			minetest.env:add_item({x = pos.x + math.random() * 2 - 1, y = pos.y+1, z = pos.z + math.random() * 2 - 1}, item)
 		end
 	end
 	

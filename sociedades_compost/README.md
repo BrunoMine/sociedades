@@ -37,6 +37,12 @@ If there is nothing in the bin, it looks empty when viewed from top (node
 "compost:wood_barrel_empty"). If there's anything in it (inputs or soil), it
 looks full of dirt (node "compost:wood_barrel").
 
+Internationalization
+--------------------
+The mod is compatible with intllib. Currently available translations:
+* Romanian
+* Russian
+
 License
 -------
 see LICENSE.txt

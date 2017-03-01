@@ -13,4 +13,4 @@ xpanes
 stairs
 doors
 farming
-sunos_compost
+sociedades_compost

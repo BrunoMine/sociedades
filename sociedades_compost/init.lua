@@ -9,8 +9,23 @@
 -- Checks if the original mod is active
 if minetest.get_modpath("compost") then return end
 
+
 minetest.log('action', 'MOD: Compost loading...')
 compost_version = '0.0.1'
+
+local i18n --internationalization
+	if minetest.get_modpath("intllib") then
+minetest.log('action', 'intllib loaded')
+		i18n = intllib.Getter()
+	else
+		i18n = function(s,a,...)
+		a={a,...}
+		local v = s:gsub("@(%d+)", function(n)
+			return a[tonumber(n)]
+			end)
+		return v
+	end
+end
 
 compost = {}
 compost.compostable_groups = {'flora', 'leaves', 'flower'}
@@ -111,12 +126,12 @@ local function update_timer(pos)
 	if not timer:is_started() and count >= 8 then
 		timer:start(30)
 		meta:set_int('progress', 0)
-		meta:set_string('infotext', 'progress: 0%')
+		meta:set_string('infotext', i18n('progress: @1%', '0'))
 		return
 	end
 	if timer:is_started() and count < 8 then
 		timer:stop()
-		meta:set_string('infotext', 'Empty composting bin.\nTo get compost, add some organic matter.')
+		meta:set_string('infotext', i18n('To start composting, place some organic matter inside.'))
 		meta:set_int('progress', 0)
 	end
 end
@@ -155,11 +170,11 @@ local function on_timer(pos)
 		meta:set_int('progress', progress)
 	end
 	if count_input(pos) >= 8 then
-		meta:set_string('infotext', 'progress: ' .. progress .. '%')
+		meta:set_string('infotext', i18n('progress: @1%', progress))
 		return true
 	else
 		timer:stop()
-		meta:set_string('infotext', 'Empty composting bin.\nTo get compost, add some organic matter.')
+		meta:set_string('infotext', i18n('To start composting, place some organic matter inside.'))
 		meta:set_int('progress', 0)
 		return false
 	end
@@ -170,7 +185,7 @@ local function on_construct(pos)
 	local inv = meta:get_inventory()
 	inv:set_size('src', 8)
 	inv:set_size('dst', 1)
-	meta:set_string('infotext','Empty composting bin.\nTo get compost, add some organic matter.')
+	meta:set_string('infotext', i18n('To start composting, place some organic matter inside.'))
 	meta:set_int('progress', 0)
 end
 
@@ -250,7 +265,7 @@ local function on_punch(pos, node, player, pointed_thing)
 end
 
 minetest.register_node(":compost:wood_barrel_empty", {
-	description = "Empty Compost Bin",
+	description = i18n('Empty Compost Bin'),
 	tiles = {
 		"default_wood.png",
 	},
@@ -283,7 +298,7 @@ minetest.register_node(":compost:wood_barrel_empty", {
 })
 
 minetest.register_node(":compost:wood_barrel", {
-	description = "Compost Bin",
+	description = i18n('Compost Bin'),
 	tiles = {
 		"default_wood.png^compost_compost.png",
 		"default_wood.png",

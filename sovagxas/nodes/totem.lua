@@ -40,8 +40,12 @@ do
 	for n,d in pairs(minetest.registered_nodes["sovagxas:totem"]) do
 		def[n] = d
 	end
+	-- Mantem a tabela groups separada
+	def.groups = minetest.deserialize(minetest.serialize(def.groups))
+	
 	-- Altera alguns paremetros
 	def.description = def.description .. " ("..S("Sem Drop")..")"
+	def.groups.not_in_creative_inventory = 1
 	def.drop = ""
 	-- Registra o novo node
 	minetest.register_node("sovagxas:totem_nodrop", def)

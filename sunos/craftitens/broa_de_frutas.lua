@@ -16,6 +16,22 @@ local S = sunos.S
 minetest.register_craftitem("sunos:broa_frutas", {
 	description = "Broa de Frutas dos Sunos",
 	inventory_image = "sunos_broa_frutas.png",
-	on_use = minetest.item_eat(7),
+	on_use = minetest.item_eat(tonumber(minetest.setting_get("sunos:broa_frutas:eat") or 7)),
 	groups = {flammable = 2},
+})
+
+-- Massa de Broa de Frutas dos Sunos
+minetest.register_craftitem("sunos:massa_broa_frutas", {
+	description = "Massa de Broa de Frutas dos Sunos",
+	inventory_image = "sunos_massa_broa_frutas.png",
+	on_use = minetest.item_eat(2),
+	groups = {flammable = 2},
+})
+
+-- Processo de assadura da broa
+minetest.register_craft({
+	type = "cooking",
+	cooktime = 15,
+	output = "sunos:broa_frutas",
+	recipe = "sunos:massa_broa_frutas"
 })

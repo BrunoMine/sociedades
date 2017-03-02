@@ -93,7 +93,7 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 
 		elseif fields.fazer_broa then
 			
-			tror.trocar_plus(player, {"default:apple 2", "farming:flour"}, {"sunos:broa_frutas"})
+			tror.trocar_plus(player, {"default:apple 2", "farming:flour"}, {"sunos:massa_broa_frutas"})
 
 		end
 	end

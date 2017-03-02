@@ -13,6 +13,8 @@ Essas configurações são colocadas em minetest.conf
 - `sunos_chance = 100` (em porcentagem, apenas numeros inteiros, padrão é 100)
 - `sunos_verif_fundamento = 10` (tempo em segundos para cada verificação de um fundamento ativo no mapa, padrão é 10)
 - `sunos_casa_comunal_decadencia = 300` (tempo em segundos que a casa comunal pode ficar em decadencia, padrão é 300)
+- `sunos:broa_frutas:eat = 7` (unidades de alimentação para cada Broa de Frutas consumida, padrão é 7)
+- `sunos:salada_frutas:eat = 5` (unidades de alimentação para cada Salada de Frutas consumida, padrão é 5)
 
 ## Licença
 Veja LICENSE.txt para informações detalhadas da licença LGPL 3.0

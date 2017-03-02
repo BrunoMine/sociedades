@@ -16,6 +16,6 @@ local S = sunos.S
 minetest.register_craftitem("sunos:salada_frutas", {
 	description = S("Salada de Frutas dos Sunos"),
 	inventory_image = "sunos_salada_frutas.png",
-	on_use = minetest.item_eat(5),
+	on_use = minetest.item_eat(tonumber(minetest.setting_get("sunos:salada_frutas:eat") or 5)),
 	groups = {flammable = 2},
 })

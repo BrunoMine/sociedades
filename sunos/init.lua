@@ -82,8 +82,11 @@ dofile(modpath.."/nodes/bau.lua")
 dofile(modpath.."/nodes/carpete.lua")
 dofile(modpath.."/nodes/tear.lua")
 dofile(modpath.."/nodes/kit_culinario.lua")
+-- Craftitens
+dofile(modpath.."/craftitens/kit_reparador.lua")
+dofile(modpath.."/craftitens/broa_de_frutas.lua")
+dofile(modpath.."/craftitens/salada_de_frutas.lua")
 -- Outros Recursos
-dofile(modpath.."/craftitens.lua")
 dofile(modpath.."/comandos.lua")
 -- NPCs e interface basica
 sunos.npcs = {} -- Tabela global de NPCs

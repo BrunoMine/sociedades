@@ -36,6 +36,8 @@ minetest.register_node("sunos:kit_culinario", {
 	},
 	
 	-- Características
+	liquids_pointable = false,
+	walkable = false,
 	paramtype = "light",
 	paramtype2 = "facedir",
 	sunlight_propagates = true,

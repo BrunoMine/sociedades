@@ -18,8 +18,9 @@ minetest.register_node("sunos:carpete_palha", {
 	tiles = {"farming_straw.png"},
 	drawtype = "nodebox",
 	paramtype = "light",
-	is_ground_content = false,
+	liquids_pointable = false,
 	walkable = true,
+	buildable_to = true,
 	node_box = {
 		type = "fixed",
 		fixed = {
@@ -38,7 +39,7 @@ minetest.register_node("sunos:carpete_palha", {
 		type = "fixed",
 		fixed = {-0.5, -0.5, -0.5, 0.5, -0.4375, 0.5}
 	},
-    	groups = {snappy=2,choppy=2,oddly_breakable_by_hand=3,wool=1,flammable=1,attached_node=1,fall_damage_add_percent=-5},
+    	groups = {choppy=2,oddly_breakable_by_hand=3,flammable=1,attached_node=1,fall_damage_add_percent=-5},
     	sounds = default.node_sound_leaves_defaults(),
 })
 

@@ -23,6 +23,7 @@ sunos.estruturas.casa.gerar_itens_repo["2"] = function()
 			{"sunos:bancada_de_trabalho_nodrop", 1, true},
 		},
 		sobrebancadas = {
+			{"sunos:kit_culinario_nodrop", 1},
 			{"sunos:tear_palha_nodrop", 1},
 		},
 		simples = {
@@ -40,6 +41,7 @@ sunos.estruturas.casa.gerar_itens_repo["3"] = function()
 			{"sunos:wood_barrel_nodrop", 1, true},
 		},
 		sobrebancadas = {
+			{"sunos:kit_culinario_nodrop", 1},
 			{"sunos:tear_palha_nodrop", 1, true},
 		},
 		simples = {
@@ -57,6 +59,7 @@ sunos.estruturas.casa.gerar_itens_repo["4"] = function()
 			{"sunos:wood_barrel_nodrop", 2, true},
 		},
 		sobrebancadas = {
+			{"sunos:kit_culinario_nodrop", 1},
 			{"sunos:tear_palha_nodrop", 1, true},
 		},
 		simples = {

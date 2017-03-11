@@ -82,6 +82,7 @@ dofile(modpath.."/nodes/bau.lua")
 dofile(modpath.."/nodes/carpete.lua")
 dofile(modpath.."/nodes/tear.lua")
 dofile(modpath.."/nodes/kit_culinario.lua")
+dofile(modpath.."/nodes/vendas.lua")
 -- Craftitens
 dofile(modpath.."/craftitens/kit_reparador.lua")
 dofile(modpath.."/craftitens/broa_de_frutas.lua")
@@ -97,4 +98,5 @@ dofile(modpath.."/estruturas/casa/init.lua")
 dofile(modpath.."/estruturas/decor/init.lua")
 -- Estruturas adicionais
 dofile(modpath.."/estruturas/loja/init.lua")
+dofile(modpath.."/estruturas/emporio/init.lua")
 notificar("[OK]!")

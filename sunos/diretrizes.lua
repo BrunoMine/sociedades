@@ -26,6 +26,9 @@ sunos.var.tempo_verif_estruturas = tonumber(minetest.setting_get("sunos_verif_fu
 -- Tempo (em segundos) em que uma casa comunal pode ficar em decadencia antes de perder o fundamento
 sunos.var.tempo_decadencia = tonumber(minetest.setting_get("sunos_comunal_decadencia") or 300)
 
+-- Moeda monetaria usada para trocas comerciais mais formais
+sunos.var.moeda = minetest.setting_get("sunos_moeda") or "default:apple"
+
 -- Lista de nodes estruturais
 --[[
 	Esses nodes são considerados importantes nas estruturas pois, 
@@ -45,8 +48,38 @@ sunos.var.nodes_trocados = {
 	["default:bookshelf"] = "sunos:default_bookshelf_nodrop",
 	["vessels:shelf"] = "sunos:vessels_shelf_nodrop",
 	["sunos:bancada"] = "sunos:bancada_nodrop",
+	["sunos:bau"] = "sunos:bau_nodrop",
 	["sunos:bancada_de_trabalho"] = "sunos:bancada_de_trabalho_nodrop",
 	["sunos:carpete_palha"] = "sunos:carpete_palha_nodrop",
 	["sunos:tear_palha"] = "sunos:tear_palha_nodrop",
 	["sunos:kit_culinario"] = "sunos:kit_culinario_nodrop",
+}
+
+-- Listagem de itens para os nodes de venda
+sunos.var.vendas = {
+	--[[ Exemplo
+	["default:dirt"] = {
+		itemstack = {name="default:dirt", count=5, wear=0, metadata=""},
+		custo = 3,
+	},]]
+	["sunos:bau_nodrop"] = {
+		itemstack = "sunos:bau",
+		custo = 20,
+	},
+	["sunos:bancada_nodrop"] = {
+		itemstack = "sunos:bancada",
+		custo = 15,
+	},
+	["sunos:kit_culinario_nodrop"] = {
+		itemstack = "sunos:kit_culinario",
+		custo = 30,
+	},
+	["sunos:tear_palha_nodrop"] = {
+		itemstack = "sunos:tear_palha",
+		custo = 25,
+	},
+	["sunos:bancada_de_trabalho_nodrop"] = {
+		itemstack = "sunos:bancada_de_trabalho",
+		custo = 20,
+	},
 }

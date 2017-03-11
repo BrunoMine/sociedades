@@ -61,26 +61,26 @@ sunos.estruturas.comunal.var.tb_menu_comunal = {
 		-- Item a receber (apenas 1 item e 1 unidade)
 		item_add = "sunos:fundamento_casa_pequena", 
 		-- Itens a pagar (de 1 a 14 itens diferentes de qualquer quantidade) 
-		item_rem = {"default:dirt"} 
+		item_rem = {"default:tree 15", "default:cobble 25", "xpanes:pane_flat 10", "default:torch 10", "farming:straw 20"}
 	},
 	[S("Casa Mediana")] = {
 		desc = S("Aumenta a quantidade de moradores da vila"),
 		pop = 5,
 		item_add = "sunos:fundamento_casa_mediana", 
-		item_rem = {"default:tree 25", "default:cobble 30", "default:stonebrick 25", "xpanes:pane_flat 15", "default:torch 10", "farming:straw 20"}
+		item_rem = {"default:tree 25", "default:cobble 30", "xpanes:pane_flat 15", "default:torch 15", "farming:straw 30"}
 	},
 	[S("Casa Grande")] = {
 		desc = S("Aumenta bastante a quantidade de moradores da vila"),
 		pop = 5,
 		item_add = "sunos:fundamento_casa_grande", 
-		item_rem = {"default:tree 40", "default:cobble 45", "default:stonebrick 35", "xpanes:pane_flat 20", "default:torch 15", "farming:straw 25"}
+		item_rem = {"default:tree 35", "default:cobble 45", "xpanes:pane_flat 20", "default:torch 20", "farming:straw 40"}
 	},
 	-- Kit Reparador
 	[S("Kit Reparador Estrutural")] = {
 		desc = S("Pode ser usado para reconstruir algumas estruturas da vila"),
 		pop = 5,
 		item_add = "sunos:kit_reparador", 
-		item_rem = {"default:tree 20", "default:cobble 20", "wool:yellow 5", "xpanes:pane_flat 15", "farming:straw 20"}
+		item_rem = {"default:tree 20", "default:cobble 20", "wool:yellow 5", "xpanes:pane_flat 15", "farming:straw 30"}
 	},
 	-- Fundamento de Loja
 	[S("Feirinha")] = {
@@ -88,5 +88,12 @@ sunos.estruturas.comunal.var.tb_menu_comunal = {
 		pop = 7,
 		item_add = "sunos:fundamento_loja", 
 		item_rem = {"default:tree 10", "default:cobble 20", "default:torch 4", "farming:straw 15"}
+	},
+	-- Fundamento de Emporio
+	[S("Emporio")] = {
+		desc = S("O principal lugar para comprar itens dos sunos. Apenas um por vila. Ele evolui conforme a vila cresce."),
+		pop = 15,
+		item_add = "sunos:fundamento_emporio", 
+		item_rem = {"default:tree 15", "default:cobble 40", "default:torch 10", "farming:straw 30"}
 	},
 }

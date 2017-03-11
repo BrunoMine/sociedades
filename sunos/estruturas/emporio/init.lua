@@ -6,17 +6,23 @@
 	Public License junto com esse software,
 	se não, veja em <http://www.gnu.org/licenses/>. 
 	
-	Loja dos sunos
+	emporio dos sunos
   ]]
 
 -- Tradução de strings
 local S = sunos.S
 
+-- Tabela global de emporio
+sunos.estruturas.emporio = {}
+
 -- Caminho do diretório do mod
 local modpath = minetest.get_modpath("sunos")
 
--- Tabela global de Loja
-sunos.estruturas.loja = {}
+-- Diretrizes (carregamento de script)
+dofile(minetest.get_modpath("sunos").."/estruturas/emporio/diretrizes.lua") 
+
+-- Placa de Emporio (carregamento de script)
+dofile(minetest.get_modpath("sunos").."/estruturas/emporio/placa.lua") 
 
 
 -- Nodes estruturais
@@ -53,66 +59,49 @@ local nodes_estruturais = {
 	"default:torch_ceiling"
 }
 
-local set_bau = function(pos, vila, dist)
 
-	-- Verifica se tem baus na estrutura montada
-	local baus = minetest.find_nodes_in_area(
-		{x=pos.x-dist, y=pos.y, z=pos.z-dist}, 
-		{x=pos.x+dist, y=pos.y+14, z=pos.z+dist}, 
-		{"sunos:bau_loja"}
-	)
-	-- Salva dados da estrutura no bau dela
-	for _,pos_bau in ipairs(baus) do
-		local meta = minetest.get_meta(pos_bau)
-		meta:set_string("infotext", S("Bau de Venda dos Sunos"))
-		meta:set_string("formspec", "size[9,9]"
-			..default.gui_bg_img
-			.."image[0,0;3,3;sunos.png]"
-			.."label[3,0;"..S("Bau de Venda dos Sunos").."]"
-			.."label[3,1;"..S("Troque alguns itens aqui").."]"
-			.."image[7.5,-0.2;2,2;default_apple.png]"
-			.."image[6.6,0;2,2;default_apple.png]"
-			.."image[6.6,1;2,2;default_apple.png]"
-			.."image[7.5,0.8;2,2;default_apple.png]"
-			-- Botoes de trocas
-			.."item_image_button[0,3;3,3;default:tree;trocar_madeira;2]"
-			.."item_image_button[0,6;3,3;default:stonebrick;trocar_pedra;2]"
-			.."item_image_button[3,3;3,3;default:gold_ingot;trocar_ouro;10]"
-			.."item_image_button[3,6;3,3;default:steel_ingot;trocar_ferro;6]"
-			.."item_image_button[6,3;3,3;default:coal_lump;trocar_carvao;1]"
-			.."item_image_button[6,6;3,3;default:glass;trocar_vidro;1]"
-		)
+-- Verificar nivel de acordo com a populacao
+local verif_nivel = function(pop)
+	if not pop then return end
+	local pop = tonumber(pop)
+	for n,p in ipairs(sunos.estruturas.emporio.var.niveis) do
+		if n == table.maxn(sunos.estruturas.emporio.var.niveis) then
+			return n
+		end
+		if pop >= p and pop < sunos.estruturas.emporio.var.niveis[n+1] then
+			return n
+		end
 	end
-
+	
+	-- Caso pop nao seja menor que nenhum dos niveis (maior que todos os exigidos) retorna nivel maximo
+	return table.maxn(sunos.estruturas.emporio.var.niveis)
+	
 end
+
 
 -- Tabela para valores de rotação
 local tb_rotat = {"0", "90", "180", "270"}
 
--- Construir loja de sunos
+-- Construir emporio de sunos
 --[[
-	Essa função construi uma loja de sunos e configura o fundamento
+	Essa função construi uma emporio de sunos e configura o fundamento
 	Retorno:
 		^ true caso ocorra tudo bem
 		^ string de erro caso algo de errado
 	Argumentos:
 		<pos> é a coordenada do fundamento da estrutura
-		<dist> distancia centro a borda da nova estrutura
 		<vila> OPCIONAL | é o numero da vila a qual a estrutura decorativa pertence
 		<verif_area> OPCIONAL | true verificar a area antes de montar a estrutura (retorna strings dos erros)
 ]]
-sunos.estruturas.loja.construir = function(pos, dist, vila, verif_area)
+sunos.estruturas.emporio.construir = function(pos, vila, verif_area)
 	-- Validar argumentos de entrada
 	if pos == nil then
-		minetest.log("error", "[Sunos] Tabela pos nula (em sunos.estruturas.loja.construir)")
+		minetest.log("error", "[Sunos] Tabela pos nula (em sunos.estruturas.emporio.construir)")
 		return "Erro interno (pos nula)"
-	end
-	if dist == nil then
-		minetest.log("error", "[Sunos] variavel dist nula (em sunos.estruturas.loja.construir)")
-		return "Erro interno (tamanho de loja inexistente)"
 	end
 	
 	-- Variaveis auxiliares
+	local dist = 5
 	local largura = (dist*2)+1
 	
 	if not vila then
@@ -155,11 +144,14 @@ sunos.estruturas.loja.construir = function(pos, dist, vila, verif_area)
 	-- Escolhe uma rotação aleatória
 	local rotat = tb_rotat[math.random(1, 4)]
 	
-	-- Criar loja
-	local rm, schem = sunos.montar_estrutura(pos, dist, "loja", rotat)
+	-- Atualizar schem do nivel
+	local schem = "nivel_" .. verif_nivel(sunos.bd:pegar("vila_"..vila, "pop_total"))
 	
-	-- Numero da estrutura da nova loja
-	local n_estrutura = sunos.nova_estrutura(vila) -- Numero da nova estrutura
+	-- Caminho do arquivo da estrutura
+	local caminho_arquivo = modpath.."/schems/emporio/"..schem..".11.mts"
+	
+	-- Criar estrutura
+	minetest.place_schematic({x=pos.x-dist, y=pos.y, z=pos.z-dist}, caminho_arquivo, rotat, sunos.var.nodes_trocados, true)
 	
 	-- Criar fundamento e configurar
 	minetest.set_node(pos, {name="sunos:fundamento"})
@@ -168,18 +160,14 @@ sunos.estruturas.loja.construir = function(pos, dist, vila, verif_area)
 	meta:set_string("schem", schem) -- Nome do arquivo da esquematico da estrutura
 	meta:set_string("rotat", rotat) -- Rotação da estrutura
 	meta:set_string("vila", vila) -- Numero da vila
-	meta:set_string("tipo", "loja") -- Tipo da estrutura
-	meta:set_string("estrutura", n_estrutura) -- Numero da estrutura
+	meta:set_string("tipo", "emporio") -- Tipo da estrutura
 	meta:set_string("dist", dist) -- Distancia centro a borda da estrutura
 	sunos.contabilizar_blocos_estruturais(pos, nodes_estruturais) -- Armazena quantidade de nodes estruturais
 	
-	-- Ajustar baus
-	set_bau(pos, vila, dist)
 	
 	-- Registros a serem salvos
 	local registros = {
-		numero = n_estrutura,
-		tipo = "loja",
+		tipo = "emporio",
 		estrutura = {
 			dist = dist,
 			largura = largura,
@@ -188,31 +176,26 @@ sunos.estruturas.loja.construir = function(pos, dist, vila, verif_area)
 	}
 	
 	-- Salva no banco de dados
-	sunos.bd:salvar("vila_"..vila, "loja_"..n_estrutura, registros)
-	
-	-- Salvar novo total de estruturas da vila
-	sunos.bd:salvar("vila_"..vila, "estruturas", n_estrutura)
+	sunos.bd:salvar("vila_"..vila, "emporio", registros)
 	
 	return true
 end
 
--- Bau de loja (carregamento de script)
-dofile(minetest.get_modpath("sunos").."/estruturas/loja/bau.lua") 
 
 -- Verificação do fundamento
-sunos.estruturas.loja.verificar = function(pos)
+sunos.estruturas.emporio.verificar = function(pos)
 	local meta = minetest.get_meta(pos)
 	local vila = meta:get_string("vila")
 	if not vila then return end
 	vila = tonumber(vila)
 	local tipo = meta:get_string("tipo")
-	local dist = tonumber(meta:get_string("dist"))
+	local dist = 5
 	local nd = tonumber(meta:get_string("nodes")) -- numero de nodes inicial
 	
 	-- Pega o numero de nodes real
 	local ndrl = sunos.verificar_blocos_estruturais(pos, nodes_estruturais)
 	
-	-- Verifica se a loja está muito destruida
+	-- Verifica se a emporio está muito destruida
 	if ndrl < nd - 4 then
 	
 		-- Montar ruinas no local da antiga casa
@@ -229,31 +212,61 @@ sunos.estruturas.loja.verificar = function(pos)
 	end
 end
 
--- Fundamento de loja
-minetest.register_node("sunos:fundamento_loja", {
-	description = S("Fundamento de Loja dos Sunos"),
+-- Fundamento de emporio
+minetest.register_node("sunos:fundamento_emporio", {
+	description = S("Fundamento de Emporio dos Sunos"),
 	tiles = {"default_tree_top.png^sunos_fundamento.png", "default_tree_top.png", "default_tree.png"},
-	inventory_image = "sunos_inv_fundamento.png^sunos_inv_fundamento_loja.png",
-	wield_image = "sunos_inv_fundamento.png^sunos_inv_fundamento_loja.png",
+	inventory_image = "sunos_inv_fundamento.png^sunos_fundamento_emporio_inv.png",
+	wield_image = "sunos_inv_fundamento.png^sunos_fundamento_emporio_inv.png",
 	paramtype2 = "facedir",
 	is_ground_content = false,
 	groups = {tree = 1, choppy = 2, oddly_breakable_by_hand = 1, flammable = 2},
 	sounds = default.node_sound_wood_defaults(),
 	stack_max = 1,
 	
-	-- Colocar uma loja
+	-- Colocar uma emporio
 	on_place = function(itemstack, placer, pointed_thing)
 		
-		sunos.criar_caixa_de_area(pointed_thing.under, 3+1)
+		-- Verificar Vila e pegar dados (buscando por um fundamento proximo)
+		local pos_fund_prox = minetest.find_node_near(pointed_thing.under, 25, {"sunos:fundamento"})
+		if pos_fund_prox == nil then 
+			return minetest.chat_send_player(placer:get_player_name(), S("Nenhuma vila por perto"))
+		end
 		
-		local r = sunos.estruturas.loja.construir(pointed_thing.under, 3, nil, true)
+		-- Pegar dados da vila encontrada
+		local meta_fund_prox = minetest.get_meta(pos_fund_prox)
+		local vila = meta_fund_prox:get_string("vila")
+		
+		if vila == "" or not vila then return minetest.chat_send_player(placer:get_player_name(), S("Vila abandonada")) end
+		
+		-- Verificar se a vila está abandonada
+		if not sunos.bd:pegar("vila_"..vila, "estruturas") then
+			return minetest.chat_send_player(placer:get_player_name(), S("Vila abandonada"))
+		end
+		
+		-- Atualizar banco de dados da vila
+		sunos.atualizar_bd_vila(vila)
+		
+		-- Verifica se tem populacao suficiente
+		if tonumber(sunos.bd:pegar("vila_"..vila, "pop_total")) < sunos.estruturas.emporio.var.niveis[1] then
+			return minetest.chat_send_player(placer:get_player_name(), S("A vila precisa ter ao menos @1 habitantes", sunos.estruturas.emporio.var.niveis[1]))
+		end
+		
+		-- Verificar se ja existe um emporio
+		if sunos.bd:verif("vila_"..vila, "emporio") == true then
+			return minetest.chat_send_player(placer:get_player_name(), S("Ja existe @1 nessa vila", S("Emporio")))
+		end
+		
+		sunos.criar_caixa_de_area(pointed_thing.under, 5+1)
+		
+		local r = sunos.estruturas.emporio.construir(pointed_thing.under, vila, true)
 		if r == true then
 			
 			-- Coloca rua em torno
-			sunos.colocar_rua(pointed_thing.under, 2)
+			sunos.colocar_rua(pointed_thing.under, 4)
 			
 			-- Retorna mensagem de montagem concluida
-			minetest.chat_send_player(placer:get_player_name(), S("Loja construida"))
+			minetest.chat_send_player(placer:get_player_name(), S("Emporio construido"))
 			itemstack:take_item()
 			return itemstack
 			
@@ -270,7 +283,7 @@ local modpath = minetest.get_modpath("sunos")
 
 -- Reforma as casas aleatoriamente
 minetest.register_abm({
-	label = "Reforma da loja",
+	label = "Reforma do emporio",
 	nodenames = {"sunos:fundamento"},
 	interval = 600,
 	chance = 4,
@@ -282,22 +295,23 @@ minetest.register_abm({
 		if vila == "" then return end
 		vila = tonumber(vila)
 		local tipo = meta:get_string("tipo")
-		if tipo ~= "loja" then return end
-		local dist = tonumber(meta:get_string("dist"))
+		if tipo ~= "emporio" then return end
+		local dist = 5
 		local schem = meta:get_string("schem")
 		local rotat = meta:get_string("rotat")
 		if schem == "" then return end
-	
+		
+		-- Atualizar schem do nivel
+		schem = "nivel_" .. verif_nivel(sunos.bd:pegar("vila_"..vila, "pop_total"))
+		
 		-- Caminho do arquivo da estrutura
 		local caminho_arquivo = modpath.."/schems/"..tipo.."/"..schem
-	
+		
 		-- Criar estrutura
-		minetest.place_schematic({x=pos.x-dist, y=pos.y, z=pos.z-dist}, caminho_arquivo, rotat, nil, true)
+		minetest.place_schematic({x=pos.x-dist, y=pos.y, z=pos.z-dist}, caminho_arquivo, rotat, sunos.var.nodes_trocados, true)
 		
 		minetest.set_node(pos, {name="sunos:fundamento"})
 		minetest.get_meta(pos):from_table(table) -- recoloca metadados no novo fumdamento
 		
-		-- Ajustar baus
-		set_bau(pos, vila, dist)
 	end,
 })

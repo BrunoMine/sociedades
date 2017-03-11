@@ -22,7 +22,7 @@ minetest.register_node("sunos:bau_loja", {
 	legacy_facedir_simple = true,
 	is_ground_content = false,
 	sounds = default.node_sound_wood_defaults(),
-	drop = "default:chest",
+	drop = "",
 	
 	-- Nao pode ser escavado/quebrado por jogadores
 	on_dig = function() end,

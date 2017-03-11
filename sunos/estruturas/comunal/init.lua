@@ -331,7 +331,7 @@ minetest.register_node("sunos:fundamento_comunal", {
 		
 		-- Verificar se ja existe uma casa comunal
 		if sunos.bd:verif("vila_"..vila, "comunal") == true then
-			return minetest.chat_send_player(placer:get_player_name(), S("Ja existe uma Casa Comunal nessa vila"))
+			return minetest.chat_send_player(placer:get_player_name(), S("Ja existe @1 nessa vila", "Casa Comunal"))
 		end
 		
 		sunos.criar_caixa_de_area(pointed_thing.under, 6+2)
@@ -340,7 +340,7 @@ minetest.register_node("sunos:fundamento_comunal", {
 		if r == true then
 			
 			-- Coloca rua em torno
-			sunos.colocar_rua(pointed_thing.under, 2)
+			sunos.colocar_rua(pointed_thing.under, 5)
 			
 			-- Retorna mensagem de montagem concluida
 			minetest.chat_send_player(placer:get_player_name(), S("Casa Comunal construida"))

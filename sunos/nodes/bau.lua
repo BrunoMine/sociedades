@@ -26,3 +26,21 @@ do
 	-- Registra o novo node
 	minetest.register_node("sunos:bau", def)
 end
+
+-- Criar cópia sem Drop (para evitar furtos em estruturas dos sunos)
+do
+	-- Copiar tabela de definições
+	local def = {}
+	for n,d in pairs(minetest.registered_nodes["sunos:bau"]) do
+		def[n] = d
+	end
+	-- Mantem a tabela groups separada
+	def.groups = minetest.deserialize(minetest.serialize(def.groups))
+	
+	-- Altera alguns paremetros
+	def.description = def.description .. " ("..S("Sem Drop")..")"
+	def.groups.not_in_creative_inventory = 1
+	def.drop = ""
+	-- Registra o novo node
+	minetest.register_node("sunos:bau_nodrop", def)
+end

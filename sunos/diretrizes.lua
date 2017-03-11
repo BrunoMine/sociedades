@@ -64,22 +64,22 @@ sunos.var.vendas = {
 	},]]
 	["sunos:bau_nodrop"] = {
 		itemstack = "sunos:bau",
-		custo = 20,
+		custo = tonumber(minetest.setting_get("sunos:bau.custo") or 20),
 	},
 	["sunos:bancada_nodrop"] = {
 		itemstack = "sunos:bancada",
-		custo = 15,
+		custo = tonumber(minetest.setting_get("sunos:bancada.custo") or 15),
 	},
 	["sunos:kit_culinario_nodrop"] = {
 		itemstack = "sunos:kit_culinario",
-		custo = 30,
+		custo = tonumber(minetest.setting_get("sunos:kit_culinario.custo") or 30),
 	},
 	["sunos:tear_palha_nodrop"] = {
 		itemstack = "sunos:tear_palha",
-		custo = 25,
+		custo = tonumber(minetest.setting_get("sunos:tear_palha.custo") or 25),
 	},
 	["sunos:bancada_de_trabalho_nodrop"] = {
 		itemstack = "sunos:bancada_de_trabalho",
-		custo = 20,
+		custo = tonumber(minetest.setting_get("sunos:bancada_de_trabalho.custo") or 20),
 	},
 }

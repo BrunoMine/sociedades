@@ -305,7 +305,7 @@ minetest.register_abm({
 		schem = "nivel_" .. verif_nivel(sunos.bd:pegar("vila_"..vila, "pop_total"))
 		
 		-- Caminho do arquivo da estrutura
-		local caminho_arquivo = modpath.."/schems/"..tipo.."/"..schem
+		local caminho_arquivo = modpath.."/schems/"..tipo.."/"..schem..".11.mts"
 		
 		-- Criar estrutura
 		minetest.place_schematic({x=pos.x-dist, y=pos.y, z=pos.z-dist}, caminho_arquivo, rotat, sunos.var.nodes_trocados, true)

@@ -89,11 +89,4 @@ sunos.estruturas.comunal.var.tb_menu_comunal = {
 		item_add = "sunos:fundamento_loja", 
 		item_rem = {"default:tree 10", "default:cobble 20", "default:torch 4", "farming:straw 15"}
 	},
-	-- Fundamento de Emporio
-	[S("Emporio")] = {
-		desc = S("O principal lugar para comprar itens dos sunos. Apenas um por vila. Ele evolui conforme a vila cresce."),
-		pop = 15,
-		item_add = "sunos:fundamento_emporio", 
-		item_rem = {"default:tree 15", "default:cobble 40", "default:torch 10", "farming:straw 30"}
-	},
 }

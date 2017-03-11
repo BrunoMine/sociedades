@@ -24,12 +24,18 @@ minetest.register_node("sunos:rua_calcetada", {
 	}),
 })
 
--- Receita
+-- Receitas
 minetest.register_craft({
 	output = "sunos:rua_calcetada 3",
 	recipe = {
 		{"", "default:cobble", ""},
 		{"default:dirt", "default:dirt", "default:dirt"}
+	}
+})
+minetest.register_craft({
+	output = "default:dirt",
+	recipe = {
+		{"sunos:rua_calcetada"},
 	}
 })
 

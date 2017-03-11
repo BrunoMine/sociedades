@@ -19,13 +19,21 @@ minetest.register_node("sunos:rua_calcetada", {
 		{name = "default_dirt.png^default_grass_side.png^sunos_rua_calcetada_lado.png",
 			tileable_vertical = false}},
 	groups = {crumbly = 3, soil = 1, spreading_dirt_type = 1},
-	drop = 'default:dirt',
 	sounds = default.node_sound_dirt_defaults({
 		footstep = {name = "default_hard_footstep", gain = 0.4},
 	}),
 })
 
--- Placa de Rua Calcetada
+-- Receita
+minetest.register_craft({
+	output = "sunos:rua_calcetada 3",
+	recipe = {
+		{"", "default:cobble", ""},
+		{"default:dirt", "default:dirt", "default:dirt"}
+	}
+})
+
+-- Placa e Degrau de Rua Calcetada
 stairs.register_stair_and_slab(
 	"rua_calcetada",
 	"sunos:rua_calcetada",
@@ -43,6 +51,3 @@ stairs.register_stair_and_slab(
 	})
 )
 
--- Remover receitas pois nao deve ser montado
-minetest.clear_craft({output = 'stairs:slab_rua_calcetada'})
-minetest.clear_craft({output = 'stairs:stair_rua_calcetada'})

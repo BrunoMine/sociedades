@@ -12,25 +12,23 @@
 -- Tradução de strings
 local S = sunos.S
 
--- Envia uma formspec simples de aviso
-local avisar = function(player, texto)
-	if not player then
-		minetest.log("error", "[Sunos] player nulo (em avisar do script interface.lua)")
-		return false
+-- Solo de barman (separa as areas do barman)
+do
+	-- Copiar tabela de definições do bau comum
+	local def = {}
+	for n,d in pairs(minetest.registered_nodes["default:cobble"]) do
+		def[n] = d
 	end
-	if not texto then
-		minetest.log("error", "[Sunos] texto nulo (em avisar do script interface.lua)")
-		return false
-	end
-	
-	minetest.show_formspec(player:get_player_name(), "sunos:npc", "size[12,1]"
-		..default.gui_bg
-		..default.gui_bg_img
-		.."label[0.5,0;"..S("Aviso").." \n"..texto.."]")
-	return true
+	-- Altera alguns paremetros
+	def.description = S("Solo de Barman dos Sunos")
+	def.tiles = {"default_cobble.png^sunos_solo_barman.png"}
+	def.drop = "default:cobble"
+	-- Registra o novo node
+	minetest.register_node("sunos:solo_barman", def)
 end
 
-sunos.npcs.npc.registrar("caseiro", {
+-- Registrar npc
+sunos.npcs.npc.registrar("barman", {
 	on_step = function(self)
 	
 		-- Verifica se o hash esta atual
@@ -58,6 +56,11 @@ sunos.npcs.npc.registrar("caseiro", {
 	end,
 	
 	drops = {
+		{name = "default:wood", chance = 1, min = 1, max = 3},
 		{name = "default:apple", chance = 2, min = 1, max = 2},
+		{name = "default:axe_stone", chance = 5, min = 1, max = 1},
 	},
 })
+
+-- interface do npc (carregamento de script)
+dofile(minetest.get_modpath("sunos").."/estruturas/taverna/interface.lua")

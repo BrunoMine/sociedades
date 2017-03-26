@@ -6,7 +6,7 @@
 	Public License junto com esse software,
 	se não, veja em <http://www.gnu.org/licenses/>. 
 	
-	Bau da casa dos sunos
+	Bau da taverna dos sunos
   ]]
 
 -- Tradução de strings
@@ -15,12 +15,57 @@ local S = sunos.S
 -- Tempo para cada ciclo de on_timer
 local timeout_bau = 180
 
+-- Metodo para spawnar npc na estrutura
+sunos.estruturas.taverna.spawn_npc = function(pos, pf)
+	
+	local dist = tonumber(minetest.get_meta(pf):get_string("dist"))	
+	
+	local meta = minetest.get_meta(pos)
+	
+	-- Escolher uma coordenada para spawnar
+	local spos = {}
+	do
+		local nok = {} -- tabela de nodes ok 
+		-- Pegar nodes de madeira
+		local nodes = minetest.find_nodes_in_area(
+			{x=pf.x-dist, y=pf.y, z=pf.z-dist}, 
+			{x=pf.x+dist, y=pf.y+14, z=pf.z+dist}, 
+			{"sunos:solo_barman"})
+		for _,p in ipairs(nodes) do
+			if minetest.get_node({x=p.x, y=p.y+1, z=p.z}).name == "sunos:carpete_palha_nodrop"
+				and minetest.get_node({x=p.x, y=p.y+2, z=p.z}).name == "air"
+			then
+				table.insert(nok, {x=p.x, y=p.y+1.5, z=p.z})
+			end
+		end
+		-- Verifica se achou algum
+		if not nok[1] then 
+			return false
+		end
+		
+		-- Sorteia uma coordenada
+		spos = nok[math.random(1, table.maxn(nok))]
+	end
+	
+	-- Spawnar um novo npc
+	do
+		local ent = sunos.npcs.npc.spawn("barman", meta:get_string("vila"), pos, spos)
+	
+		-- Salva o hash
+		local hash = os.date("%Y%m%d%H%M%S") -- Gera um hash numerico com a data
+		ent.myhash = hash -- Salva no npc
+		meta:set_string("npc_hash", hash)
+	end
+	return true
+end
+
+
 -- Bau dos sunos
 --[[
-	Esse é o node que tem nas casas dos sunos
+	Esse é o node que tem nas tavernas dos sunos
 ]]
-minetest.register_node("sunos:bau_casa", {
-	description = S("Bau da Casa dos Sunos"),
+minetest.register_node("sunos:bau_taverna", {
+	description = S("Bau da Taverna dos Sunos"),
 	tiles = {"default_chest_top.png^sunos_bau_topo.png", "default_chest_top.png", "default_chest_side.png^sunos_bau_lado.png",
 		"default_chest_side.png^sunos_bau_lado.png", "default_chest_side.png^sunos_bau_lado.png", "default_chest_lock.png^sunos_bau_frente.png"},
 	paramtype2 = "facedir",
@@ -69,43 +114,12 @@ minetest.register_node("sunos:bau_casa", {
 			end
 		end
 		
-		-- Escolher uma coordenada para spawnar
-		local spos = {}
-		do
-			local nok = {} -- tabela de nodes ok 
-			-- Pegar nodes de madeira
-			local nodes = minetest.find_nodes_in_area(
-				{x=pf.x-dist, y=pf.y, z=pf.z-dist}, 
-				{x=pf.x+dist, y=pf.y+14, z=pf.z+dist}, 
-				{"default:wood", "default:stonebrick"})
-			for _,p in ipairs(nodes) do
-				if minetest.get_node({x=p.x, y=p.y+1, z=p.z}).name == "air"
-					and minetest.get_node({x=p.x, y=p.y+2, z=p.z}).name == "air"
-				then
-					table.insert(nok, {x=p.x, y=p.y+1.5, z=p.z})
-				end
-			end
-			-- Verifica se achou algum
-			if not nok[1] then 
-				-- Reinicia o ciclo com um tempo definido
-				minetest.get_node_timer(pos):set(timeout_bau, 0)
-				return false
-			end
-			
-			-- Sorteia uma coordenada
-			spos = nok[math.random(1, table.maxn(nok))]
+		-- Spawnar npc
+		if sunos.estruturas.taverna.spawn_npc(pos, pf) == false then 
+			-- Reinicia o ciclo com um tempo definido
+			minetest.get_node_timer(pos):set(timeout_bau, 0)
+			return false 
 		end
-		
-		-- Spawnar um novo npc
-		do
-			local ent = sunos.npcs.npc.spawn("caseiro", minetest.get_meta(pos):get_string("vila"), pos, spos)
-		
-			-- Salva o hash
-			local hash = os.date("%Y%m%d%H%M%S") -- Gera um hash numerico com a data
-			ent.myhash = hash -- Salva no npc
-			meta:set_string("npc_hash", hash)
-		end
-		
 		
 		-- Reinicia o ciclo com um tempo definido
 		minetest.get_node_timer(pos):set(timeout_bau, 0)
@@ -116,8 +130,8 @@ minetest.register_node("sunos:bau_casa", {
 
 -- LBM para iniciar nodetimer caso ainda nao tenha
 minetest.register_lbm({
-	name = "sunos:casa_start_nodetimer",
-	nodenames = {"sunos:bau_casa"},
+	name = "sunos:taverna_start_nodetimer",
+	nodenames = {"sunos:bau_taverna"},
 	run_at_every_load = true,
 	action = function(pos, node)
 		if minetest.get_node_timer(pos):is_started() == false then

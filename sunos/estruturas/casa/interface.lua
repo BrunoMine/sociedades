@@ -56,8 +56,8 @@ sunos.npcs.npc.registrados.caseiro.on_rightclick = function(ent, player)
 			..default.gui_bg_img
 			.."label[0,0;"..S("Oi. Ajude essa vila a \nmontar uma Casa Comunal").."]"
 			.."item_image_button[0,1;1,1;default:tree 20;item1;]" -- Item 1
-			.."item_image_button[1,1;1,1;default:stone 70;item1;]" -- Item 2
-			.."item_image_button[2,1;1,1;farming:straw 30;item1;]" -- Item 3
+			.."item_image_button[1,1;1,1;default:stone 70;item2;]" -- Item 2
+			.."item_image_button[2,1;1,1;farming:straw 30;item3;]" -- Item 3
 			.."item_image_button[5,1;1,1;sunos:fundamento_comunal;fundamento;]" -- Fundamento de Casa Comunal
 			.."button_exit[0,2;6,1;trocar;"..S("Trocar por Fundamento").."]"
 		return minetest.show_formspec(player:get_player_name(), "sunos:npcs_npc_caseiro", formspec)

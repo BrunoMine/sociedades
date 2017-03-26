@@ -99,4 +99,5 @@ dofile(modpath.."/estruturas/decor/init.lua")
 -- Estruturas adicionais
 dofile(modpath.."/estruturas/loja/init.lua")
 dofile(modpath.."/estruturas/emporio/init.lua")
+dofile(modpath.."/estruturas/taverna/init.lua")
 notificar("[OK]!")

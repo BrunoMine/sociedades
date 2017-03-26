@@ -212,6 +212,8 @@ sunos.npcs.npc.registrar = function(tipo, def)
 				sunos.npcs.npc.registrados[self.tipo].on_rightclick(self, player) 
 			end
 		end, 
+		
+		
 	})
 
 end

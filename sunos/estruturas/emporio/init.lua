@@ -178,6 +178,9 @@ sunos.estruturas.emporio.construir = function(pos, vila, verif_area)
 	-- Salva no banco de dados
 	sunos.bd:salvar("vila_"..vila, "emporio", registros)
 	
+	-- Remover jogadores da area construida (evitar travar em paredes)
+	sunos.ajustar_jogadores(pos)
+	
 	return true
 end
 

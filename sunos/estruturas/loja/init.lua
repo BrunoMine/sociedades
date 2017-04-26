@@ -193,6 +193,9 @@ sunos.estruturas.loja.construir = function(pos, dist, vila, verif_area)
 	-- Salvar novo total de estruturas da vila
 	sunos.bd:salvar("vila_"..vila, "estruturas", n_estrutura)
 	
+	-- Remover jogadores da area construida (evitar travar em paredes)
+	sunos.ajustar_jogadores(pos)
+	
 	return true
 end
 

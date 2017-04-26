@@ -167,6 +167,9 @@ sunos.estruturas.comunal.construir = function(pos, vila, nivel, verif_area)
 	-- Ajustar baus
 	set_bau(pos, vila, dist)
 	
+	-- Remover jogadores da area construida (evitar travar em paredes)
+	sunos.ajustar_jogadores(pos)
+	
 	return true
 end
 

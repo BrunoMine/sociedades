@@ -84,6 +84,9 @@ sunos.estruturas.decor.construir = function(pos, dist, vila, verif_area)
 	-- Criar estrutura decorativa
 	sunos.montar_estrutura(pos, dist, "decor")
 	
+	-- Remover jogadores da area construida (evitar travar em paredes)
+	sunos.ajustar_jogadores(pos)
+	
 	return true
 end
 

@@ -232,6 +232,9 @@ sunos.estruturas.taverna.construir = function(pos, vila, verif_area, itens_repo)
 	-- Salva no banco de dados
 	sunos.bd:salvar("vila_"..vila, "taverna", registros)
 	
+	-- Remover jogadores da area construida (evitar travar em paredes)
+	sunos.ajustar_jogadores(pos)
+	
 	return true
 end
 

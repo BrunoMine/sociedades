@@ -83,6 +83,41 @@ local set_bau = function(pos, vila, dist)
 		
 		-- Inicia temporizador
 		minetest.get_node_timer(pos_bau):set(2, 0)
+		
+		-- Colocar npc inicial
+		do
+			-- Escolher uma coordenada para spawnar novo npc
+			local spos = {}
+			do
+				local nok = {} -- tabela de nodes ok 
+				-- Pegar nodes de madeira
+				local nodes = minetest.find_nodes_in_area(
+					{x=pos_bau.x-1, y=pos_bau.y-1, z=pos_bau.z-1}, 
+					{x=pos_bau.x+1, y=pos_bau.y-1, z=pos_bau.z+1}, 
+					{"default:cobble"})
+				for _,p in ipairs(nodes) do
+					if minetest.get_node({x=p.x, y=p.y+1, z=p.z}).name == "air"
+						and minetest.get_node({x=p.x, y=p.y+2, z=p.z}).name == "air"
+					then
+						table.insert(nok, {x=p.x, y=p.y+1.5, z=p.z})
+					end
+				end
+				-- Verifica se achou algum
+				if nok[1] then 
+					-- Sorteia uma coordenada
+				spos = nok[math.random(1, table.maxn(nok))]
+				end
+			end
+		
+			-- Spawnar um novo npc
+			if spos.x then
+				local ent = sunos.npcs.npc.spawn("comunal", minetest.get_meta(pos_bau):get_string("vila"), pos_bau, spos)
+				-- Salva o hash
+				local hash = os.date("%Y%m%d%H%M%S") -- Gera um hash numerico com a data
+				ent.myhash = hash -- Salva no npc
+				meta:set_string("npc_hash", hash)
+			end
+		end
 	end
 end
 

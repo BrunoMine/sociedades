@@ -20,6 +20,14 @@ sunos.verificar_defesa = function(pos)
 		return false 
 	end
 	
+	-- Retorna sempre defendido
+	return true
+	
+	--[[
+		Método em desuso
+		Ainda não foi pensado a maneira correta de verificar defesas das estruturas
+		
+		
 	-- Verifica se existe um método se o fundamento se mostra defendido
 	if sunos.estruturas[tipo] and sunos.estruturas[tipo].defendido -- Não tem metodo para verificar se esta defendido?
 		and sunos.estruturas[tipo].defendido(pos) == true -- Não está defendido?
@@ -31,5 +39,6 @@ sunos.verificar_defesa = function(pos)
 		return false 
 		
 	end
+	]]
 	
 end

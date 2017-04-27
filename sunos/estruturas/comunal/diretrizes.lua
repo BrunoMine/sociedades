@@ -82,12 +82,13 @@ sunos.estruturas.comunal.var.tb_menu_comunal = {
 		item_rem = {"default:tree 35", "default:cobble 45", "xpanes:pane_flat 20", "default:torch 20", "farming:straw 40"}
 	},
 	-- Kit Reparador
+	--[[ DESUSO
 	[S("Kit Reparador Estrutural")] = {
 		desc = S("Pode ser usado para reconstruir algumas estruturas da vila"),
 		pop = 5,
 		item_add = "sunos:kit_reparador", 
 		item_rem = {"default:tree 20", "default:cobble 20", "wool:yellow 5", "xpanes:pane_flat 15", "farming:straw 30"}
-	},
+	},]]
 	-- Fundamento de Loja
 	[S("Feirinha")] = {
 		desc = S("Uma feirinha simples para trocar itens"),

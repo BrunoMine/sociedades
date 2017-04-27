@@ -218,7 +218,6 @@ sunos.estruturas.comunal.construir = function(pos, vila, nivel, verif_area)
 	meta:set_string("estrutura", n_estrutura) -- Numero da estrutura
 	meta:set_string("nivel", nivel) -- Nivel da casa comunal
 	meta:set_string("dist", dist) -- Distancia centro a borda da estrutra
-	meta:set_string("status", "ativa") -- Status da casa comunal
 	meta:set_string("tempo", 0) -- Tempo de decadencia (em segundos)
 	sunos.contabilizar_blocos_estruturais(pos, nodes_estruturais) -- Armazena quantidade de nodes estruturais
 	
@@ -245,89 +244,6 @@ sunos.estruturas.comunal.construir = function(pos, vila, nivel, verif_area)
 	return true
 end
 
--- Chamada on_rightclick do fundamento
-sunos.estruturas.comunal.fund_on_rightclick = function(pos, node, player, itemstack, pointed_thing)
-	local meta = minetest.get_meta(pos)
-	
-	local vila = meta:get_string("vila")
-	if vila == "" then return end
-	
-	-- Verifica se o jogador é inimigo da vila
-	if sunos.verif_inimigo(vila, player:get_player_name()) == true then
-		return
-	end
-	
-	if meta:get_string("status") == "destruida" then
-	
-		-- Restaura a casa comunal
-		if itemstack and itemstack:get_name() == "sunos:kit_reparador" then
-		
-			local table = meta:to_table() -- salva metadados numa tabela
-			vila = tonumber(vila)
-			local tipo = meta:get_string("tipo")
-			local dist = tonumber(meta:get_string("dist"))
-			local nivel = meta:get_string("nivel")
-		
-			-- Caminho do arquivo da estrutura
-			local caminho_arquivo = modpath.."/schems/"..tipo.."/nivel_"..nivel..".13.mts"
-		
-			-- Criar estrutura
-			minetest.place_schematic({x=pos.x-dist, y=pos.y, z=pos.z-dist}, caminho_arquivo, nil, nil, true)
-		
-			minetest.set_node(pos, {name="sunos:fundamento"})
-			minetest.get_meta(pos):from_table(table) -- recoloca metadados no novo fumdamento
-		
-			-- Ajustar baus
-			set_bau(pos, vila, dist)
-			
-			-- Remove o item
-			itemstack:take_item()
-			
-			-- Finaliza
-			minetest.chat_send_player(player:get_player_name(), S("Casa Comunal restaurada."))
-			return
-		end 
-		
-	end
-end
-
--- Temporizador do fundamento
-sunos.estruturas.comunal.fund_on_timer = function(pos, elapsed)
-	local meta = minetest.get_meta(pos)
-	
-	local vila = meta:get_string("vila")
-	if vila == "" then return end
-	
-	-- Verifica se o node esta em decadencia
-	if meta:get_string("status") == "destruida" then 
-	
-		-- Verifica se ainda tem habitantes
-		
-		-- Atualizar banco de dados da vila
-		sunos.atualizar_bd_vila(vila)
-		
-		local pop = sunos.bd:pegar("vila_"..vila, "pop_total")
-		if pop > 0 then
-			minetest.get_node_timer(pos):set(sunos.var.tempo_decadencia, 0)
-			return
-		else
-			-- Remove casa comunal de vez
-			
-			-- Remove do banco de dados
-			sunos.bd:remover("vila_"..vila, "comunal")
-		
-			-- Trocar bloco de fundamento por madeira
-			minetest.set_node(pos, {name="default:tree"})
-		
-			-- Atualizar banco de dados da vila
-			sunos.atualizar_bd_vila(vila)
-			return
-		end
-	end 
-	
-	
-end
-
 
 -- Verificação do fundamento
 sunos.estruturas.comunal.verificar = function(pos)
@@ -337,27 +253,25 @@ sunos.estruturas.comunal.verificar = function(pos)
 	vila = tonumber(vila)
 	local tipo = meta:get_string("tipo")
 	local dist = tonumber(meta:get_string("dist"))
-	local status = meta:get_string("status")
+	local nd = tonumber(meta:get_string("nodes")) -- numero de nodes inicial
 	
-	-- Caso esteja ativa (funcionamento normal)
-	if status == "ativa" then
+	-- Pega o numero de nodes real
+	local ndrl = sunos.verificar_blocos_estruturais(pos, nodes_estruturais)
+	
+	-- Verifica se a casa está muito destruida
+	if ndrl < nd - 4 then
+	
+		-- Exclui o arquivo da estrutura do banco de dados
+		sunos.bd:remover("vila_"..meta:get_string("vila"), "comunal")
 		
-		local nd = tonumber(meta:get_string("nodes")) -- numero de nodes inicial
+		-- Trocar bloco de fundamento por madeira
+		minetest.set_node(pos, {name="default:tree"})
 	
-		-- Pega o numero de nodes real
-		local ndrl = sunos.verificar_blocos_estruturais(pos, nodes_estruturais)
+		-- Atualizar banco de dados da vila
+		sunos.atualizar_bd_vila(vila)
 		
-		-- Verifica se a casa comunal está muito destruida
-		if ndrl < nd - 10 then
-	
-			-- Inicia processo de decadencia da casa comunal
-			meta:set_string("status", "destruida")
-			
-			-- Dispara um temporizador de decadencia
-			minetest.get_node_timer(pos):set(sunos.var.tempo_decadencia, 0)
-			return
-		end
 	end
+	
 end
 
 

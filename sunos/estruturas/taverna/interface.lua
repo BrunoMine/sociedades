@@ -66,10 +66,10 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 			local sender_name = player:get_player_name()
 			local sender_inv = player:get_inventory()
 			if not sender_inv:contains_item("main", sunos.var.moeda.." "..custo_nectar) then
-				minetest.chat_send_player(sender_name, "Precisa pagar por isso")
+				minetest.chat_send_player(sender_name, S("Precisa pagar por isso"))
 				return
 			elseif not sender_inv:room_for_item("main", "sunos:nectar 1") then
-				minetest.chat_send_player(sender_name, "Inventario Lotado")
+				minetest.chat_send_player(sender_name, S("Inventario Lotado"))
 				return
 			end
 			-- retirando itens do inventario
@@ -86,10 +86,10 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 			local sender_name = player:get_player_name()
 			local sender_inv = player:get_inventory()
 			if not sender_inv:contains_item("main", sunos.var.moeda.." "..custo_broa_frutas) then
-				minetest.chat_send_player(sender_name, "Precisa pagar por isso")
+				minetest.chat_send_player(sender_name, S("Precisa pagar por isso"))
 				return
 			elseif not sender_inv:room_for_item("main", "sunos:broa_frutas 1") then
-				minetest.chat_send_player(sender_name, "Inventario Lotado")
+				minetest.chat_send_player(sender_name, S("Inventario Lotado"))
 				return
 			end
 			-- retirando itens do inventario

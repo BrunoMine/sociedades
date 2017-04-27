@@ -14,7 +14,7 @@ local S = sunos.S
 
 -- Carpete de palha
 minetest.register_node("sunos:carpete_palha", {
-	description = "Carpete de Palha",
+	description = S("Carpete de Palha"),
 	tiles = {"farming_straw.png"},
 	drawtype = "nodebox",
 	paramtype = "light",

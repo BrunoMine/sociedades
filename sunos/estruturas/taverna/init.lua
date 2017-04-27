@@ -311,7 +311,7 @@ minetest.register_node("sunos:fundamento_taverna", {
 		
 		-- Verificar se ja existe um taverna
 		if sunos.bd:verif("vila_"..vila, "taverna") == true then
-			return minetest.chat_send_player(placer:get_player_name(), S("Ja existe @1 nessa vila", S("taverna")))
+			return minetest.chat_send_player(placer:get_player_name(), S("Ja existe @1 nessa vila", S("Taverna")))
 		end
 		
 		sunos.criar_caixa_de_area(pointed_thing.under, 5+1)
@@ -323,7 +323,7 @@ minetest.register_node("sunos:fundamento_taverna", {
 			sunos.colocar_rua(pointed_thing.under, 4)
 			
 			-- Retorna mensagem de montagem concluida
-			minetest.chat_send_player(placer:get_player_name(), S("taverna construido"))
+			minetest.chat_send_player(placer:get_player_name(), S("Taverna construido"))
 			itemstack:take_item()
 			return itemstack
 			

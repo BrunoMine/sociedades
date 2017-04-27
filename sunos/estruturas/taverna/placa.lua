@@ -14,7 +14,7 @@ local S = sunos.S
 
 -- Placa da taverna barbara
 minetest.register_node("sunos:taverna_placa", {
-	description = "Placa de taverna dos Sunos",
+	description = S("Placa de Taverna dos Sunos"),
 	drawtype = "nodebox",
 	tiles = {
 		"default_wood.png^sunos_taverna_placa.png", -- Cima

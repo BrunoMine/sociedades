@@ -50,8 +50,8 @@ stairs.register_stair_and_slab(
 			tileable_vertical = false
 		}
 	},
-	"Degrau de Rua Calcetada",
-	"Placa de Rua Calcetada",
+	S("Degrau de Rua Calcetada"),
+	S("Placa de Rua Calcetada"),
 	default.node_sound_dirt_defaults({
 		footstep = {name = "default_hard_footstep", gain = 0.4},
 	})

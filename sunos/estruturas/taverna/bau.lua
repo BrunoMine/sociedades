@@ -65,7 +65,7 @@ end
 	Esse é o node que tem nas tavernas dos sunos
 ]]
 minetest.register_node("sunos:bau_taverna", {
-	description = S("Bau da Taverna dos Sunos"),
+	description = S("Bau de Taverna dos Sunos"),
 	tiles = {"default_chest_top.png^sunos_bau_topo.png", "default_chest_top.png", "default_chest_side.png^sunos_bau_lado.png",
 		"default_chest_side.png^sunos_bau_lado.png", "default_chest_side.png^sunos_bau_lado.png", "default_chest_lock.png^sunos_bau_frente.png"},
 	paramtype2 = "facedir",

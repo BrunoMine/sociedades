@@ -21,7 +21,7 @@ sunos.estruturas.taverna.var.niveis = {
 }
 
 -- Insere o item para ser vendido na casa comunal
-sunos.estruturas.comunal.var.tb_menu_comunal[S("taverna")] = {
+sunos.estruturas.comunal.var.tb_menu_comunal[S("Taverna")] = {
 	desc = S("O principal lugar para comprar itens dos sunos. Apenas um por vila. Ele evolui conforme a vila cresce."),
 	pop = sunos.estruturas.taverna.var.niveis[1],
 	item_add = "sunos:fundamento_taverna", 

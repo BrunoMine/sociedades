@@ -17,7 +17,7 @@ local custo_petisco = tonumber(minetest.setting_get("sunos:petisco.custo") or 1)
 
 -- Petisco de frutas dos sunos
 minetest.register_craftitem("sunos:petisco", {
-	description = "Petisco de Frutas dos Sunos",
+	description = S("Petisco de Frutas dos Sunos"),
 	inventory_image = "sunos_petisco_frutas.png",
 	on_use = core.item_eat(tonumber(minetest.setting_get("sunos:petisco.eat") or 1)),
 })
@@ -28,7 +28,7 @@ if minetest.get_modpath("hbhunger") then
 end
 
 minetest.register_node("sunos:expositor_petisco_frutas", {
-	description = "Expositor de Petisco de Frutas dos Sunos",
+	description = S("Expositor de Petisco de Frutas dos Sunos"),
 	tiles = {
 		"default_wood.png^sunos_expositor_petisco_cima.png", -- Cima
 		"default_wood.png", -- Baixo
@@ -62,7 +62,7 @@ minetest.register_node("sunos:expositor_petisco_frutas", {
 	drop = "",
 	on_construct = function(pos)
 		local meta = minetest.get_meta(pos)
-		meta:set_string("infotext", "Petisco de Frutas") -- infotext pode ser serializado
+		meta:set_string("infotext", S("Petisco de Frutas dos Sunos")) -- infotext pode ser serializado
 	end,
 	on_rightclick = function(pos, node, player)
 		minetest.show_formspec(player:get_player_name(), "sunos:expositor_petisco_frutas", 
@@ -79,10 +79,10 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 			local sender_name = player:get_player_name()
 			local sender_inv = player:get_inventory()
 			if not sender_inv:contains_item("main", sunos.var.moeda.." "..custo_petisco) then
-				minetest.chat_send_player(sender_name, "Precisa pagar por isso")
+				minetest.chat_send_player(sender_name, S("Precisa pagar por isso"))
 				return
 			elseif not sender_inv:room_for_item("main", "sunos:petisco 1") then
-				minetest.chat_send_player(sender_name, "Inventario Lotado")
+				minetest.chat_send_player(sender_name, S("Inventario Lotado"))
 				return
 			end
 			-- retirando itens do inventario

@@ -29,6 +29,9 @@ sunos.var.tempo_decadencia = tonumber(minetest.setting_get("sunos_comunal_decade
 -- Moeda monetaria usada para trocas comerciais mais formais
 sunos.var.moeda = minetest.setting_get("sunos_moeda") or "default:apple"
 
+-- Limite de população das vilas
+sunos.var.max_pop = 60
+
 -- Lista de nodes estruturais
 --[[
 	Esses nodes são considerados importantes nas estruturas pois, 

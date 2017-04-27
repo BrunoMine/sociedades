@@ -367,6 +367,7 @@ minetest.register_abm({
 		-- Criar estrutura
 		minetest.place_schematic({x=pos.x-dist, y=pos.y, z=pos.z-dist}, caminho_arquivo, rotat, sunos.var.nodes_trocados, true)
 		
+		table.schem = schem
 		minetest.set_node(pos, {name="sunos:fundamento"})
 		minetest.get_meta(pos):from_table(table) -- recoloca metadados no novo fumdamento
 		

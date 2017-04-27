@@ -30,7 +30,7 @@ minetest.register_node("sunos:fundamento_casa_pequena", {
 		
 		sunos.criar_caixa_de_area(pointed_thing.under, 2+1)
 		
-		local r = sunos.estruturas.casa.construir(pointed_thing.under, 2, nil, true, sunos.estruturas.casa.gerar_itens_repo["2"]())
+		local r = sunos.estruturas.casa.construir(pointed_thing.under, 2, nil, true, sunos.estruturas.casa.gerar_itens_repo["2"](), true)
 		if r == true then
 			
 			-- Coloca rua em torno
@@ -66,7 +66,7 @@ minetest.register_node("sunos:fundamento_casa_mediana", {
 		
 		sunos.criar_caixa_de_area(pointed_thing.under, 3+1)
 		
-		local r = sunos.estruturas.casa.construir(pointed_thing.under, 3, nil, true, sunos.estruturas.casa.gerar_itens_repo["3"]())
+		local r = sunos.estruturas.casa.construir(pointed_thing.under, 3, nil, true, sunos.estruturas.casa.gerar_itens_repo["3"](), true)
 		if r == true then
 			
 			-- Coloca rua em torno
@@ -104,7 +104,7 @@ minetest.register_node("sunos:fundamento_casa_grande", {
 		
 		sunos.criar_caixa_de_area(pointed_thing.under, 4+1)
 		
-		local r = sunos.estruturas.casa.construir(pointed_thing.under, 4, nil, true, sunos.estruturas.casa.gerar_itens_repo["4"]())
+		local r = sunos.estruturas.casa.construir(pointed_thing.under, 4, nil, true, sunos.estruturas.casa.gerar_itens_repo["4"](), true)
 		if r == true then
 			
 			-- Coloca rua em torno

@@ -72,8 +72,9 @@ local tb_rotat = {"0", "90", "180", "270"}
 		<vila> OPCIONAL | é o numero da vila a qual a casa pertence
 		<verif_area> OPCIONAL | para verificar a area a ser usada
 		<itens_repo> OPCIONAL | Repassado ao comando sunos.decor_repo para substituir itens de reposição
+		<verif_pop> OPCIONAL | Para verificações de população da vila
   ]]
-sunos.estruturas.casa.construir = function(pos, dist, vila, verif_area, itens_repo)
+sunos.estruturas.casa.construir = function(pos, dist, vila, verif_area, itens_repo, verif_pop)
 	-- Validar argumentos de entrada
 	if pos == nil then
 		minetest.log("error", "[Sunos] Tabela pos nula (sunos.estruturas.casa.construir)")
@@ -101,6 +102,13 @@ sunos.estruturas.casa.construir = function(pos, dist, vila, verif_area, itens_re
 		-- Verificar se ainda existe um banco de dados da vila
 		if sunos.bd:verif("vila_"..vila, "numero") == false then
 			return S("Vila abandonada")
+		end
+	end
+	
+	-- Verificar se a vila ja atingiu limite
+	if verif_pop then
+		if sunos.verif_pop_vila(vila) ~= true then
+			return S("Limite de @1 habitantes foi atingido", sunos.var.max_pop)
 		end
 	end
 	

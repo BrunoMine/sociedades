@@ -14,6 +14,12 @@ local S = sunos.S
 
 sunos.estruturas.comunal.var = {}
 
+-- Tabela de niveis de acordo com população
+sunos.estruturas.comunal.var.niveis = {
+	1, -- nivel 1
+	20, -- nivel 2
+}
+
 -- Nodes estruturais
 sunos.estruturas.comunal.var.nodes_estruturais = {
 	-- Palha

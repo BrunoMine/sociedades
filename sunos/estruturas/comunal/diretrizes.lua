@@ -67,19 +67,19 @@ sunos.estruturas.comunal.var.tb_menu_comunal = {
 		-- Item a receber (apenas 1 item e 1 unidade)
 		item_add = "sunos:fundamento_casa_pequena", 
 		-- Itens a pagar (de 1 a 14 itens diferentes de qualquer quantidade) 
-		item_rem = {"default:tree 15", "default:cobble 25", "xpanes:pane_flat 10", "default:torch 10", "farming:straw 20"}
+		item_rem = {"default:tree 15", "default:cobble 25", "default:glass 10", "default:torch 10", "farming:straw 20"}
 	},
 	[S("Casa Mediana")] = {
 		desc = S("Aumenta a quantidade de moradores da vila"),
 		pop = 0,
 		item_add = "sunos:fundamento_casa_mediana", 
-		item_rem = {"default:tree 25", "default:cobble 30", "xpanes:pane_flat 15", "default:torch 15", "farming:straw 30"}
+		item_rem = {"default:tree 25", "default:cobble 30", "default:glass 15", "default:torch 15", "farming:straw 30"}
 	},
 	[S("Casa Grande")] = {
 		desc = S("Aumenta bastante a quantidade de moradores da vila"),
 		pop = 0,
 		item_add = "sunos:fundamento_casa_grande", 
-		item_rem = {"default:tree 35", "default:cobble 45", "xpanes:pane_flat 20", "default:torch 20", "farming:straw 40"}
+		item_rem = {"default:tree 35", "default:cobble 45", "default:glass 20", "default:torch 20", "farming:straw 40"}
 	},
 	-- Kit Reparador
 	--[[ DESUSO

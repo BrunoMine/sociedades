@@ -101,6 +101,43 @@ sunos.colocar_rua = function(pos, dist)
 		minetest.set_node(p, {name="sunos:rua_calcetada"})
 	end
 	
+	-- Repetir processo para blocos de terra expostos
+	do
+		local nodes1 = minetest.find_nodes_in_area( -- X+
+			{x=pos.x+dist+2, y=pos.y-1, z=pos.z-dist-2-1}, {x=pos.x+dist+2+2, y=pos.y+1, z=pos.z+dist+2+1}, {"default:dirt"})
+		local nodes2 = minetest.find_nodes_in_area( -- Z+
+			{x=pos.x-dist-2-1, y=pos.y-1, z=pos.z+dist+2}, {x=pos.x+dist+2+1, y=pos.y+1, z=pos.z+dist+2+2}, {"default:dirt"})
+		local nodes3 = minetest.find_nodes_in_area( -- X-
+			{x=pos.x-dist-2-2, y=pos.y-1, z=pos.z-dist-2-1}, {x=pos.x-dist-2, y=pos.y+1, z=pos.z+dist+2+1}, {"default:dirt"})
+		local nodes4 = minetest.find_nodes_in_area( -- Z-
+			{x=pos.x-dist-2-1, y=pos.y-1, z=pos.z-dist-2-2}, {x=pos.x+dist+2+1, y=pos.y+1, z=pos.z-dist-2}, {"default:dirt"})
+
+		for _,p in ipairs(nodes1) do
+			local name = minetest.get_node({x=p.x,y=p.y+1,z=p.z}).name
+			if name == "air" or minetest.get_item_group(name, "grass") ~= 0 then
+				minetest.set_node(p, {name="sunos:rua_calcetada"})
+			end
+		end
+		for _,p in ipairs(nodes2) do
+			local name = minetest.get_node({x=p.x,y=p.y+1,z=p.z}).name
+			if name == "air" or minetest.get_item_group(name, "grass") ~= 0 then
+				minetest.set_node(p, {name="sunos:rua_calcetada"})
+			end
+		end
+		for _,p in ipairs(nodes3) do
+			local name = minetest.get_node({x=p.x,y=p.y+1,z=p.z}).name
+			if name == "air" or minetest.get_item_group(name, "grass") ~= 0 then
+				minetest.set_node(p, {name="sunos:rua_calcetada"})
+			end
+		end
+		for _,p in ipairs(nodes4) do
+			local name = minetest.get_node({x=p.x,y=p.y+1,z=p.z}).name
+			if name == "air" or minetest.get_item_group(name, "grass") ~= 0 then
+				minetest.set_node(p, {name="sunos:rua_calcetada"})
+			end
+		end
+	end
+	
 	-- Colocar rua ate a porta
 	porta_para_rua(pos, dist)
 end

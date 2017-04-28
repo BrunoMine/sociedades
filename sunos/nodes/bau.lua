@@ -1,31 +1,46 @@
 --[[
 	Mod Sunos para Minetest
-	Copyright (C) 2016 BrunoMine (https://github.com/BrunoMine)
+	Copyright (C) 2017 BrunoMine (https://github.com/BrunoMine)
 	
 	Recebeste uma cópia da GNU Lesser General
 	Public License junto com esse software,
 	se não, veja em <http://www.gnu.org/licenses/>. 
 	
-	Bau dos sunos
+	Bau
   ]]
 
--- Bau dos sunos
---[[
-	Esse é o node que tem nas casas dos sunos
-]]
-minetest.register_node("sunos:bau", {
-	description = sunos.S("Bau dos Sunos"),
-	tiles = {"default_chest_top.png^sunos_bau_topo.png", "default_chest_top.png", "default_chest_side.png^sunos_bau_lado.png",
-		"default_chest_side.png^sunos_bau_lado.png", "default_chest_side.png^sunos_bau_lado.png", "default_chest_lock.png^sunos_bau_frente.png"},
-	paramtype2 = "facedir",
-	groups = {choppy = 2, oddly_breakable_by_hand = 2, not_in_creative_inventory=1},
-	legacy_facedir_simple = true,
-	is_ground_content = false,
-	sounds = default.node_sound_wood_defaults(),
-	drop = "default:chest",
+-- Tradução de strings
+local S = sunos.S
+
+-- Bau dos Sunos
+do
+	-- Copiar tabela de definições do bau comum
+	local def = {}
+	for n,d in pairs(minetest.registered_nodes["default:chest"]) do
+		def[n] = d
+	end
+	-- Altera alguns paremetros
+	def.description = S("Bau dos Sunos")
+	def.tiles = {"default_chest_top.png^sunos_bau_topo.png", "default_chest_top.png", "default_chest_side.png^sunos_bau_lado.png",
+		"default_chest_side.png^sunos_bau_lado.png", "default_chest_side.png^sunos_bau_lado.png", "default_chest_lock.png^sunos_bau_frente.png"}
+	-- Registra o novo node
+	minetest.register_node("sunos:bau", def)
+end
+
+-- Criar cópia sem Drop (para evitar furtos em estruturas dos sunos)
+do
+	-- Copiar tabela de definições
+	local def = {}
+	for n,d in pairs(minetest.registered_nodes["sunos:bau"]) do
+		def[n] = d
+	end
+	-- Mantem a tabela groups separada
+	def.groups = minetest.deserialize(minetest.serialize(def.groups))
 	
-	-- Nao pode ser escavado/quebrado por jogadores
-	--on_dig = function() end,
-})
-
-
+	-- Altera alguns paremetros
+	def.description = def.description .. " ("..S("Sem Drop")..")"
+	def.groups.not_in_creative_inventory = 1
+	def.drop = ""
+	-- Registra o novo node
+	minetest.register_node("sunos:bau_nodrop", def)
+end

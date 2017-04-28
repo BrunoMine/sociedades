@@ -1,0 +1,51 @@
+# Traduções em português brasileiro para o pacote Sovagxas.
+# Copyright (C) 2017 BrunoMine
+# Este arquivo é distribuído sob a mesma licença que o pacote Sovagxas.
+# BrunoMine <borgesdossantosbruno@gmail.com>, 2017.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: 1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-02-27 11:36-0300\n"
+"PO-Revision-Date: 2017-02-27 12:11-0300\n"
+"Last-Translator: BrunoMine <borgesdossantosbruno@gmail.com>\n"
+"Language-Team: Brazilian Portuguese\n"
+"Language: pt_BR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Gtranslator 2.91.7\n"
+
+#: craftitens.lua
+msgid "Muda de Arvore Sovagxa"
+msgstr "Muda de Arvore Sovagxa"
+
+#: nodes/bancada.lua
+msgid "Bancada de Trabalho Sovagxa"
+msgstr "Bancada de Trabalho Sovagxa"
+
+#: nodes/bancada.lua nodes/totem.lua
+msgid "Sem Drop"
+msgstr "Sem Drop"
+
+#: nodes/bau.lua
+msgid "Bau Sovagxa"
+msgstr "Bau Sovagxa"
+
+#: nodes/bau.lua
+msgid "Inventario lotado. Esvazie um pouco."
+msgstr "Inventario lotado. Esvazie um pouco."
+
+#: nodes/bau.lua
+msgid ""
+"Bau vazio no momento. Aguarde ate \n"
+"que um sovagxa coloque algo aqui"
+msgstr ""
+"Bau vazio no momento. Aguarde ate \n"
+"que um sovagxa coloque algo aqui"
+
+#: nodes/totem.lua
+msgid "Totem Sovagxa"
+msgstr "Totem Sovagxa"

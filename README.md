@@ -8,7 +8,7 @@
 
 ## Sobre
 Esse modpack adiciona sociedades em minetest.
-Cada sociedade possui uma caracteristica própria.
+Cada sociedade possui uma caracteristica própria afim de dar certa personalidade a personagens relacionáveis.
 
 
 ## Recursos do Projeto

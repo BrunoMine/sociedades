@@ -1,81 +1,57 @@
-Sunos
-===============
-
-Por BrunoMine
+Sunos v2.0.0
+============
 
 Esse mod adiciona os povos sunos ao jogo que aparecem aleatoriamente pelo mapa.
 Os sunos (do esperanto, "sol") são povoados humildes que vivem 
 em planicies. Não possuem muita habilidade técnica e por isso 
 só utilizam materiais simples de encontrar 
-(Madeira, Pedras e etc). Leia mais sobre os sunos nó [wiki do projeto](https://github.com/BrunoMine/sociedades/wiki/Sunos)
+(Madeira, Pedras e etc). Leia mais sobre os sunos no [wiki do projeto](https://github.com/BrunoMine/sociedades/wiki/Sunos)
 
-==================================================================
+# Configurações
 
-# Licenças 
+Essas configurações podem ser feitas em `minetest.conf`
 
-### Texturas CC BY-SA 3.0
+## Comidas
+- `sunos:broa_frutas.eat = 7` (unidades de alimentação para cada Broa de Frutas consumida, padrão é 7)
+- `sunos:salada_frutas.eat = 5` (unidades de alimentação para cada Salada de Frutas consumida, padrão é 5)
+- `sunos:nectar.eat = 4` (unidades de alimentação para cada Nectar de Frutas consumida, padrão é 4)
+- `sunos:petisco.eat = 1` (unidades de alimentação para cada Petisco de Frutas consumida, padrão é 1)
 
-As atribuições de autoria das texturas estão descritos no 
-arquivo `ATRIBUICAO.txt` no diretório de texturas.
-  
-### Software LGPL v3
+## Vendas
+- `sunos_moeda = default:apple` (itemstring do item que funciona como moeda de troca para os sunos, padrão é default:apple)
+- `sunos:bau.custo = 20` (custo de compra de Bau dos Sunos, padrão é 20)
+- `sunos:bancada.custo = 15` (custo de compra de Bancada dos Sunos, padrão é 15)
+- `sunos:kit_culinario.custo = 30` (custo de compra de Kit Culinario dos Sunos, padrão é 30)
+- `sunos:tear_palha.custo = 25` (custo de compra de Tear de Palha dos Sunos, padrão é 25)
+- `sunos:bancada_de_trabalho.custo = 20` (custo de compra de Bancada de Trabalho dos Sunos, padrão é 20)
+- `sunos:petisco.custo = 1` (custo de compra de Petisco de Frutas, padrão é 1)
+- `sunos:broa_frutas.custo = 8` (custo de compra de Broa de Frutas, padrão é 8)
+- `sunos:nectar.custo = 6` (custo de compra de Nectar de Frutas, padrão é 6)
 
-Sunos é um software livre; você pode redistribuí-lo e/ou 
-modificá-lo dentro dos termos da Licença Pública Geral Menor GNU 
-como publicada pela Fundação do Software Livre (FSF); na versão 3 
-da Licença, ou (na sua opinião) qualquer versão.
-Este programa é distribuído na esperança de que possa ser útil, 
-mas SEM NENHUMA GARANTIA; sem uma garantia implícita de ADEQUAÇÃO
-a qualquer MERCADO ou APLICAÇÃO EM PARTICULAR. Veja a
-Licença Pública Geral Menor GNU para maiores detalhes.
-Você deve ter recebido uma cópia da Licença Pública 
-Geral Menor GNU junto com este programa, 
-se não, veja <http://www.gnu.org/licenses/>.
-
-### Estruturas
-
-As estruturas salvas no formato esquemático de minetest possuem 
-sua devida atribuição descrita no arquivo `CATALOGO.md` que acompanha 
-os arquivos de mídia correspondentes.
-
-## Comandos
-
-/sunos <func> | Opera algumas funcionalidades
-
-funcionalidades:
-
-- Salvar uma estrutura: `s <tipo> <nome> <largura>`
-- Carrega uma estrutura: `c <tipo> <nome> <largura>`
-
-## Configurações
-
-Essas configurações são colocadas em minetest.conf
-- `sunos_raridade = 33` (em porcentagem, apenas numeros inteiros, padrão é 33)
+## Outros
+- `sunos_chance = 100` (em porcentagem, apenas numeros inteiros, padrão é 100)
 - `sunos_verif_fundamento = 10` (tempo em segundos para cada verificação de um fundamento ativo no mapa, padrão é 10)
 - `sunos_casa_comunal_decadencia = 300` (tempo em segundos que a casa comunal pode ficar em decadencia, padrão é 300)
 
-## Criar estruturas
-Todas as estruturas desse mod devem obedecer aos seguintes parametros:
-- Largura e comprimento (vetores x e z) iguais
-- Altura (vetor y) de 15 nodes
-- Largura de 3, 5, 7, 9, 11 ou 13
-- Salvas e armazenadas no formato esquemático de minetest
-- Nome do arquivo deve seguir o formato `<nome>.<largura>.mts`
-- Descrição feita no arquivo `CATALOGO.md`
 
-Formato para arquivos `CATALOGO.md`:
+# Licença
+Veja LICENSE.txt para informações detalhadas da licença LGPL 3.0
 
-```md
-	Estruturas:
-		<Nomde de um arquivo>
-		<Nome de outro arquivo>
-		<Nome de mais outro arquivo>
-	Autor: <Nome>
-	Data: <Data de termino>
-	Licença: <Licença>
-	Nodes: <OPCIONAL>
-		<ID de um node>
-		<ID de outro node>
-		<ID de mais outro node>
-	Descrição: <OPCIONAL para descrever como funciona a estrutura>
-```
+Autores do código fonte
+-----------------------
+Originalmente por BrunoMine, Bruno Borges <borgesdossantosbruno@gmail.com> (LGPL 3.0)
+
+Autores de mídias (texturas, modelos and sons)
+----------------------------------------------
+Todos que não est~ao listados aqui:
+BrunoMine, Bruno Borges <borgesdossantosbruno@gmail.com> (CC BY-SA 3.0)
+
+VanessaE (CC-BY-SA 3.0)
+	sunos_barril.png
+	sunos_barril.obj
+
+Desconhecido (CC0)
+	sunos_bebendo_garrafa_de_vidro.ogg
+	sunos_comendo_crocante.1.ogg
+	sunos_comendo_crocante.2.ogg
+	sunos_comendo_crocante.ogg

@@ -1,6 +1,6 @@
 --[[
 	Mod Sunos para Minetest
-	Copyright (C) 2016 BrunoMine (https://github.com/BrunoMine)
+	Copyright (C) 2017 BrunoMine (https://github.com/BrunoMine)
 	
 	Recebeste uma cópia da GNU Lesser General
 	Public License junto com esse software,
@@ -185,7 +185,7 @@ local verificar_mapa_gerado = function(minp, maxp)
 	if rel.bom < 10 then return end
 	
 	-- Sortear chance de criar vila
-	if math.random(1, 100) > sunos.RARIDADE then return end
+	if math.random(1, 100) > sunos.var.CHANCE then return end
 	
 	-- Criar vila
 	sunos.criar_vila(pos, vpos)
@@ -194,5 +194,5 @@ end
 minetest.register_on_generated(function(minp, maxp, seed)
 	
 	-- A verificação é feita apos um intervalo de tempo para garantir que o mapa foi corretamente gerado
-	minetest.after(1.5, verificar_mapa_gerado, minp, maxp)
+	minetest.after(5, verificar_mapa_gerado, minp, maxp)
 end)

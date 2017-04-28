@@ -1,6 +1,6 @@
 --[[
 	Mod Sunos para Minetest
-	Copyright (C) 2016 BrunoMine (https://github.com/BrunoMine)
+	Copyright (C) 2017 BrunoMine (https://github.com/BrunoMine)
 	
 	Recebeste uma cópia da GNU Lesser General
 	Public License junto com esse software,
@@ -16,7 +16,7 @@ local modpath = minetest.get_modpath("sunos")
 local nodes_estruturais = {"default:wood", "default:cobble", "default:stonebrick", "group:stair", "farming:straw"}
 
 -- Nodes removidos na montagem de ruinas
-local nodes_rem_ruinas = {"sunos:bau", "sunos:bau_loja", "default:wood", "group:stair", "group:glass", "group:fence", "group:ladder", "group:flower", "group:vessel", "default:torch", "group:pane", "default:ladder_wood", "default:ladder_steel", "group:leaves", "group:wool", "group:door", "farming:straw", "group:sunos", "default:bookshelf", "vessels:shelf", "flowers:mushroom_brown"}
+local nodes_rem_ruinas = {"default:apple", "sunos:bau", "sunos:bau_casa_comunal", "sunos:bau_loja", "default:wood", "group:stair", "group:glass", "group:fence", "group:ladder", "group:flower", "group:vessel", "default:torch", "group:pane", "default:ladder_wood", "default:ladder_steel", "group:leaves", "group:wool", "group:door", "farming:straw", "group:sunos", "default:bookshelf", "vessels:shelf", "flowers:mushroom_brown"}
 
 -- Pegar direcao oposta
 sunos.pegar_dir_oposta = function(dir)
@@ -102,7 +102,7 @@ sunos.pegar_solo = function(pos, dist, subir)
 	local r = nil
 	while y <= dist do
 		local node = sunos.pegar_node({x=np.x, y=np.y-y, z=np.z})
-		if node.name == "default:dirt_with_grass" then
+		if node.name == "default:dirt_with_grass" or node.name == "sunos:rua_calcetada" then
 			r = {x=np.x, y=np.y-y, z=np.z}
 			break
 		end
@@ -130,7 +130,7 @@ sunos.pegar_arquivo = function(largura, tipo)
 		return nil
 	end
 	
-	local estruturas = minetest.get_dir_list(modpath.."/estruturas/"..tipo)
+	local estruturas = minetest.get_dir_list(modpath.."/schems/"..tipo)
 	
 	local validos = {}
 	if estruturas ~= nil then
@@ -438,64 +438,6 @@ sunos.verif_fundamento = function(pos, dist)
 	return true
 end
 
--- Contabilizar blocos estruturais
---[[
-	Contabiliza quantos blocos estruturais tem na estrutura
-	do fundamento da pos informada
-	Retorno:
-		Nenhum
-	Argumentos:
-		<pos> é a coordenada do fundamento da estrutura
-  ]]
-sunos.contabilizar_blocos_estruturais = function(pos)
-	if pos == nil then
-		minetest.log("error", "[Sunos] Tabela pos nula (em sunos.contabilizar_blocos_estruturais)")
-		return false
-	end
-	
-	local meta = minetest.get_meta(pos)
-	local dist = tonumber(meta:get_string("dist"))
-	
-	local nodes = minetest.find_nodes_in_area(
-		{x=pos.x-dist, y=pos.y, z=pos.z-dist}, 
-		{x=pos.x+dist, y=pos.y+15, z=pos.z+dist}, 
-		nodes_estruturais
-	)
-	
-	meta:set_string("nodes", table.maxn(nodes))
-end
-
--- Verifica quantidade de blocos estruturais
---[[
-	Verifica quantos blocos estruturais tem na estrutura
-	do fundamento da pos informada e compara com a quatidade
-	armazenada para verificar obstrução
-	Retorno:
-		<booleano> (true == aceitavel | false == obstruida)
-	Argumentos:
-		<pos> é a coordenada do fundamento da estrutura
-  ]]
-sunos.verificar_blocos_estruturais = function(pos)
-	if pos == nil then
-		minetest.log("error", "[Sunos] Tabela pos nula (em sunos.verificar_blocos_estruturais)")
-		return false
-	end
-	
-	local meta = minetest.get_meta(pos)
-	local dist = meta:get_string("dist")
-	local nodes_reg = tonumber(meta:get_string("nodes"))
-	
-	local nodes = minetest.find_nodes_in_area(
-		{x=pos.x-dist, y=pos.y, z=pos.z-dist}, 
-		{x=pos.x+dist, y=pos.y+14, z=pos.z+dist}, 
-		nodes_estruturais
-	)
-	
-	if table.maxn(nodes) < nodes_reg - 10 then -- Permite ate 10 blocos serem removidos
-		return false
-	end
-	return true
-end
 
 -- Montar ruinas
 sunos.montar_ruinas = function(pos, dist)

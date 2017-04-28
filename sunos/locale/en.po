@@ -1,0 +1,492 @@
+# English translations for Sunos package.
+# Copyright (C) 2017 GNU LESSER GENERAL PUBLIC LICENSE
+# This file is distributed under the same license as the Sunos package.
+# Bruno <borgesdossantosbruno@gmail.com>, 2017.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-04-27 20:21-0300\n"
+"PO-Revision-Date: 2017-04-27 20:28-0300\n"
+"Last-Translator: Bruno <borgesdossantosbruno@gmail.com>\n"
+"Language-Team: English\n"
+"Language: en\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=ASCII\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Gtranslator 2.91.7\n"
+
+#: editor_schems.lua
+msgid "Editor de Estruturas Esquematicas (Schems)"
+msgstr "Editor of Schematic Structures (Schems)"
+
+#: editor_schems.lua
+msgid "Tipo de estrutura"
+msgstr "Structure type"
+
+#: editor_schems.lua
+msgid "Manipular estruturas"
+msgstr "Manipulate structures"
+
+#: editor_schems.lua
+msgid "Nome da estrutura"
+msgstr "Structure name"
+
+#: editor_schems.lua
+msgid "Carregar"
+msgstr "Load"
+
+#: editor_schems.lua
+msgid "Salvar"
+msgstr "Save"
+
+#: editor_schems.lua
+msgid "Criar nova estrutura"
+msgstr "Create new structure"
+
+#: editor_schems.lua
+msgid "Largura"
+msgstr "Width"
+
+#: editor_schems.lua
+msgid "Salvar nova estrutura"
+msgstr "Save new structure"
+
+#: editor_schems.lua
+msgid "Defina o tipo e estrutura desejada."
+msgstr "Define the desired type and structure."
+
+#: editor_schems.lua
+msgid "Estrutura carregada."
+msgstr "Structure loaded."
+
+#: editor_schems.lua
+msgid "Falha ao remover arquivo antigo."
+msgstr "Failed to remove old file."
+
+#: editor_schems.lua
+msgid ""
+"Estrutura foi salva. Mas precisa reiniciar o minetest para carregar ela "
+"novamente."
+msgstr ""
+"Structure has been saved. But need to restart the minetest to load it again."
+
+#: editor_schems.lua
+msgid "Defina um nome da estrutura."
+msgstr "Define a structure name."
+
+#: editor_schems.lua
+msgid "Use apenas letras e sublinhado (_)"
+msgstr "Use only letters and underline (_)"
+
+#: editor_schems.lua
+msgid "Nenhum tipo definido."
+msgstr "No type defined."
+
+#: editor_schems.lua
+msgid "Estrutura nova foi salva."
+msgstr "New structure saved."
+
+#: editor_schems.lua
+msgid "Editor de estruturas dos Sunos"
+msgstr "Sunes Structures Editor"
+
+#: inimigos.lua
+msgid "Acabaste de se tornar inimigo de uma vila dos Sunos"
+msgstr "You have just become an enemy of a sunean village."
+
+#: nodes/bancada.lua
+msgid "Bancada dos Sunos"
+msgstr "Sunian Bench"
+
+#: nodes/bancada.lua nodes/bancada_de_trabalho.lua nodes/bau.lua
+#: nodes/carpete.lua nodes/compost.lua nodes/estantes_nodrop.lua
+#: nodes/kit_culinario.lua nodes/tear.lua estruturas/taverna/nectar.lua
+msgid "Sem Drop"
+msgstr "No Drop"
+
+#: nodes/bancada_de_trabalho.lua
+msgid "Bancada de Trabalho dos Sunos"
+msgstr "Sunian Workbench"
+
+#: nodes/bancada_de_trabalho.lua
+msgid "Craftador"
+msgstr "Crafting"
+
+#: nodes/bau.lua
+msgid "Bau dos Sunos"
+msgstr "Chest of Sunes"
+
+#: nodes/carpete.lua
+msgid "Carpete de Palha"
+msgstr "Straw Carpet"
+
+#: nodes/decor_repo.lua
+msgid "Bancada"
+msgstr "Bench"
+
+#: nodes/decor_repo.lua
+msgid "demarcador"
+msgstr "demarcative"
+
+#: nodes/decor_repo.lua
+msgid "Sobrebancada"
+msgstr "Over Bench"
+
+#: nodes/decor_repo.lua
+msgid "Decorativo"
+msgstr "Decoration"
+
+#: nodes/fundamento.lua
+msgid "Fundamento dos Sunos"
+msgstr "Structural Basis of Sunes"
+
+#: nodes/kit_culinario.lua
+msgid "Kit Culinario"
+msgstr "Culinary Kit"
+
+#: nodes/rua.lua
+msgid "Rua Calcetada"
+msgstr "Cobble Street"
+
+#: nodes/rua.lua
+msgid "Degrau de Rua Calcetada"
+msgstr "Cobble Street Stair"
+
+#: nodes/rua.lua
+msgid "Placa de Rua Calcetada"
+msgstr "Cobble Street Slab"
+
+#: nodes/tear.lua
+msgid "Tear de Palha"
+msgstr "Straw Loom"
+
+#: nodes/vendas.lua
+msgid "Caixa de Vendas"
+msgstr "Sales Box"
+
+#: craftitens/broa_de_frutas.lua
+msgid "Broa de Frutas dos Sunos"
+msgstr "Fruit Bread of Sunes"
+
+#: craftitens/broa_de_frutas.lua
+msgid "Massa de Broa de Frutas dos Sunos"
+msgstr "Fruit Bread Dough of Sunes"
+
+#: craftitens/kit_reparador.lua
+msgid "Kit Reparador de estrutura dos Sunos"
+msgstr "Sune Structural Repair Kit"
+
+#: craftitens/salada_de_frutas.lua
+msgid "Salada de Frutas dos Sunos"
+msgstr "Sunian Fruit Salad"
+
+#: estruturas/casa/bau.lua estruturas/casa/init.lua
+msgid "Bau da Casa dos Sunos"
+msgstr "Chest of Sunian House"
+
+#: estruturas/casa/init.lua estruturas/comunal/init.lua
+#: estruturas/decor/init.lua estruturas/emporio/init.lua
+#: estruturas/loja/init.lua estruturas/taverna/init.lua
+msgid "Nenhuma vila por perto"
+msgstr "No village nearby"
+
+#: estruturas/casa/init.lua estruturas/comunal/init.lua
+#: estruturas/decor/init.lua estruturas/emporio/init.lua
+#: estruturas/loja/init.lua estruturas/taverna/init.lua
+msgid "Vila abandonada"
+msgstr "Abandoned village"
+
+#: estruturas/casa/init.lua
+msgid "Limite de @1 habitantes foi atingido"
+msgstr "Limit of 20 inhabitants has been reached"
+
+#: estruturas/casa/init.lua estruturas/comunal/init.lua
+#: estruturas/decor/init.lua estruturas/emporio/init.lua
+#: estruturas/loja/init.lua estruturas/taverna/init.lua
+msgid ""
+"O local precisa estar limpo e plano em uma area de @1x@1 blocos da largura"
+msgstr "The land must be clean and flat in an area of @1x@1 blocks of width"
+
+#: estruturas/casa/init.lua estruturas/comunal/init.lua
+#: estruturas/decor/init.lua estruturas/emporio/init.lua
+#: estruturas/loja/init.lua estruturas/taverna/init.lua
+msgid ""
+"O solo precisa estar plano e gramado em uma area de @1x@1 blocos da largura"
+msgstr "The soil must be flat and lawn in an area of @1x@1 blocks of width"
+
+#: estruturas/casa/init.lua estruturas/comunal/init.lua
+#: estruturas/decor/init.lua estruturas/emporio/init.lua
+#: estruturas/loja/init.lua estruturas/taverna/init.lua
+msgid ""
+"O subsolo precisa estar preenchido (ao menos 2 blocos de profundidade) em "
+"uma area de @1x@1 blocos da largura"
+msgstr ""
+"The subsoil must be filled (at least 2 blocks deep) in an area of @1x@1 "
+"blocks of width"
+
+#: estruturas/casa/interface.lua estruturas/casa/npc.lua
+#: estruturas/comunal/interface.lua
+msgid "Aviso"
+msgstr "Notice"
+
+#: estruturas/casa/interface.lua
+msgid ""
+"Oi. Ajude essa vila a \n"
+"montar uma Casa Comunal"
+msgstr ""
+"Hi. Help this village \n"
+"set up a Communal House"
+
+#: estruturas/casa/interface.lua
+msgid "Trocar por Fundamento"
+msgstr "Make a Structural Basis"
+
+#: estruturas/casa/interface.lua
+msgid "Nenhuma atividade disponivel"
+msgstr "No interaction available"
+
+#: estruturas/casa/interface.lua
+msgid "Faltou itens para trocar pelo fundamento de Casa Comunal"
+msgstr "Unanswered items to exchange for the foundation of the Communal House"
+
+#: estruturas/casa/interface.lua
+msgid "Recebeste um Fundamento de Casa Comunal"
+msgstr "You have received a Communal House Structural Basis"
+
+#: estruturas/casa/interface.lua
+msgid "Coloque em um local adequado para que seja construida"
+msgstr "Place in a suitable place for it to be built"
+
+#: estruturas/casa/nodes.lua
+msgid "Fundamento Suno de Casa Pequena"
+msgstr "Structural Basis of Sunian Small House"
+
+#: estruturas/casa/nodes.lua
+msgid "Casa construida"
+msgstr "House built"
+
+#: estruturas/casa/nodes.lua
+msgid "Fundamento Suno de Casa Mediana"
+msgstr "Structural Basis of Sunian Median House"
+
+#: estruturas/casa/nodes.lua
+msgid "Fundamento Suno de Casa Grande"
+msgstr "Structural Basis of Sunian Big House"
+
+#: estruturas/comunal/bau.lua estruturas/comunal/init.lua
+msgid "Bau da Casa Comunal dos Sunos"
+msgstr "Chest of Sunian Communal House"
+
+#: estruturas/comunal/diretrizes.lua
+msgid "Casa Pequena"
+msgstr "Small House"
+
+#: estruturas/comunal/diretrizes.lua
+msgid "Aumenta um pouco a quantidade de moradores da vila"
+msgstr "Increases slightly the number of villagers"
+
+#: estruturas/comunal/diretrizes.lua
+msgid "Casa Mediana"
+msgstr "Median House"
+
+#: estruturas/comunal/diretrizes.lua
+msgid "Aumenta a quantidade de moradores da vila"
+msgstr "Increases the number of villagers"
+
+#: estruturas/comunal/diretrizes.lua
+msgid "Casa Grande"
+msgstr "Big House"
+
+#: estruturas/comunal/diretrizes.lua
+msgid "Aumenta bastante a quantidade de moradores da vila"
+msgstr "Increases greatly the number of villagers"
+
+#: estruturas/comunal/diretrizes.lua
+msgid "Feirinha"
+msgstr "Small Trade Fair"
+
+#: estruturas/comunal/diretrizes.lua
+msgid "Uma feirinha simples para trocar itens"
+msgstr "A simple trade fair to exchange some items"
+
+#: estruturas/comunal/init.lua
+msgid "Fundamento de Casa Comunal dos Sunos"
+msgstr "Structural Basis of Sunian Communal House"
+
+#: estruturas/comunal/init.lua estruturas/emporio/init.lua
+#: estruturas/taverna/init.lua
+msgid "Ja existe @1 nessa vila"
+msgstr "@1 already exists in this village"
+
+#: estruturas/comunal/init.lua
+msgid "Casa Comunal construida"
+msgstr "Communal House built"
+
+#: estruturas/comunal/interface.lua
+msgid "Nenhuma Casa Comunal nessa vila"
+msgstr "No Community House in this village"
+
+#: estruturas/comunal/interface.lua
+msgid "Bem vindo a Casa Comunal"
+msgstr "Welcome to Community House"
+
+#: estruturas/comunal/interface.lua
+msgid "Habitantes atuais: @1"
+msgstr "Current population: @1"
+
+#: estruturas/comunal/interface.lua
+msgid "Trocar"
+msgstr "Exchange"
+
+#: estruturas/comunal/interface.lua
+msgid "Requisitos"
+msgstr "Requirements"
+
+#: estruturas/comunal/interface.lua
+msgid "Habitantes: @1"
+msgstr "Population: @1"
+
+#: estruturas/comunal/interface.lua
+msgid "Escolha algo da lista"
+msgstr "Choose something from the list"
+
+#: estruturas/comunal/interface.lua
+msgid "A vila precisa de mais habitantes para isso"
+msgstr "The village needs more population for this"
+
+#: estruturas/comunal/interface.lua
+msgid ""
+"Precisa dos itens exigidos para a trocar por \n"
+"@1"
+msgstr ""
+"You need the required items to trade \n"
+"@1"
+
+#: estruturas/comunal/interface.lua
+msgid "Recebeste um @1"
+msgstr "You received a @1"
+
+#: estruturas/emporio/diretrizes.lua estruturas/emporio/init.lua
+msgid "Emporio"
+msgstr "Emporium"
+
+#: estruturas/emporio/diretrizes.lua estruturas/taverna/diretrizes.lua
+msgid ""
+"O principal lugar para comprar itens dos sunos. Apenas um por vila. Ele "
+"evolui conforme a vila cresce."
+msgstr ""
+"The main place to buy items from the sunes. Only one per villa. It evolves "
+"as the village grows."
+
+#: estruturas/emporio/init.lua
+msgid "Fundamento de Emporio dos Sunos"
+msgstr "Structural Basis of Sunian Emporium"
+
+#: estruturas/emporio/init.lua estruturas/taverna/init.lua
+msgid "A vila precisa ter ao menos @1 habitantes"
+msgstr "The village must have at least @1 inhabitants"
+
+#: estruturas/emporio/init.lua
+msgid "Emporio construido"
+msgstr "Emporium build"
+
+#: estruturas/emporio/placa.lua
+msgid "Placa de Emporio dos Sunos"
+msgstr "Sunian Emporium Plate"
+
+#: estruturas/loja/bau.lua estruturas/loja/init.lua
+msgid "Bau de Venda dos Sunos"
+msgstr "Sunian Trader"
+
+#: estruturas/loja/bau.lua
+msgid "Precisa do item para trocar"
+msgstr "Need the item to exchange"
+
+#: estruturas/loja/bau.lua
+msgid "Troca feita"
+msgstr "Done exchange"
+
+#: estruturas/loja/init.lua
+msgid "Troque alguns itens aqui"
+msgstr "Exchange some items here"
+
+#: estruturas/loja/init.lua
+msgid "Fundamento de Loja dos Sunos"
+msgstr "Structural Basis of Sunian Small Trade Fair"
+
+#: estruturas/loja/init.lua
+msgid "Loja construida"
+msgstr "Small Trade Fair build"
+
+#: estruturas/taverna/barril.lua
+msgid "Barril"
+msgstr "Barrel"
+
+#: estruturas/taverna/bau.lua estruturas/taverna/init.lua
+msgid "Bau de Taverna dos Sunos"
+msgstr "Chest of Sunian Tavern"
+
+#: estruturas/taverna/diretrizes.lua estruturas/taverna/init.lua
+msgid "Taverna"
+msgstr "Tavern"
+
+#: estruturas/taverna/init.lua
+msgid "Fundamento de taverna dos Sunos"
+msgstr "Structural Basis of Sunian Tavern"
+
+#: estruturas/taverna/init.lua
+msgid "Taverna construido"
+msgstr "Tavern built"
+
+#: estruturas/taverna/interface.lua estruturas/taverna/petisco.lua
+msgid "Precisa pagar por isso"
+msgstr "You need to pay for this"
+
+#: estruturas/taverna/interface.lua estruturas/taverna/petisco.lua
+msgid "Inventario Lotado"
+msgstr "Crowded Inventory"
+
+#: estruturas/taverna/nectar.lua
+msgid "Nectar de Frutas dos Sunos"
+msgstr "Fruit Nectar of Sunes"
+
+#: estruturas/taverna/npc.lua
+msgid "Solo de Barman dos Sunos"
+msgstr "Sunian Barman Floor"
+
+#: estruturas/taverna/petisco.lua
+msgid "Petisco de Frutas dos Sunos"
+msgstr "Fruit Snack of Sunes"
+
+#: estruturas/taverna/petisco.lua
+msgid "Expositor de Petisco de Frutas dos Sunos"
+msgstr "Fruit Snack Showcase of Sunes"
+
+#: estruturas/taverna/placa.lua
+msgid "Placa de Taverna dos Sunos"
+msgstr "Sunian Tavern Plate"
+
+#, fuzzy
+#~ msgid "Bau da Taverna dos Sunos"
+#~ msgstr "Chest of Sunian House"
+
+#~ msgid "taverna"
+#~ msgstr "Taverna"
+
+#~ msgid "Kit Reparador Estrutural"
+#~ msgstr "Structural Repair Kit"
+
+#~ msgid "Pode ser usado para reconstruir algumas estruturas da vila"
+#~ msgstr "Can be used to rebuild some structures of the village"
+
+#~ msgid "Casa Comunal restaurada."
+#~ msgstr "Restored Communal House."
+
+#~ msgid "Kit Reparador"
+#~ msgstr "Structural Repair Kit"
+
+#~ msgid "Nome de estrutura"
+#~ msgstr "Structure name"

@@ -1,6 +1,6 @@
 --[[
 	Mod Sunos para Minetest
-	Copyright (C) 2016 BrunoMine (https://github.com/BrunoMine)
+	Copyright (C) 2017 BrunoMine (https://github.com/BrunoMine)
 	
 	Recebeste uma cópia da GNU Lesser General
 	Public License junto com esse software,
@@ -9,10 +9,12 @@
 	Bancada de trabalho dos Sunos
   ]]
 
+-- Tradução de strings
+local S = sunos.S
 
 -- Bancada de trabalho dos Sunos
 minetest.register_node("sunos:bancada_de_trabalho", {
-	description = sunos.S("Bancada de Trabalho dos Sunos"),
+	description = S("Bancada de Trabalho dos Sunos"),
 	tiles = {"default_wood.png^sunos_bancada_trabalho_topo.png", "default_wood.png", "default_wood.png",
 		"default_wood.png", "default_wood.png", "default_wood.png"},
 	paramtype2 = "facedir",
@@ -42,7 +44,7 @@ minetest.register_node("sunos:bancada_de_trabalho", {
 			default.gui_bg..
 			default.gui_bg_img..
 			default.gui_slots..
-			"label[1.75,0;"..sunos.S("Craftador").."]"..
+			"label[1.75,0;"..S("Craftador").."]"..
 			"list[current_player;main;0,4.25;8,1;]"..
 			"list[current_player;main;0,5.5;8,3;8]"..
 			"list[current_player;craft;1.75,0.5;3,3;]"..
@@ -52,3 +54,21 @@ minetest.register_node("sunos:bancada_de_trabalho", {
 		)
 	end,
 })
+
+-- Criar cópia sem Drop (para evitar furtos em estruturas dos sunos)
+do
+	-- Copiar tabela de definições
+	local def = {}
+	for n,d in pairs(minetest.registered_nodes["sunos:bancada_de_trabalho"]) do
+		def[n] = d
+	end
+	-- Mantem a tabela groups separada
+	def.groups = minetest.deserialize(minetest.serialize(def.groups))
+	
+	-- Altera alguns paremetros
+	def.description = def.description .. " ("..S("Sem Drop")..")"
+	def.groups.not_in_creative_inventory = 1
+	def.drop = ""
+	-- Registra o novo node
+	minetest.register_node("sunos:bancada_de_trabalho_nodrop", def)
+end

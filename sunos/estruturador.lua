@@ -1,6 +1,6 @@
 --[[
 	Mod Sunos para Minetest
-	Copyright (C) 2016 BrunoMine (https://github.com/BrunoMine)
+	Copyright (C) 2017 BrunoMine (https://github.com/BrunoMine)
 	
 	Recebeste uma cópia da GNU Lesser General
 	Public License junto com esse software,
@@ -13,9 +13,13 @@
 local modpath = minetest.get_modpath("sunos")
 
 -- Montar uma estrutura
-sunos.montar_estrutura = function(cpos, dist, tipo)
+sunos.montar_estrutura = function(cpos, dist, tipo, rotat)
 	if cpos == nil then
 		minetest.log("error", "[Sunos] Tabela cpos nula (em sunos.montar_estrutura)")
+		return false
+	end
+	if dist == nil then
+		minetest.log("error", "[Sunos] dist nula (em sunos.montar_estrutura)")
 		return false
 	end
 	if tipo == nil then
@@ -29,11 +33,14 @@ sunos.montar_estrutura = function(cpos, dist, tipo)
 	-- Largura
 	local largura = 2*dist+1
 	
+	-- Nome do arquivo esquematico da estrutura
+	local schem = sunos.pegar_arquivo(largura, tipo).."."..largura..".mts"
+	
 	-- Caminho do arquivo da estrutura
-	local arquivo = modpath.."/estruturas/"..tipo.."/"..sunos.pegar_arquivo(largura, tipo).."."..largura..".mts"
+	local caminho_arquivo = modpath.."/schems/"..tipo.."/"..schem
 	
 	-- Criar estrutura
-	minetest.place_schematic(pos, arquivo, nil, nil, true)
+	minetest.place_schematic(pos, caminho_arquivo, rotat, sunos.var.nodes_trocados, true)
 	
-	return true
+	return true, schem
 end

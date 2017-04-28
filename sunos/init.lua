@@ -18,13 +18,6 @@ sunos.versao = "1.4"
 -- Versoes compativeis
 sunos.versao_comp = {}
 
--- Configurações / Settings
---[[ 
-	Quanto maior, mais raro (Minimo é 1).
-	The larger, more rare (Minimo is 1).
-  ]]
-sunos.CHANCE = tonumber(minetest.setting_get("sunos_chance") or 100)
-
 -- Notificador de Inicializador
 local notificar = function(msg)
 	if minetest.setting_get("log_mods") then

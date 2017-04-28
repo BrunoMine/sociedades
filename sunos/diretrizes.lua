@@ -13,6 +13,12 @@
 -- Salvar dados variaveis
 sunos.var = {}
 
+-- Configurações / Settings
+--[[ 
+	Quanto maior, mais raro (Minimo é 1).
+	The larger, more rare (Minimo is 1).
+  ]]
+sunos.var.CHANCE = tonumber(minetest.setting_get("sunos_chance") or 100)
 
 -- Intervalo de tempo (em segundos) que uma vila se mantem inimigo de um jogador apos ser atacada
 sunos.var.tempo_inimigo = 300

@@ -79,7 +79,7 @@ minetest.register_node("sunos:bau_casa", {
 				{x=pf.x+dist, y=pf.y+14, z=pf.z+dist}, 
 				{"default:wood", "default:stonebrick"})
 			for _,p in ipairs(nodes) do
-				if minetest.get_node({x=p.x, y=p.y+1, z=p.z}).name == "air"
+				if minetest.get_node({x=p.x, y=p.y+1, z=p.z}).name == "sunos:carpete_palha_nodrop"
 					and minetest.get_node({x=p.x, y=p.y+2, z=p.z}).name == "air"
 				then
 					table.insert(nok, {x=p.x, y=p.y+1.5, z=p.z})

@@ -185,7 +185,7 @@ local verificar_mapa_gerado = function(minp, maxp)
 	if rel.bom < 10 then return end
 	
 	-- Sortear chance de criar vila
-	if math.random(1, 100) > sunos.CHANCE then return end
+	if math.random(1, 100) > sunos.var.CHANCE then return end
 	
 	-- Criar vila
 	sunos.criar_vila(pos, vpos)

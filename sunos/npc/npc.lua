@@ -19,7 +19,7 @@ sunos.npcs.npc.registrados = {}
 
 -- Verificador do Bau de sunos
 -- Tempo (em segundos) que demora para um bau verificar se tem um suno dele por perto
-local tempo_verif_npc = 60
+local tempo_verif_npc = 20
 -- Distancia (om blocos) que um bau verifica em sua volta para encontrar seu proprio npc
 local dist_verif_npc = 10
 

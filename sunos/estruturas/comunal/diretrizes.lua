@@ -71,13 +71,13 @@ sunos.estruturas.comunal.var.tb_menu_comunal = {
 	},
 	[S("Casa Mediana")] = {
 		desc = S("Aumenta a quantidade de moradores da vila"),
-		pop = 5,
+		pop = 0,
 		item_add = "sunos:fundamento_casa_mediana", 
 		item_rem = {"default:tree 25", "default:cobble 30", "xpanes:pane_flat 15", "default:torch 15", "farming:straw 30"}
 	},
 	[S("Casa Grande")] = {
 		desc = S("Aumenta bastante a quantidade de moradores da vila"),
-		pop = 5,
+		pop = 0,
 		item_add = "sunos:fundamento_casa_grande", 
 		item_rem = {"default:tree 35", "default:cobble 45", "xpanes:pane_flat 20", "default:torch 20", "farming:straw 40"}
 	},

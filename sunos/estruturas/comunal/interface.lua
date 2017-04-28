@@ -17,11 +17,16 @@ local tb_itens_menu_comunal = {}
 
 -- Lista de itens do menu da casa comunal em formato de string
 local string_menu_comunal = ""
-for item,_ in pairs(sunos.estruturas.comunal.var.tb_menu_comunal) do
-	if string_menu_comunal ~= "" then string_menu_comunal = string_menu_comunal .. "," end
-	string_menu_comunal = string_menu_comunal .. item
-	table.insert(tb_itens_menu_comunal, item)
+local atualizar_string_menu_comunal = function()
+	tb_itens_menu_comunal = {}
+	string_menu_comunal = ""
+	for item,_ in pairs(sunos.estruturas.comunal.var.tb_menu_comunal) do
+		if string_menu_comunal ~= "" then string_menu_comunal = string_menu_comunal .. "," end
+		string_menu_comunal = string_menu_comunal .. item
+		table.insert(tb_itens_menu_comunal, item)
+	end
 end
+atualizar_string_menu_comunal()
 
 -- Envia uma formspec simples de aviso
 local avisar = function(player, texto)
@@ -65,6 +70,9 @@ sunos.npcs.npc.registrados.comunal.on_rightclick = function(ent, player, fields)
 		
 		-- Atualizar banco de dados da vila
 		sunos.atualizar_bd_vila(ent.vila)
+		
+		-- Atualizar string do menu
+		atualizar_string_menu_comunal()
 		
 		-- Verifica se existe casa comunal na vila
 		if sunos.bd:verif("vila_"..ent.vila, "comunal") == false then

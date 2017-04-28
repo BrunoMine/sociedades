@@ -1,5 +1,5 @@
-Sunos v1.4
-==========
+Sunos v2.0.0
+============
 
 Esse mod adiciona os povos sunos ao jogo que aparecem aleatoriamente pelo mapa.
 Os sunos (do esperanto, "sol") são povoados humildes que vivem 
@@ -7,17 +7,17 @@ em planicies. Não possuem muita habilidade técnica e por isso
 só utilizam materiais simples de encontrar 
 (Madeira, Pedras e etc). Leia mais sobre os sunos no [wiki do projeto](https://github.com/BrunoMine/sociedades/wiki/Sunos)
 
-## Configurações
+# Configurações
 
 Essas configurações podem ser feitas em `minetest.conf`
 
-# Comidas
+## Comidas
 - `sunos:broa_frutas.eat = 7` (unidades de alimentação para cada Broa de Frutas consumida, padrão é 7)
 - `sunos:salada_frutas.eat = 5` (unidades de alimentação para cada Salada de Frutas consumida, padrão é 5)
 - `sunos:nectar.eat = 4` (unidades de alimentação para cada Nectar de Frutas consumida, padrão é 4)
 - `sunos:petisco.eat = 1` (unidades de alimentação para cada Petisco de Frutas consumida, padrão é 1)
 
-# Vendas
+## Vendas
 - `sunos_moeda = default:apple` (itemstring do item que funciona como moeda de troca para os sunos, padrão é default:apple)
 - `sunos:bau.custo = 20` (custo de compra de Bau dos Sunos, padrão é 20)
 - `sunos:bancada.custo = 15` (custo de compra de Bancada dos Sunos, padrão é 15)
@@ -28,13 +28,13 @@ Essas configurações podem ser feitas em `minetest.conf`
 - `sunos:broa_frutas.custo = 8` (custo de compra de Broa de Frutas, padrão é 8)
 - `sunos:nectar.custo = 6` (custo de compra de Nectar de Frutas, padrão é 6)
 
-# Outros
+## Outros
 - `sunos_chance = 100` (em porcentagem, apenas numeros inteiros, padrão é 100)
 - `sunos_verif_fundamento = 10` (tempo em segundos para cada verificação de um fundamento ativo no mapa, padrão é 10)
 - `sunos_casa_comunal_decadencia = 300` (tempo em segundos que a casa comunal pode ficar em decadencia, padrão é 300)
 
 
-## Licença
+# Licença
 Veja LICENSE.txt para informações detalhadas da licença LGPL 3.0
 
 Autores do código fonte

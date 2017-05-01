@@ -93,7 +93,7 @@ sunos.criar_caixa_de_area = function(pos, dist)
 	end
 	
 	-- Remove a caixa apos 5 segundos
-	minetest.after(5, remover_caixa, obj)
+	minetest.after(10, remover_caixa, obj)
 	
 	return true
 	

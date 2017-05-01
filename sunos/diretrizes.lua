@@ -36,7 +36,7 @@ sunos.var.tempo_decadencia = tonumber(minetest.setting_get("sunos_comunal_decade
 sunos.var.moeda = minetest.setting_get("sunos_moeda") or "default:apple"
 
 -- Limite de população das vilas
-sunos.var.max_pop = 60
+sunos.var.max_pop = 40
 
 -- Lista de nodes estruturais
 --[[

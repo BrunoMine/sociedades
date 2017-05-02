@@ -141,6 +141,7 @@ sovagxas.verif_bau_sovagxa = function(pos)
 	-- Salva alguns dados na entidade inicialmente
 	if obj then
 		local ent = obj:get_luaentity()
+		ent.versao = sovagxas.versao
 		ent.temp = 0 -- Temporizador
 		ent.pos_bau = pos -- Pos do bau
 	end
@@ -148,10 +149,20 @@ end
 
 -- Coloca e verifica o Bau dos Sovagxas
 minetest.register_abm({
+	label = "Verificar npc",
 	nodenames = {"sovagxas:bau"},
 	interval = tempo_verif_npc,
 	chance = 1,
 	action = function(pos)
+		local meta = minetest.get_meta(pos)
+		
+		-- Verificar versao
+		if sovagxas.verif_comp(meta:get_string("versao")) ~= true then
+			local node = minetest.get_node(pos)
+			minetest.set_node(pos, {name="default:chest", param2 = node.param2})
+			return
+		end
+		
 		minetest.after(2, sovagxas.verif_bau_sovagxa, pos)
 	end,
 })

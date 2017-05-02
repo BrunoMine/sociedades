@@ -70,6 +70,7 @@ minetest.register_node("sovagxas:bau", {
 	sounds = default.node_sound_wood_defaults(),
 	on_construct = function(pos)
 		local meta = minetest.get_meta(pos)
+		meta:set_string("versao", sovagxas.versao)
 		meta:set_string("itens", minetest.serialize(sortear_bau()))
 		meta:set_string("data", os.date("%Y %m %d %H"))
 		meta:set_string("arvore", minetest.serialize(pos))
@@ -169,6 +170,13 @@ minetest.register_abm({
 	chance = 1,
 	action = function(pos)
 		local meta = minetest.get_meta(pos)
+		
+		-- Verificar versao
+		if sovagxas.verif_comp(meta:get_string("versao")) ~= true then
+			local node = minetest.get_node(pos)
+			minetest.set_node(pos, {name="default:chest", param2 = node.param2})
+			return
+		end
 		
 		-- Verificar se arvore ainda existe
 		local p_arv = minetest.deserialize(meta:get_string("arvore"))

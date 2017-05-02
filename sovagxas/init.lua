@@ -12,6 +12,11 @@
 -- Variavel grobal dos metodos
 sovagxas = {}
 
+-- Versão do projeto (MAJOR.MINOR)
+sovagxas.versao = "1.0"
+
+-- Versoes compativeis
+sovagxas.versao_comp = {}
 
 -- Notificador de Inicializador
 local notificar = function(msg)
@@ -27,6 +32,7 @@ local modpath = minetest.get_modpath("sovagxas")
 notificar("Carregando...")
 dofile(modpath.."/diretrizes.lua")
 dofile(modpath.."/tradutor.lua")
+dofile(modpath.."/compatibilidade.lua")
 dofile(modpath.."/nodes/totem.lua")
 dofile(modpath.."/nodes/bancada.lua")
 dofile(modpath.."/nodes/bau.lua")

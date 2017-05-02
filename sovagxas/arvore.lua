@@ -382,4 +382,22 @@ sovagxas.montar_arvore = function(pos)
 		end
 	end
 	
+	-- Coloca novo npc
+	do
+		local pos_bau = minetest.find_node_near({x=pos.x, y=pos.y+altura_piso, z=pos.z}, 10, {"sovagxas:bau"})
+		if pos_bau then
+			local node_bau = minetest.get_node(pos_bau)
+			local p = minetest.facedir_to_dir(node_bau.param2)
+			local spos = {x=pos_bau.x-p.x,y=pos_bau.y+1.5,z=pos_bau.z-p.z}
+			local obj = minetest.add_entity(spos, "sovagxas:npc") -- Cria o mob
+	
+			-- Salva alguns dados na entidade inicialmente
+			if obj then
+				local ent = obj:get_luaentity()
+				ent.versao = sovagxas.versao
+				ent.temp = 0 -- Temporizador
+				ent.pos_bau = pos_bau -- Pos do bau
+			end
+		end
+	end
 end

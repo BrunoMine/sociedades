@@ -12,11 +12,9 @@
 
 -- Verifica se a versao informada é compativel com a versao atual
 sunos.verif_comp = function(versao)
-	if versao == "" then return false end
+	if not versao or versao == "" then return false end
 	if versao == sunos.versao then return true end
-	for _,v in ipairs(sunos.versao_comp) do
-		if versao == v then return true end
-	end 
+	if sunos.versao_comp[versao] then return true end
 	return false
 end 
 
@@ -38,7 +36,7 @@ minetest.register_lbm({
 	end,
 })
 
--- LBM para remover nodes obsoletos
+-- LBM para remover nodes obsoletos anteriores a 1.4
 minetest.register_lbm({
 	name = "sunos:remove_oldnodes_1dot4",
 	nodenames = {"sunos:bau", "sunos:bau_casa_comunal", "sunos:bau_loja"},

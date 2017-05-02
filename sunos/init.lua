@@ -13,7 +13,7 @@
 sunos = {}
 
 -- Versão do projeto
-sunos.versao = "1.4"
+sunos.versao = "2.0"
 
 -- Versoes compativeis
 sunos.versao_comp = {}

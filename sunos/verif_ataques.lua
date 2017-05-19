@@ -178,6 +178,7 @@ end
 
 -- Coloca na tabela por um tempo após remover um node
 minetest.register_on_dignode(function(pos, oldnode, digger)
+	if not digger then return end
 	tbp[digger:get_player_name()] = {x=pos.x, y=pos.y, z=pos.z}
 	minetest.after(sunos.var.tempo_atualizar_jogadores_perto, remover_tbp, digger:get_player_name())
 
@@ -185,6 +186,7 @@ end)
 
 -- Coloca na tabela por um tempo após colocar um node
 minetest.register_on_placenode(function(pos, newnode, placer)
+	if not placer then return end
 	tbp[placer:get_player_name()] = {x=pos.x, y=pos.y, z=pos.z}
 	minetest.after(sunos.var.tempo_atualizar_jogadores_perto, remover_tbp, placer:get_player_name())
 end)

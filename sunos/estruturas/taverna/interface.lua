@@ -13,9 +13,9 @@
 local S = sunos.S
 
 -- Custo de uma broa de frutas
-local custo_broa_frutas = tonumber(minetest.setting_get("sunos:broa_frutas.custo") or 8)
+local custo_broa_frutas = tonumber(minetest.setting_get("sunos_item_broa_frutas_custo") or 8)
 -- Custo de uma garrafa de Nectar de fruta dos sunos
-local custo_nectar = tonumber(minetest.setting_get("sunos:nectar.custo") or 6)
+local custo_nectar = tonumber(minetest.setting_get("sunos_item_nectar_custo") or 6)
 
 -- Acessar NPC
 sunos.npcs.npc.registrados.barman.on_rightclick = function(ent, player)

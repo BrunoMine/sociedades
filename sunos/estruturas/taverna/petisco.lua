@@ -13,18 +13,18 @@
 local S = sunos.S
 
 -- Custo de um petisco
-local custo_petisco = tonumber(minetest.setting_get("sunos:petisco.custo") or 1)
+local custo_petisco = tonumber(minetest.setting_get("sunos_item_petisco_custo") or 1)
 
 -- Petisco de frutas dos sunos
 minetest.register_craftitem("sunos:petisco", {
 	description = S("Petisco de Frutas dos Sunos"),
 	inventory_image = "sunos_petisco_frutas.png",
-	on_use = core.item_eat(tonumber(minetest.setting_get("sunos:petisco.eat") or 1)),
+	on_use = core.item_eat(tonumber(minetest.setting_get("sunos_item_petisco_eat") or 1)),
 })
 
 -- Registrar comida no hbhunger
 if minetest.get_modpath("hbhunger") then
-	hbhunger.register_food("sunos:petisco", tonumber(minetest.setting_get("sunos:petisco.eat") or 1), nil, nil, 2, "sunos_comendo_crocante")
+	hbhunger.register_food("sunos:petisco", tonumber(minetest.setting_get("sunos_item_petisco_eat") or 1), nil, nil, 2, "sunos_comendo_crocante")
 end
 
 minetest.register_node("sunos:expositor_petisco_frutas", {

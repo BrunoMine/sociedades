@@ -48,6 +48,8 @@ end
   ]]
 local verificar_mapa_gerado = function(minp, maxp)
 	
+	if sovagxas.CHANCE < 1 then return end
+	
 	-- Verificar altura
 	if minp.y < -70 or minp.y > 120 then return end
 	

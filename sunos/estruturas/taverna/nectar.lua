@@ -35,14 +35,14 @@ minetest.register_node("sunos:nectar", {
 		}
 	},
 	stack_max = 10,
-	on_use = core.item_eat(tonumber(minetest.setting_get("sunos:nectar.eat") or 4)),
+	on_use = core.item_eat(tonumber(minetest.setting_get("sunos_item_nectar_eat") or 4)),
 	groups = {attached_node=1,choppy=2,dig_immediate=3},
 	sounds = default.node_sound_defaults(),
 })
 
 -- Registrar comida no hbhunger
 if minetest.get_modpath("hbhunger") then
-	hbhunger.register_food("sunos:nectar", tonumber(minetest.setting_get("sunos:nectar.eat") or 4), "vessels:glass_bottle", nil, 2, "sunos_bebendo_garrafa_de_vidro")
+	hbhunger.register_food("sunos:nectar", tonumber(minetest.setting_get("sunos_item_nectar_eat") or 4), "vessels:glass_bottle", nil, 2, "sunos_bebendo_garrafa_de_vidro")
 end
 
 -- Criar cópia sem Drop (para evitar furtos em estruturas dos sunos)

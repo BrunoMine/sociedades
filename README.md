@@ -13,7 +13,7 @@ Cada sociedade possui uma caracteristica própria afim de dar certa personalidad
 
 ## Recursos do Projeto
 
-* [Download](https://github.com/BrunoMine/sociedades/archive/master.zip)
-* [Project](https://github.com/BrunoMine/sociedades)
+* [Baixar](https://github.com/BrunoMine/sociedades/archive/master.zip)
+* [Projeto](https://github.com/BrunoMine/sociedades)
 * [Forum](https://forum.minetest.net/viewtopic.php?f=9&t=15382)
 * [Bower](https://minetest-bower.herokuapp.com/mods/sociedades)

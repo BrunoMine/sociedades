@@ -35,15 +35,13 @@ local modpath = minetest.get_modpath("sunos")
 -- Banco de dados (Memor)
 sunos.bd = memor.montar_bd()
 
--- Tabela de dados volateis para jogadores online
-sunos.online = memor.online()
-
 -- Tabela de estruturas e funções
 sunos.estruturas = {}
 
 -- Carregar scripts
 notificar("Carregando...")
 dofile(modpath.."/tradutor.lua")
+dofile(modpath.."/online.lua")
 dofile(modpath.."/rollback.lua")
 dofile(modpath.."/diretrizes.lua")
 dofile(modpath.."/comum.lua")

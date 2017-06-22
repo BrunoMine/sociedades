@@ -77,7 +77,7 @@ minetest.register_node("sunos:bau_casa", {
 			local nodes = minetest.find_nodes_in_area(
 				{x=pf.x-dist, y=pf.y, z=pf.z-dist}, 
 				{x=pf.x+dist, y=pf.y+14, z=pf.z+dist}, 
-				{"default:wood", "default:stonebrick"})
+				{"default:wood", "default:stonebrick", "default:cobble"})
 			for _,p in ipairs(nodes) do
 				if minetest.get_node({x=p.x, y=p.y+1, z=p.z}).name == "sunos:carpete_palha_nodrop"
 					and minetest.get_node({x=p.x, y=p.y+2, z=p.z}).name == "air"

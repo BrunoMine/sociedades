@@ -59,14 +59,14 @@ minetest.register_node("sunos:bau_loja", {
 			end
 		elseif fields.trocar_carvao then
 			-- Tenta trocar
-			if tror.trocar_plus(sender, {"default:coal_lump"}, {"default:apple 1"}) == false then
+			if tror.trocar_plus(sender, {"default:coal_lump"}, {"default:apple 2"}) == false then
 				return minetest.chat_send_player(sender:get_player_name(), S("Precisa do item para trocar"))
 			else
 				return minetest.chat_send_player(sender:get_player_name(), S("Troca feita"))
 			end
 		elseif fields.trocar_vidro then
 			-- Tenta trocar
-			if tror.trocar_plus(sender, {"default:glass"}, {"default:apple 10"}) == false then
+			if tror.trocar_plus(sender, {"default:glass"}, {"default:apple 2"}) == false then
 				return minetest.chat_send_player(sender:get_player_name(), S("Precisa do item para trocar"))
 			else
 				return minetest.chat_send_player(sender:get_player_name(), S("Troca feita"))

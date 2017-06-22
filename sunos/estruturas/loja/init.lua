@@ -79,8 +79,8 @@ local set_bau = function(pos, vila, dist)
 			.."item_image_button[0,6;3,3;default:stonebrick;trocar_pedra;2]"
 			.."item_image_button[3,3;3,3;default:gold_ingot;trocar_ouro;10]"
 			.."item_image_button[3,6;3,3;default:steel_ingot;trocar_ferro;6]"
-			.."item_image_button[6,3;3,3;default:coal_lump;trocar_carvao;1]"
-			.."item_image_button[6,6;3,3;default:glass;trocar_vidro;1]"
+			.."item_image_button[6,3;3,3;default:coal_lump;trocar_carvao;2]"
+			.."item_image_button[6,6;3,3;default:glass;trocar_vidro;2]"
 		)
 	end
 

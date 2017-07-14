@@ -192,7 +192,7 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 			end   
 			
 			-- Tenta trocar
-			if tror.trocar_plus(player, dados.item_rem, {dados.item_add}) == false then
+			if sunos.trocar_plus(player, dados.item_rem, {dados.item_add}) == false then
 				return avisar(player, S("Precisa dos itens exigidos para a trocar por \n@1", titulo))
 			else
 				-- Pegar descrição do item

@@ -1,15 +1,20 @@
---
--- Mod Tror
---
--- Operador de trocas
---
+--[[
+	Mod Sunos para Minetest
+	Copyright (C) 2017 BrunoMine (https://github.com/BrunoMine)
+	
+	Recebeste uma cópia da GNU Lesser General
+	Public License junto com esse software,
+	se não, veja em <http://www.gnu.org/licenses/>. 
+	
+	Operações de troca de itens
+  ]]
 
 
 -- Verificar viabilidade de uma troca
-tror.verificar = function(player, item_rem, item_add)
+sunos.verificar = function(player, item_rem, item_add)
 
 	if not player or not item_add or not item_rem then
-		minetest.log("error", "[Tror] Faltou dados em (em tror.verificar)")
+		minetest.log("error", "[Sunos] Faltou dados em (em sunos.verificar)")
 		return false
 	end
 	
@@ -26,15 +31,15 @@ tror.verificar = function(player, item_rem, item_add)
 end
 
 -- Realizar uma troca entre com um jogador
-tror.trocar = function(player, item_rem, item_add, msg)
+sunos.trocar = function(player, item_rem, item_add, msg)
 	
 	if not player or not item_add or not item_rem then
-		minetest.log("error", "[Tror] Faltou dados em (em tror.trocar)")
+		minetest.log("error", "[Sunos] Faltou dados em (em sunos.trocar)")
 		return false
 	end
 	
 	
-	local v = tror.verificar(player, item_rem, item_add)
+	local v = sunos.verificar(player, item_rem, item_add)
 	if v ~= true then
 		if v == 1 then
 			if msg and msg.ins then
@@ -47,7 +52,7 @@ tror.trocar = function(player, item_rem, item_add, msg)
 			end
 			return 2
 		else
-			minetest.log("error", "[Tror] Resultado inesperado em tror.trocar (v = "..dump(v)..")")
+			minetest.log("error", "[Tror] Resultado inesperado em sunos.trocar (v = "..dump(v)..")")
 			return false
 		end
 	end
@@ -77,20 +82,20 @@ end
 	Retorna false caso o jogador nao tenha os itens requisitados
 	e dropa no local todos os itens que não couberem no inventario
   ]]
-tror.trocar_plus = function(player, item_rem, item_add)
+sunos.trocar_plus = function(player, item_rem, item_add)
 	
 	if not player then
-		minetest.log("error", "[Tror] Faltou player (em tror.trocar_plus)")
+		minetest.log("error", "[Sunos] Faltou player (em sunos.trocar_plus)")
 		return false
 	end
 	
 	if item_rem and not item_rem[1] then
-		minetest.log("error", "[Tror] argumento item_rem invalido (em tror.trocar_plus)")
+		minetest.log("error", "[Sunos] argumento item_rem invalido (em sunos.trocar_plus)")
 		return false
 	end
 	
 	if item_add and not item_add[1] then
-		minetest.log("error", "[Tror] argumento item_add invalido (em tror.trocar_plus)")
+		minetest.log("error", "[Sunos] argumento item_add invalido (em sunos.trocar_plus)")
 		return false
 	end
 	

@@ -40,6 +40,7 @@ sunos.estruturas = {}
 
 -- Carregar scripts
 notificar("Carregando...")
+-- Metodos gerais
 dofile(modpath.."/tradutor.lua")
 dofile(modpath.."/online.lua")
 dofile(modpath.."/rollback.lua")
@@ -64,6 +65,7 @@ dofile(modpath.."/rua_manip.lua")
 dofile(modpath.."/ajuste_jogador.lua")
 dofile(modpath.."/verif_pop.lua")
 dofile(modpath.."/planificador.lua")
+dofile(modpath.."/troca.lua")
 -- Nodes
 dofile(modpath.."/nodes/estantes_nodrop.lua")
 dofile(modpath.."/nodes/rua.lua")

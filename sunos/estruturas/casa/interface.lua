@@ -86,7 +86,7 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 		if fields.trocar then -- Trocar fundamento de casa comunal
 			
 			-- Tenta trocar pelo fundamento de casa comunal
-			if tror.trocar_plus(player, 
+			if sunos.trocar_plus(player, 
 				{"default:tree 20", "default:stone 70", "farming:straw 30"}, 
 				{"sunos:fundamento_comunal"}
 			) == false 

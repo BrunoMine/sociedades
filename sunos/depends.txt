@@ -1,7 +1,6 @@
 memor?
 sociedades_memor
 mobs
-sociedades_tror
 tror?
 intllib?
 plagen?

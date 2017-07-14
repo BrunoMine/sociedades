@@ -56,7 +56,7 @@ sunos.estruturas.decor.construir = function(pos, dist, vila, verif_area)
 		vila = meta_fund_prox:get_string("vila")
 	
 		-- Verificar se ainda existe um banco de dados da vila
-		if sunos.bd:verif("vila_"..vila, "numero") == false then
+		if sunos.bd.verif("vila_"..vila, "numero") == false then
 			return S("Vila abandonada")
 		end
 	end

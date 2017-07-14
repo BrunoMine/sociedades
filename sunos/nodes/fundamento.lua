@@ -71,7 +71,7 @@ minetest.register_node("sunos:fundamento", {
 		end
 		
 		-- Remover do banco de dados caso o bloco seja removido
-		sunos.bd:remover("vila_"..meta:get_string("vila"), tipo.."_"..meta:get_string("estrutura"))
+		sunos.bd.remover("vila_"..meta:get_string("vila"), tipo.."_"..meta:get_string("estrutura"))
 		
 		sunos.atualizar_bd_vila(vila)
 	end,

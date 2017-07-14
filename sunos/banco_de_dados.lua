@@ -6,11 +6,9 @@
 	Public License junto com esse software,
 	se não, veja em <http://www.gnu.org/licenses/>. 
 	
-	Operações de troca de itens
+	Banco de Dados
   ]]
 
--- Lib tror
-local tror = dofile(minetest.get_modpath("sunos").."/lib/tror.lua")
+-- Lib memor
+sunos.bd = dofile(minetest.get_modpath("sunos").."/lib/memor.lua")
 
--- Trocar itens
-sunos.trocar_plus = tror.trocar_plus

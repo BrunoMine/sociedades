@@ -50,7 +50,7 @@ sunos.npcs.npc.registrados.caseiro.on_rightclick = function(ent, player)
 	sunos.online[player:get_player_name()].casa.ent_acesso = ent
 	
 	-- Verifica se nao tem casa comunal e oferece para construir
-	if sunos.bd:verif("vila_"..ent.vila, "comunal") == false then
+	if sunos.bd.verif("vila_"..ent.vila, "comunal") == false then
 		local formspec = "size[6,3]"
 			..default.gui_bg
 			..default.gui_bg_img

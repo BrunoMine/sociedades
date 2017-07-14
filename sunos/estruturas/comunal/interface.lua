@@ -75,12 +75,12 @@ sunos.npcs.npc.registrados.comunal.on_rightclick = function(ent, player, fields)
 		atualizar_string_menu_comunal()
 		
 		-- Verifica se existe casa comunal na vila
-		if sunos.bd:verif("vila_"..ent.vila, "comunal") == false then
+		if sunos.bd.verif("vila_"..ent.vila, "comunal") == false then
 			return minetest.chat_send_player(player:get_player_name(), S("Nenhuma Casa Comunal nessa vila"))
 		end
 		
 		-- Coletar dados da vila
-		local habitantes = sunos.bd:pegar("vila_"..ent.vila, "pop_total") or "Erro interno"
+		local habitantes = sunos.bd.pegar("vila_"..ent.vila, "pop_total") or "Erro interno"
 		
 		-- Formspec de NPC da casa comunal
 		local formspec = "size[12,8.3]"
@@ -186,7 +186,7 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 			-- Verifica se tem os habitantes necessarios
 			-- Atualizar banco de dados da vila
 			sunos.atualizar_bd_vila(ent.vila)
-			local pop_atual = sunos.bd:pegar("vila_"..ent.vila, "pop_total")
+			local pop_atual = sunos.bd.pegar("vila_"..ent.vila, "pop_total")
 			if pop_atual == nil or pop_atual < dados.pop then
 				return avisar(player, S("A vila precisa de mais habitantes para isso"))
 			end   

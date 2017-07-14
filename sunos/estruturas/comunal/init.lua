@@ -185,7 +185,7 @@ sunos.estruturas.comunal.construir = function(pos, vila, nivel, verif_area)
 	local rotat = tb_rotat[math.random(1, 4)]
 	
 	-- Pegar nivel
-	local nivel = verif_nivel(sunos.bd:pegar("vila_"..vila, "pop_total"))
+	local nivel = verif_nivel(sunos.bd.pegar("vila_"..vila, "pop_total"))
 	
 	-- Atualizar schem do nivel
 	local schem = "nivel_" .. nivel
@@ -231,7 +231,7 @@ sunos.estruturas.comunal.construir = function(pos, vila, nivel, verif_area)
 			pos = pos
 		}
 	}
-	sunos.bd:salvar("vila_"..vila, "comunal", registros)
+	sunos.bd.salvar("vila_"..vila, "comunal", registros)
 	
 	-- Ajustar nodes da estrutura
 	
@@ -262,7 +262,7 @@ sunos.estruturas.comunal.verificar = function(pos)
 	if ndrl < nd - 4 then
 	
 		-- Exclui o arquivo da estrutura do banco de dados
-		sunos.bd:remover("vila_"..meta:get_string("vila"), "comunal")
+		sunos.bd.remover("vila_"..meta:get_string("vila"), "comunal")
 		
 		-- Trocar bloco de fundamento por madeira
 		minetest.set_node(pos, {name="default:tree"})
@@ -306,7 +306,7 @@ minetest.register_node("sunos:fundamento_comunal", {
 		if vila == "" or not vila then return minetest.chat_send_player(placer:get_player_name(), S("Vila abandonada")) end
 		
 		-- Verificar se a vila está abandonada
-		if not sunos.bd:pegar("vila_"..vila, "estruturas") then
+		if not sunos.bd.pegar("vila_"..vila, "estruturas") then
 			return minetest.chat_send_player(placer:get_player_name(), S("Vila abandonada"))
 		end
 		
@@ -314,12 +314,12 @@ minetest.register_node("sunos:fundamento_comunal", {
 		sunos.atualizar_bd_vila(vila) -- Atualizar o banco de dados
 		
 		-- Verificar se ainda existe um banco de dados da vila
-		if sunos.bd:verif("vila_"..vila, "numero") == false then
+		if sunos.bd.verif("vila_"..vila, "numero") == false then
 			return minetest.chat_send_player(placer:get_player_name(), S("Vila abandonada"))
 		end
 		
 		-- Verificar se ja existe uma casa comunal
-		if sunos.bd:verif("vila_"..vila, "comunal") == true then
+		if sunos.bd.verif("vila_"..vila, "comunal") == true then
 			return minetest.chat_send_player(placer:get_player_name(), S("Ja existe @1 nessa vila", "Casa Comunal"))
 		end
 		
@@ -366,7 +366,7 @@ minetest.register_abm({
 		if schem == "" then return end
 		
 		-- Atualizar schem do nivel
-		schem = "nivel_" .. verif_nivel(sunos.bd:pegar("vila_"..vila, "pop_total"))
+		schem = "nivel_" .. verif_nivel(sunos.bd.pegar("vila_"..vila, "pop_total"))
 		
 		-- Caminho do arquivo da estrutura
 		local caminho_arquivo = modpath.."/schems/"..tipo.."/"..schem..".13.mts"

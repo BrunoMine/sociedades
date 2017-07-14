@@ -29,12 +29,6 @@ end
 local modpath = minetest.get_modpath("sunos")
 
 
-
-
-
--- Banco de dados (Memor)
-sunos.bd = memor.montar_bd()
-
 -- Tabela de estruturas e funções
 sunos.estruturas = {}
 
@@ -42,6 +36,7 @@ sunos.estruturas = {}
 notificar("Carregando...")
 -- Metodos gerais
 dofile(modpath.."/tradutor.lua")
+dofile(modpath.."/banco_de_dados.lua")
 dofile(modpath.."/online.lua")
 dofile(modpath.."/rollback.lua")
 dofile(modpath.."/diretrizes.lua")

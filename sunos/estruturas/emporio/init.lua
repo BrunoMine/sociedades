@@ -120,7 +120,7 @@ sunos.estruturas.emporio.construir = function(pos, vila, verif_area)
 	if verif_area == true then
 	
 		-- Verificar se ainda existe um banco de dados da vila
-		if sunos.bd:verif("vila_"..vila, "numero") == false then
+		if sunos.bd.verif("vila_"..vila, "numero") == false then
 			return S("Vila abandonada")
 		end
 		
@@ -145,7 +145,7 @@ sunos.estruturas.emporio.construir = function(pos, vila, verif_area)
 	local rotat = tb_rotat[math.random(1, 4)]
 	
 	-- Atualizar schem do nivel
-	local schem = "nivel_" .. verif_nivel(sunos.bd:pegar("vila_"..vila, "pop_total"))
+	local schem = "nivel_" .. verif_nivel(sunos.bd.pegar("vila_"..vila, "pop_total"))
 	
 	-- Caminho do arquivo da estrutura
 	local caminho_arquivo = modpath.."/schems/emporio/"..schem..".11.mts"
@@ -176,7 +176,7 @@ sunos.estruturas.emporio.construir = function(pos, vila, verif_area)
 	}
 	
 	-- Salva no banco de dados
-	sunos.bd:salvar("vila_"..vila, "emporio", registros)
+	sunos.bd.salvar("vila_"..vila, "emporio", registros)
 	
 	-- Remover jogadores da area construida (evitar travar em paredes)
 	sunos.ajustar_jogadores(pos)
@@ -205,7 +205,7 @@ sunos.estruturas.emporio.verificar = function(pos)
 		sunos.montar_ruinas(pos, dist)
 		
 		-- Exclui o arquivo da estrutura do banco de dados
-		sunos.bd:remover("vila_"..meta:get_string("vila"), tipo.."_"..meta:get_string("estrutura"))
+		sunos.bd.remover("vila_"..meta:get_string("vila"), tipo.."_"..meta:get_string("estrutura"))
 		
 		-- Trocar bloco de fundamento por madeira
 		minetest.set_node(pos, {name="default:tree"})
@@ -243,7 +243,7 @@ minetest.register_node("sunos:fundamento_emporio", {
 		if vila == "" or not vila then return minetest.chat_send_player(placer:get_player_name(), S("Vila abandonada")) end
 		
 		-- Verificar se a vila está abandonada
-		if not sunos.bd:pegar("vila_"..vila, "estruturas") then
+		if not sunos.bd.pegar("vila_"..vila, "estruturas") then
 			return minetest.chat_send_player(placer:get_player_name(), S("Vila abandonada"))
 		end
 		
@@ -251,12 +251,12 @@ minetest.register_node("sunos:fundamento_emporio", {
 		sunos.atualizar_bd_vila(vila)
 		
 		-- Verifica se tem populacao suficiente
-		if tonumber(sunos.bd:pegar("vila_"..vila, "pop_total")) < sunos.estruturas.emporio.var.niveis[1] then
+		if tonumber(sunos.bd.pegar("vila_"..vila, "pop_total")) < sunos.estruturas.emporio.var.niveis[1] then
 			return minetest.chat_send_player(placer:get_player_name(), S("A vila precisa ter ao menos @1 habitantes", sunos.estruturas.emporio.var.niveis[1]))
 		end
 		
 		-- Verificar se ja existe um emporio
-		if sunos.bd:verif("vila_"..vila, "emporio") == true then
+		if sunos.bd.verif("vila_"..vila, "emporio") == true then
 			return minetest.chat_send_player(placer:get_player_name(), S("Ja existe @1 nessa vila", S("Emporio")))
 		end
 		
@@ -305,7 +305,7 @@ minetest.register_abm({
 		if schem == "" then return end
 		
 		-- Atualizar schem do nivel
-		schem = "nivel_" .. verif_nivel(sunos.bd:pegar("vila_"..vila, "pop_total"))
+		schem = "nivel_" .. verif_nivel(sunos.bd.pegar("vila_"..vila, "pop_total"))
 		
 		-- Caminho do arquivo da estrutura
 		local caminho_arquivo = modpath.."/schems/"..tipo.."/"..schem..".11.mts"

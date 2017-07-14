@@ -18,29 +18,29 @@ local dirs = {
 }
 
 -- Validar bando de dados
-if sunos.bd:verif("geral", "vilas") ~= true then
-	sunos.bd:salvar("geral", "vilas", 0)
+if sunos.bd.verif("geral", "vilas") ~= true then
+	sunos.bd.salvar("geral", "vilas", 0)
 end
 
 -- Registrar nova vila (retorna o numero da vila registrada)
 local registrar_vila = function()
 	
 	-- Pegar quantidade vilas
-	local n = tonumber(sunos.bd:pegar("geral", "vilas"))
+	local n = tonumber(sunos.bd.pegar("geral", "vilas"))
 	
 	n = n + 1
 	
 	-- Criar registro
-	sunos.bd:salvar("vila_"..n, "numero", n)
+	sunos.bd.salvar("vila_"..n, "numero", n)
 	
 	-- Salvar versao
-	sunos.bd:salvar("vila_"..n, "versao", sunos.versao)
+	sunos.bd.salvar("vila_"..n, "versao", sunos.versao)
 	
 	-- Salvar numero incial de estruturas
-	sunos.bd:salvar("vila_"..n, "estruturas", 0)
+	sunos.bd.salvar("vila_"..n, "estruturas", 0)
 	
 	-- Atualizar quantidade de vilas
-	sunos.bd:salvar("geral", "vilas", n)
+	sunos.bd.salvar("geral", "vilas", n)
 	
 	return n
 end
@@ -52,19 +52,19 @@ sunos.nova_estrutura = function(vila)
 		return false
 	end
 	-- Verificar se a vila ainda existe no banco de dados
-	if sunos.bd:verif("vila_"..vila, "estruturas") ~= true then
+	if sunos.bd.verif("vila_"..vila, "estruturas") ~= true then
 		minetest.log("error", "[Sunos] A vila não existe no banco de dados (em sunos.nova_estrutura)")
 		return false
 	end
 	
 	-- Pega o numero atual de estruturas
-	local n = sunos.bd:pegar("vila_"..vila, "estruturas")
+	local n = sunos.bd.pegar("vila_"..vila, "estruturas")
 	
 	-- Soma 1
 	n = n + 1
 	
 	-- Salva o novo numero de estruturas
-	sunos.bd:salvar("vila_"..vila, "estruturas", n)
+	sunos.bd.salvar("vila_"..vila, "estruturas", n)
 	
 	-- Retorna o novo total
 	return n
@@ -606,7 +606,7 @@ sunos.criar_vila = function(pos_ref)
 			
 			-- Planifica assentamento
 			if d_assent ~= 0 then
-				plagen.planificar(p_assent, "quadrada", (d_assent*2+1), 10, {solo="default:dirt_with_grass", subsolo="default:dirt", rocha="default:stone"}, 3, true, true)
+				sunos.planificar(p_assent, "quadrada", (d_assent*2+1), 10, {solo="default:dirt_with_grass", subsolo="default:dirt", rocha="default:stone"}, 3, true, true)
 				-- Atualiza a coordenada do solo
 				p_assent = sunos.pegar_solo(p_assent, 8, 4) or p_assent
 			end

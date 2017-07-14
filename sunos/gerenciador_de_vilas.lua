@@ -38,8 +38,8 @@ sunos.atualizar_bd_vila = function(vila)
 	end
 	
 	-- Verifica versão do mod sunos para essa vila
-	if sunos.bd:verif("vila_"..vila, "versao") ~= true then return false end
-	if sunos.verif_comp(sunos.bd:pegar("vila_"..vila, "versao")) == false then return false end
+	if sunos.bd.verif("vila_"..vila, "versao") ~= true then return false end
+	if sunos.verif_comp(sunos.bd.pegar("vila_"..vila, "versao")) == false then return false end
 	
 	-- População total
 	local pop_total = 0
@@ -57,7 +57,7 @@ sunos.atualizar_bd_vila = function(vila)
 			local stdata = true
 			
 			-- Pegar dados do arquivo
-			local reg = sunos.bd:pegar("vila_"..vila, arq)
+			local reg = sunos.bd.pegar("vila_"..vila, arq)
 			
 			-- Verifica se o fundamento ainda existe
 			do
@@ -70,7 +70,7 @@ sunos.atualizar_bd_vila = function(vila)
 					stdata = false
 					
 					-- Elimina o arquivo
-					sunos.bd:remover("vila_"..vila, arq)
+					sunos.bd.remover("vila_"..vila, arq)
 				
 				end
 			end
@@ -87,7 +87,7 @@ sunos.atualizar_bd_vila = function(vila)
 					stdata = false
 					
 					-- Elimina o arquivo
-					sunos.bd:remover("vila_"..vila, arq)
+					sunos.bd.remover("vila_"..vila, arq)
 				
 				end
 			end
@@ -104,14 +104,14 @@ sunos.atualizar_bd_vila = function(vila)
 	end
 	
 	-- Salva a população atual
-	sunos.bd:salvar("vila_"..vila, "pop_total", pop_total)
+	sunos.bd.salvar("vila_"..vila, "pop_total", pop_total)
 	
 	-- Verificar se a vila deve ser apagado do banco de dados
 	if pop_total == 0 -- Sem população
-		and sunos.bd:verif("vila_"..vila, "comunal") ~= true -- Sem casa comunal
+		and sunos.bd.verif("vila_"..vila, "comunal") ~= true -- Sem casa comunal
 	then
 		
-		sunos.bd:drop_tb("vila_"..vila)
+		sunos.bd.drop_tb("vila_"..vila)
 	end
 	
 	return true

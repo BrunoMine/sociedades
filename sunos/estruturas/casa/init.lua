@@ -100,7 +100,7 @@ sunos.estruturas.casa.construir = function(pos, dist, vila, verif_area, itens_re
 		vila = meta_fund_prox:get_string("vila")
 	
 		-- Verificar se ainda existe um banco de dados da vila
-		if sunos.bd:verif("vila_"..vila, "numero") == false then
+		if sunos.bd.verif("vila_"..vila, "numero") == false then
 			return S("Vila abandonada")
 		end
 	end
@@ -181,10 +181,10 @@ sunos.estruturas.casa.construir = function(pos, dist, vila, verif_area, itens_re
 	}
 	
 	-- Salva no banco de dados
-	sunos.bd:salvar("vila_"..vila, "casa_"..n_estrutura, registros)
+	sunos.bd.salvar("vila_"..vila, "casa_"..n_estrutura, registros)
 	
 	-- Salvar novo total de estruturas da vila
-	sunos.bd:salvar("vila_"..vila, "estruturas", n_estrutura)
+	sunos.bd.salvar("vila_"..vila, "estruturas", n_estrutura)
 	
 	-- Remover jogadores da area construida (evitar travar em paredes)
 	sunos.ajustar_jogadores(pos)
@@ -209,7 +209,7 @@ sunos.estruturas.casa.verificar = function(pos)
 	if ndrl < nd - 4 then
 	
 		-- Exclui o arquivo da estrutura do banco de dados
-		sunos.bd:remover("vila_"..meta:get_string("vila"), tipo.."_"..meta:get_string("estrutura"))
+		sunos.bd.remover("vila_"..meta:get_string("vila"), tipo.."_"..meta:get_string("estrutura"))
 		
 		-- Trocar bloco de fundamento por madeira
 		minetest.set_node(pos, {name="default:tree"})

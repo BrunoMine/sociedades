@@ -19,12 +19,12 @@ sunos.verif_pop_vila = function(vila)
 	vila = tonumber(vila)
 	
 	-- Verificar se ainda existe um banco de dados da vila
-	if sunos.bd:verif("vila_"..vila, "pop_total") == false then
+	if sunos.bd.verif("vila_"..vila, "pop_total") == false then
 		return
 	end
 	
 	-- Verifica se ja passou do limite
-	if tonumber(sunos.bd:pegar("vila_"..vila, "pop_total")) > sunos.var.max_pop then
+	if tonumber(sunos.bd.pegar("vila_"..vila, "pop_total")) > sunos.var.max_pop then
 		return false
 	else
 		return true

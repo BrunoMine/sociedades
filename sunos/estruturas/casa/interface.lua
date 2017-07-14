@@ -50,7 +50,7 @@ sunos.npcs.npc.registrados.caseiro.on_rightclick = function(ent, player)
 	sunos.online[player:get_player_name()].casa.ent_acesso = ent
 	
 	-- Verifica se nao tem casa comunal e oferece para construir
-	if sunos.bd:verif("vila_"..ent.vila, "comunal") == false then
+	if sunos.bd.verif("vila_"..ent.vila, "comunal") == false then
 		local formspec = "size[6,3]"
 			..default.gui_bg
 			..default.gui_bg_img
@@ -86,7 +86,7 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 		if fields.trocar then -- Trocar fundamento de casa comunal
 			
 			-- Tenta trocar pelo fundamento de casa comunal
-			if tror.trocar_plus(player, 
+			if sunos.trocar_plus(player, 
 				{"default:tree 20", "default:stone 70", "farming:straw 30"}, 
 				{"sunos:fundamento_comunal"}
 			) == false 

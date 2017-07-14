@@ -29,18 +29,14 @@ end
 local modpath = minetest.get_modpath("sunos")
 
 
-
-
-
--- Banco de dados (Memor)
-sunos.bd = memor.montar_bd()
-
 -- Tabela de estruturas e funções
 sunos.estruturas = {}
 
 -- Carregar scripts
 notificar("Carregando...")
+-- Metodos gerais
 dofile(modpath.."/tradutor.lua")
+dofile(modpath.."/banco_de_dados.lua")
 dofile(modpath.."/online.lua")
 dofile(modpath.."/rollback.lua")
 dofile(modpath.."/diretrizes.lua")
@@ -63,6 +59,8 @@ dofile(modpath.."/ajuste_estantes.lua")
 dofile(modpath.."/rua_manip.lua")
 dofile(modpath.."/ajuste_jogador.lua")
 dofile(modpath.."/verif_pop.lua")
+dofile(modpath.."/planificador.lua")
+dofile(modpath.."/troca.lua")
 -- Nodes
 dofile(modpath.."/nodes/estantes_nodrop.lua")
 dofile(modpath.."/nodes/rua.lua")

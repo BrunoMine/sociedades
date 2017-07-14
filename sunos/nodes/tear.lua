@@ -106,7 +106,7 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 			local inv = player:get_inventory()
 			
 			if inv:room_for_item("main", "sunos:carpete_palha 5") then
-				tror.trocar_plus(player, {"farming:straw"}, {"sunos:carpete_palha 5"})
+				sunos.trocar_plus(player, {"farming:straw"}, {"sunos:carpete_palha 5"})
 			end
 		end
 	end

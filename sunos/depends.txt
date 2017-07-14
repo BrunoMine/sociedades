@@ -1,11 +1,5 @@
-memor?
-sociedades_memor
 mobs
-sociedades_tror
-sociedades_plagen
-tror?
 intllib?
-plagen?
 hbhunger?
 default
 vessels

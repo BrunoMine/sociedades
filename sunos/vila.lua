@@ -606,7 +606,7 @@ sunos.criar_vila = function(pos_ref)
 			
 			-- Planifica assentamento
 			if d_assent ~= 0 then
-				plagen.planificar(p_assent, "quadrada", (d_assent*2+1), 10, {solo="default:dirt_with_grass", subsolo="default:dirt", rocha="default:stone"}, 3, true, true)
+				sunos.planificar(p_assent, "quadrada", (d_assent*2+1), 10, {solo="default:dirt_with_grass", subsolo="default:dirt", rocha="default:stone"}, 3, true, true)
 				-- Atualiza a coordenada do solo
 				p_assent = sunos.pegar_solo(p_assent, 8, 4) or p_assent
 			end

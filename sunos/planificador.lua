@@ -1,9 +1,13 @@
---
--- Mod PlaGen
---
--- Planificador
---
-
+--[[
+	Mod Sunos para Minetest
+	Copyright (C) 2017 BrunoMine (https://github.com/BrunoMine)
+	
+	Recebeste uma cópia da GNU Lesser General
+	Public License junto com esse software,
+	se não, veja em <http://www.gnu.org/licenses/>. 
+	
+	Planificador
+  ]]
 
 -- Metodo para pegar blocos mesmo nao carregados
 local function pegar_node(pos)
@@ -84,7 +88,7 @@ end
 		
   ]]
 local solos_gerais = {"group:soil", "group:stone", "group:sand"}
-plagen.planificar = function(pos, tipo, largura, amplitude, nodes, borda, calc_media, verif_mapa)
+sunos.planificar = function(pos, tipo, largura, amplitude, nodes, borda, calc_media, verif_mapa)
 	-- Verificar dados
 	if not pos then
 		minetest.log("error", "[Plagen] Tabela 'pos' nula (em plagen.planificar)")

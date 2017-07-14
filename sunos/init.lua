@@ -63,6 +63,7 @@ dofile(modpath.."/ajuste_estantes.lua")
 dofile(modpath.."/rua_manip.lua")
 dofile(modpath.."/ajuste_jogador.lua")
 dofile(modpath.."/verif_pop.lua")
+dofile(modpath.."/planificador.lua")
 -- Nodes
 dofile(modpath.."/nodes/estantes_nodrop.lua")
 dofile(modpath.."/nodes/rua.lua")

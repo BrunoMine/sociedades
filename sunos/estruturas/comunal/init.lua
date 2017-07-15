@@ -138,18 +138,13 @@ local tb_rotat = {"0", "90", "180", "270"}
 		<update> OPCIONAL | Informa que se trata de uma atualização de uma estrutura que ja existe
   ]]
 sunos.estruturas.comunal.construir = function(pos, vila, nivel, verif_area)
+	sunos.checkvar(pos, "Coordenada invalida para construir estrutura de casa comunal")
+	sunos.checkvar(vila, "Nenhuma vila informada para construir estrutura de casa comunal")
+	sunos.checkvar(nivel, "Nenhum nivel informado para construir estrutura de casa comunal")
+	
 	-- Validar argumentos de entrada
-	if pos == nil then
-		minetest.log("error", "[Sunos] Tabela pos nula (sunos.estruturas.comunal.construir)")
-		return "Erro interno (pos nula)"
-	end
-	if nivel == nil then
-		minetest.log("error", "[Sunos] variavel nivel nula (em sunos.estruturas.comunal.construir)")
-		return "Erro interno (nivel nulo)"
-	end
-	if vila == nil then
-		minetest.log("error", "[Sunos] variavel vila nula (em sunos.estruturas.comunal.construir)")
-		return "Erro interno (vila inexistente)"
+	if not pos or not nivel or not vila then
+		return "Erro interno"
 	end
 	
 	-- Distancia centro a borda padrão

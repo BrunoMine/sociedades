@@ -42,26 +42,11 @@ end
 
 -- Spawnar um NPC
 sunos.npcs.npc.spawn = function(tipo, vila, pos, spos)
-	if not tipo then
-		minetest.log("error", "[Sunos] tipo nulo (em sunos.npcs.npc.spawn)")
-		return false
-	end
-	if not sunos.npcs.npc.registrados[tipo] then
-		minetest.log("error", "[Sunos] tipo invalido (em sunos.npcs.npc.spawn)")
-		return false
-	end
-	if not vila then
-		minetest.log("error", "[Sunos] vila nula (em sunos.npcs.npc.spawn)")
-		return false
-	end
-	if not pos then
-		minetest.log("error", "[Sunos] pos nula (em sunos.npcs.npc.spawn)")
-		return false
-	end
-	if not spos then
-		minetest.log("error", "[Sunos] faltou coordenada para spawnar (em sunos.npcs.npc.spawn)")
-		return false
-	end
+	sunos.checkvar(tipo, "Nenhum tipo fornecido para spawnar um npc")
+	sunos.checkvar(sunos.npcs.npc.registrados[tipo], "Tipo de npc inexistente para spawnar um npc")
+	sunos.checkvar(vila, "Nenhuma vila informada para spawnar um npc")
+	sunos.checkvar(pos, spos, "Coordenada nula para spawnar um npc")
+	
 	
 	-- Verifica o node para spawn
 	local node = minetest.get_node(pos)

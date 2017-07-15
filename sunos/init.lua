@@ -37,6 +37,7 @@ notificar("Carregando...")
 -- Metodos gerais
 dofile(modpath.."/tradutor.lua")
 dofile(modpath.."/banco_de_dados.lua")
+dofile(modpath.."/checkvar.lua")
 dofile(modpath.."/online.lua")
 dofile(modpath.."/rollback.lua")
 dofile(modpath.."/diretrizes.lua")

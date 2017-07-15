@@ -137,10 +137,11 @@ local tb_rotat = {"0", "90", "180", "270"}
 		<itens_repo> OPCIONAL | Repassado ao comando sunos.decor_repo para substituir itens de reposição
 ]]
 sunos.estruturas.taverna.construir = function(pos, vila, verif_area, itens_repo)
+	sunos.checkvar(pos, "Coordenada invalida para construir estrutura de taverna")
+	
 	-- Validar argumentos de entrada
-	if pos == nil then
-		minetest.log("error", "[Sunos] Tabela pos nula (em sunos.estruturas.taverna.construir)")
-		return "Erro interno (pos nula)"
+	if not pos then
+		return "Erro interno"
 	end
 	
 	-- Variaveis auxiliares

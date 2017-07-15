@@ -530,10 +530,7 @@ end
 		<pos_ref> é uma coordenada de referencia do local onde a vila será criada
   ]]
 sunos.criar_vila = function(pos_ref)
-	if pos_ref == nil then
-		minetest.log("error", "[Sunos] Tabela pos_ref nula (em sunos.criar_vila)")
-		return false
-	end
+	sunos.checkvar(pos_ref, "Coordenada de referencia nula ao criar uma vila")
 	
 	local pos = { -- Pos do vetor de movimentação
 		x=pos_ref.x,

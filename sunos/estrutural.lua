@@ -14,18 +14,8 @@ sunos.estrutural = {}
 
 -- Preenche uma area com um node
 sunos.estrutural.preencher = function(minp, maxp, node)
-	if minp == nil then
-		minetest.log("error", "[Sunos] minp nulo (em sunos.estrutural.preencher)")
-		return false
-	end
-	if maxp == nil then
-		minetest.log("error", "[Sunos] maxp nulo (em sunos.estrutural.preencher)")
-		return false
-	end
-	if node == nil then
-		minetest.log("error", "[Sunos] node nulo (em sunos.estrutural.preencher)")
-		return false
-	end
+	sunos.checkvar(minp, maxp, "Coordenadas maior e/ou menor invalidas ao preencher uma area")
+	sunos.checkvar(node, "Nenhum node de preenchimento informado ao preencher uma area")
 	
 	for x = minp.x, maxp.x, 1 do
 		for y = minp.y, maxp.y, 1 do

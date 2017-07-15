@@ -21,14 +21,8 @@
 		'3' faixa de subsolo (considerando 2 faixas) falta blocos de terra
   ]]
 sunos.verif_terreno = function(pos, dist)
-	if not pos then
-		minetest.log("error", "[Sunos] minp nulo (em sunos:verif_terreno)")
-		return false
-	end
-	if not dist then
-		minetest.log("error", "[Sunos] dist nulo (em sunos:verif_terreno)")
-		return false
-	end
+	sunos.checkvar(pos, dist, "Parametro(s) invalido(s) para verificar terreno")
+	
 	
 	-- Verificar faixa de solo superficial
 	do

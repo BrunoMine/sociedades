@@ -14,14 +14,8 @@ local S = sunos.S
 
 -- Envia uma formspec simples de aviso
 local avisar = function(player, texto)
-	if not player then
-		minetest.log("error", "[Sunos] player nulo (em avisar do script interface.lua)")
-		return false
-	end
-	if not texto then
-		minetest.log("error", "[Sunos] texto nulo (em avisar do script interface.lua)")
-		return false
-	end
+	sunos.checkvar(player, "Nenhum player fornecido para avisar com formspec")
+	sunos.checkvar(texto, "Nenhum texto fornecido para avisar player com formspec")
 	
 	minetest.show_formspec(player:get_player_name(), "sunos:npc", "size[12,1]"
 		..default.gui_bg

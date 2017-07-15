@@ -22,6 +22,7 @@ minetest.register_node("sunos:bancada_repo", {
 	legacy_facedir_simple = true,
 	is_ground_content = false,
 	sounds = default.node_sound_wood_defaults(),
+	drop = "",
 })
 
 -- SobreBancada comum (item com aspecto parecido com o bau)
@@ -43,6 +44,7 @@ minetest.register_node("sunos:sobrebancada_repo", {
 	legacy_facedir_simple = true,
 	is_ground_content = false,
 	sounds = default.node_sound_wood_defaults(),
+	drop = "",
 })
 
 -- Decoração simples (tipo vaso, totem e etc)
@@ -61,6 +63,7 @@ minetest.register_node("sunos:simples_repo", {
 	},
 	groups = {dig_immediate = 3, attached_node = 1, sunos_repo=1},
 	sounds = default.node_sound_glass_defaults(),
+	drop = "",
 })
 
 
@@ -77,10 +80,8 @@ minetest.register_node("sunos:simples_repo", {
 			}
   ]]
 sunos.decor_repo = function(pos, dist, itens)
-	if itens == nil then
-		minetest.log("error", "[Sunos] Tabela itens nula (sunos.decor_repo)")
-		return "Erro interno (pos nula)"
-	end
+	sunos.checkvar(pos, dist, itens, "Parametro(s) invalido(s) para trocar itens de reposicao")
+	
 	
 	if itens.bancadas then
 		-- Pegar todas bancadas

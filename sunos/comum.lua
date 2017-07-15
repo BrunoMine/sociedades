@@ -44,14 +44,8 @@ end
 		<pos2> é uma pos para ser comparada com a outra
   ]]
 sunos.verif_dist_pos = function(pos1, pos2)
-	if pos1 == nil then
-		minetest.log("error", "[Sunos] Tabela pos1 nula (em sunos.verif_dist_pos)")
-		return false
-	end
-	if pos2 == nil then
-		minetest.log("error", "[Sunos] Tabela pos2 nula (em sunos.verif_dist_pos)")
-		return false
-	end
+	sunos.checkvar(pos1, pos2, "Coordenada(s) nula(s) ao ao verificar distancia entre pos1 e pos2")
+	
 	local x = math.abs(math.abs(pos1.x)-math.abs(pos2.x))
 	local y = math.abs(math.abs(pos1.y)-math.abs(pos2.y))
 	local z = math.abs(math.abs(pos1.z)-math.abs(pos2.z))
@@ -90,10 +84,9 @@ end
 			loop deve iniciar (padrão é 0) 
   ]]
 sunos.pegar_solo = function(pos, dist, subir)
-	if pos == nil then
-		minetest.log("error", "[Sunos] Tabela pos nula (em sunos.pegar_solo)")
-		return false
-	end	
+	sunos.checkvar(pos, "Coordenada nula para pegar altura do solo")
+	sunos.checkvar(dist, subir, "Parametro(s) invalido(s) nula para pegar altura do solo")
+	
 	
 	if dist == nil then dist = 10 end
 	if subir == nil then subir = 0 end
@@ -121,14 +114,7 @@ end
 		<nome> Nome da estrutura (Ex. casa_simples)
   ]]
 sunos.pegar_arquivo = function(largura, tipo)
-	if largura == nil then
-		minetest.log("error", "[Sunos] Largura nula (em sunos.pegar_arquivo)")
-		return nil
-	end
-	if tipo == nil then
-		minetest.log("error", "[Sunos] Tipo de estrutura nula (em sunos.pegar_arquivo)")
-		return nil
-	end
+	sunos.checkvar(largura, tipo, "Parametro(s) invalido(s) para pegar arquivo")
 	
 	local estruturas = minetest.get_dir_list(modpath.."/schems/"..tipo)
 	
@@ -167,10 +153,6 @@ end
 			(padrão é 1)
   ]]
 sunos.ir_dir = function(pos, dir, dist)
-	if pos == nil then
-		minetest.log("error", "[Sunos] Tabela pos nula (em sunos.ir_dir)")
-		return false
-	end
 	
 	if dist == nil then dist = 1 end
 	
@@ -203,14 +185,6 @@ end
 			("<"(direita) ou ">"(esquerda))
   ]]
 sunos.girar_dir = function(dir, lado)
-	if dir == nil then
-		minetest.log("error", "[Sunos] String dir nula (em sunos.girar_dir)")
-		return false
-	end
-	if lado ~= "<" and lado ~= ">" then
-		minetest.log("error", "[Sunos] String lado invalida (em sunos.girar_dir)")
-		return false
-	end
 	
 	if dir == "x+" then
 		if lado == "<" then 
@@ -252,10 +226,6 @@ end
   ]]
 sunos.pegar_dir_aleatoria = function(exeto)
 	local d = {"x+", "x-", "z+", "z-"}
-	if table.maxn(exeto) >= 4 then 
-		minetest.log("error", "[Sunos] todas as direcoes foram proibidas (em sunos.pegar_dir_aleatoria)")
-		return nil 
-	end
 	
 	if exeto and table.maxn(exeto) > 0 then
 		for _,dir2 in ipairs(exeto) do
@@ -288,10 +258,7 @@ end
 			loop deve iniciar (padrão é 0)
   ]]
 sunos.f_pegar_solo = function(p, degrau, dist, subir)
-	if p == nil then
-		minetest.log("error", "[Sunos] Tabela p nula (em sunos.f_pegar_solo)")
-		return false
-	end
+
 	if subir == nil then subir = 0 end
 	local s = sunos.pegar_solo(p, dist, subir)
 	if s == nil then
@@ -320,14 +287,7 @@ end
 		<dist> do centro a borda da estrutura
   ]]
 sunos.verificar_estrutura = function(pos, dist)
-	if pos == nil then
-		minetest.log("error", "[Sunos] Tabela pos nula (em sunos.verificar_estrutura)")
-		return false
-	end
-	if dist == nil then
-		minetest.log("error", "[Sunos] Variavel dist nula (em sunos.verificar_estrutura)")
-		return false
-	end
+	sunos.checkvar(pos, dist, "Parametro(s) invalido(s) para verificar estrutura")
 	
 	-- Nodes de solo de entorno
 	local nodes_solo_entorno = {"default:dirt_with_grass", "default:cobble"}
@@ -404,14 +364,7 @@ end
 		<dist> do centro a borda da possivel nova estrutura
   ]]
 sunos.verif_fundamento = function(pos, dist)
-	if pos == nil then
-		minetest.log("error", "[Sunos] Tabela pos nula (em verif_fundamento)")
-		return false
-	end
-	if dist == nil then
-		minetest.log("error", "[Sunos] Variavel dist nula (em verif_fundamento)")
-		return false
-	end
+	sunos.checkvar(pos, dist, "Parametro(s) invalido(s) para verificar fundamento")
 	
 	-- Distancia a verificar
 	-- Considerando a pior hipotese de uma estrutura de largura 13 e mais 1 bloco de espaço
@@ -441,14 +394,7 @@ end
 
 -- Montar ruinas
 sunos.montar_ruinas = function(pos, dist)
-	if pos == nil then
-		minetest.log("error", "[Sunos] Tabela pos nula (em sunos.montar_ruinas)")
-		return false
-	end
-	if dist == nil then
-		minetest.log("error", "[Sunos] Variavel dist nula (em sunos.montar_ruinas)")
-		return false
-	end
+	sunos.checkvar(pos, dist, "Parametro(s) invalido(s) para montar ruinas")
 	
 	-- Pega todas elementos pedrosos
 	local nodes = minetest.find_nodes_in_area(
@@ -496,14 +442,8 @@ end
 		<dist> distancia de centro a borda da area
   ]]
 sunos.verif_carregamento = function(pos, dist)
-	if pos == nil then
-		minetest.log("error", "[Sunos] Tabela pos nula (em sunos.verif_carregamento)")
-		return false
-	end
-	if dist == nil then
-		minetest.log("error", "[Sunos] Variavel dist nula (em sunos.verif_carregamento)")
-		return false
-	end
+	sunos.checkvar(pos, dist, "Parametro(s) invalido(s) para verificar carregamento")
+	
 	
 	-- Pegar os 8 cantos da area
 	local nn = {} -- nomes dos nodes

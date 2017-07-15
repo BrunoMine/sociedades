@@ -20,10 +20,8 @@
 		[nodes] é uma tabela ordenada com os nomes dos nodes a ser considerados estruturais
   ]]
 sunos.contabilizar_blocos_estruturais = function(pos, nodes)
-	if pos == nil then
-		minetest.log("error", "[Sunos] Tabela pos nula (em sunos.contabilizar_blocos_estruturais)")
-		return false
-	end
+	sunos.checkvar(pos, nodes, "Parametro(s) invalido(s) para contabilizar nodes estruturais")
+	
 	
 	local meta = minetest.get_meta(pos)
 	local dist = tonumber(meta:get_string("dist"))
@@ -49,10 +47,7 @@ end
 		[nodes] é uma tabela ordenada com os nomes dos nodes a ser considerados estruturais
   ]]
 sunos.verificar_blocos_estruturais = function(pos, nodes)
-	if pos == nil then
-		minetest.log("error", "[Sunos] Tabela pos nula (em sunos.verificar_blocos_estruturais)")
-		return false
-	end
+	sunos.checkvar(pos, nodes, "Parametro(s) invalido(s) para verificar nodes estruturais")
 	
 	-- Acessar metadados do fundamento
 	local meta = minetest.get_meta(pos)

@@ -39,15 +39,7 @@ end
 
 -- Colocação de uma caixa
 sunos.criar_caixa_de_area = function(pos, dist)
-	
-	if not pos then
-		minetest.log("error", "[Sunos] pos nulo (em sunos.criar_caixa_de_area)")
-		return false
-	end
-	if not dist then
-		minetest.log("error", "[Sunos] dist nulo (em sunos.criar_caixa_de_area)")
-		return false
-	end
+	sunos.checkvar(pos, dist, "Parametro(s) invalido(s) para criar caixa de estrutura")
 	
 	-- Remove caixas proximas para evitar colisão
 	for  _,obj in ipairs(minetest.get_objects_inside_radius(pos, 13)) do
@@ -61,8 +53,7 @@ sunos.criar_caixa_de_area = function(pos, dist)
 	local obj = minetest.add_entity({x=pos.x, y=pos.y+7, z=pos.z}, "sunos:caixa_de_area")
 	
 	-- Verifica se foi criado
-	if not obj then
-		minetest.log("error", "[Sunos] Falha ao criar objecto (em sunos.criar_caixa_de_area)")
+	if sunos.checkvar(obj, "Falha ao criar objecto de caixa de area") == false then
 		return false
 	end
 	

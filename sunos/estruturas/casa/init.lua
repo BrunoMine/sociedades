@@ -75,14 +75,11 @@ local tb_rotat = {"0", "90", "180", "270"}
 		<verif_pop> OPCIONAL | Para verificações de população da vila
   ]]
 sunos.estruturas.casa.construir = function(pos, dist, vila, verif_area, itens_repo, verif_pop)
-	-- Validar argumentos de entrada
-	if pos == nil then
-		minetest.log("error", "[Sunos] Tabela pos nula (sunos.estruturas.casa.construir)")
-		return "Erro interno (pos nula)"
-	end
-	if dist == nil then
-		minetest.log("error", "[Sunos] variavel dist nula (em sunos.estruturas.casa.construir)")
-		return "Erro interno (tamanho de casa inexistente)"
+	sunos.checkvar(pos, "Coordenada invalida para construir estrutura de casa")
+	sunos.checkvar(dist, "Distancia centro-borda invalida para construir estrutura de casa")
+	
+	if not pos or not dist then
+		return "Erro interno"
 	end
 	
 	-- Variaveis auxiliares

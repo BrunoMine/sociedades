@@ -14,18 +14,9 @@ local modpath = minetest.get_modpath("sunos")
 
 -- Montar uma estrutura
 sunos.montar_estrutura = function(cpos, dist, tipo, rotat)
-	if cpos == nil then
-		minetest.log("error", "[Sunos] Tabela cpos nula (em sunos.montar_estrutura)")
-		return false
-	end
-	if dist == nil then
-		minetest.log("error", "[Sunos] dist nula (em sunos.montar_estrutura)")
-		return false
-	end
-	if tipo == nil then
-		minetest.log("error", "[Sunos] Tipo de estrutura nula (em sunos.montar_estrutura)")
-		return nil
-	end
+	sunos.checkvar(cpos, "Coordenada central nula ao montar estrutura")
+	sunos.checkvar(dist, "Nenhuma distancia centro-borda fornecida ao montar estrutura")
+	sunos.checkvar(tipo, "Nenhum tipo fornecido ao montar estrutura")
 	
 	-- Pegando dados do local
 	local pos = {x=cpos.x-dist, y=cpos.y, z=cpos.z-dist}

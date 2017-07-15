@@ -25,10 +25,8 @@ local worldpath = minetest.get_worldpath()
 
 -- Atualizar banco de dados da vila
 sunos.atualizar_bd_vila = function(vila)
-	if vila == nil then
-		minetest.log("error", "[Sunos] Variavel vila nula (em sunos.atualizar_bd_vila)")
-		return false
-	end
+	sunos.checkvar(vila, "Nenhuma vila fornecida para atualizar o banco de dados")
+	
 	
 	-- Pegar lista de tabelas da vila
 	local list = minetest.get_dir_list(worldpath.."/sunos/vila_"..vila)

@@ -14,7 +14,7 @@ local modname = minetest.get_current_modname()
 local modpath = minetest.get_modpath(modname)
 
 -- Variavel global
-memor = {}
+local memor = {}
 
 -- Rotinas de interação com arquivos
 

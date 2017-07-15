@@ -57,10 +57,18 @@ function memor.escrever(dir, arquivo, dados)
 		saida:write(dados)
 		io.close(saida)
 		return true
-	else
-		minetest.log("info", "[Memor] memor.escrever tentou escrever num diretorio inexistente")
-		return false
 	end
+	-- Cria diretorio (tabela) caso nao exista
+	memor.mkdir(modname.."/"..dir)
+	saida = io.open(wpath .. "/" .. modname .. "/" .. dir .. "/" .. arquivo, "w")
+	if saida then
+		saida:write(dados)
+		io.close(saida)
+		return true
+	end
+	
+	minetest.log("error", "[Memor] Impossivel escrever dados em "..modname.."/"..dir.."/"..arquivo.." (em memor.escrever)")
+	return false
 end
 
 -- Ler dados de um arquivo de memória (Carregar)
@@ -123,24 +131,23 @@ end
 -- Verifica diretorios e corrige
 verificar = function(subdir)
 	
-	local dir = modname
 	
 	-- Verifica e corrige diretorio
 	local list = minetest.get_dir_list(minetest.get_worldpath(), true)
 	local r = false
 	for n, ndir in ipairs(list) do
-		if ndir == dir then
+		if ndir == modname then
 			r = true
 			break
 		end
 	end
 	-- Diretorio inexistente
 	if r == false then
-		memor.mkdir(dir)
+		memor.mkdir(modname)
 	end
 	
 	-- Verifica e corrige subdiretorio
-	list = minetest.get_dir_list(minetest.get_worldpath().."/"..dir, true)
+	list = minetest.get_dir_list(minetest.get_worldpath().."/"..modname, true)
 	r = false
 	for n, ndir in ipairs(list) do
 		if ndir == subdir then
@@ -150,7 +157,7 @@ verificar = function(subdir)
 	end
 	-- Subdiretorio inexistente
 	if r == false then
-		memor.mkdir(dir.."/"..subdir)
+		memor.mkdir(modname.."/"..subdir)
 	end
 	
 end

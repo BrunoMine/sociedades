@@ -1,15 +1,74 @@
 --[[
 	Lib Tror para Minetest
-	Copyright (C) 2017 BrunoMine (https://github.com/BrunoMine)
+	Tror v2.0.0 Copyright (C) 2017 BrunoMine (https://github.com/BrunoMine)
 	
 	Recebeste uma cópia da GNU Lesser General
 	Public License junto com esse software,
 	se não, veja em <http://www.gnu.org/licenses/>. 
 	
-	Operações de troca de itens
+	Autoria do código:
+	Originalmente por BrunoMine, Bruno Borges <borgesdossantosbruno@gmail.com>
   ]]
 
 local tror = {}
+
+local ajustar_tabela = function(items)
+	if not items then return end
+	
+	-- Torna tabela
+	if type(items) == "string" then
+		items = {items}
+	end
+	
+	-- Torna itens em tabelas
+	if items[1] then
+		for i,item in ipairs(items) do
+			if type(item) == "string" then
+				local n = string.split(item, " ")
+				items[i] = {name=n[1]}
+			end
+		end
+	end
+	
+	-- Consolida dados de cada item
+	for i,item in ipairs(items) do
+		local wear = tonumber(item.wear or 0)
+		items[i].wear = wear
+		items[i].count = tonumber(item.count or 1)
+		items[i].metadata = tostring(item.metadata or "")
+	end
+	
+	-- Evita redundancias de itens
+	-- Transforma a tabela em desordenada para poder remover valores sem alterar a sequencia
+	local old_items = minetest.deserialize(minetest.serialize(items))
+	items = {}
+	for i,item in ipairs(old_items) do
+		items[tostring(i)] = minetest.deserialize(minetest.serialize(item))
+	end
+	-- Acumula os itens exatamente iguais
+	for i,item in pairs(items) do
+		for ii,iitem in pairs(items) do
+			if item and iitem and ii ~= i then
+				if iitem.name == item.name 
+					and iitem.name == item.name 
+					and iitem.metadata  == item.metadata 
+					and iitem.wear == item.wear 
+				then
+					items[i].count = items[i].count + items[ii].count
+					items[ii] = nil
+				end
+			end
+		end
+	end
+	-- Restaura a tabela
+	old_items = minetest.deserialize(minetest.serialize(items))
+	items = {}
+	for i,item in pairs(old_items) do
+		table.insert(items, minetest.deserialize(minetest.serialize(item)))
+	end
+	
+	return items
+end
 
 -- Verificar viabilidade de uma troca
 tror.verificar = function(player, item_rem, item_add)
@@ -31,74 +90,18 @@ tror.verificar = function(player, item_rem, item_add)
 	return true
 end
 
--- Realizar uma troca entre com um jogador
-tror.trocar = function(player, item_rem, item_add, msg)
-	
-	if not player or not item_add or not item_rem then
-		minetest.log("error", "[Tror] Faltou dados em (em tror.trocar)")
-		return false
-	end
-	
-	
-	local v = tror.verificar(player, item_rem, item_add)
-	if v ~= true then
-		if v == 1 then
-			if msg and msg.ins then
-				minetest.chat_send_player(player:get_player_name(), msg.ins)
-			end
-			return 1
-		elseif v == 2 then
-			if msg and msg.lot then
-				minetest.chat_send_player(player:get_player_name(), msg.lot)
-			end
-			return 2
-		else
-			minetest.log("error", "[Tror] Resultado inesperado em tror.trocar (v = "..dump(v)..")")
-			return false
-		end
-	end
-	
-	local inv = player:get_inventory()
-	
-	-- Retirar itens do inventario
-	local i = string.split(item_rem, " ")
-	local n = i[2] or 1
-	i = i[1]
-	for r=1, tonumber(n) do -- 1 eh o tanto que quero tirar
-		inv:remove_item("main", i) -- tira 1 por vez
-	end
-	
-	inv:add_item("main", item_add)
-	
-	
-	if msg and msg.ok then
-		minetest.chat_send_player(player:get_player_name(), msg.ok)
-	end
-	return true
-	
-end
 
--- Realizar uma troca com um jogador
---[[
-	Retorna false caso o jogador nao tenha os itens requisitados
-	e dropa no local todos os itens que não couberem no inventario
-  ]]
-tror.trocar_plus = function(player, item_rem, item_add)
+-- Tenta trocar itens
+tror.trocar = function(player, item_rem, item_add)
 	
 	if not player then
 		minetest.log("error", "[Tror] Faltou player (em tror.trocar_plus)")
 		return false
 	end
 	
-	if item_rem and not item_rem[1] then
-		minetest.log("error", "[Tror] argumento item_rem invalido (em tror.trocar_plus)")
-		return false
-	end
-	
-	if item_add and not item_add[1] then
-		minetest.log("error", "[Tror] argumento item_add invalido (em tror.trocar_plus)")
-		return false
-	end
+	-- Ajusta para tabelas
+	item_rem = ajustar_tabela(item_rem)
+	item_add = ajustar_tabela(item_add)
 	
 	local pos = player:getpos()
 	
@@ -107,6 +110,7 @@ tror.trocar_plus = function(player, item_rem, item_add)
 	-- Verificar se o jogador possui os itens requisitados
 	local possui = true
 	for _,item in ipairs(item_rem) do
+		
 		if not inv:contains_item("main", item) then
 			possui = false
 			break
@@ -120,11 +124,8 @@ tror.trocar_plus = function(player, item_rem, item_add)
 	
 	-- Retira itens do jogador
 	for _,item in ipairs(item_rem) do
-		local i = string.split(item, " ")
-		local n = i[2] or 1
-		i = i[1]
-		for r=1, tonumber(n) do -- 1 eh o tanto que quero tirar
-			inv:remove_item("main", i) -- tira 1 por vez
+		for r=1, tonumber(item.count), 1 do -- tira 1 por vez
+			inv:remove_item("main", item.name) 
 		end
 	end
 	
@@ -142,5 +143,6 @@ tror.trocar_plus = function(player, item_rem, item_add)
 	return true
 	
 end
+
 
 return tror

@@ -28,11 +28,18 @@ do
 		end
 		-- Mantem a tabela groups separada
 		def.groups = minetest.deserialize(minetest.serialize(def.groups))
-	
+		
+		-- Evita todas chamadas
+		def.on_use = nil
+		def.on_place = nil
+		def.after_place_node = nil
+		def.on_dig = nil
+		
 		-- Altera alguns paremetros
 		def.description = minetest.registered_nodes[original].description .. " ("..S("Sem Drop")..")"
 		def.groups.not_in_creative_inventory = 1
 		def.drop = "default:torch"
+		
 		-- Registra o novo node
 		minetest.register_node(novo, def)
 	end

@@ -62,6 +62,9 @@ sunos.var.nodes_trocados = {
 	["sunos:carpete_palha"] = "sunos:carpete_palha_nodrop",
 	["sunos:tear_palha"] = "sunos:tear_palha_nodrop",
 	["sunos:kit_culinario"] = "sunos:kit_culinario_nodrop",
+	["default:torch"] = "sunos:torch_nodrop",
+	["default:torch_ceiling"] = "sunos:torch_ceiling_nodrop",
+	["default:torch_wall"] = "sunos:torch_wall_nodrop",
 }
 
 -- Listagem de itens para os nodes de venda

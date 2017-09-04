@@ -12,7 +12,6 @@
 -- Tradução de strings
 local S = sunos.S
 
-
 -- Kit Culinario
 minetest.register_node("sunos:kit_culinario", {
 	-- Geral

@@ -75,6 +75,7 @@ dofile(modpath.."/nodes/carpete.lua")
 dofile(modpath.."/nodes/tear.lua")
 dofile(modpath.."/nodes/kit_culinario.lua")
 dofile(modpath.."/nodes/vendas.lua")
+dofile(modpath.."/nodes/tochas.lua")
 -- Craftitens
 dofile(modpath.."/craftitens/kit_reparador.lua")
 dofile(modpath.."/craftitens/broa_de_frutas.lua")

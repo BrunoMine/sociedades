@@ -31,11 +31,14 @@ sunos.estruturas.decor = {}
 		<verif_area> OPCIONAL | true verificar a area antes de montar a estrutura (retorna strings dos erros)
   ]]
 sunos.estruturas.decor.construir = function(pos, dist, vila, verif_area)
-	sunos.checkvar(pos, "Coordenada invalida para construir estrutura decorativa")
-	sunos.checkvar(dist, "Distancia centro-borda invalida para construir estrutura decorativa")
-	
-	if not pos or not dist then
-		return "Erro interno"
+	-- Validar argumentos de entrada
+	if pos == nil then
+		minetest.log("error", "[Sunos] Tabela pos nula (sunos.estruturas.decor.construir)")
+		return "Erro interno (pos nula)"
+	end
+	if dist == nil then
+		minetest.log("error", "[Sunos] variavel dist nula (em sunos.estruturas.decor.construir)")
+		return "Erro interno (tamanho de estrutura decorativa inexistente)"
 	end
 	
 	-- Variaveis auxiliares

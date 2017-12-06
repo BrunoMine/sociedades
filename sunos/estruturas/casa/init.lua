@@ -24,19 +24,31 @@ dofile(minetest.get_modpath("sunos").."/estruturas/casa/diretrizes.lua")
 -- Métodos para gerar tabelas de itens para reposição de nodes (carregamento de script)
 dofile(minetest.get_modpath("sunos").."/estruturas/casa/repo_nodes.lua") 
 
+-- Bau de casa dos sunos (carregamento de script)
+dofile(minetest.get_modpath("sunos").."/estruturas/casa/bau.lua") 
+
 -- Registros do NPC da casa (carregamento de script)
 dofile(minetest.get_modpath("sunos").."/estruturas/casa/npc.lua") 
 
 -- Registros do NPC da casa (carregamento de script)
 dofile(minetest.get_modpath("sunos").."/estruturas/casa/interface.lua") 
 
--- Bau de casa dos sunos (carregamento de script)
-dofile(minetest.get_modpath("sunos").."/estruturas/casa/bau.lua") 
+
 
 
 -- Nodes estruturais de uma casa
 local nodes_estruturais = sunos.estruturas.casa.var.nodes_estruturais
 
+-- Buscar nodes numa casa
+sunos.estruturas.casa.buscar_nodes = function(pos, nodes)
+	local meta = minetest.get_meta(pos)
+	local dist = meta:get_string("dist")
+	return minetest.find_nodes_in_area(
+		{x=pos.x-dist, y=pos.y, z=pos.z-dist}, 
+		{x=pos.x+dist, y=pos.y+14, z=pos.z+dist}, 
+		nodes
+	)
+end
 
 local set_bau = function(pos, vila, dist)
 
@@ -75,11 +87,14 @@ local tb_rotat = {"0", "90", "180", "270"}
 		<verif_pop> OPCIONAL | Para verificações de população da vila
   ]]
 sunos.estruturas.casa.construir = function(pos, dist, vila, verif_area, itens_repo, verif_pop)
-	sunos.checkvar(pos, "Coordenada invalida para construir estrutura de casa")
-	sunos.checkvar(dist, "Distancia centro-borda invalida para construir estrutura de casa")
-	
-	if not pos or not dist then
-		return "Erro interno"
+	-- Validar argumentos de entrada
+	if pos == nil then
+		minetest.log("error", "[Sunos] Tabela pos nula (sunos.estruturas.casa.construir)")
+		return "Erro interno (pos nula)"
+	end
+	if dist == nil then
+		minetest.log("error", "[Sunos] variavel dist nula (em sunos.estruturas.casa.construir)")
+		return "Erro interno (tamanho de casa inexistente)"
 	end
 	
 	-- Variaveis auxiliares

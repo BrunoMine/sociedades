@@ -9,13 +9,22 @@
 	NPC das casas
   ]]
 
+-- Cronograma de atividades do NPC da casa (carregamento de script)
+dofile(minetest.get_modpath("sunos").."/estruturas/casa/cronograma_npc.lua") 
+
 -- Tradução de strings
 local S = sunos.S
 
 -- Envia uma formspec simples de aviso
 local avisar = function(player, texto)
-	sunos.checkvar(player, "Nenhum player fornecido para avisar com formspec")
-	sunos.checkvar(texto, "Nenhum texto fornecido para avisar player com formspec")
+	if not player then
+		minetest.log("error", "[Sunos] player nulo (em avisar do script interface.lua)")
+		return false
+	end
+	if not texto then
+		minetest.log("error", "[Sunos] texto nulo (em avisar do script interface.lua)")
+		return false
+	end
 	
 	minetest.show_formspec(player:get_player_name(), "sunos:npc", "size[12,1]"
 		..default.gui_bg
@@ -24,34 +33,56 @@ local avisar = function(player, texto)
 	return true
 end
 
+-- Configurar lugares do npc
+local set_npc_places = function(self)
+	local pf = self.sunos_fundamento
+	if not pf then return end
+	
+	-- Cama
+	if sunos.estruturas.casa.buscar_nodes(pf, {"beds:bed_bottom"})[1] then
+		local pos_cama = sunos.estruturas.casa.buscar_nodes(pf, {"beds:bed_bottom"})[1]
+		local v = minetest.facedir_to_dir(minetest.get_node(pos_cama).param2)
+		local pos_acesso = {x=pos_cama.x-v.x,y=pos_cama.y, z=pos_cama.z-v.z}
+		npc.places.add_owned(self, "house_bed", "bed_primary", pos_cama, pos_acesso)
+	end
+	
+	-- Saidas da casa
+	if sunos.estruturas.casa.buscar_nodes(pf, {"doors:door_wood_a"})[1] then
+		local pos_porta = sunos.estruturas.casa.buscar_nodes(pf, {"doors:door_wood_a"})[1]
+		local v = minetest.facedir_to_dir(minetest.get_node(pos_porta).param2)
+		local pos_porta_dentro = {x=pos_porta.x-v.x,y=pos_porta.y, z=pos_porta.z-v.z}
+		local pos_porta_fora = {x=pos_porta.x+v.x,y=pos_porta.y, z=pos_porta.z+v.z}
+		npc.places.add_owned(self, "home_outside", "home_inside", pos_porta_dentro, nil)
+		npc.places.add_owned(self, "home_inside", "home_outside", pos_porta_fora, nil)
+	end
+end
+
+-- Criar entidade NPC
 sunos.npcs.npc.registrar("caseiro", {
-	on_step = function(self)
+	max_dist = 100,	
+	node_spawner = "sunos:bau_casa",
 	
-		-- Verifica se o hash esta atual
-		if minetest.get_meta(self.mypos):get_string("npc_hash") ~= self.myhash then
-			-- Remove npc
-			self.object:remove()
-		end
-	
-		-- Verifica se algum dos jogadores proximos é um inimigo
-		if self.state ~= "attack" then -- Verifica se ja não está em um ataque
-			for _,obj in ipairs(minetest.get_objects_inside_radius(self.object:getpos(), 13)) do
-				if obj:is_player() then
-				
-					-- Verifica se o jogador é inimigo
-					if sunos.verif_inimigo(self.vila, obj:get_player_name()) == true then
-						self.attack = obj
-						self.state = "attack"
-						return
-					end
-			
-				end
-			end
-		end
+	on_spawn = function(self)
 		
+		if self.dias_roteiro == nil -- Sem roteiro ainda
+			or self.dias_roteiro + 2 < minetest.get_day_count() -- Ja é o terceiro dia com esse roteiro
+		then
+			-- Configurar lugares (espera para que alores sejam atualizados)
+			minetest.after(1, set_npc_places, self)
+			
+			-- Configura agenda de tarefas
+			minetest.after(2, sunos.estruturas.casa.atribuir_cronograma_npc, self)
+		end
 	end,
+	
+	on_step = function(self, dtime)
+		return npc.step(self, dtime)
+	end,
+	
 	
 	drops = {
 		{name = "default:apple", chance = 2, min = 1, max = 2},
 	},
 })
+
+

@@ -43,6 +43,13 @@ NPCs
 		max_dist = 15,
 		^ Distancia maxima que o mob pode ficar da coordenada de origem
 		
+		node_spawner = "sunos:nodename",
+		^ Node do bau que vai spawnar o npc no sentido de estar associado com o mesmo
+		
+		nodes_spawn = {"sunos:meu_bau"},
+		^ Node sobre o qual o npc pode spawnar aleatoriamente
+		^ Por padrao será madeira, pedregulho e tijolos de pedra
+		
 		on_step = function(self),
 		^ O tempo entre cada iteração é o valor definido em `tempo_verif_bau` (não documentado)
 		

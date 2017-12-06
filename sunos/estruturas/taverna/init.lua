@@ -113,11 +113,6 @@ local set_bau = function(pos, vila, dist)
 		meta:set_string("infotext", S("Bau de Taverna dos Sunos"))
 	end
 	
-	-- Spawna um npc barman
-	if baus[1] then
-		sunos.estruturas.taverna.spawn_npc(baus[1], pos)
-	end
-	
 end
 
 
@@ -137,11 +132,10 @@ local tb_rotat = {"0", "90", "180", "270"}
 		<itens_repo> OPCIONAL | Repassado ao comando sunos.decor_repo para substituir itens de reposição
 ]]
 sunos.estruturas.taverna.construir = function(pos, vila, verif_area, itens_repo)
-	sunos.checkvar(pos, "Coordenada invalida para construir estrutura de taverna")
-	
 	-- Validar argumentos de entrada
-	if not pos then
-		return "Erro interno"
+	if pos == nil then
+		minetest.log("error", "[Sunos] Tabela pos nula (em sunos.estruturas.taverna.construir)")
+		return "Erro interno (pos nula)"
 	end
 	
 	-- Variaveis auxiliares

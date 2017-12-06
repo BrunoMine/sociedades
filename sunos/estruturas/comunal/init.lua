@@ -21,14 +21,14 @@ sunos.estruturas.comunal = {}
 -- Diretrizes
 dofile(modpath.."/estruturas/comunal/diretrizes.lua") 
 
+-- Bau de casa dos sunos (carregamento de script)
+dofile(modpath.."/estruturas/comunal/bau.lua") 
+
 -- Registros do NPC da casa (carregamento de script)
 dofile(modpath.."/estruturas/comunal/npc.lua") 
 
 -- Interface de atendimento da casa comunal (carregamento de script)
 dofile(modpath.."/estruturas/comunal/interface.lua") 
-
--- Bau de casa dos sunos (carregamento de script)
-dofile(modpath.."/estruturas/comunal/bau.lua") 
 
 -- Nodes estruturais
 local nodes_estruturais = sunos.estruturas.comunal.var.nodes_estruturais
@@ -138,13 +138,18 @@ local tb_rotat = {"0", "90", "180", "270"}
 		<update> OPCIONAL | Informa que se trata de uma atualização de uma estrutura que ja existe
   ]]
 sunos.estruturas.comunal.construir = function(pos, vila, nivel, verif_area)
-	sunos.checkvar(pos, "Coordenada invalida para construir estrutura de casa comunal")
-	sunos.checkvar(vila, "Nenhuma vila informada para construir estrutura de casa comunal")
-	sunos.checkvar(nivel, "Nenhum nivel informado para construir estrutura de casa comunal")
-	
 	-- Validar argumentos de entrada
-	if not pos or not nivel or not vila then
-		return "Erro interno"
+	if pos == nil then
+		minetest.log("error", "[Sunos] Tabela pos nula (sunos.estruturas.comunal.construir)")
+		return "Erro interno (pos nula)"
+	end
+	if nivel == nil then
+		minetest.log("error", "[Sunos] variavel nivel nula (em sunos.estruturas.comunal.construir)")
+		return "Erro interno (nivel nulo)"
+	end
+	if vila == nil then
+		minetest.log("error", "[Sunos] variavel vila nula (em sunos.estruturas.comunal.construir)")
+		return "Erro interno (vila inexistente)"
 	end
 	
 	-- Distancia centro a borda padrão

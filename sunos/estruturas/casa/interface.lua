@@ -14,9 +14,14 @@ local S = sunos.S
 
 -- Envia uma formspec simples de aviso
 local avisar = function(player, texto)
-	sunos.checkvar(player, "Nenhum player fornecido para avisar com formspec")
-	sunos.checkvar(texto, "Nenhum texto fornecido para avisar player com formspec")
-	
+	if not player then
+		minetest.log("error", "[Sunos] player nulo (em avisar do script interface.lua)")
+		return false
+	end
+	if not texto then
+		minetest.log("error", "[Sunos] texto nulo (em avisar do script interface.lua)")
+		return false
+	end
 	
 	minetest.show_formspec(player:get_player_name(), "sunos:npc", "size[12,1]"
 		..default.gui_bg
@@ -81,7 +86,7 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 		if fields.trocar then -- Trocar fundamento de casa comunal
 			
 			-- Tenta trocar pelo fundamento de casa comunal
-			if sunos.trocar_itens(player, 
+			if sunos.trocar_plus(player, 
 				{"default:tree 20", "default:stone 70", "farming:straw 30"}, 
 				{"sunos:fundamento_comunal"}
 			) == false 

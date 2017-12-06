@@ -30,10 +30,16 @@ atualizar_string_menu_comunal()
 
 -- Envia uma formspec simples de aviso
 local avisar = function(player, texto)
-	sunos.checkvar(player, "Nenhum player fornecido para avisar com formspec")
-	sunos.checkvar(texto, "Nenhum texto fornecido para avisar player com formspec")
+	if not player then
+		minetest.log("error", "[Sunos] player nulo (em avisar do script interface.lua)")
+		return false
+	end
+	if not texto then
+		minetest.log("error", "[Sunos] texto nulo (em avisar do script interface.lua)")
+		return false
+	end
 	
-	minetest.show_formspec(player:get_player_name(), "sunos:npc", "size[12,1]"
+	minetest.show_formspec(player:get_player_name(), "sunos:npc_comunal", "size[12,1]"
 		..default.gui_bg
 		..default.gui_bg_img
 		.."label[0.5,0;"..S("Aviso").." \n"..texto.."]")
@@ -60,7 +66,7 @@ sunos.npcs.npc.registrados.comunal.on_rightclick = function(ent, player, fields)
 	sunos.online[player:get_player_name()].comunal.ent_acesso = ent
 	
 	-- NPC da casa Comunal
-	if ent.name == "sunos:npc" and ent.tipo == "comunal" then
+	if ent.name == "sunos:npc_comunal" then
 		
 		-- Atualizar banco de dados da vila
 		sunos.atualizar_bd_vila(ent.vila)
@@ -186,7 +192,7 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 			end   
 			
 			-- Tenta trocar
-			if sunos.trocar_itens(player, dados.item_rem, {dados.item_add}) == false then
+			if sunos.trocar_plus(player, dados.item_rem, {dados.item_add}) == false then
 				return avisar(player, S("Precisa dos itens exigidos para a trocar por \n@1", titulo))
 			else
 				-- Pegar descrição do item

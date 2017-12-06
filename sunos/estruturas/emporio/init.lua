@@ -94,11 +94,9 @@ local tb_rotat = {"0", "90", "180", "270"}
 		<verif_area> OPCIONAL | true verificar a area antes de montar a estrutura (retorna strings dos erros)
 ]]
 sunos.estruturas.emporio.construir = function(pos, vila, verif_area)
-	sunos.checkvar(pos, "Coordenada invalida para construir estrutura de emporio")
-	
-	
 	-- Validar argumentos de entrada
-	if not pos then
+	if pos == nil then
+		minetest.log("error", "[Sunos] Tabela pos nula (em sunos.estruturas.emporio.construir)")
 		return "Erro interno (pos nula)"
 	end
 	

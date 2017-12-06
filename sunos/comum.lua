@@ -18,6 +18,41 @@ local nodes_estruturais = {"default:wood", "default:cobble", "default:stonebrick
 -- Nodes removidos na montagem de ruinas
 local nodes_rem_ruinas = {"default:apple", "sunos:bau", "sunos:bau_casa_comunal", "sunos:bau_loja", "default:wood", "group:stair", "group:glass", "group:fence", "group:ladder", "group:flower", "group:vessel", "default:torch", "group:pane", "default:ladder_wood", "default:ladder_steel", "group:leaves", "group:wool", "group:door", "farming:straw", "group:sunos", "default:bookshelf", "vessels:shelf", "flowers:mushroom_brown"}
 
+-- Copiar tabela de dados (bom para coordenadas)
+sunos.copy_tb = function(tb)
+	return minetest.deserialize(minetest.serialize(tb))
+end
+
+-- Pegar distancia entre duas coordenadas
+sunos.p1_to_p2 = function(pos1, pos2)
+	local dx = math.abs(pos1.x - pos2.x)
+	local dy = math.abs(pos1.y - pos2.y)
+	local dz = math.abs(pos1.z - pos2.z)
+	local dist_xy = math.hypot(dx, dy)
+	local dist_xyz = math.hypot(dist_xy, dz)
+	return dist_xyz
+end
+
+-- Calcular valor diretamente proporcional (regra de 3)
+sunos.calc_proporcional = function(x1, y1, x2)
+	return ((y1*x2)/x1)
+end
+
+-- Ir um numero de blocos de pos1 a pos2
+sunos.ir_p1_to_p2 = function(pos1, pos2, dist)
+	-- Distancias em cada coordenada
+	local dx = pos2.x - pos1.x
+	local dy = pos2.y - pos1.y
+	local dz = pos2.z - pos1.z
+	local dxyz = sunos.p1_to_p2(pos1, pos2) -- distancia direta
+	-- Calcular distancia proporcionais e cada coordenada
+	local x = sunos.calc_proporcional(dxyz, dx, dist)
+	local y = sunos.calc_proporcional(dxyz, dy, dist)
+	local z = sunos.calc_proporcional(dxyz, dz, dist)
+	return {x=pos1.x+x, y=pos1.y+y, z=pos1.z+z}
+end
+
+
 -- Pegar direcao oposta
 sunos.pegar_dir_oposta = function(dir)
 	if dir == "x+" then
@@ -471,4 +506,16 @@ sunos.verif_carregamento = function(pos, dist)
 		end
 	end
 	return true
+end
+
+-- Verificar se uma estrutura existe na vila
+-- Retorna o nome do arquivo da estrutura no banco ou nulo se nao existir a estrutura
+-- Se houver mais de uma estrutura do tipo, retorna a primeira encontrada
+sunos.verif_estrutura_existe = function(vila, estrutura)
+	local lista = minetest.get_dir_list(minetest.get_worldpath() .. "/sunos/vila_" .. vila)
+	for _,arquivo in ipairs(lista) do
+		if string.match(arquivo, estrutura.."_") then
+			return arquivo
+		end
+	end
 end

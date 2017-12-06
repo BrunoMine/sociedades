@@ -23,9 +23,12 @@ local tempo_verif_npc = 20
 -- Distancia (om blocos) que um bau verifica em sua volta para encontrar seu proprio npc
 local dist_verif_npc = 10
 
+-- Tempo para bau verificar se deve spawner novo npc
+timeout_bau = 20
+
 -- Verificador do npc suno comum 
 -- Tempo (em segundos) que um npc demora para verificar se esta perto da pos de seu bau
-local tempo_verif_bau = 20
+sunos.timer_npc_check = 10
 -- A cada quantos loops de verificação do npc ele deve verificar se seu bau ainda existe
 local qtd_loops_npc = 3
 
@@ -40,13 +43,63 @@ local verif_dist_pos = function(pos1, pos2)
 	return x or y or z
 end
 
+-- Tabelas
+local sunos_walkable_nodes = {
+	"sunos:carpete_palha",
+	"sunos:carpete_palha_nodrop"
+}
+
+-- Pegar horario atual em minetest para checkins
+sunos.npcs.npc.get_time = function()
+	local time = minetest.get_timeofday() * 24
+	time = (time) - (time % 1)
+	return time
+end
+
+-- Configurar schekin
+sunos.npcs.npc.set_checkin = function(self, lugar, inicio, fim)
+	if inicio > fim then return end
+	for h=inicio, fim do
+		self.sunos_checkin[h] = sunos.copy_tb(lugar)
+	end
+	
+	-- Atualiza dados do bau
+	minetest.get_meta(self.mypos):set_string("checkin_npc", minetest.serialize(self.sunos_checkin))
+end
+local set_checkin = sunos.npcs.npc.set_checkin
+
+-- Spawners
+tabela_spawners = {}
+
+-- Tabela de npcs ativos no mundo
+--[[
+	Essa tabela conecta um determinado hash de npc ao seu objeto,
+	caso esteja nulo, o objeto não esta mais carregado ou morreu.
+  ]]
+sunos.npcs.npc.ativos = {}
+
 -- Spawnar um NPC
 sunos.npcs.npc.spawn = function(tipo, vila, pos, spos)
-	sunos.checkvar(tipo, "Nenhum tipo fornecido para spawnar um npc")
-	sunos.checkvar(sunos.npcs.npc.registrados[tipo], "Tipo de npc inexistente para spawnar um npc")
-	sunos.checkvar(vila, "Nenhuma vila informada para spawnar um npc")
-	sunos.checkvar(pos, spos, "Coordenada nula para spawnar um npc")
-	
+	if not tipo then
+		minetest.log("error", "[Sunos] tipo nulo (em sunos.npcs.npc.spawn)")
+		return false
+	end
+	if not sunos.npcs.npc.registrados[tipo] then
+		minetest.log("error", "[Sunos] tipo invalido (em sunos.npcs.npc.spawn)")
+		return false
+	end
+	if not vila then
+		minetest.log("error", "[Sunos] vila nula (em sunos.npcs.npc.spawn)")
+		return false
+	end
+	if not pos then
+		minetest.log("error", "[Sunos] pos nula (em sunos.npcs.npc.spawn)")
+		return false
+	end
+	if not spos then
+		minetest.log("error", "[Sunos] faltou coordenada para spawnar (em sunos.npcs.npc.spawn)")
+		return false
+	end
 	
 	-- Verifica o node para spawn
 	local node = minetest.get_node(pos)
@@ -61,17 +114,33 @@ sunos.npcs.npc.spawn = function(tipo, vila, pos, spos)
 		return false
 	end
 	
-	local obj = minetest.add_entity(spos, "sunos:npc") -- Cria o mob
+	local obj = minetest.add_entity(spos, "sunos:npc_"..tipo) -- Cria o mob
 	
 	-- Salva alguns dados na entidade inicialmente
 	if obj then
 		local ent = obj:get_luaentity()
-		ent.tipo = tipo -- Tipo de npc comum
+		ent.tipo = tipo -- Tipo de npc
 		ent.temp = 0 -- Temporizador
 		ent.loop = 0 -- Numero de loop de temporizador
 		ent.vila = vila -- numero da vila
-		ent.mypos = pos
-		ent.mynode = node.name
+		ent.mypos = pos -- pos do node de spawn (bau)
+		ent.mynode = node.name -- nome do node de spawn (bau)
+		ent.sunos_fundamento = minetest.deserialize(minetest.get_meta(pos):get_string("pos_fundamento"))
+		
+		-- Gera um hash numerico com a data e coordenada
+		local hash = minetest.pos_to_string(pos)
+		
+		ent.sunos_npchash = hash -- Salva no npc
+		sunos.npcs.npc.ativos[hash] = ent.object -- salva na tabela de npcs ativos
+		minetest.get_meta(ent.mypos):set_string("npchash", hash) -- Salva no bau
+		
+		-- Tabela de checkins da agenda
+		--[[
+			Quando da o horario o NPC se dirige ao local, 
+			ao estar la ele volta as atividades que deve fazer la
+		  ]]
+		ent.sunos_checkin = {}
+		set_checkin(ent, ent.sunos_fundamento, 0, 23) -- configura checkin no npc e bau
 		
 		-- Retorna a entidade
 		return ent
@@ -80,6 +149,60 @@ sunos.npcs.npc.spawn = function(tipo, vila, pos, spos)
 		return false
 	end
 	
+end
+
+
+-- Loop para andar até um local
+sunos.npcs.npc.loop_walk_pos = function(self, decorrido)
+	if not self or not self.object or not self.object:getpos() then return end
+	
+	decorrido = decorrido or 0
+	
+	local pos1 = self.object:getpos()
+	local pos2 = self.sunos_checkin[sunos.npcs.npc.get_time()]
+	local pos_indo = sunos.ir_p1_to_p2(pos1, pos2, 7)
+	local dist = sunos.p1_to_p2(pos1, pos2)
+	
+	local alvo, alvo_interior
+	
+	-- Caminho na rua calcetada
+	local alvo = minetest.find_node_near(pos_indo, 4, {"sunos:rua_calcetada"}, true)
+	if alvo then
+		if alvo then alvo.y = alvo.y+1 end
+	end
+	
+	-- Caminho para dentro da estrutura alvo 
+	if dist <= 15 then
+		alvo_interior = minetest.find_node_near(pos_indo, 4, sunos_walkable_nodes, true)
+	end
+	
+	
+	if alvo_interior or alvo then
+		-- Salva o local para andar
+		npc.places.add_shared_accessible_place(
+			self, 
+			{owner="", node_pos=alvo_interior or alvo}, 
+			"sunos_npc_walk", 
+			true,
+			{}
+		)
+		npc.add_task(self, npc.actions.cmd.WALK_TO_POS,
+			{
+				end_pos = "sunos_npc_walk",
+				walkable = sunos_walkable_nodes,
+			}
+		)
+	end
+	
+	-- Demorou demais
+	if decorrido + 1.5 > sunos.timer_npc_check then
+		return
+	end
+	
+	-- Distancia ainda é longa
+	if dist > 15 then
+		minetest.after(1.5, sunos.npcs.npc.loop_walk_pos, self, decorrido+1.5)
+	end
 end
 
 
@@ -97,11 +220,9 @@ sunos.npcs.npc.registrar = function(tipo, def)
 	-- Cria o registro na tabela global
 	sunos.npcs.npc.registrados[tipo] = def
 	sunos.npcs.npc.registrados[tipo].max_dist = def.max_dist or 10
-	sunos.npcs.npc.registrados[tipo].on_step = def.on_step
-	sunos.npcs.npc.registrados[tipo].on_rightclick = def.on_rightclick
 	
 	-- Registrar um mob
-	mobs:register_mob("sunos:npc", {
+	mobs:register_mob("sunos:npc_"..tipo, {
 		type = "npc",
 		passive = false,
 		damage = 3,
@@ -111,7 +232,7 @@ sunos.npcs.npc.registrar = function(tipo, def)
 		hp_min = 10,
 		hp_max = 20,
 		armor = 100,
-		collisionbox = {-0.35,-1.0,-0.35, 0.35,0.8,0.35},
+		collisionbox = {-0.35,0.0,-0.35, 0.35,1.8,0.35},
 		visual = "mesh",
 		mesh = "character.b3d",
 		drawtype = "front",
@@ -144,27 +265,50 @@ sunos.npcs.npc.registrar = function(tipo, def)
 			punch_start = 200,
 			punch_end = 219,
 		},
+		
+		on_spawn = function(self)
+			npc.initialize(self, self.object:getpos(), true)
+			self.tamed = false
+			
+			-- Realiza procedimento personalizado
+			if def.on_spawn then
+				def.on_spawn(self)
+			end
+		end,
+		
+		-- Atualiza dados com tabela de NPCs ativos
+		after_activate = function(self, staticdata, def, dtime)
+			
+			if not self.sunos_npchash then
+				return
+			end
+
+			-- Verifica se é o npc atual de seu node
+			local meta = minetest.get_meta(self.mypos)
+			if meta:get_string("npchash") == self.sunos_npchash then
+				-- Atualiza tabela de npcs ativos
+				sunos.npcs.npc.ativos[self.sunos_npchash] = self.object
+			else
+				-- Esse NPC ja está ativo em outro local
+				self.object:remove()
+			end
+		end,
 	
 		do_custom = function(self, dtime)
 			
+			if not self.tipo then
+				self.object:remove()
+				return
+			end
+			
 			-- Verifica se esta perto do bau de origem
 			self.temp = (self.temp or 0) + dtime
-			if self.temp >= tempo_verif_bau then
-			
-				-- Verifica se ainda tem os dados internos
-				if not self.tipo then
-					self.object:remove()
-					return
-				end
+			if self.temp >= sunos.timer_npc_check then
+				
+				local def_npc = sunos.npcs.npc.registrados[self.tipo]
 				
 				self.temp = 0
 				self.loop = self.loop + 1
-			
-				-- Verificar se esta perto do bau
-				if verif_dist_pos(self.object:getpos(), self.mypos) > dist_verif_npc then
-					self.object:remove()
-					return
-				end
 			
 				-- Verifica o se o bau de origem ainda existe
 				if self.loop >= qtd_loops_npc then
@@ -178,15 +322,42 @@ sunos.npcs.npc.registrar = function(tipo, def)
 				end 
 				
 				-- Verificar se está muito longe do bau
-				if verif_dist_pos(self.object:getpos(), self.mypos) > sunos.npcs.npc.registrados[tipo].max_dist then
+				if verif_dist_pos(self.object:getpos(), self.mypos) > def_npc.max_dist then
 					self.object:remove()
 					return
 				end
 				
-				-- Realiza procedimento personalizado
-				if sunos.npcs.npc.registrados[self.tipo].on_step then
-					sunos.npcs.npc.registrados[self.tipo].on_step(self)
+				-- Verifica se algum dos jogadores proximos é um inimigo
+				if self.state ~= "attack" then -- Verifica se ja não está em um ataque
+					for _,obj in ipairs(minetest.get_objects_inside_radius(self.object:getpos(), 13)) do
+						if obj:is_player() then
+						
+							-- Verifica se o jogador é inimigo
+							if sunos.verif_inimigo(self.vila, obj:get_player_name()) == true then
+								self.attack = obj
+								self.state = "attack"
+								return
+							end
+					
+						end
+					end
 				end
+				
+				-- Caminha para o local do checkin atual
+				if sunos.p1_to_p2(self.object:getpos(), self.sunos_checkin[sunos.npcs.npc.get_time()]) > 15 then
+					sunos.npcs.npc.loop_walk_pos(self)
+				end
+				
+				
+				-- Realiza procedimento personalizado
+				if def_npc.on_step_timed then
+					def_npc.on_step_timed(self)
+				end
+			end
+			
+			-- Realiza procedimento personalizado
+			if sunos.npcs.npc.registrados[self.tipo].on_step then
+				return sunos.npcs.npc.registrados[self.tipo].on_step(self, dtime)
 			end
 		
 		end,
@@ -200,5 +371,113 @@ sunos.npcs.npc.registrar = function(tipo, def)
 		
 		
 	})
-
+	
+	-- Modifica a chamada on_timer do node spawnador
+	minetest.override_item(def.node_spawner, {
+		on_timer = function(pos, elapsed)
+			local meta = minetest.get_meta(pos)
+			
+			-- Pega a coordenada do fundamento
+			local pf = meta:get_string("pos_fundamento")
+			if pf == "" then
+				minetest.set_node(pos, {name="default:chest", param2=minetest.get_node(pos).param2})
+				return
+			end
+			pf = minetest.deserialize(pf)
+			
+			-- Verificar se o fundamento ainda existe
+			if minetest.get_node(pf).name ~= "sunos:fundamento" then
+				minetest.set_node(pos, {name="default:chest", param2=minetest.get_node(pos).param2})
+				return
+			end
+			
+			-- Verifica se NPC já está ativo
+			local obj = sunos.npcs.npc.ativos[minetest.pos_to_string(pos)]
+			if obj and obj:getpos() then
+				-- Reinicia o ciclo com um tempo definido
+				minetest.get_node_timer(pos):set(timeout_bau, 0)
+				return false
+			end
+			local dist = tonumber(minetest.get_meta(pf):get_string("dist"))
+			
+			-- Verifica se ja tem um checkin definindo NPC em outro lugar
+			if meta:get_string("checkin_npc") ~= "" then
+				checkin = minetest.deserialize(meta:get_string("checkin_npc"))
+				if minetest.pos_to_string(checkin[sunos.npcs.npc.get_time()]) ~= minetest.pos_to_string(pf) then
+					-- Reinicia o ciclo com um tempo definido
+					minetest.get_node_timer(pos):set(timeout_bau, 0)
+					return false
+				end
+			end
+						
+			-- Analizar objetos (possiveis npcs) perto
+			do
+				for i = 0, math.floor(15/dist)-1 do
+					for _,obj in ipairs(minetest.get_objects_inside_radius({x=pf.x, y=pf.y+(i*dist), z=pf.z}, dist)) do
+					
+						-- Evita jogadores por perto para nao spawnar de repente
+						if obj:is_player() then
+							-- Encerra o procedimento para tentar novamente apos um tempo mais curto
+							minetest.get_node_timer(pos):set(5, 0)
+							return false
+						end
+					end
+				end
+			end
+			
+			-- Escolher uma coordenada para spawnar
+			local spos = {}
+			do
+				local nok = {} -- tabela de nodes ok 
+				-- Pegar nodes de madeira
+				local nodes = minetest.find_nodes_in_area(
+					{x=pf.x-dist, y=pf.y, z=pf.z-dist}, 
+					{x=pf.x+dist, y=pf.y+14, z=pf.z+dist}, 
+					def.nodes_spawn or {"default:wood", "default:stonebrick", "default:cobble"})
+				for _,p in ipairs(nodes) do
+					if (minetest.get_node({x=p.x, y=p.y+1, z=p.z}).name == "sunos:carpete_palha_nodrop" 
+						or minetest.get_node({x=p.x, y=p.y+1, z=p.z}).name == "sunos:carpete_palha" 
+						or minetest.get_node({x=p.x, y=p.y+1, z=p.z}).name == "air")
+						and minetest.get_node({x=p.x, y=p.y+2, z=p.z}).name == "air"
+					then
+						table.insert(nok, {x=p.x, y=p.y+1.5, z=p.z})
+					end
+				end
+				-- Verifica se achou algum
+				if not nok[1] then 
+					-- Reinicia o ciclo com um tempo definido
+					minetest.get_node_timer(pos):set(timeout_bau, 0)
+					return false
+				end
+				
+				-- Sorteia uma coordenada
+				spos = nok[math.random(1, table.maxn(nok))]
+			end
+			
+			-- Spawnar um novo npc na casa
+			local ent = sunos.npcs.npc.spawn(tipo, minetest.get_meta(pos):get_string("vila"), pos, spos)
+			
+			-- Reinicia o ciclo com um tempo definido
+			minetest.get_node_timer(pos):set(timeout_bau, 0)
+			return false -- Evita que repita com um tempo diferente do definido
+		end
+	})
+	
+	-- Insere spawner na lista
+	table.insert(tabela_spawners, def.node_spawner)
+	
+	-- LBM para iniciar nodetimer caso ainda nao tenha
+	minetest.register_lbm({
+		name = "sunos:casa_start_nodetimer",
+		nodenames = tabela_spawners,
+		run_at_every_load = true,
+		action = function(pos, node)
+			if minetest.get_node_timer(pos):is_started() == false then
+				minetest.get_node_timer(pos):set(2, 0)
+			end
+		end,
+	})
+	
 end
+
+

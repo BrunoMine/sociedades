@@ -24,6 +24,10 @@ local lista_de_tipos_i = {}
 local lista_de_larguras = {"3", "5", "7", "9", "13"}
 local lista_de_larguras_i = {["3"]=1, ["5"]=2, ["7"]=3, ["9"]=4, ["13"]=5}
 
+-- Lista de steps
+local lista_de_steps = {"Completa", "1", "2", "3", "4", "5"}
+local lista_de_steps_i = {["Completa"]=1, ["1"]=2, ["2"]=3, ["3"]=4, ["4"]=5, ["5"]=6}
+
 -- Acessar formspec
 local acessar_menu = function(name)
 	
@@ -51,12 +55,14 @@ local acessar_menu = function(name)
 	if list_estruturas then
 		
 		for n, nschem in ipairs(list_estruturas) do
-			local nn = string.split(nschem, ".")
-			local estrut = nn[1] .. " ("..nn[2]..")"
-			list_estruturas[n] = estrut -- reajusta o nome
-			lista_estruturas_i[estrut] = n
-			if list_estruturas_strings ~= "" then list_estruturas_strings = list_estruturas_strings .."," end
-			list_estruturas_strings = list_estruturas_strings .. estrut
+			if not string.match(nschem, "-step") then
+				local nn = string.split(nschem, ".")
+				local estrut = nn[1] .. " ("..nn[2]..")"
+				list_estruturas[n] = estrut -- reajusta o nome
+				lista_estruturas_i[estrut] = n
+				if list_estruturas_strings ~= "" then list_estruturas_strings = list_estruturas_strings .."," end
+				list_estruturas_strings = list_estruturas_strings .. estrut
+			end
 		end
 		
 		-- Salva listas no node
@@ -78,11 +84,13 @@ local acessar_menu = function(name)
 		..default.gui_bg_img
 		.."label[0,0;"..S("Editor de Estruturas Esquematicas (Schems)").."]"
 		.."label[0,0.5;"..S("Tipo de estrutura").."]"
-		.."dropdown[0,1;10,1;tipo;"..list_estruturas_string..";"..escolha_tipo.."]"
+		.."dropdown[0,1;10.5,1;tipo;"..list_estruturas_string..";"..escolha_tipo.."]"
 		
 		.."label[0,2;"..S("Manipular estruturas").."]"
 		.."label[0,2.5;"..S("Nome da estrutura").."]"
-		.."dropdown[0,3;10,1;estrutura;"..list_estruturas_strings..";"..escolha_estrutura.."]"
+		.."dropdown[0,3;8.5,1;estrutura;"..list_estruturas_strings..";"..escolha_estrutura.."]"
+		.."label[8,2.5;"..S("Estagio").."]"
+		.."dropdown[8,3;2,1;step;Completa,1,2,3,4,5;"..acessos[name].escolha_step.."]"
 		.."button_exit[0,3.8;3,1;carregar;"..S("Carregar").."]"
 		.."button_exit[3,3.8;3,1;salvar;"..S("Salvar").."]"
 		
@@ -105,7 +113,13 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 		
 		-- Carregar estrutura
 		if fields.carregar then
-		
+			
+			-- Verificar step
+			local step_sufix = ""
+			if acessos[name].escolha_step > 1 then
+				step_sufix = "-step"..acessos[name].escolha_step-1
+			end
+					
 			-- Verificar tipo
 			local tipo = minetest.get_meta(acessos[name].pos):get_string("tipo_nome")
 			-- Verificar estrutura e largura 
@@ -133,15 +147,25 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 			-- Verificar estrutura
 			local dist = ((largura-1)/2)
 			-- Pegar nome do caminho do arquivo
-			local arq = "/"..tipo.."/"..estrutura.."."..largura..".mts"
-			minetest.place_schematic({x=pos.x+8-dist, y=pos.y, z=pos.z-dist}, minetest.get_modpath("sunos").."/schems"..arq, 0, nil, true)
+			local arq = tipo.."/"..estrutura.."."..largura..".mts"..step_sufix
+			local r = minetest.place_schematic({x=pos.x+8-dist, y=pos.y, z=pos.z-dist}, minetest.get_modpath("sunos").."/schems/"..arq, 0, nil, true)
 			
-			minetest.chat_send_player(name, S("Estrutura carregada."))
+			if r == true then
+				minetest.chat_send_player(name, S("Estrutura carregada."))
+			else
+				minetest.chat_send_player(name, S("Falha ao carregar estrutura."))
+			end
 			return
 		end
 		
 		if fields.salvar then
-		
+			
+			-- Verificar step
+			local step_sufix = ""
+			if acessos[name].escolha_step > 1 then
+				step_sufix = "-step"..acessos[name].escolha_step-1
+			end
+			
 			-- Verificar tipo
 			local tipo = minetest.get_meta(acessos[name].pos):get_string("tipo_nome")
 			-- Verificar estrutura e largura 
@@ -160,12 +184,10 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 			end
 			
 			-- Pegar nome do caminho do arquivo
-			local arq = "/"..tipo.."/"..estrutura.."."..largura..".mts"
-			
+			local arq = tipo.."/"..estrutura.."."..largura..".mts"..step_sufix
 			-- Remove o antigo arquivo schematic
-			if os.remove(minetest.get_modpath("sunos").."/schems/"..arq) == nil then
+			if step_sufix == "" and os.remove(minetest.get_modpath("sunos").."/schems/"..arq) == nil then
 				minetest.chat_send_player(name, S("Falha ao remover arquivo antigo."))
-				return
 			end
 			
 			-- Criar novo arquivo schematic
@@ -173,7 +195,7 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 			minetest.create_schematic(
 				{x=pos.x+8-dist, y=pos.y, z=pos.z-dist}, 
 				{x=pos.x+8+dist, y=pos.y+14, z=pos.z+dist}, {}, 
-				minetest.get_modpath("sunos").."/schems"..arq
+				minetest.get_modpath("sunos").."/schems/"..arq
 			)
 			
 			-- Avisa o bug do minetest
@@ -232,6 +254,10 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 			minetest.get_meta(acessos[name].pos):set_string("estrutura", fields.estrutura)
 		end
 		
+		-- Escolheu step
+		if fields.step then
+			acessos[name].escolha_step = lista_de_steps_i[fields.step]
+		end
 	end
 end)
 
@@ -257,6 +283,8 @@ minetest.register_node("sunos:editor_schems", {
 			acessos[name] = {}
 		end
 		acessos[name].pos = {x=pos.x, y=pos.y, z=pos.z}
+		acessos[name].escolha_step = acessos[name].escolha_step or 1
+		
 		acessar_menu(name)
 	end,
 })

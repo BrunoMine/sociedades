@@ -19,12 +19,12 @@ sunos.npcs.npc.registrados = {}
 
 -- Verificador do Bau de sunos
 -- Tempo (em segundos) que demora para um bau verificar se tem um suno dele por perto
-local tempo_verif_npc = 20
+local tempo_verif_npc = 5--20
 -- Distancia (om blocos) que um bau verifica em sua volta para encontrar seu proprio npc
 local dist_verif_npc = 10
 
 -- Tempo para bau verificar se deve spawner novo npc
-timeout_bau = 20
+timeout_bau = 5--20
 
 -- Verificador do npc suno comum 
 -- Tempo (em segundos) que um npc demora para verificar se esta perto da pos de seu bau
@@ -142,6 +142,11 @@ sunos.npcs.npc.spawn = function(tipo, vila, pos, spos)
 		ent.sunos_checkin = {}
 		set_checkin(ent, ent.sunos_fundamento, 0, 23) -- configura checkin no npc e bau
 		
+		-- Flags
+		ent.flags["sunos_checkin_status"] = "dentro"
+		ent.flags["sunos_target_status"] = "nenhum"
+		ent.flags["sunos_repouso_status"] = "nenhum"
+		
 		-- Retorna a entidade
 		return ent
 	else
@@ -152,56 +157,226 @@ sunos.npcs.npc.spawn = function(tipo, vila, pos, spos)
 end
 
 
--- Loop para andar até um local
-sunos.npcs.npc.loop_walk_pos = function(self, decorrido)
+-- Envia o npc para o checkin
+--[[
+    Retorna true se conseguir enviar ação
+    Retorna false se nao conseguir
+  ]]
+sunos.npcs.npc.send_to_checkin = function(self)
 	if not self or not self.object or not self.object:getpos() then return end
 	
-	decorrido = decorrido or 0
+	-- Remove todas atividades atuais do NPC
+	self.actions.queue = {}
 	
-	local pos1 = self.object:getpos()
-	local pos2 = self.sunos_checkin[sunos.npcs.npc.get_time()]
-	local pos_indo = sunos.ir_p1_to_p2(pos1, pos2, 7)
+	local pos1 = sunos.copy_tb(self.object:getpos())
+	local pos2 = sunos.copy_tb(self.sunos_checkin[sunos.npcs.npc.get_time()])
+	local cmds = 0
 	local dist = sunos.p1_to_p2(pos1, pos2)
 	
-	local alvo, alvo_interior
-	
-	-- Caminho na rua calcetada
-	local alvo = minetest.find_node_near(pos_indo, 4, {"sunos:rua_calcetada"}, true)
-	if alvo then
-		if alvo then alvo.y = alvo.y+1 end
+	while (dist >= 15) do
+		local pos_indo = sunos.ir_p1_to_p2(pos1, pos2, 7)
+		
+		-- Escolher caminho
+		-- 1º Rua calcetada
+		local alvo = minetest.find_node_near(pos_indo, 4, {"sunos:rua_calcetada"}, true)
+		-- 2º Gramado
+		if not alvo then
+			alvo = minetest.find_node_near(pos_indo, 4, {"default:dirt_with_grass"}, true)
+		end
+		
+		if alvo then
+			if alvo then alvo.y = alvo.y+1 end
+		end
+		
+		if alvo then
+			-- Atualiza numero do comando
+			cmds = cmds + 1 
+			-- Salva o local para andar
+			npc.places.add_shared_accessible_place(
+				self, 
+				{owner="", node_pos=alvo}, 
+				"sunos_npc_walk_"..cmds, 
+				true,
+				{}
+			)
+			npc.add_task(self, npc.actions.cmd.WALK_TO_POS,
+				{
+					end_pos = "sunos_npc_walk_"..cmds,
+					walkable = sunos_walkable_nodes,
+				}
+			)
+		end
+		
+		-- Atualiza para proximo loop
+		pos1 = sunos.copy_tb(pos_indo)
+		dist = sunos.p1_to_p2(pos1, pos2)
 	end
 	
-	-- Caminho para dentro da estrutura alvo 
-	if dist <= 15 then
-		alvo_interior = minetest.find_node_near(pos_indo, 4, sunos_walkable_nodes, true)
+	if cmds > 0 then 
+		return true
+	else
+		return false
+	end
+end
+
+-- Envia o npc para uma coordenada alvo
+--[[
+    Retorna true se conseguir enviar ação
+    Retorna false se nao conseguir
+  ]]
+sunos.npcs.npc.send_to_target = function(self, pos)
+	if not self or not self.object or not self.object:getpos() then return end
+	
+	-- Remove todas atividades atuais do NPC
+	self.actions.queue = {}
+	
+	local pos1 = sunos.copy_tb(self.object:getpos())
+	local pos2 = sunos.copy_tb(pos)
+	local cmds = 0
+	local dist = sunos.p1_to_p2(pos1, pos2)
+	
+	while (dist > 6) do
+		local pos_indo = sunos.ir_p1_to_p2(pos1, pos2, 7)
+		
+		-- Escolher caminho
+		-- 1º Rua calcetada
+		local alvo = minetest.find_node_near(pos_indo, 4, {"sunos:rua_calcetada"}, true)
+		-- 2º Gramado
+		if not alvo then
+			alvo = minetest.find_node_near(pos_indo, 4, {"default:dirt_with_grass"}, true)
+		end
+		-- 3º Carpete da casa
+		if not alvo then
+			alvo = minetest.find_node_near(pos_indo, 4, {"sunos:carpete_palha", "sunos:carpete_palha_nodrop"}, true)
+			if alvo then alvo.y = alvo.y-1 end
+		end
+		
+		if alvo then
+			if alvo then alvo.y = alvo.y+1 end
+		end
+		
+		if alvo then
+			-- Atualiza numero do comando
+			cmds = cmds + 1 
+			-- Salva o local para andar
+			npc.places.add_shared_accessible_place(
+				self, 
+				{owner="", node_pos=alvo}, 
+				"sunos_npc_walk_target_"..cmds, 
+				true,
+				{}
+			)
+			npc.add_task(self, npc.actions.cmd.WALK_TO_POS,
+				{
+					end_pos = "sunos_npc_walk_target_"..cmds,
+					walkable = sunos_walkable_nodes,
+				}
+			)
+		end
+		
+		-- Atualiza para proximo loop
+		pos1 = sunos.copy_tb(pos_indo)
+		dist = sunos.p1_to_p2(pos1, pos2)
 	end
 	
+	if cmds > 0 then 
+		return true
+	else
+		return false
+	end
+end
+
+
+-- Envia o npc durmir
+--[[
+    Retorna true se conseguir enviar ação
+    Retorna false se nao conseguir
+  ]]
+sunos.npcs.npc.send_to_bed = function(self, pos)
+	if not self or not self.object or not self.object:getpos() then return end
 	
-	if alvo_interior or alvo then
-		-- Salva o local para andar
-		npc.places.add_shared_accessible_place(
-			self, 
-			{owner="", node_pos=alvo_interior or alvo}, 
-			"sunos_npc_walk", 
-			true,
-			{}
-		)
-		npc.add_task(self, npc.actions.cmd.WALK_TO_POS,
+	-- Remove todas atividades atuais do NPC
+	self.actions.queue = {}
+	
+	local pos1 = sunos.copy_tb(self.object:getpos())
+	local pos2 = sunos.copy_tb(pos)
+	local cmds = 0
+	local dist = sunos.p1_to_p2(pos1, pos2)
+	
+	while (dist > 6) do
+		local pos_indo = sunos.ir_p1_to_p2(pos1, pos2, 7)
+		
+		-- Escolher caminho
+		-- 1º Rua calcetada
+		local alvo = minetest.find_node_near(pos_indo, 4, {"sunos:rua_calcetada"}, true)
+		-- 2º Gramado
+		if not alvo then
+			alvo = minetest.find_node_near(pos_indo, 4, {"default:dirt_with_grass"}, true)
+		end
+		-- 3º Carpete da casa
+		if not alvo then
+			alvo = minetest.find_node_near(pos_indo, 4, {"sunos:carpete_palha", "sunos:carpete_palha_nodrop"}, true)
+			if alvo then alvo.y = alvo.y-1 end
+		end
+		
+		if alvo then
+			if alvo then alvo.y = alvo.y+1 end
+		end
+		
+		if alvo then
+			-- Atualiza numero do comando
+			cmds = cmds + 1 
+			-- Salva o local para andar
+			npc.places.add_shared_accessible_place(
+				self, 
+				{owner="", node_pos=alvo}, 
+				"sunos_npc_walk_target_"..cmds, 
+				true,
+				{}
+			)
+			npc.add_task(self, npc.actions.cmd.WALK_TO_POS,
+				{
+					end_pos = "sunos_npc_walk_target_"..cmds,
+					walkable = sunos_walkable_nodes,
+				}
+			)
+		else
+			-- Impossivel avançar em direção ao alvo (sem caminho)
+			break
+		end
+		
+		-- Atualiza para proximo loop
+		pos1 = sunos.copy_tb(pos_indo)
+		dist = sunos.p1_to_p2(pos1, pos2)
+	end
+	
+	-- Certifica que dist foi atualizada (caso o loop tenha interrompido antes)
+	dist = sunos.p1_to_p2(pos1, pos2)
+	
+	-- Se for chegar na cama, durmir
+	if dist <= 6 then
+		npc.add_task(self, npc.actions.cmd.WALK_TO_POS, 
 			{
-				end_pos = "sunos_npc_walk",
-				walkable = sunos_walkable_nodes,
+				end_pos = {
+					place_type="bed_primary", 
+					use_access_node=true
+				}
 			}
 		)
+		npc.add_task(self, npc.actions.cmd.USE_BED, 
+			{
+				pos = "bed_primary",
+				action = npc.actions.const.beds.LAY
+			}
+		)
+		npc.add_action(self, npc.actions.cmd.FREEZE, {freeze = true})
 	end
 	
-	-- Demorou demais
-	if decorrido + 1.5 > sunos.timer_npc_check then
-		return
-	end
 	
-	-- Distancia ainda é longa
-	if dist > 15 then
-		minetest.after(1.5, sunos.npcs.npc.loop_walk_pos, self, decorrido+1.5)
+	if cmds > 0 or dist <= 6 then 
+		return true
+	else
+		return false
 	end
 end
 
@@ -266,14 +441,18 @@ sunos.npcs.npc.registrar = function(tipo, def)
 			punch_end = 219,
 		},
 		
+		
 		on_spawn = function(self)
-			npc.initialize(self, self.object:getpos(), true)
-			self.tamed = false
-			
-			-- Realiza procedimento personalizado
-			if def.on_spawn then
-				def.on_spawn(self)
+			if self.initialized == nil then
+				npc.initialize(self, self.object:getpos(), true)
+				self.tamed = false
+				
+				-- Realiza procedimento personalizado
+				if def.on_spawn then
+					def.on_spawn(self)
+				end
 			end
+			
 		end,
 		
 		-- Atualiza dados com tabela de NPCs ativos
@@ -284,13 +463,17 @@ sunos.npcs.npc.registrar = function(tipo, def)
 			end
 
 			-- Verifica se é o npc atual de seu node
-			local meta = minetest.get_meta(self.mypos)
-			if meta:get_string("npchash") == self.sunos_npchash then
+			if not sunos.npcs.npc.ativos[self.sunos_npchash] then
 				-- Atualiza tabela de npcs ativos
 				sunos.npcs.npc.ativos[self.sunos_npchash] = self.object
 			else
-				-- Esse NPC ja está ativo em outro local
+				-- Esse NPC ja está ativo em outro objeto
 				self.object:remove()
+			end
+			
+			-- Realiza procedimento personalizado
+			if sunos.npcs.npc.registrados[tipo].after_activate then
+				sunos.npcs.npc.registrados[tipo].after_activate(self, staticdata, def, dtime)
 			end
 		end,
 	
@@ -299,6 +482,20 @@ sunos.npcs.npc.registrar = function(tipo, def)
 			if not self.tipo then
 				self.object:remove()
 				return
+			end
+			
+			-- Correção do NPC_advanced para tornar NPC em modo de ataque interrompedo qualquer atividade
+			if self.state == "attack" then
+				-- Interrompe atividades
+				if self.actions.current_action_state ~= npc.action_state.interrupted then
+					npc.lock_actions(self)
+					self.freeze = false
+				end
+				-- Permite API Mobs Redo controlar ataque
+				return true
+			end
+			if self.actions.current_action_state == npc.action_state.interrupted and self.state ~= "attack" then
+				npc.execute_action(self)
 			end
 			
 			-- Verifica se esta perto do bau de origem
@@ -336,18 +533,69 @@ sunos.npcs.npc.registrar = function(tipo, def)
 							if sunos.verif_inimigo(self.vila, obj:get_player_name()) == true then
 								self.attack = obj
 								self.state = "attack"
-								return
+								return npc.step(self, dtime)
 							end
 					
 						end
 					end
 				end
 				
-				-- Caminha para o local do checkin atual
-				if sunos.p1_to_p2(self.object:getpos(), self.sunos_checkin[sunos.npcs.npc.get_time()]) > 15 then
-					sunos.npcs.npc.loop_walk_pos(self)
+				-- Verificiar se deve ir para o checkin atual
+				if self.flags["sunos_checkin_status"] == "fora" then
+					if sunos.p1_to_p2(self.object:getpos(), sunos.copy_tb(self.sunos_checkin[sunos.npcs.npc.get_time()])) > 15 then
+						self.flags["sunos_checkin_status"] = "dentro"
+						local caminho = sunos.npcs.npc.send_to_checkin(self)
+						-- Impossivel andar ate o local destino
+						if caminho == false then
+							self.object:remove()
+							return
+						end
+					else
+						-- Ignora pois ja esta perto do edificio
+						self.flags["sunos_checkin_status"] = "dentro"
+					end
 				end
 				
+				-- Verificar se deve ir para proximo de uma coordenada
+				if self.flags["sunos_target_status"] ~= "nenhum" then
+					local target = sunos.copy_tb(npc.places.get_by_type(self, self.flags["sunos_target_status"])[1])
+					if not target.pos then
+					elseif sunos.p1_to_p2(self.object:getpos(), target.pos) > 6 then
+						
+						local caminho = sunos.npcs.npc.send_to_target(self, target.pos)
+						
+						self.flags["sunos_target_status"] = "nenhum"
+						-- Impossivel andar ate o local destino
+						if caminho == false then
+							self.object:remove()
+							return
+						end
+					else
+						-- Ignora pois ja esta perto do edificio
+						self.flags["sunos_target_status"] = "nenhum"
+					end
+				end
+				
+				-- Verifica se deve ir durmir
+				if self.flags["sunos_repouso_status"] == "durmir" then
+					local target = sunos.copy_tb(npc.places.get_by_type(self, "bed_primary")[1])
+					
+					-- Verifica se ja esta durmindo 
+					if self.actions.move_state.is_laying ~= true
+						or sunos.p1_to_p2(self.object:getpos(), target.pos) > 2
+					then
+						local caminho = sunos.npcs.npc.send_to_bed(self, target.pos)
+						
+						-- Impossivel andar ate o local destino
+						if caminho == false then
+							self.object:remove()
+							return
+						end
+					end
+					
+					self.flags["sunos_repouso_status"] = "nenhum"
+					
+				end
 				
 				-- Realiza procedimento personalizado
 				if def_npc.on_step_timed then
@@ -357,8 +605,10 @@ sunos.npcs.npc.registrar = function(tipo, def)
 			
 			-- Realiza procedimento personalizado
 			if sunos.npcs.npc.registrados[self.tipo].on_step then
-				return sunos.npcs.npc.registrados[self.tipo].on_step(self, dtime)
+				sunos.npcs.npc.registrados[self.tipo].on_step(self, dtime)
 			end
+			
+			return npc.step(self, dtime)
 		
 		end,
 	
@@ -400,20 +650,39 @@ sunos.npcs.npc.registrar = function(tipo, def)
 			end
 			local dist = tonumber(minetest.get_meta(pf):get_string("dist"))
 			
-			-- Verifica se ja tem um checkin definindo NPC em outro lugar
-			if meta:get_string("checkin_npc") ~= "" then
-				checkin = minetest.deserialize(meta:get_string("checkin_npc"))
-				if minetest.pos_to_string(checkin[sunos.npcs.npc.get_time()]) ~= minetest.pos_to_string(pf) then
-					-- Reinicia o ciclo com um tempo definido
-					minetest.get_node_timer(pos):set(timeout_bau, 0)
-					return false
-				end
+			
+			-- Spawna NPC na regiao de checkin
+			local checkin = meta:get_string("checkin_npc")
+			
+			-- Ajusta para caso nao tenha checkin
+			if checkin ~= "" then
+				checkin = minetest.deserialize(checkin)
+			else
+				checkin = {}
 			end
-						
+			
+			-- Tenta remover resquicio do antigo NPC (evitar existir uma multidão de NPC no local nao carregado)
+			if obj then
+				obj:remove()
+			end
+			
+			-- Local de checkin
+			local pc = checkin[sunos.npcs.npc.get_time()] or pf
+			-- Distancia centro a borda para analise
+			local pc_dist = tonumber(minetest.get_meta(pc):get_string("dist")) or 6
+			
+			-- Verifica se a area está carregada
+			if minetest.get_node(pc).name == "ignore" then
+				minetest.get_voxel_manip():read_from_map(
+					{x=pc.x-pc_dist, y=pc.y, z=pc.z-pc_dist},
+					{x=pc.x+pc_dist, y=pc.y+14, z=pc.z+pc_dist}
+				)
+			end
+			
 			-- Analizar objetos (possiveis npcs) perto
 			do
-				for i = 0, math.floor(15/dist)-1 do
-					for _,obj in ipairs(minetest.get_objects_inside_radius({x=pf.x, y=pf.y+(i*dist), z=pf.z}, dist)) do
+				for i = 0, math.floor(15/pc_dist)-1 do
+					for _,obj in ipairs(minetest.get_objects_inside_radius({x=pc.x, y=pc.y+(i*pc_dist), z=pc.z}, dist)) do
 					
 						-- Evita jogadores por perto para nao spawnar de repente
 						if obj:is_player() then
@@ -431,13 +700,11 @@ sunos.npcs.npc.registrar = function(tipo, def)
 				local nok = {} -- tabela de nodes ok 
 				-- Pegar nodes de madeira
 				local nodes = minetest.find_nodes_in_area(
-					{x=pf.x-dist, y=pf.y, z=pf.z-dist}, 
-					{x=pf.x+dist, y=pf.y+14, z=pf.z+dist}, 
+					{x=pc.x-pc_dist, y=pc.y, z=pc.z-pc_dist}, 
+					{x=pc.x+pc_dist, y=pc.y+14, z=pc.z+pc_dist}, 
 					def.nodes_spawn or {"default:wood", "default:stonebrick", "default:cobble"})
 				for _,p in ipairs(nodes) do
-					if (minetest.get_node({x=p.x, y=p.y+1, z=p.z}).name == "sunos:carpete_palha_nodrop" 
-						or minetest.get_node({x=p.x, y=p.y+1, z=p.z}).name == "sunos:carpete_palha" 
-						or minetest.get_node({x=p.x, y=p.y+1, z=p.z}).name == "air")
+					if minetest.get_node({x=p.x, y=p.y+1, z=p.z}).name == "sunos:carpete_palha_nodrop"
 						and minetest.get_node({x=p.x, y=p.y+2, z=p.z}).name == "air"
 					then
 						table.insert(nok, {x=p.x, y=p.y+1.5, z=p.z})

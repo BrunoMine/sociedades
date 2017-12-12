@@ -12,107 +12,68 @@
 -- Tradução de strings
 local S = sunos.S
 
--- Tabelas
-local sunos_walkable_nodes = {
-	"sunos:carpete_palha",
-	"sunos:carpete_palha_nodrop"
-}
+-- Atividades estruturadas
+dofile(minetest.get_modpath("sunos").."/estruturas/casa/atividades.lua") 
+
+-- Carregar roteiros
+dofile(minetest.get_modpath("sunos").."/estruturas/casa/roteiros/lojista.lua") 
+dofile(minetest.get_modpath("sunos").."/estruturas/casa/roteiros/caseiro.lua") 
 
 -- Escolhe uma tarefa para o npc durante o dia
 sunos.estruturas.casa.escolher_roteiro_npc = function(vila)
-
+	
+	-- Escolha padrao "caseiro"
+	local escolha = "caseiro"
+	
 	local loja = sunos.verif_estrutura_existe(vila, "loja")
 	
-	if loja then
-		return "ir_na_loja"
+	-- Sorteia numero entre 1 e 100
+	local s = math.random(1, 100)
+	
+	if s >= 1 and s <= 40 then -- minimo 40% é caseiro
+		return "caseiro"
+	elseif s >= 41 and s <= 70 and loja then -- 30% é lojista
+		return "lojista"
 	end
+	
+	-- Os outros 30% tambem vira caseiro
+	
+	-- Se nao houver o escolhido, vira caseiro
+	return "caseiro"
 end
 
-
 -- Atribuir cronograma de atividades no NPC caseiro e retorna uma agenda escolhida
-sunos.estruturas.casa.atribuir_cronograma_npc = function(self, roteiro)
-	
-	-- Adicionar agenda padrao
-	npc.occupations.initialize_occupation_values(self, "sunos_npc_caseiro")
-	
-	roteiro = roteiro or sunos.estruturas.casa.escolher_roteiro_npc(self.vila)
-	
-	--Ir na loja
-	if roteiro == "ir_na_loja" then
+sunos.estruturas.casa.atribuir_cronograma_npc = function(self, roteiro, data)
 		
+	roteiro = roteiro or sunos.estruturas.casa.escolher_roteiro_npc(self.vila)
+	data = data or minetest.get_day_count()
+	
+	-- Trabalha em casa
+	if roteiro == "caseiro" then
+		
+		npc.occupations.initialize_occupation_values(self, "sunos_npc_caseiro")
+		
+	-- Visita lojas da cidade
+	elseif roteiro == "lojista" then
+	
 		local dados_loja = sunos.bd.pegar("vila_"..self.vila, sunos.verif_estrutura_existe(self.vila, "loja"))
 		
 		-- Configura checkin
 		sunos.npcs.npc.set_checkin(self, dados_loja.estrutura.pos, 7, 12)
+		npc.places.add_shared(self, "sunos_feirinha_1", "sunos_feirinha", sunos.copy_tb(dados_loja.estrutura.pos), acesso)
+		
+		
+		npc.occupations.initialize_occupation_values(self, "sunos_npc_caseiro_"..roteiro)
 		
 	end
 	
-	-- Salva o numero do dia que o cronograma foi atribuido
-	self.dias_roteiro = minetest.get_day_count()
+	-- Salva roteiro no NPC
+	self.roteiro = roteiro
+	self.data_roteiro = data
+	-- Salva no bau
+	local meta = minetest.get_meta(self.mypos)
+	meta:set_string("roteiro", roteiro)
+	meta:set_string("data_roteiro", data)
 	
 end
 
-
--- Registra ocupação padrão no NPC caseiro
-npc.occupations.register_occupation("sunos_npc_caseiro", {
-	dialogues = {},
-	textures = {},
-	building_types = {},
-	surrounding_building_types = {},
-	walkable_nodes = sunos_walkable_nodes,
-	initial_inventory = {},
-	schedules_entries = {
-	
-		[6] = {
-		    -- Get out of bed
-		    [1] = {
-			task = npc.actions.cmd.USE_BED, 
-			args = {
-			    pos = "bed_primary",
-			    action = npc.actions.const.beds.GET_UP
-			}
-		    },
-		    -- Allow mobs_redo wandering
-		    [2] = {action = npc.actions.cmd.FREEZE, 
-		    	args = {freeze = false}
-		    }
-		    -- Walk to home inside
-		    
-		},
-		-- Ir para a jola
-		[7] = {
-			[1] = {
-				task = npc.actions.cmd.WALK_TO_POS, 
-				args = {
-					end_pos = npc.places.PLACE_TYPE.OTHER.HOME_OUTSIDE,
-					walkable = {}
-				},
-			},
-		},
-		
-		[22] = {
-		    [1] = {
-			task = npc.actions.cmd.WALK_TO_POS, 
-			args = {
-			    end_pos = "bed_primary",
-			    walkable = sunos_walkable_nodes,
-			}
-		    },
-		    -- Use bed
-		    [2] = {
-			task = npc.actions.cmd.USE_BED, 
-			args = {
-			    pos = "bed_primary",
-			    action = npc.actions.const.beds.LAY
-			}
-		    },
-		    -- Stay put on bed
-		    [3] = {
-		    	action = npc.actions.cmd.FREEZE, 
-		    	args = {
-		    		freeze = true
-		    	} 
-		    }
-		}
-	}
-})

@@ -13,7 +13,7 @@
 local modpath = minetest.get_modpath("sunos")
 
 -- Montar uma estrutura
-sunos.montar_estrutura = function(cpos, dist, tipo, rotat)
+sunos.montar_estrutura = function(cpos, dist, tipo, rotat, schem)
 	sunos.checkvar(cpos, "Coordenada central nula ao montar estrutura")
 	sunos.checkvar(dist, "Nenhuma distancia centro-borda fornecida ao montar estrutura")
 	sunos.checkvar(tipo, "Nenhum tipo fornecido ao montar estrutura")
@@ -25,7 +25,7 @@ sunos.montar_estrutura = function(cpos, dist, tipo, rotat)
 	local largura = 2*dist+1
 	
 	-- Nome do arquivo esquematico da estrutura
-	local schem = sunos.pegar_arquivo(largura, tipo).."."..largura..".mts"
+	schem = schem or sunos.pegar_arquivo(largura, tipo).."."..largura..".mts"
 	
 	-- Caminho do arquivo da estrutura
 	local caminho_arquivo = modpath.."/schems/"..tipo.."/"..schem

@@ -282,20 +282,19 @@ minetest.register_abm({
 		local rotat = meta:get_string("rotat")
 		if schem == "" then return end
 	
-		-- Caminho do arquivo da estrutura
-		local caminho_arquivo = modpath.."/schems/"..tipo.."/"..schem
-	
-		-- Criar estrutura
-		minetest.place_schematic({x=pos.x-dist, y=pos.y, z=pos.z-dist}, caminho_arquivo, rotat, nil, true)
+		-- Remonta estrutura
+		sunos.montar_estrutura(pos, dist, "casa", rotat, schem)
 		
 		-- Troca os itens de reposição
 		sunos.decor_repo(pos, dist, sunos.estruturas.casa.gerar_itens_repo[tostring(dist)]())
 		
 		-- Estantes e fornos se mantem altomaticamente por sobreposição
 		
+		-- Reestabelece fundamento
 		minetest.set_node(pos, {name="sunos:fundamento"})
 		minetest.get_meta(pos):from_table(table) -- recoloca metadados no novo fumdamento
 		
+		-- Configura novos baus
 		set_bau({x=pos.x,y=pos.y,z=pos.z}, vila, dist)
 	end,
 })

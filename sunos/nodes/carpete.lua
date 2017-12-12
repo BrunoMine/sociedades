@@ -19,7 +19,7 @@ minetest.register_node("sunos:carpete_palha", {
 	drawtype = "nodebox",
 	paramtype = "light",
 	liquids_pointable = false,
-	walkable = true,
+	walkable = false,
 	buildable_to = true,
 	node_box = {
 		type = "fixed",

@@ -119,19 +119,9 @@ end
 -- Tabela para valores de rotação
 local tb_rotat = {"0", "90", "180", "270"}
 
--- Construir taverna de sunos
---[[
-	Essa função construi uma taverna de sunos e configura o fundamento
-	Retorno:
-		^ true caso ocorra tudo bem
-		^ string de erro caso algo de errado
-	Argumentos:
-		<pos> é a coordenada do fundamento da estrutura
-		<vila> OPCIONAL | é o numero da vila a qual a estrutura decorativa pertence
-		<verif_area> OPCIONAL | true verificar a area antes de montar a estrutura (retorna strings dos erros)
-		<itens_repo> OPCIONAL | Repassado ao comando sunos.decor_repo para substituir itens de reposição
-]]
-sunos.estruturas.taverna.construir = function(pos, vila, verif_area, itens_repo)
+-- Verificar se pode construir
+sunos.estruturas.taverna.verif = function(pos, verif_area)
+
 	-- Validar argumentos de entrada
 	if pos == nil then
 		minetest.log("error", "[Sunos] Tabela pos nula (em sunos.estruturas.taverna.construir)")
@@ -142,16 +132,29 @@ sunos.estruturas.taverna.construir = function(pos, vila, verif_area, itens_repo)
 	local dist = 5
 	local largura = (dist*2)+1
 	
-	if not vila then
-		-- Verificar Vila e pegar dados (buscando por um fundamento proximo)
-		local pos_fund_prox = minetest.find_node_near(pos, 25, {"sunos:fundamento"})
-		if pos_fund_prox == nil then 
-			return S("Nenhuma vila por perto")
-		end
+	-- Encontrar vila perto
 	
-		-- Pegar dados da vila encontrada
-		local meta_fund_prox = minetest.get_meta(pos_fund_prox)
-		vila = meta_fund_prox:get_string("vila")
+	-- Verificar Vila e pegar dados (buscando por um fundamento proximo)
+	local pos_fund_prox = minetest.find_node_near(pos, 25, {"sunos:fundamento"})
+	if pos_fund_prox == nil then 
+		return S("Nenhuma vila por perto")
+	end
+	
+	-- Pegar dados da vila encontrada
+	local meta_fund_prox = minetest.get_meta(pos_fund_prox)
+	local vila = meta_fund_prox:get_string("vila")
+	
+	-- Atualizar banco de dados da vila
+	sunos.atualizar_bd_vila(vila)
+	
+	-- Verifica se tem populacao suficiente
+	if tonumber(sunos.bd.pegar("vila_"..vila, "pop_total")) < sunos.estruturas.taverna.var.niveis[1] then
+		return S("A vila precisa ter ao menos @1 habitantes", sunos.estruturas.taverna.var.niveis[1])
+	end
+	
+	-- Verificar se ja existe um taverna
+	if sunos.bd.verif("vila_"..vila, "taverna") == true then
+		return S("Ja existe @1 nessa vila", S("Taverna"))
 	end
 	
 	-- Verificações de area
@@ -179,6 +182,34 @@ sunos.estruturas.taverna.construir = function(pos, vila, verif_area, itens_repo)
 		end
 	end
 	
+	return true, vila
+end
+
+
+-- Construir taverna de sunos
+--[[
+	Essa função construi uma taverna de sunos e configura o fundamento
+	Retorno:
+		^ true caso ocorra tudo bem
+		^ string de erro caso algo de errado
+	Argumentos:
+		<pos> é a coordenada do fundamento da estrutura
+		<vila> OPCIONAL | é o numero da vila a qual a estrutura decorativa pertence
+		<verif_area> OPCIONAL | true verificar a area antes de montar a estrutura (retorna strings dos erros)
+		<itens_repo> OPCIONAL | Repassado ao comando sunos.decor_repo para substituir itens de reposição
+]]
+sunos.estruturas.taverna.construir = function(pos, vila, verif_area)
+	
+	-- Verifica se pode construir a casa
+	local verif, vila = sunos.estruturas.taverna.verif(pos, verif_area)
+	if verif ~= true then
+		return verif
+	end
+	
+	-- Variaveis auxiliares
+	local dist = 5
+	local largura = (dist*2)+1
+	
 	-- Escolhe uma rotação aleatória
 	local rotat = tb_rotat[math.random(1, 4)]
 	
@@ -195,9 +226,7 @@ sunos.estruturas.taverna.construir = function(pos, vila, verif_area, itens_repo)
 	minetest.place_schematic({x=pos.x-dist, y=pos.y, z=pos.z-dist}, caminho_arquivo, rotat, sunos.var.nodes_trocados, true)
 	
 	-- Recoloca itens reais (apartir dos itens de reposição)
-	if itens_repo then
-		sunos.decor_repo(pos, dist, sunos.estruturas.taverna.gerar_itens_repo[tostring(nivel)]())
-	end
+	sunos.decor_repo(pos, dist, sunos.estruturas.taverna.gerar_itens_repo[tostring(nivel)]())
 	
 	-- Configurar bau de taverna
 	minetest.after(1, set_bau, {x=pos.x,y=pos.y,z=pos.z}, vila, dist)
@@ -279,50 +308,38 @@ minetest.register_node("sunos:fundamento_taverna", {
 	-- Colocar uma taverna
 	on_place = function(itemstack, placer, pointed_thing)
 		
-		-- Verificar Vila e pegar dados (buscando por um fundamento proximo)
-		local pos_fund_prox = minetest.find_node_near(pointed_thing.under, 25, {"sunos:fundamento"})
-		if pos_fund_prox == nil then 
-			return minetest.chat_send_player(placer:get_player_name(), S("Nenhuma vila por perto"))
-		end
+		local pos = pointed_thing.under
 		
-		-- Pegar dados da vila encontrada
-		local meta_fund_prox = minetest.get_meta(pos_fund_prox)
-		local vila = meta_fund_prox:get_string("vila")
+		local r, vila = sunos.estruturas.emporio.verif(pos, true)
 		
-		if vila == "" or not vila then return minetest.chat_send_player(placer:get_player_name(), S("Vila abandonada")) end
-		
-		-- Verificar se a vila está abandonada
-		if not sunos.bd.pegar("vila_"..vila, "estruturas") then
-			return minetest.chat_send_player(placer:get_player_name(), S("Vila abandonada"))
-		end
-		
-		-- Atualizar banco de dados da vila
-		sunos.atualizar_bd_vila(vila)
-		
-		-- Verifica se tem populacao suficiente
-		if tonumber(sunos.bd.pegar("vila_"..vila, "pop_total")) < sunos.estruturas.taverna.var.niveis[1] then
-			return minetest.chat_send_player(placer:get_player_name(), S("A vila precisa ter ao menos @1 habitantes", sunos.estruturas.taverna.var.niveis[1]))
-		end
-		
-		-- Verificar se ja existe um taverna
-		if sunos.bd.verif("vila_"..vila, "taverna") == true then
-			return minetest.chat_send_player(placer:get_player_name(), S("Ja existe @1 nessa vila", S("Taverna")))
-		end
-		
-		sunos.criar_caixa_de_area(pointed_thing.under, 5+1)
-		
-		local r = sunos.estruturas.taverna.construir(pointed_thing.under, vila, true, true)
 		if r == true then
 			
 			-- Coloca rua em torno
-			sunos.colocar_rua(pointed_thing.under, 4)
+			sunos.colocar_rua(pos, 5)
+			
+			-- Coloca fundamento step para construir estrutura
+			minetest.set_node(pointed_thing.under, {name="sunos:fundamento_step"})
+			local meta = minetest.get_meta(pos)
+			meta:set_string("tipo", "taverna")
+			meta:set_string("dist", 5)
+			meta:set_string("versao", sunos.versao)
+			meta:set_string("vila", vila)
+			meta:set_string("step", 1)
+			meta:set_string("data_inicio", minetest.get_day_count())
+			meta:set_string("tempo_inicio", minetest.get_timeofday())
+			meta:set_string("duracao", 36000) -- 1,5 dias no jogo
+			meta:set_string("schem", "nivel_1")
+			meta:set_string("rotat", sunos.pegar_rotat())
+			minetest.get_node_timer(pos):set(0.1, 0) -- Inicia temporizador
 			
 			-- Retorna mensagem de montagem concluida
-			minetest.chat_send_player(placer:get_player_name(), S("Taverna construido"))
+			minetest.chat_send_player(placer:get_player_name(), S("Taverna sendo construido"))
 			itemstack:take_item()
 			return itemstack
 			
 		else
+			-- Mostra area necessaria
+			sunos.criar_caixa_de_area(pos, 5+1)
 			-- Retorna mensagem de falha
 			minetest.chat_send_player(placer:get_player_name(), r)
 			return itemstack

@@ -69,24 +69,9 @@ local set_bau = function(pos, vila, dist)
 
 end
 
--- Tabela para valores de rotação
-local tb_rotat = {"0", "90", "180", "270"}
+-- Verifica a possibilidade de construir uma casa no local
+sunos.estruturas.casa.verif = function(pos, dist, vila, verif_area, verif_pop)
 
--- Construir casa de sunos
---[[
-	Essa função construi uma casa de sunos e configura o fundamento
-	Retorno:
-		^ true caso ocorra tudo bem
-		^ string de erro caso algo de errado
-	Argumentos:
-		<pos> é a coordenada do fundamento da estrutura
-		<dist> distancia centro a borda da nova estrutura
-		<vila> OPCIONAL | é o numero da vila a qual a casa pertence
-		<verif_area> OPCIONAL | para verificar a area a ser usada
-		<itens_repo> OPCIONAL | Repassado ao comando sunos.decor_repo para substituir itens de reposição
-		<verif_pop> OPCIONAL | Para verificações de população da vila
-  ]]
-sunos.estruturas.casa.construir = function(pos, dist, vila, verif_area, itens_repo, verif_pop)
 	-- Validar argumentos de entrada
 	if pos == nil then
 		minetest.log("error", "[Sunos] Tabela pos nula (sunos.estruturas.casa.construir)")
@@ -144,8 +129,39 @@ sunos.estruturas.casa.construir = function(pos, dist, vila, verif_area, itens_re
 		end
 	end
 	
+	return true, vila
+end
+
+-- Tabela para valores de rotação
+local tb_rotat = {"0", "90", "180", "270"}
+
+-- Construir casa de sunos
+--[[
+	Essa função construi uma casa de sunos e configura o fundamento
+	Retorno:
+		^ true caso ocorra tudo bem
+		^ string de erro caso algo de errado
+	Argumentos:
+		<pos> é a coordenada do fundamento da estrutura
+		<dist> distancia centro a borda da nova estrutura
+		<vila> OPCIONAL | é o numero da vila a qual a casa pertence
+		<verif_area> OPCIONAL | para verificar a area a ser usada
+		<itens_repo> OPCIONAL | Repassado ao comando sunos.decor_repo para substituir itens de reposição
+		<verif_pop> OPCIONAL | Para verificações de população da vila
+  ]]
+sunos.estruturas.casa.construir = function(pos, dist, vila, verif_area, itens_repo, verif_pop)
+	
+	-- Verifica se pode construir a casa
+	local verif, vila = sunos.estruturas.casa.verif(pos, dist, vila, verif_area, verif_pop)
+	if verif ~= true then
+		return verif
+	end
+	
+	-- Variaveis auxiliares
+	local largura = (dist*2)+1
+	
 	-- Escolhe uma rotação aleatória
-	local rotat = tb_rotat[math.random(1, 4)]
+	local rotat = sunos.pegar_rotat()
 	
 	-- Criar casa e pega o nome do arquivo da estrutura
 	local rm, schem = sunos.montar_estrutura(pos, dist, "casa", rotat)

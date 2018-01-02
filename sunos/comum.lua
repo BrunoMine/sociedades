@@ -139,6 +139,26 @@ sunos.pegar_solo = function(pos, dist, subir)
 	return r
 end
 
+
+-- Pegar rotação
+sunos.pegar_rotat = function()
+	local tb_rotat = {"0", "90", "180", "270"}
+	return tb_rotat[math.random(1, 4)]
+end
+
+
+-- Verifica se tem jogador perto
+-- Retorna nulo ou objeto se encontrar jogador
+sunos.verif_player_perto = function(pos, dist)
+	for _,obj in ipairs(minetest.get_objects_inside_radius(pos, dist)) do
+		if obj:is_player() then
+			return obj	
+		end
+	end
+end
+
+
+
 -- Pegar uma arquivo de estrutura aleatoriamente
 --[[
 	Essa função retorna um nome aleatorio de arquivo para estrutura.
@@ -157,7 +177,10 @@ sunos.pegar_arquivo = function(largura, tipo)
 	if estruturas ~= nil then
 		for _,nome in ipairs(estruturas) do
 			local n = string.split(nome, ".")
-			if n[2] and tonumber(n[2]) == tonumber(largura) then
+			if n[2] -- Tem valor apos segundo ponto
+				and tonumber(n[2]) == tonumber(largura) -- Largura corresponde à exigida
+				and not string.match(nome, "-step") -- evita arquivos tipo step
+			then
 				table.insert(validos, n[1])
 			end
 		end
@@ -478,7 +501,6 @@ end
   ]]
 sunos.verif_carregamento = function(pos, dist)
 	sunos.checkvar(pos, dist, "Parametro(s) invalido(s) para verificar carregamento")
-	
 	
 	-- Pegar os 8 cantos da area
 	local nn = {} -- nomes dos nodes

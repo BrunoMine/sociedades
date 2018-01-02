@@ -35,3 +35,20 @@ sunos.montar_estrutura = function(cpos, dist, tipo, rotat, schem)
 	
 	return true, schem
 end
+
+-- Verificar estagio
+sunos.verif_estrutura_step = function(pos)
+	local meta = minetest.get_meta(pos)
+	local tipo = meta:get_string("tipo")
+	local schem = meta:get_string("schem")
+	local step = tonumber(meta:get_string("step"))
+	
+	-- Verifica se terminou
+	if step == 5 then
+	
+	--
+	else
+		
+	end
+	
+end

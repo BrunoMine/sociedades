@@ -49,7 +49,8 @@ sunos.var.nodes_estruturais = {
 	"default:stonebrick", 
 	"group:stair", 
 	"group:slab", 
-	"farming:straw"
+	"farming:straw",
+	"sunos:straw_nodrop",
 }
 
 -- Nodes trocados na montagem de qualquer estrutura
@@ -65,6 +66,12 @@ sunos.var.nodes_trocados = {
 	["default:torch"] = "sunos:torch_nodrop",
 	["default:torch_ceiling"] = "sunos:torch_ceiling_nodrop",
 	["default:torch_wall"] = "sunos:torch_wall_nodrop",
+	-- Decorativos comuns
+	["default:tree"] = "sunos:tree_nodrop",
+	["default:cobble"] = "sunos:cobble_nodrop",
+	["default:glass"] = "sunos:glass_nodrop",
+	["default:wood"] = "sunos:wood_nodrop",
+	["farming:straw"] = "sunos:straw_nodrop",
 }
 
 -- Listagem de itens para os nodes de venda

@@ -53,13 +53,14 @@ local acessar_menu = function(name)
 	local list_estruturas_strings = ""
 	local lista_estruturas_i = {}
 	if list_estruturas then
-		
+		local i = 1
 		for n, nschem in ipairs(list_estruturas) do
 			if not string.match(nschem, "-step") then
 				local nn = string.split(nschem, ".")
 				local estrut = nn[1] .. " ("..nn[2]..")"
 				list_estruturas[n] = estrut -- reajusta o nome
-				lista_estruturas_i[estrut] = n
+				lista_estruturas_i[estrut] = i
+				i = i + 1
 				if list_estruturas_strings ~= "" then list_estruturas_strings = list_estruturas_strings .."," end
 				list_estruturas_strings = list_estruturas_strings .. estrut
 			end
@@ -69,14 +70,17 @@ local acessar_menu = function(name)
 		minetest.get_meta(acessos[name].pos):set_string("lista_estruturas", minetest.serialize(list_estruturas))
 		minetest.get_meta(acessos[name].pos):set_string("lista_estruturas_i", minetest.serialize(list_estruturas_i))
 	end
+	
 	local escolha_estrutura = minetest.get_meta(acessos[name].pos):get_string("estrutura")
 	if not lista_estruturas_i[escolha_estrutura] then
+		
 		-- Atualiza a escolha salva com a escolha exibida
 		minetest.get_meta(acessos[name].pos):set_string("estrutura", list_estruturas[1])
 		escolha_estrutura = 1
 	else
 		escolha_estrutura = lista_estruturas_i[escolha_estrutura]
 	end
+	
 	
 	
 	local formspec = "size[10,10]"

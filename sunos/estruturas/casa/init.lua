@@ -82,50 +82,28 @@ sunos.estruturas.casa.verif = function(pos, dist, vila, verif_area, verif_pop)
 		return "Erro interno (tamanho de casa inexistente)"
 	end
 	
-	-- Variaveis auxiliares
-	local largura = (dist*2)+1
-	
-	-- Buscar uma vila por perto
-	if not vila then
-		local pos_fund_prox = minetest.find_node_near(pos, 25, {"sunos:fundamento"})
-		if pos_fund_prox == nil then 
-			return S("Nenhuma vila por perto")
-		end
-	
-		-- Pegar dados da vila encontrada
-		local meta_fund_prox = minetest.get_meta(pos_fund_prox)
-		vila = meta_fund_prox:get_string("vila")
-	
-		-- Verificar se ainda existe um banco de dados da vila
-		if sunos.bd.verif("vila_"..vila, "numero") == false then
-			return S("Vila abandonada")
+	-- Verificar se vila existe (caso especificado)
+	if vila and sunos.verificar_vila_existente(vila) == false then
+		return S("Vila abandonada")
+		
+	-- Encontrar vila ativa
+	else
+		vila = sunos.encontrar_vila(pos, 25)
+		if not vila then
+			return S("Nenhuma vila habitavel encontrada")
 		end
 	end
 	
-	-- Verificar se a vila ja atingiu limite
-	if verif_pop then
-		if sunos.verif_pop_vila(vila) ~= true then
-			return S("Limite de @1 habitantes foi atingido", sunos.var.max_pop)
-		end
+	-- Verificar limite populacional
+	if sunos.verif_pop_vila(vila) ~= true then
+		return S("Limite de @1 habitantes foi atingido", sunos.var.max_pop)
 	end
 	
 	-- Verificações de area
 	if verif_area == true then
-		
-		-- Verifica status do terreno
-		local st = sunos.verif_terreno(pos, dist+1)
-		
-		-- Problema: em cima da faixa de solo existem obstrucoes (nao esta limpo e plano)
-		if st == 1 then
-			return S("O local precisa estar limpo e plano em uma area de @1x@1 blocos da largura", (largura+2))
-		
-		-- Problema: faixa de solo (superficial) falta blocos de terra
-		elseif st == 2 then
-			return S("O solo precisa estar plano e gramado em uma area de @1x@1 blocos da largura", (largura+2))
-		
-		-- Problema: faixa de subsolo (considerando 2 faixas) falta blocos de terra
-		elseif st == 3 then
-			return S("O subsolo precisa estar preenchido (ao menos 2 blocos de profundidade) em uma area de @1x@1 blocos da largura", (largura+2))
+		local r = sunos.verificar_area_para_fundamento(pos, dist)
+		if r ~= true then
+			return r
 		end
 	end
 	
@@ -148,13 +126,16 @@ local tb_rotat = {"0", "90", "180", "270"}
 		<verif_area> OPCIONAL | para verificar a area a ser usada
 		<itens_repo> OPCIONAL | Repassado ao comando sunos.decor_repo para substituir itens de reposição
 		<verif_pop> OPCIONAL | Para verificações de população da vila
+		<force> OPCIONAL | ignora todas as verificações
   ]]
-sunos.estruturas.casa.construir = function(pos, dist, vila, verif_area, itens_repo, verif_pop)
+sunos.estruturas.casa.construir = function(pos, dist, vila, verif_area, itens_repo, verif_pop, force)
 	
 	-- Verifica se pode construir a casa
-	local verif, vila = sunos.estruturas.casa.verif(pos, dist, vila, verif_area, verif_pop)
-	if verif ~= true then
-		return verif
+	if force ~= true then
+		local verif, vila = sunos.estruturas.casa.verif(pos, dist, vila, verif_area, verif_pop)
+		if verif ~= true then
+			return verif
+		end
 	end
 	
 	-- Variaveis auxiliares

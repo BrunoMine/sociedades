@@ -9,14 +9,11 @@
 	Métodos comuns
   ]]
 
+-- Traduções
+local S = sunos.S
+
 -- Caminho do diretório do mod
 local modpath = minetest.get_modpath("sunos")
-
--- Nodes de verificação para casas obstruidas
-local nodes_estruturais = {"default:wood", "default:cobble", "default:stonebrick", "group:stair", "farming:straw"}
-
--- Nodes removidos na montagem de ruinas
-local nodes_rem_ruinas = {"default:apple", "sunos:bau", "sunos:bau_casa_comunal", "sunos:bau_loja", "default:wood", "group:stair", "group:glass", "group:fence", "group:ladder", "group:flower", "group:vessel", "default:torch", "group:pane", "default:ladder_wood", "default:ladder_steel", "group:leaves", "group:wool", "group:door", "farming:straw", "group:sunos", "default:bookshelf", "vessels:shelf", "flowers:mushroom_brown"}
 
 -- Copiar tabela de dados (bom para coordenadas)
 sunos.copy_tb = function(tb)
@@ -157,6 +154,67 @@ sunos.verif_player_perto = function(pos, dist)
 	end
 end
 
+
+-- Verificar se uma area está pronta para fundamento
+-- Retorna mensagens de acordo com o erro
+sunos.verificar_area_para_fundamento = function(pos, dist)
+
+	-- Verifica status do terreno
+	local st = sunos.verif_terreno(pos, dist+1)
+	
+	-- Variaveis auxiliares
+	local largura = (dist*2)+1
+	
+	-- Problema: em cima da faixa de solo existem obstrucoes (nao esta limpo e plano)
+	if st == 1 then
+		return S("O local precisa estar limpo e plano em uma area de @1x@1 blocos da largura", (largura+2))
+	
+	-- Problema: faixa de solo (superficial) falta blocos de terra
+	elseif st == 2 then
+		return S("O solo precisa estar plano e gramado em uma area de @1x@1 blocos da largura", (largura+2))
+	
+	-- Problema: faixa de subsolo (considerando 2 faixas) falta blocos de terra
+	elseif st == 3 then
+		return S("O subsolo precisa estar preenchido (ao menos 2 blocos de profundidade) em uma area de @1x@1 blocos da largura", (largura+2))
+	end
+	
+	return true
+end
+
+
+-- Verificar vila abandonada
+sunos.verificar_vila_existente = function(vila)
+	-- Atualizar o banco de dados
+	sunos.atualizar_bd_vila(vila)
+	
+	-- Verificar se ainda existe um banco de dados da vila
+	if sunos.bd.verif("vila_"..vila, "numero") == true then
+		return true
+	end
+	return false
+end
+
+
+-- Encontrar vila perto
+-- Retorna o numero de uma vila encontrada
+sunos.encontrar_vila = function(pos, dist)
+	
+	local nodes = minetest.find_nodes_in_area(vector.subtract(pos, dist), vector.add(pos, dist), {"sunos:fundamento"})	
+	
+	for _,fund in ipairs(nodes) do
+		
+		-- Pegar dados da vila encontrada
+		local meta = minetest.get_meta(fund)
+		vila = meta:get_string("vila")
+		
+		-- Verificar se vila existe
+		if sunos.verificar_vila_existente(vila) == true then
+			return tonumber(vila)
+		end
+		
+	end
+	
+end
 
 
 -- Pegar uma arquivo de estrutura aleatoriamente
@@ -450,45 +508,7 @@ sunos.verif_fundamento = function(pos, dist)
 end
 
 
--- Montar ruinas
-sunos.montar_ruinas = function(pos, dist)
-	sunos.checkvar(pos, dist, "Parametro(s) invalido(s) para montar ruinas")
-	
-	-- Pega todas elementos pedrosos
-	local nodes = minetest.find_nodes_in_area(
-		{x=pos.x-dist, y=pos.y, z=pos.z-dist}, 
-		{x=pos.x+dist, y=pos.y+14, z=pos.z+dist}, 
-		{"group:stone"}
-	)
-	-- Pega a terra do chao
-	local nodes_solo = minetest.find_nodes_in_area(
-		{x=pos.x-dist, y=pos.y, z=pos.z-dist}, 
-		{x=pos.x+dist, y=pos.y, z=pos.z+dist}, 
-		{"default:dirt", "default:dirt_with_grass"}
-	)
-	
-	-- Pegar blocos a serem removidos
-	local nodes_rem = minetest.find_nodes_in_area(
-		{x=pos.x-dist, y=pos.y, z=pos.z-dist}, 
-		{x=pos.x+dist, y=pos.y+14, z=pos.z+dist}, 
-		nodes_rem_ruinas
-	)
-	
-	-- Limpar nodes a serem removidos
-	for _,p in ipairs(nodes_rem) do
-		minetest.remove_node(p)
-	end
-	
-	-- Recoloca pedregulho no lugar de elementos pedrosos
-	for _,p in ipairs(nodes) do
-		minetest.set_node(p, {name="default:cobble"})
-	end
-	-- Recoloca terra no solo
-	for _,p in ipairs(nodes_solo) do
-		minetest.set_node(p, {name="default:dirt_with_grass"})
-	end
-	return true
-end
+
 
 -- Verificar area carregada
 --[[

@@ -21,6 +21,7 @@ sunos.estruturas.casa.gerar_itens_repo["2"] = function()
 		bancadas = {
 			{"sunos:bau_casa", 1},
 			{"sunos:bancada_de_trabalho_nodrop", 1, true},
+			{"sunos:caixa_de_musica_nodrop", 1},
 		},
 		sobrebancadas = {
 			{"sunos:kit_culinario_nodrop", 1},
@@ -38,6 +39,7 @@ sunos.estruturas.casa.gerar_itens_repo["3"] = function()
 		bancadas = {
 			{"sunos:bau_casa", 1, true},
 			{"sunos:bancada_de_trabalho_nodrop", 1, true},
+			{"sunos:caixa_de_musica_nodrop", 1},
 			{"sunos:wood_barrel_nodrop", 1, true},
 		},
 		sobrebancadas = {
@@ -56,6 +58,7 @@ sunos.estruturas.casa.gerar_itens_repo["4"] = function()
 		bancadas = {
 			{"sunos:bau_casa", 1, true},
 			{"sunos:bancada_de_trabalho_nodrop", 1, true},
+			{"sunos:caixa_de_musica_nodrop", 1},
 			{"sunos:wood_barrel_nodrop", 2, true},
 		},
 		sobrebancadas = {

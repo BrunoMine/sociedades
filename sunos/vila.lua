@@ -672,8 +672,7 @@ sunos.criar_vila = function(pos_ref)
 			if tipo == "casa" then
 				
 				-- Montar casa
-				sunos.estruturas.casa.construir(dados.pos, dados.dist, vila, nil, true)
-				
+				sunos.estruturas.casa.construir(dados.pos, dados.dist, vila, false, true, false, true)
 				tem_casa = true
 				
 			elseif tipo == "decor" then
@@ -690,7 +689,7 @@ sunos.criar_vila = function(pos_ref)
 				
 			elseif tipo == "loja" then
 				
-				sunos.estruturas.loja.construir(dados.pos, dados.dist, vila)
+				sunos.estruturas.loja.construir(dados.pos, dados.dist, vila, true)
 				
 				tem_loja = true
 			end

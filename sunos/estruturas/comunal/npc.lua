@@ -15,7 +15,7 @@ local S = sunos.S
 sunos.npcs.npc.registrar("comunal", {
 	
 	node_spawner = "sunos:bau_comunal",
-	nodes_spawn = {"default:wood"},
+	nodes_spawn = {"sunos:wood_nodrop"},
 	
 	drops = {
 		{name = "default:wood", chance = 1, min = 1, max = 3},

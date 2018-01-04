@@ -18,6 +18,17 @@ local nodes_trocaveis_nodrop = {
 	["default:cobble"] = {name="sunos:cobble_nodrop"},
 	["default:wood"] = {name="sunos:wood_nodrop"},
 	["farming:straw"] = {name="sunos:straw_nodrop"},
+	["default:stonebrick"] = {name="sunos:stonebrick_nodrop"},
+	-- Stairs
+	["stairs:stair_wood"] = {name="sunos:stair_wood_nodrop"},
+	["stairs:slab_wood"] = {name="sunos:slab_wood_nodrop"},
+	["stairs:stair_inner_wood"] = {name="sunos:stair_inner_wood_nodrop"},
+	["stairs:stair_outer_wood"] = {name="sunos:stair_outer_wood_nodrop"},
+	["stairs:stair_cobble"] = {name="sunos:stair_cobble_nodrop"},
+	["stairs:slab_cobble"] = {name="sunos:slab_cobble_nodrop"},
+	["stairs:stair_inner_cobble"] = {name="sunos:stair_inner_cobble_nodrop"},
+	["stairs:stair_outer_cobble"] = {name="sunos:stair_outer_cobble_nodrop"},
+	
 }
 
 -- Criar cópia sem Drop (para evitar furtos em estruturas dos sunos)

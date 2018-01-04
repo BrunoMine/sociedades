@@ -124,7 +124,7 @@ minetest.register_node("sunos:fundamento_step", {
 			
 			if r ~= true then
 				-- Informa o ocorrido no depurador
-				minetest.log("action", "[Sunos] Construção cancelada em "..minetest.pos_to_string(pos).." : "..r)
+				minetest.log("action", "[Sunos] Construção de "..tipo.." cancelada em "..minetest.pos_to_string(pos).." : "..r)
 				minetest.set_node(pos, {name="default:tree"})
 				
 				-- Monta ruina
@@ -137,7 +137,7 @@ minetest.register_node("sunos:fundamento_step", {
 		elseif agora > inicio then
 			
 			-- evita jogador, adia procedimento
-			if not sunos.verif_player_perto(pos, 25) then
+			if not sunos.verif_player_perto(pos, 15) then
 				-- Reinicia o ciclo com um tempo definido
 				minetest.get_node_timer(pos):set(10, 0)
 				return false -- Evita que repita com um tempo diferente do definido

@@ -105,41 +105,25 @@ sunos.estruturas.loja.verif = function(pos, dist, verif_area)
 	
 	-- Variaveis auxiliares
 	local largura = (dist*2)+1
+	local vila
 	
-	-- Encontrar vila
-	
-	-- Verificar Vila e pegar dados (buscando por um fundamento proximo)
-	local pos_fund_prox = minetest.find_node_near(pos, 25, {"sunos:fundamento"})
-	if pos_fund_prox == nil then 
-		return S("Nenhuma vila por perto")
+	-- Verificar se vila existe (caso especificado)
+	if vila and sunos.verificar_vila_existente(vila) == false then
+		return S("Vila abandonada")
+		
+	-- Encontrar vila ativa
+	else
+		vila = sunos.encontrar_vila(pos, 25)
+		if not vila then
+			return S("Nenhuma vila habitavel encontrada")
+		end
 	end
-
-	-- Pegar dados da vila encontrada
-	local meta_fund_prox = minetest.get_meta(pos_fund_prox)
-	local vila = meta_fund_prox:get_string("vila")
 	
 	-- Verificações de area
 	if verif_area == true then
-	
-		-- Verificar se ainda existe um banco de dados da vila
-		if sunos.bd.verif("vila_"..vila, "numero") == false then
-			return S("Vila abandonada")
-		end
-		
-		-- Verifica status do terreno
-		local st = sunos.verif_terreno(pos, dist+1)
-		
-		-- Problema: em cima da faixa de solo existem obstrucoes (nao esta limpo e plano)
-		if st == 1 then
-			return S("O local precisa estar limpo e plano em uma area de @1x@1 blocos da largura", (largura+2))
-		
-		-- Problema: faixa de solo (superficial) falta blocos de terra
-		elseif st == 2 then
-			return S("O solo precisa estar plano e gramado em uma area de @1x@1 blocos da largura", (largura+2))
-		
-		-- Problema: faixa de subsolo (considerando 2 faixas) falta blocos de terra
-		elseif st == 3 then
-			return S("O subsolo precisa estar preenchido (ao menos 2 blocos de profundidade) em uma area de @1x@1 blocos da largura", (largura+2))
+		local r = sunos.verificar_area_para_fundamento(pos, dist)
+		if r ~= true then
+			return r
 		end
 	end
 	
@@ -158,12 +142,14 @@ end
 		<vila> OPCIONAL | é o numero da vila a qual a estrutura decorativa pertence
 		<verif_area> OPCIONAL | true verificar a area antes de montar a estrutura (retorna strings dos erros)
 ]]
-sunos.estruturas.loja.construir = function(pos, dist, verif_area)
+sunos.estruturas.loja.construir = function(pos, dist, verif_area, force)
 	
 	-- Verifica se pode construir a casa
-	local verif, vila = sunos.estruturas.loja.verif(pos, dist, verif_area)
-	if verif ~= true then
-		return verif
+	if force ~= true then
+		local verif, vila = sunos.estruturas.loja.verif(pos, dist, verif_area)
+		if verif ~= true then
+			return verif
+		end
 	end
 	
 	-- Escolhe uma rotação aleatória

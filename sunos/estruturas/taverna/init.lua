@@ -131,25 +131,18 @@ sunos.estruturas.taverna.verif = function(pos, verif_area)
 	-- Variaveis auxiliares
 	local dist = 5
 	local largura = (dist*2)+1
+	local vila
 	
-	-- Encontrar vila perto
-	
-	-- Verificar Vila e pegar dados (buscando por um fundamento proximo)
-	local pos_fund_prox = minetest.find_node_near(pos, 25, {"sunos:fundamento"})
-	if pos_fund_prox == nil then 
-		return S("Nenhuma vila por perto")
-	end
-	
-	-- Pegar dados da vila encontrada
-	local meta_fund_prox = minetest.get_meta(pos_fund_prox)
-	local vila = meta_fund_prox:get_string("vila")
-	
-	-- Atualizar banco de dados da vila
-	sunos.atualizar_bd_vila(vila)
-	
-	-- Verifica se tem populacao suficiente
-	if tonumber(sunos.bd.pegar("vila_"..vila, "pop_total")) < sunos.estruturas.taverna.var.niveis[1] then
-		return S("A vila precisa ter ao menos @1 habitantes", sunos.estruturas.taverna.var.niveis[1])
+	-- Verificar se vila existe (caso especificado)
+	if vila and sunos.verificar_vila_existente(vila) == false then
+		return S("Vila abandonada")
+		
+	-- Encontrar vila ativa
+	else
+		vila = sunos.encontrar_vila(pos, 25)
+		if not vila then
+			return S("Nenhuma vila habitavel encontrada")
+		end
 	end
 	
 	-- Verificar se ja existe um taverna
@@ -157,28 +150,16 @@ sunos.estruturas.taverna.verif = function(pos, verif_area)
 		return S("Ja existe @1 nessa vila", S("Taverna"))
 	end
 	
+	-- Verifica se tem populacao suficiente
+	if tonumber(sunos.bd.pegar("vila_"..vila, "pop_total")) < sunos.estruturas.taverna.var.niveis[1] then
+		return S("A vila precisa ter ao menos @1 habitantes", sunos.estruturas.taverna.var.niveis[1])
+	end
+	
 	-- Verificações de area
 	if verif_area == true then
-	
-		-- Verificar se ainda existe um banco de dados da vila
-		if sunos.bd.verif("vila_"..vila, "numero") == false then
-			return S("Vila abandonada")
-		end
-		
-		-- Verifica status do terreno
-		local st = sunos.verif_terreno(pos, dist+1)
-		
-		-- Problema: em cima da faixa de solo existem obstrucoes (nao esta limpo e plano)
-		if st == 1 then
-			return S("O local precisa estar limpo e plano em uma area de @1x@1 blocos da largura", (largura+2))
-		
-		-- Problema: faixa de solo (superficial) falta blocos de terra
-		elseif st == 2 then
-			return S("O solo precisa estar plano e gramado em uma area de @1x@1 blocos da largura", (largura+2))
-		
-		-- Problema: faixa de subsolo (considerando 2 faixas) falta blocos de terra
-		elseif st == 3 then
-			return S("O subsolo precisa estar preenchido (ao menos 2 blocos de profundidade) em uma area de @1x@1 blocos da largura", (largura+2))
+		local r = sunos.verificar_area_para_fundamento(pos, dist)
+		if r ~= true then
+			return r
 		end
 	end
 	
@@ -310,7 +291,7 @@ minetest.register_node("sunos:fundamento_taverna", {
 		
 		local pos = pointed_thing.under
 		
-		local r, vila = sunos.estruturas.emporio.verif(pos, true)
+		local r, vila = sunos.estruturas.taverna.verif(pos, true)
 		
 		if r == true then
 			

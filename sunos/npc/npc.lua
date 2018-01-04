@@ -702,7 +702,7 @@ sunos.npcs.npc.registrar = function(tipo, def)
 				local nodes = minetest.find_nodes_in_area(
 					{x=pc.x-pc_dist, y=pc.y, z=pc.z-pc_dist}, 
 					{x=pc.x+pc_dist, y=pc.y+14, z=pc.z+pc_dist}, 
-					def.nodes_spawn or {"default:wood", "default:stonebrick", "default:cobble"})
+					def.nodes_spawn or {"sunos:wood_nodrop", "default:stonebrick", "sunos:cobble_nodrop"})
 				for _,p in ipairs(nodes) do
 					if minetest.get_node({x=p.x, y=p.y+1, z=p.z}).name == "sunos:carpete_palha_nodrop"
 						and minetest.get_node({x=p.x, y=p.y+2, z=p.z}).name == "air"

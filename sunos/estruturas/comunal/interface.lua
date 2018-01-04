@@ -107,16 +107,17 @@ sunos.npcs.npc.registrados.comunal.on_rightclick = function(ent, player, fields)
 			formspec = formspec .."label[5,3;"..titulo.."]"
 			
 			-- Botao de trocar
-			formspec = formspec .. "item_image_button[5,3.5;2,2;"..dados.item_add..";trocar;"..S("Trocar").."]"
+			formspec = formspec .. "item_image_button[5,3.5;2,2;"..dados.item_add..";trocar;]"
 			
 			-- Texto descritivo
-			formspec = formspec .. "textarea[7.2,3.5;5.1,2.25;desc;;"..dados.desc.."]"
+			formspec = formspec .. "textarea[7.2,3.5;5.1,2.25;;"..S(dados.desc)..";]"
+			--"textarea[7.2,3.5;5.1,2.25;desc;;"..dados.desc.."]"
 			
 			-- Requisitos
 			formspec = formspec .."label[5,5.5;"..S("Requisitos").."]"
 			
 			-- População minima
-			formspec = formspec .."label[5,6;"..S("Habitantes: @1", dados.pop).."]"
+			formspec = formspec .."label[5,6;"..S("Habitantes requeridos: @1", dados.pop).."]"
 			
 			-- Organizando formspec dos itens
 			for n,item in pairs(dados.item_rem) do

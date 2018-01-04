@@ -236,8 +236,8 @@ end
 minetest.register_node("sunos:fundamento_loja", {
 	description = S("Fundamento de Loja dos Sunos"),
 	tiles = {"default_tree_top.png^sunos_fundamento.png", "default_tree_top.png", "default_tree.png"},
-	inventory_image = "sunos_inv_fundamento.png^sunos_inv_fundamento_loja.png",
-	wield_image = "sunos_inv_fundamento.png^sunos_inv_fundamento_loja.png",
+	inventory_image = "sunos_fundamento_fundo_inv.png^sunos_fundamento_loja_inv.png",
+	wield_image = "sunos_fundamento_estrutura_namao.png^sunos_fundamento_loja_namao.png",
 	paramtype2 = "facedir",
 	is_ground_content = false,
 	groups = {tree = 1, choppy = 2, oddly_breakable_by_hand = 1, flammable = 2},

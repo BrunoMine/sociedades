@@ -17,8 +17,8 @@ local S = sunos.S
 minetest.register_node("sunos:fundamento_casa_pequena", {
 	description = S("Fundamento Suno de Casa Pequena"),
 	tiles = {"default_tree_top.png^sunos_fundamento.png", "default_tree_top.png", "default_tree.png"},
-	inventory_image = "sunos_inv_fundamento.png^sunos_inv_fundamento_casa.png",
-	wield_image = "sunos_inv_fundamento.png^sunos_inv_fundamento_casa.png",
+	inventory_image = "sunos_fundamento_fundo_inv.png^sunos_fundamento_casa_inv.png",
+	wield_image = "sunos_fundamento_estrutura_namao.png^sunos_fundamento_casa_namao.png",
 	paramtype2 = "facedir",
 	is_ground_content = false,
 	groups = {tree = 1, choppy = 2, oddly_breakable_by_hand = 1, flammable = 2},
@@ -72,8 +72,8 @@ minetest.register_node("sunos:fundamento_casa_pequena", {
 minetest.register_node("sunos:fundamento_casa_mediana", {
 	description = S("Fundamento Suno de Casa Mediana"),
 	tiles = {"default_tree_top.png^sunos_fundamento.png", "default_tree_top.png", "default_tree.png"},
-	inventory_image = "sunos_inv_fundamento.png^sunos_inv_fundamento_casa.png",
-	wield_image = "sunos_inv_fundamento.png^sunos_inv_fundamento_casa.png",
+	inventory_image = "sunos_fundamento_fundo_inv.png^sunos_fundamento_casa_inv.png",
+	wield_image = "sunos_fundamento_estrutura_namao.png^sunos_fundamento_casa_namao.png",
 	paramtype2 = "facedir",
 	is_ground_content = false,
 	groups = {tree = 1, choppy = 2, oddly_breakable_by_hand = 1, flammable = 2},
@@ -129,8 +129,8 @@ minetest.register_node("sunos:fundamento_casa_mediana", {
 minetest.register_node("sunos:fundamento_casa_grande", {
 	description = S("Fundamento Suno de Casa Grande"),
 	tiles = {"default_tree_top.png^sunos_fundamento.png", "default_tree_top.png", "default_tree.png"},
-	inventory_image = "sunos_inv_fundamento.png^sunos_inv_fundamento_casa.png",
-	wield_image = "sunos_inv_fundamento.png^sunos_inv_fundamento_casa.png",
+	inventory_image = "sunos_fundamento_fundo_inv.png^sunos_fundamento_casa_inv.png",
+	wield_image = "sunos_fundamento_estrutura_namao.png^sunos_fundamento_casa_namao.png",
 	paramtype2 = "facedir",
 	is_ground_content = false,
 	groups = {tree = 1, choppy = 2, oddly_breakable_by_hand = 1, flammable = 2},

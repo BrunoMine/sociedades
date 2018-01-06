@@ -112,6 +112,7 @@ sunos.var.musicas = {
 	["sunos_bondade"] = {duracao=37, gain=0.1},
 	["sunos_coragem"] = {duracao=26, gain=0.1},
 	["sunos_alegria"] = {duracao=21, gain=0.1},
+	["sunos_colheita"] = {duracao=29, gain=0.1},
 }
 
 -- Tabela de grupos de nodes

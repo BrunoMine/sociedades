@@ -58,7 +58,7 @@ local acessar_menu = function(name)
 			if not string.match(nschem, "-step") then
 				local nn = string.split(nschem, ".")
 				local estrut = nn[1] .. " ("..nn[2]..")"
-				list_estruturas[n] = estrut -- reajusta o nome
+				list_estruturas[i] = estrut -- reajusta o nome
 				lista_estruturas_i[estrut] = i
 				i = i + 1
 				if list_estruturas_strings ~= "" then list_estruturas_strings = list_estruturas_strings .."," end
@@ -68,7 +68,7 @@ local acessar_menu = function(name)
 		
 		-- Salva listas no node
 		minetest.get_meta(acessos[name].pos):set_string("lista_estruturas", minetest.serialize(list_estruturas))
-		minetest.get_meta(acessos[name].pos):set_string("lista_estruturas_i", minetest.serialize(list_estruturas_i))
+		minetest.get_meta(acessos[name].pos):set_string("lista_estruturas_i", minetest.serialize(lista_estruturas_i))
 	end
 	
 	local escolha_estrutura = minetest.get_meta(acessos[name].pos):get_string("estrutura")

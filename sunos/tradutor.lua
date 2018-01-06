@@ -16,4 +16,10 @@ local S, NS = dofile(MP.."/lib/intllib.lua")
 
 -- Variavel global do sunos
 sunos.S = S
+sunos.NS = NS
 
+-- Utiliza tradução do proprio minetest se existir
+--[[
+if minetest.get_translator() then
+	sunos.S = minetest.get_translator()
+end]]

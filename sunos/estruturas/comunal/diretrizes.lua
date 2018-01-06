@@ -82,7 +82,7 @@ sunos.estruturas.comunal.var.tb_menu_comunal = {
 		item_rem = {"default:tree 35", "default:cobble 45", "default:glass 20", "default:torch 20", "farming:straw 40"}
 	},
 	-- Kit Reparador
-	--[[ DESUSO
+	--[[ DESCONTINUADO
 	[S("Kit Reparador Estrutural")] = {
 		desc = S("Pode ser usado para reconstruir algumas estruturas da vila"),
 		pop = 5,

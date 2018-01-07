@@ -16,12 +16,8 @@ local S = sunos.S
 minetest.register_node("sunos:bancada", {
 	description = S("Bancada dos Sunos"),
 	tiles = {
-		"default_wood.png", 
-		"default_wood.png", 
-		"default_wood.png^(farming_straw.png^sunos_bancada_lado.png^[makealpha:76,255,0)",
-		"default_wood.png^(farming_straw.png^sunos_bancada_lado.png^[makealpha:76,255,0)", 
-		"default_wood.png^(farming_straw.png^sunos_bancada_lado.png^[makealpha:76,255,0)", 
-		"default_wood.png^(farming_straw.png^sunos_bancada_lado.png^[makealpha:76,255,0)"
+		"default_wood.png",
+		"(default_wood.png^(farming_straw.png^sunos_bancada_lado.png^[makealpha:76,255,0))"
 	},
 	paramtype2 = "facedir",
 	groups = {choppy = 2, oddly_breakable_by_hand = 2, sunos=1},

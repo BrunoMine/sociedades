@@ -5,6 +5,19 @@
 [![forum](https://img.shields.io/badge/minetest-mod-green.svg?style=flat-square)](https://forum.minetest.net/viewtopic.php?f=9&t=15382)
 [![bower](https://img.shields.io/badge/bower-mod-green.svg?style=flat-square)](https://minetest-bower.herokuapp.com/mods/sociedades)
 
+## Requitos
+* Minetest 0.5.0
+* mobs
+* default
+* vessels
+* flowers
+* xpanes
+* stairs
+* doors
+* farming
+* advanced_npc
+* intllib (opicional)
+* hbhunger (opicional)
 
 ## Sobre
 Esse modpack adiciona sociedades em minetest.

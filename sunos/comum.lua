@@ -561,3 +561,15 @@ sunos.verif_estrutura_existe = function(vila, estrutura)
 		end
 	end
 end
+
+-- Limpar NodeMetaData
+sunos.limpar_metadados = function(pos1, pos2, nodes)
+	for _,pos in ipairs(minetest.find_nodes_in_area(
+		pos1, 
+		pos2, 
+		nodes or sunos.var.node_group.remover_metadados
+	)) do
+		local meta = minetest.get_meta(pos)
+		meta:from_table() -- limpa metadados
+	end
+end

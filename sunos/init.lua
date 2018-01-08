@@ -1,6 +1,6 @@
 --[[
 	Mod Sunos para Minetest
-	Copyright (C) 2017 BrunoMine (https://github.com/BrunoMine)
+	Copyright (C) 2018 BrunoMine (https://github.com/BrunoMine)
 	
 	Recebeste uma cópia da GNU Lesser General
 	Public License junto com esse software,
@@ -13,10 +13,12 @@
 sunos = {}
 
 -- Versão do projeto
-sunos.versao = "2.0"
+sunos.versao = "2.2"
 
 -- Versoes compativeis
-sunos.versao_comp = {}
+sunos.versao_comp = {
+	["2.0"] = true,
+}
 
 -- Notificador de Inicializador
 local notificar = function(msg)

@@ -20,6 +20,10 @@ local nodes_trocaveis_nodrop = {
 	["farming:straw"] = {name="sunos:straw_nodrop"},
 	["default:stonebrick"] = {name="sunos:stonebrick_nodrop"},
 	-- Stairs
+	["stairs:stair_straw"] = {name="sunos:stair_straw_nodrop"},
+	["stairs:slab_straw"] = {name="sunos:slab_straw_nodrop"},
+	["stairs:stair_inner_straw"] = {name="sunos:stair_inner_straw_nodrop"},
+	["stairs:stair_outer_straw"] = {name="sunos:stair_outer_straw_nodrop"},
 	["stairs:stair_wood"] = {name="sunos:stair_wood_nodrop"},
 	["stairs:slab_wood"] = {name="sunos:slab_wood_nodrop"},
 	["stairs:stair_inner_wood"] = {name="sunos:stair_inner_wood_nodrop"},

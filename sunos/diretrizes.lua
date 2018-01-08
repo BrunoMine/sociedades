@@ -51,6 +51,10 @@ sunos.var.nodes_trocados = {
 	["default:stonebrick"] = "sunos:stonebrick_nodrop",
 	
 	-- Stairs
+	["stairs:stair_straw"] = "sunos:stair_straw_nodrop",
+	["stairs:slab_straw"] = "sunos:slab_straw_nodrop",
+	["stairs:stair_inner_straw"] = "sunos:stair_inner_straw_nodrop",
+	["stairs:stair_outer_straw"] = "sunos:stair_outer_straw_nodrop",
 	["stairs:stair_wood"] = "sunos:stair_wood_nodrop",
 	["stairs:slab_wood"] = "sunos:slab_wood_nodrop",
 	["stairs:stair_inner_wood"] = "sunos:stair_inner_wood_nodrop",
@@ -118,6 +122,24 @@ sunos.var.musicas = {
 -- Tabela de grupos de nodes
 sunos.var.node_group = {
 	
+	-- Nodes a terem metadados removidos quando schem for alterada
+	remover_metadados = {
+		"default:furnace",
+		"default:furnace_active",
+		"default:bookshelf", 
+		"vessels:shelf", 
+		"sunos:kit_culinario",
+		"sunos:kit_culinario_nodrop",
+		"sunos:tear_palha",
+		"sunos:tear_palha_nodrop",
+		"sunos:bancada_de_trabalho",
+		"sunos:bancada_de_trabalho_nodrop",
+		"sunos:expositor_petisco_frutas",
+		"sunos:caixa_venda",
+		"sunos:caixa_de_musica",
+		"sunos:caixa_de_musica_nodrop",
+	},
+	
 	-- Nodes que compoem uma estrutura dos sunos
 	estrutura = {
 	
@@ -128,8 +150,12 @@ sunos.var.node_group = {
 		"sunos:stonebrick_nodrop",
 		"sunos:straw_nodrop",
 		"sunos:glass_nodrop",
-		
+				
 		-- Stairs
+		"stairs:stair_straw",
+		"stairs:slab_straw",
+		"stairs:stair_inner_straw",
+		"stairs:stair_outer_straw",
 		"sunos:stair_wood_nodrop",
 		"sunos:slab_wood_nodrop",
 		"sunos:stair_inner_wood_nodrop",
@@ -173,12 +199,35 @@ sunos.var.node_group = {
 		"default:ladder_steel", 
 		"farming:straw",
 		
+		-- Stairs
+		"sunos:stair_wood_nodrop",
+		"sunos:slab_wood_nodrop",
+		"sunos:stair_inner_wood_nodrop",
+		"sunos:stair_outer_wood_nodrop",
+		"sunos:stair_cobble_nodrop",
+		"sunos:slab_cobble_nodrop",
+		"sunos:stair_inner_cobble_nodrop",
+		"sunos:stair_outer_cobble_nodrop",
+		"stairs:stair_straw",
+		"stairs:slab_straw",
+		"stairs:stair_inner_straw",
+		"stairs:stair_outer_straw",
+		"stairs:stair_wood",
+		"stairs:slab_wood",
+		"stairs:stair_inner_wood",
+		"stairs:stair_outer_wood",
+		"stairs:stair_cobble",
+		"stairs:slab_cobble",
+		"stairs:stair_inner_cobble",
+		"stairs:stair_outer_cobble",
+		
 		-- Objetos simples
 		"default:apple", 
 		"flowers:mushroom_brown",
 		"group:flower",
 		
 		-- Tochas
+		"group:torch", 
 		"default:torch", 
 		"sunos:torch_nodrop",
 		"sunos:torch_ceiling_nodrop",
@@ -198,7 +247,13 @@ sunos.var.node_group = {
 		"sunos:bau", 
 		"sunos:bau_casa_comunal", 
 		"sunos:bau_loja", 
-				
+		"sunos:taverna_placa",
+		"sunos:emporio_placa",
+		"sunos:nectar_nodrop",
+		"sunos:barril",
+		"sunos:expositor_petisco_frutas",
+		"sunos:caixa_venda"
+		
 	},
 
 }

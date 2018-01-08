@@ -17,12 +17,18 @@ local S = sunos.S
 sunos.montar_ruinas = function(pos, dist)
 	sunos.checkvar(pos, dist, "Parametro(s) invalido(s) para montar ruinas")
 	
+	local pos1 = {x=pos.x-dist, y=pos.y, z=pos.z-dist}
+	local pos2 = {x=pos.x+dist, y=pos.y+14, z=pos.z+dist}
+	
 	-- Pegar blocos a serem removidos
 	local nodes_rem = minetest.find_nodes_in_area(
-		{x=pos.x-dist, y=pos.y, z=pos.z-dist}, 
-		{x=pos.x+dist, y=pos.y+14, z=pos.z+dist}, 
+		pos1, 
+		pos2, 
 		sunos.var.node_group.remover_da_ruina
 	)
+	
+	-- Limpar metadados
+	sunos.limpar_metadados(pos1, pos2)
 	
 	-- Limpar nodes a serem removidos
 	for _,p in ipairs(nodes_rem) do

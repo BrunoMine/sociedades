@@ -12,7 +12,6 @@
 -- Tradução de strings
 local S = sunos.S
 
-
 -- Kit Culinario
 minetest.register_node("sunos:kit_culinario", {
 	-- Geral
@@ -91,11 +90,11 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 	if formname == "sunos:kit_culinario" then
 		if fields.fazer_salada then
 			
-			sunos.trocar_plus(player, {"default:apple 5", "default:stick 2"}, {"sunos:salada_frutas"})
+			sunos.trocar_itens(player, {"default:apple 5", "default:stick 2"}, {"sunos:salada_frutas"})
 
 		elseif fields.fazer_broa then
 			
-			sunos.trocar_plus(player, {"default:apple 2", "farming:flour"}, {"sunos:massa_broa_frutas"})
+			sunos.trocar_itens(player, {"default:apple 2", "farming:flour"}, {"sunos:massa_broa_frutas"})
 
 		end
 	end

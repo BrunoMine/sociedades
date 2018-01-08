@@ -24,19 +24,31 @@ dofile(minetest.get_modpath("sunos").."/estruturas/casa/diretrizes.lua")
 -- Métodos para gerar tabelas de itens para reposição de nodes (carregamento de script)
 dofile(minetest.get_modpath("sunos").."/estruturas/casa/repo_nodes.lua") 
 
+-- Bau de casa dos sunos (carregamento de script)
+dofile(minetest.get_modpath("sunos").."/estruturas/casa/bau.lua") 
+
 -- Registros do NPC da casa (carregamento de script)
 dofile(minetest.get_modpath("sunos").."/estruturas/casa/npc.lua") 
 
 -- Registros do NPC da casa (carregamento de script)
 dofile(minetest.get_modpath("sunos").."/estruturas/casa/interface.lua") 
 
--- Bau de casa dos sunos (carregamento de script)
-dofile(minetest.get_modpath("sunos").."/estruturas/casa/bau.lua") 
+
 
 
 -- Nodes estruturais de uma casa
 local nodes_estruturais = sunos.estruturas.casa.var.nodes_estruturais
 
+-- Buscar nodes numa casa
+sunos.estruturas.casa.buscar_nodes = function(pos, nodes)
+	local meta = minetest.get_meta(pos)
+	local dist = meta:get_string("dist")
+	return minetest.find_nodes_in_area(
+		{x=pos.x-dist, y=pos.y, z=pos.z-dist}, 
+		{x=pos.x+dist, y=pos.y+14, z=pos.z+dist}, 
+		nodes
+	)
+end
 
 local set_bau = function(pos, vila, dist)
 
@@ -57,6 +69,47 @@ local set_bau = function(pos, vila, dist)
 
 end
 
+-- Verifica a possibilidade de construir uma casa no local
+sunos.estruturas.casa.verif = function(pos, dist, vila, verif_area, verif_pop)
+
+	-- Validar argumentos de entrada
+	if pos == nil then
+		minetest.log("error", "[Sunos] Tabela pos nula (sunos.estruturas.casa.construir)")
+		return "Erro interno (pos nula)"
+	end
+	if dist == nil then
+		minetest.log("error", "[Sunos] variavel dist nula (em sunos.estruturas.casa.construir)")
+		return "Erro interno (tamanho de casa inexistente)"
+	end
+	
+	-- Verificar se vila existe (caso especificado)
+	if vila and sunos.verificar_vila_existente(vila) == false then
+		return S("Vila abandonada")
+		
+	-- Encontrar vila ativa
+	else
+		vila = sunos.encontrar_vila(pos, 25)
+		if not vila then
+			return S("Nenhuma vila habitavel encontrada")
+		end
+	end
+	
+	-- Verificar limite populacional
+	if sunos.verif_pop_vila(vila) ~= true then
+		return S("Limite de @1 habitantes foi atingido", sunos.var.max_pop)
+	end
+	
+	-- Verificações de area
+	if verif_area == true then
+		local r = sunos.verificar_area_para_fundamento(pos, dist)
+		if r ~= true then
+			return r
+		end
+	end
+	
+	return true, vila
+end
+
 -- Tabela para valores de rotação
 local tb_rotat = {"0", "90", "180", "270"}
 
@@ -73,67 +126,28 @@ local tb_rotat = {"0", "90", "180", "270"}
 		<verif_area> OPCIONAL | para verificar a area a ser usada
 		<itens_repo> OPCIONAL | Repassado ao comando sunos.decor_repo para substituir itens de reposição
 		<verif_pop> OPCIONAL | Para verificações de população da vila
+		<force> OPCIONAL | ignora todas as verificações
   ]]
-sunos.estruturas.casa.construir = function(pos, dist, vila, verif_area, itens_repo, verif_pop)
-	-- Validar argumentos de entrada
-	if pos == nil then
-		minetest.log("error", "[Sunos] Tabela pos nula (sunos.estruturas.casa.construir)")
-		return "Erro interno (pos nula)"
-	end
-	if dist == nil then
-		minetest.log("error", "[Sunos] variavel dist nula (em sunos.estruturas.casa.construir)")
-		return "Erro interno (tamanho de casa inexistente)"
+sunos.estruturas.casa.construir = function(pos, dist, vila, verif_area, itens_repo, verif_pop, force)
+	
+	-- Verifica se pode construir a casa
+	if force ~= true then
+		local verif, vila = sunos.estruturas.casa.verif(pos, dist, vila, verif_area, verif_pop)
+		if verif ~= true then
+			return verif
+		end
 	end
 	
 	-- Variaveis auxiliares
 	local largura = (dist*2)+1
+	local pos1 = {x=pos.x-dist, y=pos.y, z=pos.z-dist}
+	local pos2 = {x=pos.x+dist, y=pos.y+14, z=pos.z+dist}
 	
-	-- Buscar uma vila por perto
-	if not vila then
-		local pos_fund_prox = minetest.find_node_near(pos, 25, {"sunos:fundamento"})
-		if pos_fund_prox == nil then 
-			return S("Nenhuma vila por perto")
-		end
-	
-		-- Pegar dados da vila encontrada
-		local meta_fund_prox = minetest.get_meta(pos_fund_prox)
-		vila = meta_fund_prox:get_string("vila")
-	
-		-- Verificar se ainda existe um banco de dados da vila
-		if sunos.bd.verif("vila_"..vila, "numero") == false then
-			return S("Vila abandonada")
-		end
-	end
-	
-	-- Verificar se a vila ja atingiu limite
-	if verif_pop then
-		if sunos.verif_pop_vila(vila) ~= true then
-			return S("Limite de @1 habitantes foi atingido", sunos.var.max_pop)
-		end
-	end
-	
-	-- Verificações de area
-	if verif_area == true then
-		
-		-- Verifica status do terreno
-		local st = sunos.verif_terreno(pos, dist+1)
-		
-		-- Problema: em cima da faixa de solo existem obstrucoes (nao esta limpo e plano)
-		if st == 1 then
-			return S("O local precisa estar limpo e plano em uma area de @1x@1 blocos da largura", (largura+2))
-		
-		-- Problema: faixa de solo (superficial) falta blocos de terra
-		elseif st == 2 then
-			return S("O solo precisa estar plano e gramado em uma area de @1x@1 blocos da largura", (largura+2))
-		
-		-- Problema: faixa de subsolo (considerando 2 faixas) falta blocos de terra
-		elseif st == 3 then
-			return S("O subsolo precisa estar preenchido (ao menos 2 blocos de profundidade) em uma area de @1x@1 blocos da largura", (largura+2))
-		end
-	end
+	-- Limpar metadados dos nodes que possam estar la
+	sunos.limpar_metadados(pos1, pos2)
 	
 	-- Escolhe uma rotação aleatória
-	local rotat = tb_rotat[math.random(1, 4)]
+	local rotat = sunos.pegar_rotat()
 	
 	-- Criar casa e pega o nome do arquivo da estrutura
 	local rm, schem = sunos.montar_estrutura(pos, dist, "casa", rotat)
@@ -269,21 +283,26 @@ minetest.register_abm({
 		local schem = meta:get_string("schem")
 		local rotat = meta:get_string("rotat")
 		if schem == "" then return end
-	
-		-- Caminho do arquivo da estrutura
-		local caminho_arquivo = modpath.."/schems/"..tipo.."/"..schem
-	
-		-- Criar estrutura
-		minetest.place_schematic({x=pos.x-dist, y=pos.y, z=pos.z-dist}, caminho_arquivo, rotat, nil, true)
+		
+		local pos1 = {x=pos.x-dist, y=pos.y, z=pos.z-dist}
+		local pos2 = {x=pos.x+dist, y=pos.y+14, z=pos.z+dist}
+		
+		-- Limpar metadados dos nodes que possam estar la
+		sunos.limpar_metadados(pos1, pos2)
+		
+		-- Remonta estrutura
+		sunos.montar_estrutura(pos, dist, "casa", rotat, schem)
 		
 		-- Troca os itens de reposição
 		sunos.decor_repo(pos, dist, sunos.estruturas.casa.gerar_itens_repo[tostring(dist)]())
 		
 		-- Estantes e fornos se mantem altomaticamente por sobreposição
 		
+		-- Reestabelece fundamento
 		minetest.set_node(pos, {name="sunos:fundamento"})
 		minetest.get_meta(pos):from_table(table) -- recoloca metadados no novo fumdamento
 		
+		-- Configura novos baus
 		set_bau({x=pos.x,y=pos.y,z=pos.z}, vila, dist)
 	end,
 })

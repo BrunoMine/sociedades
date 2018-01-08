@@ -13,4 +13,7 @@
 local tror = dofile(minetest.get_modpath("sunos").."/lib/tror.lua")
 
 -- Trocar itens
+sunos.trocar_itens = tror.trocar
+
+-- Plucar itens "PLUS"
 sunos.trocar_plus = tror.trocar_plus

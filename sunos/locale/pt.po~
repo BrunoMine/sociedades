@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-04-27 20:18-0300\n"
+"POT-Creation-Date: 2017-04-27 20:21-0300\n"
 "PO-Revision-Date: 2017-04-27 20:17-0300\n"
 "Last-Translator: BrunoMine <borgesdossantosbruno@gmail.com>\n"
 "Language-Team: Brazilian Portuguese\n"
@@ -427,17 +427,13 @@ msgstr "Loja construida"
 msgid "Barril"
 msgstr "Carpete de Palha"
 
-#: estruturas/taverna/bau.lua
-msgid "Bau da Taverna dos Sunos"
-msgstr "Bau da Taverna dos Sunos"
+#: estruturas/taverna/bau.lua estruturas/taverna/init.lua
+msgid "Bau de Taverna dos Sunos"
+msgstr "Bau de Taverna dos Sunos"
 
 #: estruturas/taverna/diretrizes.lua estruturas/taverna/init.lua
 msgid "Taverna"
 msgstr "Taverna"
-
-#: estruturas/taverna/init.lua
-msgid "Bau de Taverna dos Sunos"
-msgstr "Bau de Taverna dos Sunos"
 
 #: estruturas/taverna/init.lua
 msgid "Fundamento de taverna dos Sunos"
@@ -474,6 +470,9 @@ msgstr "Expositor de Petisco de Frutas dos Sunos"
 #: estruturas/taverna/placa.lua
 msgid "Placa de Taverna dos Sunos"
 msgstr "Placa de Taverna dos Sunos"
+
+#~ msgid "Bau da Taverna dos Sunos"
+#~ msgstr "Bau da Taverna dos Sunos"
 
 #~ msgid "taverna"
 #~ msgstr "taverna"

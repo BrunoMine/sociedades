@@ -39,7 +39,7 @@ local avisar = function(player, texto)
 		return false
 	end
 	
-	minetest.show_formspec(player:get_player_name(), "sunos:npc", "size[12,1]"
+	minetest.show_formspec(player:get_player_name(), "sunos:npc_comunal", "size[12,1]"
 		..default.gui_bg
 		..default.gui_bg_img
 		.."label[0.5,0;"..S("Aviso").." \n"..texto.."]")
@@ -66,7 +66,7 @@ sunos.npcs.npc.registrados.comunal.on_rightclick = function(ent, player, fields)
 	sunos.online[player:get_player_name()].comunal.ent_acesso = ent
 	
 	-- NPC da casa Comunal
-	if ent.name == "sunos:npc" and ent.tipo == "comunal" then
+	if ent.name == "sunos:npc_comunal" then
 		
 		-- Atualizar banco de dados da vila
 		sunos.atualizar_bd_vila(ent.vila)
@@ -107,16 +107,17 @@ sunos.npcs.npc.registrados.comunal.on_rightclick = function(ent, player, fields)
 			formspec = formspec .."label[5,3;"..titulo.."]"
 			
 			-- Botao de trocar
-			formspec = formspec .. "item_image_button[5,3.5;2,2;"..dados.item_add..";trocar;"..S("Trocar").."]"
+			formspec = formspec .. "item_image_button[5,3.5;2,2;"..dados.item_add..";trocar;]"
 			
 			-- Texto descritivo
-			formspec = formspec .. "textarea[7.2,3.5;5.1,2.25;desc;;"..dados.desc.."]"
+			formspec = formspec .. "textarea[7.2,3.5;5.1,2.25;;"..S(dados.desc)..";]"
+			--"textarea[7.2,3.5;5.1,2.25;desc;;"..dados.desc.."]"
 			
 			-- Requisitos
 			formspec = formspec .."label[5,5.5;"..S("Requisitos").."]"
 			
 			-- População minima
-			formspec = formspec .."label[5,6;"..S("Habitantes: @1", dados.pop).."]"
+			formspec = formspec .."label[5,6;"..S("Habitantes requeridos: @1", dados.pop).."]"
 			
 			-- Organizando formspec dos itens
 			for n,item in pairs(dados.item_rem) do

@@ -29,31 +29,9 @@ end
 
 -- Registrar npc
 sunos.npcs.npc.registrar("barman", {
-	on_step = function(self)
 	
-		-- Verifica se o hash esta atual
-		if minetest.get_meta(self.mypos):get_string("npc_hash") ~= self.myhash then
-			-- Remove npc
-			self.object:remove()
-		end
-	
-		-- Verifica se algum dos jogadores proximos é um inimigo
-		if self.state ~= "attack" then -- Verifica se ja não está em um ataque
-			for _,obj in ipairs(minetest.get_objects_inside_radius(self.object:getpos(), 13)) do
-				if obj:is_player() then
-				
-					-- Verifica se o jogador é inimigo
-					if sunos.verif_inimigo(self.vila, obj:get_player_name()) == true then
-						self.attack = obj
-						self.state = "attack"
-						return
-					end
-			
-				end
-			end
-		end
-		
-	end,
+	node_spawner = "sunos:bau_taverna",
+	nodes_spawn = {"sunos:solo_barman"},	
 	
 	drops = {
 		{name = "default:wood", chance = 1, min = 1, max = 3},

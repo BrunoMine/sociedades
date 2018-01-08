@@ -13,19 +13,10 @@
 local modpath = minetest.get_modpath("sunos")
 
 -- Montar uma estrutura
-sunos.montar_estrutura = function(cpos, dist, tipo, rotat)
-	if cpos == nil then
-		minetest.log("error", "[Sunos] Tabela cpos nula (em sunos.montar_estrutura)")
-		return false
-	end
-	if dist == nil then
-		minetest.log("error", "[Sunos] dist nula (em sunos.montar_estrutura)")
-		return false
-	end
-	if tipo == nil then
-		minetest.log("error", "[Sunos] Tipo de estrutura nula (em sunos.montar_estrutura)")
-		return nil
-	end
+sunos.montar_estrutura = function(cpos, dist, tipo, rotat, schem)
+	sunos.checkvar(cpos, "Coordenada central nula ao montar estrutura")
+	sunos.checkvar(dist, "Nenhuma distancia centro-borda fornecida ao montar estrutura")
+	sunos.checkvar(tipo, "Nenhum tipo fornecido ao montar estrutura")
 	
 	-- Pegando dados do local
 	local pos = {x=cpos.x-dist, y=cpos.y, z=cpos.z-dist}
@@ -34,7 +25,7 @@ sunos.montar_estrutura = function(cpos, dist, tipo, rotat)
 	local largura = 2*dist+1
 	
 	-- Nome do arquivo esquematico da estrutura
-	local schem = sunos.pegar_arquivo(largura, tipo).."."..largura..".mts"
+	schem = schem or sunos.pegar_arquivo(largura, tipo).."."..largura..".mts"
 	
 	-- Caminho do arquivo da estrutura
 	local caminho_arquivo = modpath.."/schems/"..tipo.."/"..schem
@@ -43,4 +34,21 @@ sunos.montar_estrutura = function(cpos, dist, tipo, rotat)
 	minetest.place_schematic(pos, caminho_arquivo, rotat, sunos.var.nodes_trocados, true)
 	
 	return true, schem
+end
+
+-- Verificar estagio
+sunos.verif_estrutura_step = function(pos)
+	local meta = minetest.get_meta(pos)
+	local tipo = meta:get_string("tipo")
+	local schem = meta:get_string("schem")
+	local step = tonumber(meta:get_string("step"))
+	
+	-- Verifica se terminou
+	if step == 5 then
+	
+	--
+	else
+		
+	end
+	
 end

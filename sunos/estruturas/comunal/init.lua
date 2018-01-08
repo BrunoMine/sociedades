@@ -21,14 +21,14 @@ sunos.estruturas.comunal = {}
 -- Diretrizes
 dofile(modpath.."/estruturas/comunal/diretrizes.lua") 
 
+-- Bau de casa dos sunos (carregamento de script)
+dofile(modpath.."/estruturas/comunal/bau.lua") 
+
 -- Registros do NPC da casa (carregamento de script)
 dofile(modpath.."/estruturas/comunal/npc.lua") 
 
 -- Interface de atendimento da casa comunal (carregamento de script)
 dofile(modpath.."/estruturas/comunal/interface.lua") 
-
--- Bau de casa dos sunos (carregamento de script)
-dofile(modpath.."/estruturas/comunal/bau.lua") 
 
 -- Nodes estruturais
 local nodes_estruturais = sunos.estruturas.comunal.var.nodes_estruturais
@@ -124,6 +124,55 @@ end
 -- Tabela para valores de rotação
 local tb_rotat = {"0", "90", "180", "270"}
 
+-- Verificar se pode construir e envontra vila 
+sunos.estruturas.comunal.verif = function(pos, nivel, verif_area)
+	
+	-- Validar argumentos de entrada
+	if pos == nil then
+		minetest.log("error", "[Sunos] Tabela pos nula (sunos.estruturas.comunal.construir)")
+		return "Erro interno (pos nula)"
+	end
+	if nivel == nil then
+		minetest.log("error", "[Sunos] variavel nivel nula (em sunos.estruturas.comunal.construir)")
+		return "Erro interno (nivel nulo)"
+	end
+	
+	local vila
+	
+	-- Verificar se vila existe (caso especificado)
+	if vila and sunos.verificar_vila_existente(vila) == false then
+		return S("Vila abandonada")
+		
+	-- Encontrar vila ativa
+	else
+		vila = sunos.encontrar_vila(pos, 25)
+		if not vila then
+			return S("Nenhuma vila habitavel encontrada")
+		end
+	end
+	
+	-- Verificar casa comunal ja existente
+	if sunos.bd.verif("vila_"..vila, "comunal") == true then
+		return S("Ja existe @1 nessa vila", "Casa Comunal")
+	end
+	
+	-- Distancia centro a borda padrão
+	local dist = 6 
+	
+	-- Variaveis auxiliares
+	local largura = 13
+	
+	-- Verificações de area
+	if verif_area == true then
+		local r = sunos.verificar_area_para_fundamento(pos, dist)
+		if r ~= true then
+			return r
+		end
+	end
+	
+	return true, vila
+end
+
 -- Construir casa comunal
 --[[
 	Essa função construi uma casa comunal e configura o fundamento
@@ -137,19 +186,12 @@ local tb_rotat = {"0", "90", "180", "270"}
 		<verif_area> OPCIONAL | Para ignorar as verificações de area limpa
 		<update> OPCIONAL | Informa que se trata de uma atualização de uma estrutura que ja existe
   ]]
-sunos.estruturas.comunal.construir = function(pos, vila, nivel, verif_area)
-	-- Validar argumentos de entrada
-	if pos == nil then
-		minetest.log("error", "[Sunos] Tabela pos nula (sunos.estruturas.comunal.construir)")
-		return "Erro interno (pos nula)"
-	end
-	if nivel == nil then
-		minetest.log("error", "[Sunos] variavel nivel nula (em sunos.estruturas.comunal.construir)")
-		return "Erro interno (nivel nulo)"
-	end
-	if vila == nil then
-		minetest.log("error", "[Sunos] variavel vila nula (em sunos.estruturas.comunal.construir)")
-		return "Erro interno (vila inexistente)"
+sunos.estruturas.comunal.construir = function(pos, nivel, verif_area)
+	
+	-- Verifica se pode construir a casa comunal
+	local verif, vila = sunos.estruturas.comunal.verif(pos, nivel, verif_area)
+	if verif ~= true then
+		return verif
 	end
 	
 	-- Distancia centro a borda padrão
@@ -157,27 +199,11 @@ sunos.estruturas.comunal.construir = function(pos, vila, nivel, verif_area)
 	
 	-- Variaveis auxiliares
 	local largura = 13
+	local pos1 = {x=pos.x-dist, y=pos.y, z=pos.z-dist}
+	local pos2 = {x=pos.x+dist, y=pos.y+14, z=pos.z+dist}
 	
-	-- Verificações de area
-	if verif_area == true then
-	
-		-- Verifica status do terreno
-		local st = sunos.verif_terreno(pos, dist+2)
-		
-		-- Problema: em cima da faixa de solo existem obstrucoes (nao esta limpo e plano)
-		if st == 1 then
-			return S("O local precisa estar limpo e plano em uma area de @1x@1 blocos da largura", (largura+2))
-		
-		-- Problema: faixa de solo (superficial) falta blocos de terra
-		elseif st == 2 then
-			return S("O solo precisa estar plano e gramado em uma area de @1x@1 blocos da largura", (largura+2))
-		
-		-- Problema: faixa de subsolo (considerando 2 faixas) falta blocos de terra
-		elseif st == 3 then
-			return S("O subsolo precisa estar preenchido (ao menos 2 blocos de profundidade) em uma area de @1x@1 blocos da largura", (largura+2))
-		end
-		
-	end
+	-- Limpar metadados dos nodes que possam estar la
+	sunos.limpar_metadados(pos1, pos2)
 	
 	-- Criar casa comunal
 	
@@ -205,7 +231,6 @@ sunos.estruturas.comunal.construir = function(pos, vila, nivel, verif_area)
 		-- Pega um novo numero de estrutura
 		n_estrutura = sunos.nova_estrutura(vila) -- Numero da estrutura da nova casa comunal
 	end
-	
 	
 	-- Criar fundamento e configurar
 	minetest.set_node(pos, {name="sunos:fundamento"})
@@ -282,8 +307,8 @@ end
 minetest.register_node("sunos:fundamento_comunal", {
 	description = S("Fundamento de Casa Comunal dos Sunos"),
 	tiles = {"default_tree_top.png^sunos_fundamento.png", "default_tree_top.png", "default_tree.png"},
-	inventory_image = "sunos_inv_fundamento.png^sunos_inv_fundamento_comunal.png",
-	wield_image = "sunos_inv_fundamento.png^sunos_inv_fundamento_comunal.png",
+	inventory_image = "sunos_fundamento_fundo_inv.png^sunos_fundamento_comunal_inv.png",
+	wield_image = "sunos_fundamento_estrutura_namao.png^sunos_fundamento_comunal_namao.png",
 	paramtype2 = "facedir",
 	is_ground_content = false,
 	groups = {tree = 1, choppy = 2, oddly_breakable_by_hand = 1, flammable = 2},
@@ -293,50 +318,38 @@ minetest.register_node("sunos:fundamento_comunal", {
 	-- Colocar uma casa comunal
 	on_place = function(itemstack, placer, pointed_thing)
 		
-		-- Verificar Vila e pegar dados (buscando por um fundamento proximo)
-		local pos_fund_prox = minetest.find_node_near(pointed_thing.under, 25, {"sunos:fundamento"})
-		if pos_fund_prox == nil then 
-			return minetest.chat_send_player(placer:get_player_name(), S("Nenhuma vila por perto"))
-		end
+		local pos = pointed_thing.under
 		
-		-- Pegar dados da vila encontrada
-		local meta_fund_prox = minetest.get_meta(pos_fund_prox)
-		local vila = meta_fund_prox:get_string("vila")
+		local r = sunos.estruturas.comunal.verif(pos, 1, verif_area)
 		
-		if vila == "" or not vila then return minetest.chat_send_player(placer:get_player_name(), S("Vila abandonada")) end
-		
-		-- Verificar se a vila está abandonada
-		if not sunos.bd.pegar("vila_"..vila, "estruturas") then
-			return minetest.chat_send_player(placer:get_player_name(), S("Vila abandonada"))
-		end
-		
-		-- Verificar se a vila pode criar uma nova casa comunal
-		sunos.atualizar_bd_vila(vila) -- Atualizar o banco de dados
-		
-		-- Verificar se ainda existe um banco de dados da vila
-		if sunos.bd.verif("vila_"..vila, "numero") == false then
-			return minetest.chat_send_player(placer:get_player_name(), S("Vila abandonada"))
-		end
-		
-		-- Verificar se ja existe uma casa comunal
-		if sunos.bd.verif("vila_"..vila, "comunal") == true then
-			return minetest.chat_send_player(placer:get_player_name(), S("Ja existe @1 nessa vila", "Casa Comunal"))
-		end
-		
-		sunos.criar_caixa_de_area(pointed_thing.under, 6+2)
-		
-		local r = sunos.estruturas.comunal.construir(pointed_thing.under, vila, 1, true)
 		if r == true then
 			
 			-- Coloca rua em torno
-			sunos.colocar_rua(pointed_thing.under, 5)
+			sunos.colocar_rua(pos, 5)
+			
+			-- Coloca fundamento step para construir estrutura
+			minetest.set_node(pointed_thing.under, {name="sunos:fundamento_step"})
+			local meta = minetest.get_meta(pos)
+			meta:set_string("tipo", "comunal")
+			meta:set_string("dist", 6)
+			meta:set_string("versao", sunos.versao)
+			meta:set_string("vila", vila)
+			meta:set_string("step", 1)
+			meta:set_string("data_inicio", minetest.get_day_count())
+			meta:set_string("tempo_inicio", minetest.get_timeofday())
+			meta:set_string("duracao", 24000) -- 1 dia no jogo
+			meta:set_string("schem", "nivel_1")
+			meta:set_string("rotat", sunos.pegar_rotat())
+			minetest.get_node_timer(pos):set(0.1, 0) -- Inicia temporizador
 			
 			-- Retorna mensagem de montagem concluida
-			minetest.chat_send_player(placer:get_player_name(), S("Casa Comunal construida"))
+			minetest.chat_send_player(placer:get_player_name(), S("Casa Comunal sendo construida"))
 			itemstack:take_item()
 			return itemstack
 			
 		else
+			-- Mostra area necessaria
+			sunos.criar_caixa_de_area(pointed_thing.under, 6+2)
 			-- Retorna mensagem de falha
 			minetest.chat_send_player(placer:get_player_name(), r)
 			return itemstack

@@ -9,3 +9,4 @@ stairs
 doors
 farming
 sociedades_compost
+advanced_npc

@@ -25,7 +25,9 @@ minetest.register_node("sunos:bau_loja", {
 	drop = "",
 	
 	-- Nao pode ser escavado/quebrado por jogadores
-	on_dig = function() end,
+	can_dig = function(pos, player)
+		return minetest.check_player_privs(player, {server=true})
+	end,
 	
 	-- Receptor dos botos
 	on_receive_fields = function(pos, formname, fields, sender)

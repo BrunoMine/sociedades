@@ -73,6 +73,7 @@ else
 	minetest.register_on_dignode(function(pos, oldnode, digger)
 		if not digger then return end
 		local name = digger:get_player_name()
+		if not sunos.rollback_list[name] then return end
 		-- Insere a nova coordenada
 		table.insert(sunos.rollback_list[name], pos)
 		-- Remove o excesso
@@ -85,6 +86,7 @@ else
 	minetest.register_on_placenode(function(pos, newnode, placer)
 		if not placer then return end
 		local name = placer:get_player_name()
+		if not sunos.rollback_list[name] then return end
 		-- Insere a nova coordenada
 		table.insert(sunos.rollback_list[name], pos)
 		-- Remove o excesso

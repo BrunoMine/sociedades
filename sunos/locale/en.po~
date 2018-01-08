@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-04-27 20:18-0300\n"
-"PO-Revision-Date: 2017-04-27 20:13-0300\n"
+"POT-Creation-Date: 2017-04-27 20:21-0300\n"
+"PO-Revision-Date: 2017-04-27 20:28-0300\n"
 "Last-Translator: Bruno <borgesdossantosbruno@gmail.com>\n"
 "Language-Team: English\n"
 "Language: en\n"
@@ -425,62 +425,53 @@ msgstr "Small Trade Fair build"
 msgid "Barril"
 msgstr "Barrel"
 
-#: estruturas/taverna/bau.lua
-#, fuzzy
-msgid "Bau da Taverna dos Sunos"
-msgstr "Chest of Sunian House"
+#: estruturas/taverna/bau.lua estruturas/taverna/init.lua
+msgid "Bau de Taverna dos Sunos"
+msgstr "Chest of Sunian Tavern"
 
 #: estruturas/taverna/diretrizes.lua estruturas/taverna/init.lua
-#, fuzzy
 msgid "Taverna"
-msgstr "Taverna"
+msgstr "Tavern"
 
 #: estruturas/taverna/init.lua
-#, fuzzy
-msgid "Bau de Taverna dos Sunos"
-msgstr "Sunian Trader"
-
-#: estruturas/taverna/init.lua
-#, fuzzy
 msgid "Fundamento de taverna dos Sunos"
-msgstr "Structural Basis of Sunian Small Trade Fair"
+msgstr "Structural Basis of Sunian Tavern"
 
 #: estruturas/taverna/init.lua
-#, fuzzy
 msgid "Taverna construido"
-msgstr "House built"
+msgstr "Tavern built"
 
 #: estruturas/taverna/interface.lua estruturas/taverna/petisco.lua
 msgid "Precisa pagar por isso"
-msgstr ""
+msgstr "You need to pay for this"
 
 #: estruturas/taverna/interface.lua estruturas/taverna/petisco.lua
 msgid "Inventario Lotado"
-msgstr ""
+msgstr "Crowded Inventory"
 
 #: estruturas/taverna/nectar.lua
 msgid "Nectar de Frutas dos Sunos"
-msgstr "Sunes Structures Editor"
+msgstr "Fruit Nectar of Sunes"
 
 #: estruturas/taverna/npc.lua
-#, fuzzy
 msgid "Solo de Barman dos Sunos"
-msgstr "Chest of Sunian House"
+msgstr "Sunian Barman Floor"
 
 #: estruturas/taverna/petisco.lua
-#, fuzzy
 msgid "Petisco de Frutas dos Sunos"
-msgstr "Editor of Sunes Structures"
+msgstr "Fruit Snack of Sunes"
 
 #: estruturas/taverna/petisco.lua
-#, fuzzy
 msgid "Expositor de Petisco de Frutas dos Sunos"
-msgstr "Editor of Sunes Structures"
+msgstr "Fruit Snack Showcase of Sunes"
 
 #: estruturas/taverna/placa.lua
-#, fuzzy
 msgid "Placa de Taverna dos Sunos"
-msgstr "Sunian Trader"
+msgstr "Sunian Tavern Plate"
+
+#, fuzzy
+#~ msgid "Bau da Taverna dos Sunos"
+#~ msgstr "Chest of Sunian House"
 
 #~ msgid "taverna"
 #~ msgstr "Taverna"

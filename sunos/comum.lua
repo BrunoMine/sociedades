@@ -9,14 +9,46 @@
 	Métodos comuns
   ]]
 
+-- Traduções
+local S = sunos.S
+
 -- Caminho do diretório do mod
 local modpath = minetest.get_modpath("sunos")
 
--- Nodes de verificação para casas obstruidas
-local nodes_estruturais = {"default:wood", "default:cobble", "default:stonebrick", "group:stair", "farming:straw"}
+-- Copiar tabela de dados (bom para coordenadas)
+sunos.copy_tb = function(tb)
+	return minetest.deserialize(minetest.serialize(tb))
+end
 
--- Nodes removidos na montagem de ruinas
-local nodes_rem_ruinas = {"default:apple", "sunos:bau", "sunos:bau_casa_comunal", "sunos:bau_loja", "default:wood", "group:stair", "group:glass", "group:fence", "group:ladder", "group:flower", "group:vessel", "default:torch", "group:pane", "default:ladder_wood", "default:ladder_steel", "group:leaves", "group:wool", "group:door", "farming:straw", "group:sunos", "default:bookshelf", "vessels:shelf", "flowers:mushroom_brown"}
+-- Pegar distancia entre duas coordenadas
+sunos.p1_to_p2 = function(pos1, pos2)
+	local dx = math.abs(pos1.x - pos2.x)
+	local dy = math.abs(pos1.y - pos2.y)
+	local dz = math.abs(pos1.z - pos2.z)
+	local dist_xy = math.hypot(dx, dy)
+	local dist_xyz = math.hypot(dist_xy, dz)
+	return dist_xyz
+end
+
+-- Calcular valor diretamente proporcional (regra de 3)
+sunos.calc_proporcional = function(x1, y1, x2)
+	return ((y1*x2)/x1)
+end
+
+-- Ir um numero de blocos de pos1 a pos2
+sunos.ir_p1_to_p2 = function(pos1, pos2, dist)
+	-- Distancias em cada coordenada
+	local dx = pos2.x - pos1.x
+	local dy = pos2.y - pos1.y
+	local dz = pos2.z - pos1.z
+	local dxyz = sunos.p1_to_p2(pos1, pos2) -- distancia direta
+	-- Calcular distancia proporcionais e cada coordenada
+	local x = sunos.calc_proporcional(dxyz, dx, dist)
+	local y = sunos.calc_proporcional(dxyz, dy, dist)
+	local z = sunos.calc_proporcional(dxyz, dz, dist)
+	return {x=pos1.x+x, y=pos1.y+y, z=pos1.z+z}
+end
+
 
 -- Pegar direcao oposta
 sunos.pegar_dir_oposta = function(dir)
@@ -44,14 +76,8 @@ end
 		<pos2> é uma pos para ser comparada com a outra
   ]]
 sunos.verif_dist_pos = function(pos1, pos2)
-	if pos1 == nil then
-		minetest.log("error", "[Sunos] Tabela pos1 nula (em sunos.verif_dist_pos)")
-		return false
-	end
-	if pos2 == nil then
-		minetest.log("error", "[Sunos] Tabela pos2 nula (em sunos.verif_dist_pos)")
-		return false
-	end
+	sunos.checkvar(pos1, pos2, "Coordenada(s) nula(s) ao ao verificar distancia entre pos1 e pos2")
+	
 	local x = math.abs(math.abs(pos1.x)-math.abs(pos2.x))
 	local y = math.abs(math.abs(pos1.y)-math.abs(pos2.y))
 	local z = math.abs(math.abs(pos1.z)-math.abs(pos2.z))
@@ -90,10 +116,9 @@ end
 			loop deve iniciar (padrão é 0) 
   ]]
 sunos.pegar_solo = function(pos, dist, subir)
-	if pos == nil then
-		minetest.log("error", "[Sunos] Tabela pos nula (em sunos.pegar_solo)")
-		return false
-	end	
+	sunos.checkvar(pos, "Coordenada nula para pegar altura do solo")
+	sunos.checkvar(dist, subir, "Parametro(s) invalido(s) nula para pegar altura do solo")
+	
 	
 	if dist == nil then dist = 10 end
 	if subir == nil then subir = 0 end
@@ -111,6 +136,87 @@ sunos.pegar_solo = function(pos, dist, subir)
 	return r
 end
 
+
+-- Pegar rotação
+sunos.pegar_rotat = function()
+	local tb_rotat = {"0", "90", "180", "270"}
+	return tb_rotat[math.random(1, 4)]
+end
+
+
+-- Verifica se tem jogador perto
+-- Retorna nulo ou objeto se encontrar jogador
+sunos.verif_player_perto = function(pos, dist)
+	for _,obj in ipairs(minetest.get_objects_inside_radius(pos, dist)) do
+		if obj:is_player() then
+			return obj	
+		end
+	end
+end
+
+
+-- Verificar se uma area está pronta para fundamento
+-- Retorna mensagens de acordo com o erro
+sunos.verificar_area_para_fundamento = function(pos, dist)
+
+	-- Verifica status do terreno
+	local st = sunos.verif_terreno(pos, dist+1)
+	
+	-- Variaveis auxiliares
+	local largura = (dist*2)+1
+	
+	-- Problema: em cima da faixa de solo existem obstrucoes (nao esta limpo e plano)
+	if st == 1 then
+		return S("O local precisa estar limpo e plano em uma area de @1x@1 blocos da largura", (largura+2))
+	
+	-- Problema: faixa de solo (superficial) falta blocos de terra
+	elseif st == 2 then
+		return S("O solo precisa estar plano e gramado em uma area de @1x@1 blocos da largura", (largura+2))
+	
+	-- Problema: faixa de subsolo (considerando 2 faixas) falta blocos de terra
+	elseif st == 3 then
+		return S("O subsolo precisa estar preenchido (ao menos 2 blocos de profundidade) em uma area de @1x@1 blocos da largura", (largura+2))
+	end
+	
+	return true
+end
+
+
+-- Verificar vila abandonada
+sunos.verificar_vila_existente = function(vila)
+	-- Atualizar o banco de dados
+	sunos.atualizar_bd_vila(vila)
+	
+	-- Verificar se ainda existe um banco de dados da vila
+	if sunos.bd.verif("vila_"..vila, "numero") == true then
+		return true
+	end
+	return false
+end
+
+
+-- Encontrar vila perto
+-- Retorna o numero de uma vila encontrada
+sunos.encontrar_vila = function(pos, dist)
+	
+	local nodes = minetest.find_nodes_in_area(vector.subtract(pos, dist), vector.add(pos, dist), {"sunos:fundamento"})	
+	
+	for _,fund in ipairs(nodes) do
+		
+		-- Pegar dados da vila encontrada
+		local meta = minetest.get_meta(fund)
+		local vila = meta:get_string("vila")
+		
+		-- Verificar se vila existe
+		if sunos.verificar_vila_existente(vila) == true then
+			return tonumber(vila)
+		end
+		
+	end
+	
+end
+
+
 -- Pegar uma arquivo de estrutura aleatoriamente
 --[[
 	Essa função retorna um nome aleatorio de arquivo para estrutura.
@@ -121,14 +227,7 @@ end
 		<nome> Nome da estrutura (Ex. casa_simples)
   ]]
 sunos.pegar_arquivo = function(largura, tipo)
-	if largura == nil then
-		minetest.log("error", "[Sunos] Largura nula (em sunos.pegar_arquivo)")
-		return nil
-	end
-	if tipo == nil then
-		minetest.log("error", "[Sunos] Tipo de estrutura nula (em sunos.pegar_arquivo)")
-		return nil
-	end
+	sunos.checkvar(largura, tipo, "Parametro(s) invalido(s) para pegar arquivo")
 	
 	local estruturas = minetest.get_dir_list(modpath.."/schems/"..tipo)
 	
@@ -136,7 +235,10 @@ sunos.pegar_arquivo = function(largura, tipo)
 	if estruturas ~= nil then
 		for _,nome in ipairs(estruturas) do
 			local n = string.split(nome, ".")
-			if n[2] and tonumber(n[2]) == tonumber(largura) then
+			if n[2] -- Tem valor apos segundo ponto
+				and tonumber(n[2]) == tonumber(largura) -- Largura corresponde à exigida
+				and not string.match(nome, "-step") -- evita arquivos tipo step
+			then
 				table.insert(validos, n[1])
 			end
 		end
@@ -167,10 +269,6 @@ end
 			(padrão é 1)
   ]]
 sunos.ir_dir = function(pos, dir, dist)
-	if pos == nil then
-		minetest.log("error", "[Sunos] Tabela pos nula (em sunos.ir_dir)")
-		return false
-	end
 	
 	if dist == nil then dist = 1 end
 	
@@ -203,14 +301,6 @@ end
 			("<"(direita) ou ">"(esquerda))
   ]]
 sunos.girar_dir = function(dir, lado)
-	if dir == nil then
-		minetest.log("error", "[Sunos] String dir nula (em sunos.girar_dir)")
-		return false
-	end
-	if lado ~= "<" and lado ~= ">" then
-		minetest.log("error", "[Sunos] String lado invalida (em sunos.girar_dir)")
-		return false
-	end
 	
 	if dir == "x+" then
 		if lado == "<" then 
@@ -252,10 +342,6 @@ end
   ]]
 sunos.pegar_dir_aleatoria = function(exeto)
 	local d = {"x+", "x-", "z+", "z-"}
-	if table.maxn(exeto) >= 4 then 
-		minetest.log("error", "[Sunos] todas as direcoes foram proibidas (em sunos.pegar_dir_aleatoria)")
-		return nil 
-	end
 	
 	if exeto and table.maxn(exeto) > 0 then
 		for _,dir2 in ipairs(exeto) do
@@ -288,10 +374,7 @@ end
 			loop deve iniciar (padrão é 0)
   ]]
 sunos.f_pegar_solo = function(p, degrau, dist, subir)
-	if p == nil then
-		minetest.log("error", "[Sunos] Tabela p nula (em sunos.f_pegar_solo)")
-		return false
-	end
+
 	if subir == nil then subir = 0 end
 	local s = sunos.pegar_solo(p, dist, subir)
 	if s == nil then
@@ -320,14 +403,7 @@ end
 		<dist> do centro a borda da estrutura
   ]]
 sunos.verificar_estrutura = function(pos, dist)
-	if pos == nil then
-		minetest.log("error", "[Sunos] Tabela pos nula (em sunos.verificar_estrutura)")
-		return false
-	end
-	if dist == nil then
-		minetest.log("error", "[Sunos] Variavel dist nula (em sunos.verificar_estrutura)")
-		return false
-	end
+	sunos.checkvar(pos, dist, "Parametro(s) invalido(s) para verificar estrutura")
 	
 	-- Nodes de solo de entorno
 	local nodes_solo_entorno = {"default:dirt_with_grass", "default:cobble"}
@@ -404,14 +480,7 @@ end
 		<dist> do centro a borda da possivel nova estrutura
   ]]
 sunos.verif_fundamento = function(pos, dist)
-	if pos == nil then
-		minetest.log("error", "[Sunos] Tabela pos nula (em verif_fundamento)")
-		return false
-	end
-	if dist == nil then
-		minetest.log("error", "[Sunos] Variavel dist nula (em verif_fundamento)")
-		return false
-	end
+	sunos.checkvar(pos, dist, "Parametro(s) invalido(s) para verificar fundamento")
 	
 	-- Distancia a verificar
 	-- Considerando a pior hipotese de uma estrutura de largura 13 e mais 1 bloco de espaço
@@ -439,52 +508,7 @@ sunos.verif_fundamento = function(pos, dist)
 end
 
 
--- Montar ruinas
-sunos.montar_ruinas = function(pos, dist)
-	if pos == nil then
-		minetest.log("error", "[Sunos] Tabela pos nula (em sunos.montar_ruinas)")
-		return false
-	end
-	if dist == nil then
-		minetest.log("error", "[Sunos] Variavel dist nula (em sunos.montar_ruinas)")
-		return false
-	end
-	
-	-- Pega todas elementos pedrosos
-	local nodes = minetest.find_nodes_in_area(
-		{x=pos.x-dist, y=pos.y, z=pos.z-dist}, 
-		{x=pos.x+dist, y=pos.y+14, z=pos.z+dist}, 
-		{"group:stone"}
-	)
-	-- Pega a terra do chao
-	local nodes_solo = minetest.find_nodes_in_area(
-		{x=pos.x-dist, y=pos.y, z=pos.z-dist}, 
-		{x=pos.x+dist, y=pos.y, z=pos.z+dist}, 
-		{"default:dirt", "default:dirt_with_grass"}
-	)
-	
-	-- Pegar blocos a serem removidos
-	local nodes_rem = minetest.find_nodes_in_area(
-		{x=pos.x-dist, y=pos.y, z=pos.z-dist}, 
-		{x=pos.x+dist, y=pos.y+14, z=pos.z+dist}, 
-		nodes_rem_ruinas
-	)
-	
-	-- Limpar nodes a serem removidos
-	for _,p in ipairs(nodes_rem) do
-		minetest.remove_node(p)
-	end
-	
-	-- Recoloca pedregulho no lugar de elementos pedrosos
-	for _,p in ipairs(nodes) do
-		minetest.set_node(p, {name="default:cobble"})
-	end
-	-- Recoloca terra no solo
-	for _,p in ipairs(nodes_solo) do
-		minetest.set_node(p, {name="default:dirt_with_grass"})
-	end
-	return true
-end
+
 
 -- Verificar area carregada
 --[[
@@ -496,14 +520,7 @@ end
 		<dist> distancia de centro a borda da area
   ]]
 sunos.verif_carregamento = function(pos, dist)
-	if pos == nil then
-		minetest.log("error", "[Sunos] Tabela pos nula (em sunos.verif_carregamento)")
-		return false
-	end
-	if dist == nil then
-		minetest.log("error", "[Sunos] Variavel dist nula (em sunos.verif_carregamento)")
-		return false
-	end
+	sunos.checkvar(pos, dist, "Parametro(s) invalido(s) para verificar carregamento")
 	
 	-- Pegar os 8 cantos da area
 	local nn = {} -- nomes dos nodes
@@ -531,4 +548,28 @@ sunos.verif_carregamento = function(pos, dist)
 		end
 	end
 	return true
+end
+
+-- Verificar se uma estrutura existe na vila
+-- Retorna o nome do arquivo da estrutura no banco ou nulo se nao existir a estrutura
+-- Se houver mais de uma estrutura do tipo, retorna a primeira encontrada
+sunos.verif_estrutura_existe = function(vila, estrutura)
+	local lista = minetest.get_dir_list(minetest.get_worldpath() .. "/sunos/vila_" .. vila)
+	for _,arquivo in ipairs(lista) do
+		if string.match(arquivo, estrutura.."_") then
+			return arquivo
+		end
+	end
+end
+
+-- Limpar NodeMetaData
+sunos.limpar_metadados = function(pos1, pos2, nodes)
+	for _,pos in ipairs(minetest.find_nodes_in_area(
+		pos1, 
+		pos2, 
+		nodes or sunos.var.node_group.remover_metadados
+	)) do
+		local meta = minetest.get_meta(pos)
+		meta:from_table() -- limpa metadados
+	end
 end

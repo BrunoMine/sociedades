@@ -1,6 +1,6 @@
 --[[
 	Mod Sunos para Minetest
-	Copyright (C) 2017 BrunoMine (https://github.com/BrunoMine)
+	Copyright (C) 2018 BrunoMine (https://github.com/BrunoMine)
 	
 	Recebeste uma cópia da GNU Lesser General
 	Public License junto com esse software,
@@ -38,22 +38,38 @@ sunos.var.moeda = minetest.setting_get("sunos_moeda") or "default:apple"
 -- Limite de população das vilas
 sunos.var.max_pop = 40
 
--- Lista de nodes estruturais
---[[
-	Esses nodes são considerados importantes nas estruturas pois, 
-	caso eles sejam removidos pelo jogador, a estrutura deve ser limpa
-  ]]
-sunos.var.nodes_estruturais = {
-	"default:wood", 
-	"default:cobble", 
-	"default:stonebrick", 
-	"group:stair", 
-	"group:slab", 
-	"farming:straw"
-}
 
 -- Nodes trocados na montagem de qualquer estrutura
 sunos.var.nodes_trocados = {
+	
+	-- Estruturais
+	["default:tree"] = "sunos:tree_nodrop",
+	["default:wood"] = "sunos:wood_nodrop",
+	["default:cobble"] = "sunos:cobble_nodrop",
+	["default:glass"] = "sunos:glass_nodrop",
+	["farming:straw"] = "sunos:straw_nodrop",
+	["default:stonebrick"] = "sunos:stonebrick_nodrop",
+	
+	-- Stairs
+	["stairs:stair_straw"] = "sunos:stair_straw_nodrop",
+	["stairs:slab_straw"] = "sunos:slab_straw_nodrop",
+	["stairs:stair_inner_straw"] = "sunos:stair_inner_straw_nodrop",
+	["stairs:stair_outer_straw"] = "sunos:stair_outer_straw_nodrop",
+	["stairs:stair_wood"] = "sunos:stair_wood_nodrop",
+	["stairs:slab_wood"] = "sunos:slab_wood_nodrop",
+	["stairs:stair_inner_wood"] = "sunos:stair_inner_wood_nodrop",
+	["stairs:stair_outer_wood"] = "sunos:stair_outer_wood_nodrop",
+	["stairs:stair_cobble"] = "sunos:stair_cobble_nodrop",
+	["stairs:slab_cobble"] = "sunos:slab_cobble_nodrop",
+	["stairs:stair_inner_cobble"] = "sunos:stair_inner_cobble_nodrop",
+	["stairs:stair_outer_cobble"] = "sunos:stair_outer_cobble_nodrop",
+	
+	-- Tochas
+	["default:torch"] = "sunos:torch_nodrop",
+	["default:torch_ceiling"] = "sunos:torch_ceiling_nodrop",
+	["default:torch_wall"] = "sunos:torch_wall_nodrop",
+	
+	-- Moveis
 	["default:bookshelf"] = "sunos:default_bookshelf_nodrop",
 	["vessels:shelf"] = "sunos:vessels_shelf_nodrop",
 	["sunos:bancada"] = "sunos:bancada_nodrop",
@@ -62,6 +78,7 @@ sunos.var.nodes_trocados = {
 	["sunos:carpete_palha"] = "sunos:carpete_palha_nodrop",
 	["sunos:tear_palha"] = "sunos:tear_palha_nodrop",
 	["sunos:kit_culinario"] = "sunos:kit_culinario_nodrop",
+	
 }
 
 -- Listagem de itens para os nodes de venda
@@ -91,4 +108,152 @@ sunos.var.vendas = {
 		itemstack = "sunos:bancada_de_trabalho",
 		custo = tonumber(minetest.setting_get("sunos_item_bancada_de_trabalho_custo") or 20),
 	},
+}
+
+-- Tabela de musicas dos sunos
+sunos.var.musicas = {
+	["sunos_sol"] = {duracao=37, gain=0.1},
+	["sunos_bondade"] = {duracao=37, gain=0.1},
+	["sunos_coragem"] = {duracao=26, gain=0.1},
+	["sunos_alegria"] = {duracao=21, gain=0.1},
+	["sunos_colheita"] = {duracao=29, gain=0.1},
+}
+
+-- Tabela de grupos de nodes
+sunos.var.node_group = {
+	
+	-- Nodes a terem metadados removidos quando schem for alterada
+	remover_metadados = {
+		"default:furnace",
+		"default:furnace_active",
+		"default:bookshelf", 
+		"vessels:shelf", 
+		"sunos:kit_culinario",
+		"sunos:kit_culinario_nodrop",
+		"sunos:tear_palha",
+		"sunos:tear_palha_nodrop",
+		"sunos:bancada_de_trabalho",
+		"sunos:bancada_de_trabalho_nodrop",
+		"sunos:expositor_petisco_frutas",
+		"sunos:caixa_venda",
+		"sunos:caixa_de_musica",
+		"sunos:caixa_de_musica_nodrop",
+	},
+	
+	-- Nodes que compoem uma estrutura dos sunos
+	estrutura = {
+	
+		-- Estrutural
+		"sunos:tree_nodrop",
+		"sunos:wood_nodrop", 
+		"sunos:cobble_nodrop", 
+		"sunos:stonebrick_nodrop",
+		"sunos:straw_nodrop",
+		"sunos:glass_nodrop",
+				
+		-- Stairs
+		"stairs:stair_straw",
+		"stairs:slab_straw",
+		"stairs:stair_inner_straw",
+		"stairs:stair_outer_straw",
+		"sunos:stair_wood_nodrop",
+		"sunos:slab_wood_nodrop",
+		"sunos:stair_inner_wood_nodrop",
+		"sunos:stair_outer_wood_nodrop",
+		"sunos:stair_cobble_nodrop",
+		"sunos:slab_cobble_nodrop",
+		"sunos:stair_inner_cobble_nodrop",
+		"sunos:stair_outer_cobble_nodrop",
+		
+		-- Tochas
+		"sunos:torch_nodrop",
+		"sunos:torch_ceiling_nodrop",
+		"sunos:torch_wall_nodrop",
+		
+		-- Moveis
+		"sunos:kit_culinario_nodrop",
+		"sunos:tear_palha_nodrop",
+		"sunos:carpete_palha_nodrop",
+		"sunos:bancada_de_trabalho_nodrop",
+		"sunos:bau_nodrop",
+		"sunos:bancada_nodrop",
+		"sunos:vessels_shelf_nodrop",
+		"sunos:default_bookshelf_nodrop",
+	},
+	
+	-- Nodes que devem ser removidos quando uma estrutura se torna em ruina
+	-- Evita que jogadores farmem itens bons em ruinas
+	remover_da_ruina = {
+		
+		-- Estruturais
+		"group:glass", 
+		"group:fence", 
+		"group:ladder", 
+		"group:vessel", 
+		"group:wool", 
+		"group:wood",
+		"group:tree",
+		"group:door", 
+		"group:pane", 
+		"default:ladder_wood", 
+		"default:ladder_steel", 
+		"farming:straw",
+		
+		-- Stairs
+		"sunos:stair_wood_nodrop",
+		"sunos:slab_wood_nodrop",
+		"sunos:stair_inner_wood_nodrop",
+		"sunos:stair_outer_wood_nodrop",
+		"sunos:stair_cobble_nodrop",
+		"sunos:slab_cobble_nodrop",
+		"sunos:stair_inner_cobble_nodrop",
+		"sunos:stair_outer_cobble_nodrop",
+		"stairs:stair_straw",
+		"stairs:slab_straw",
+		"stairs:stair_inner_straw",
+		"stairs:stair_outer_straw",
+		"stairs:stair_wood",
+		"stairs:slab_wood",
+		"stairs:stair_inner_wood",
+		"stairs:stair_outer_wood",
+		"stairs:stair_cobble",
+		"stairs:slab_cobble",
+		"stairs:stair_inner_cobble",
+		"stairs:stair_outer_cobble",
+		
+		-- Objetos simples
+		"default:apple", 
+		"flowers:mushroom_brown",
+		"group:flower",
+		
+		-- Tochas
+		"group:torch", 
+		"default:torch", 
+		"sunos:torch_nodrop",
+		"sunos:torch_ceiling_nodrop",
+		"sunos:torch_wall_nodrop",
+		
+		-- Moveis
+		"sunos:kit_culinario_nodrop",
+		"sunos:tear_palha_nodrop",
+		"sunos:carpete_palha_nodrop",
+		"sunos:bancada_de_trabalho_nodrop",
+		"sunos:bau_nodrop",
+		"sunos:bancada_nodrop",
+		"sunos:vessels_shelf_nodrop",
+		"sunos:default_bookshelf_nodrop",
+		"default:bookshelf", 
+		"vessels:shelf", 
+		"sunos:bau", 
+		"sunos:bau_casa_comunal", 
+		"sunos:bau_loja", 
+		"sunos:taverna_placa",
+		"sunos:emporio_placa",
+		"sunos:nectar_nodrop",
+		"sunos:barril",
+		"sunos:expositor_petisco_frutas",
+		"sunos:caixa_venda"
+		
+	},
+
 }

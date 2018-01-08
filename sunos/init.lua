@@ -1,6 +1,6 @@
 --[[
 	Mod Sunos para Minetest
-	Copyright (C) 2017 BrunoMine (https://github.com/BrunoMine)
+	Copyright (C) 2018 BrunoMine (https://github.com/BrunoMine)
 	
 	Recebeste uma cópia da GNU Lesser General
 	Public License junto com esse software,
@@ -13,10 +13,12 @@
 sunos = {}
 
 -- Versão do projeto
-sunos.versao = "2.0"
+sunos.versao = "2.2"
 
 -- Versoes compativeis
-sunos.versao_comp = {}
+sunos.versao_comp = {
+	["2.0"] = true,
+}
 
 -- Notificador de Inicializador
 local notificar = function(msg)
@@ -37,6 +39,7 @@ notificar("Carregando...")
 -- Metodos gerais
 dofile(modpath.."/tradutor.lua")
 dofile(modpath.."/banco_de_dados.lua")
+dofile(modpath.."/checkvar.lua")
 dofile(modpath.."/online.lua")
 dofile(modpath.."/rollback.lua")
 dofile(modpath.."/diretrizes.lua")
@@ -61,19 +64,24 @@ dofile(modpath.."/ajuste_jogador.lua")
 dofile(modpath.."/verif_pop.lua")
 dofile(modpath.."/planificador.lua")
 dofile(modpath.."/troca.lua")
+dofile(modpath.."/ruinas.lua")
 -- Nodes
 dofile(modpath.."/nodes/estantes_nodrop.lua")
 dofile(modpath.."/nodes/rua.lua")
 dofile(modpath.."/nodes/fundamento.lua")
+dofile(modpath.."/nodes/fundamento_step.lua")
 dofile(modpath.."/nodes/decor_repo.lua")
 dofile(modpath.."/nodes/bancada.lua")
 dofile(modpath.."/nodes/bancada_de_trabalho.lua")
 dofile(modpath.."/nodes/compost.lua")
+dofile(modpath.."/nodes/comuns_nodrop.lua")
 dofile(modpath.."/nodes/bau.lua")
 dofile(modpath.."/nodes/carpete.lua")
 dofile(modpath.."/nodes/tear.lua")
 dofile(modpath.."/nodes/kit_culinario.lua")
 dofile(modpath.."/nodes/vendas.lua")
+dofile(modpath.."/nodes/tochas.lua")
+dofile(modpath.."/nodes/caixa_de_musica.lua")
 -- Craftitens
 dofile(modpath.."/craftitens/kit_reparador.lua")
 dofile(modpath.."/craftitens/broa_de_frutas.lua")

@@ -208,13 +208,13 @@ minetest.register_on_leaveplayer(function(player)
 	local nodes = minetest.find_nodes_in_area(
 		{x=pos.x-20, y=pos.y-20, z=pos.z-20}, 
 		{x=pos.x+20, y=pos.y+15, z=pos.z+20}, 
-		{"sunos:fundamento"}
+		{"sunos:fundamento", "sunos:fundamento_step"}
 	)
 	
 	-- Adiciona o node caso ainda não exista
 	if not rastreados[name] then rastreados[name] = {} end
 	
-	-- Indere os fundamentos proximos	
+	-- Insere os fundamentos proximos	
 	for _,p in ipairs(nodes) do
 		-- Verifica se está registrado
 		if minetest.get_meta(p):get_string("vila") ~= "" then

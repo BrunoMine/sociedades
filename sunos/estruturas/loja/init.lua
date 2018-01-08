@@ -89,19 +89,10 @@ end
 -- Tabela para valores de rotação
 local tb_rotat = {"0", "90", "180", "270"}
 
--- Construir loja de sunos
---[[
-	Essa função construi uma loja de sunos e configura o fundamento
-	Retorno:
-		^ true caso ocorra tudo bem
-		^ string de erro caso algo de errado
-	Argumentos:
-		<pos> é a coordenada do fundamento da estrutura
-		<dist> distancia centro a borda da nova estrutura
-		<vila> OPCIONAL | é o numero da vila a qual a estrutura decorativa pertence
-		<verif_area> OPCIONAL | true verificar a area antes de montar a estrutura (retorna strings dos erros)
-]]
-sunos.estruturas.loja.construir = function(pos, dist, vila, verif_area)
+
+-- Verificar se pode construir
+sunos.estruturas.loja.verif = function(pos, dist, verif_area)
+	
 	-- Validar argumentos de entrada
 	if pos == nil then
 		minetest.log("error", "[Sunos] Tabela pos nula (em sunos.estruturas.loja.construir)")
@@ -114,43 +105,58 @@ sunos.estruturas.loja.construir = function(pos, dist, vila, verif_area)
 	
 	-- Variaveis auxiliares
 	local largura = (dist*2)+1
+	local vila
 	
-	if not vila then
-		-- Verificar Vila e pegar dados (buscando por um fundamento proximo)
-		local pos_fund_prox = minetest.find_node_near(pos, 25, {"sunos:fundamento"})
-		if pos_fund_prox == nil then 
-			return S("Nenhuma vila por perto")
+	-- Verificar se vila existe (caso especificado)
+	if vila and sunos.verificar_vila_existente(vila) == false then
+		return S("Vila abandonada")
+		
+	-- Encontrar vila ativa
+	else
+		vila = sunos.encontrar_vila(pos, 25)
+		if not vila then
+			return S("Nenhuma vila habitavel encontrada")
 		end
-	
-		-- Pegar dados da vila encontrada
-		local meta_fund_prox = minetest.get_meta(pos_fund_prox)
-		vila = meta_fund_prox:get_string("vila")
 	end
 	
 	-- Verificações de area
 	if verif_area == true then
-	
-		-- Verificar se ainda existe um banco de dados da vila
-		if sunos.bd.verif("vila_"..vila, "numero") == false then
-			return S("Vila abandonada")
-		end
-		
-		-- Verifica status do terreno
-		local st = sunos.verif_terreno(pos, dist+1)
-		
-		-- Problema: em cima da faixa de solo existem obstrucoes (nao esta limpo e plano)
-		if st == 1 then
-			return S("O local precisa estar limpo e plano em uma area de @1x@1 blocos da largura", (largura+2))
-		
-		-- Problema: faixa de solo (superficial) falta blocos de terra
-		elseif st == 2 then
-			return S("O solo precisa estar plano e gramado em uma area de @1x@1 blocos da largura", (largura+2))
-		
-		-- Problema: faixa de subsolo (considerando 2 faixas) falta blocos de terra
-		elseif st == 3 then
-			return S("O subsolo precisa estar preenchido (ao menos 2 blocos de profundidade) em uma area de @1x@1 blocos da largura", (largura+2))
+		local r = sunos.verificar_area_para_fundamento(pos, dist)
+		if r ~= true then
+			return r
 		end
 	end
+	
+	return true, vila
+end
+
+-- Construir loja de sunos
+--[[
+	Essa função construi uma loja de sunos e configura o fundamento
+	Retorno:
+		^ true caso ocorra tudo bem
+		^ string de erro caso algo de errado
+	Argumentos:
+		<pos> é a coordenada do fundamento da estrutura
+		<dist> distancia centro a borda da nova estrutura
+		<vila> OPCIONAL | é o numero da vila a qual a estrutura decorativa pertence
+		<verif_area> OPCIONAL | true verificar a area antes de montar a estrutura (retorna strings dos erros)
+]]
+sunos.estruturas.loja.construir = function(pos, dist, verif_area, force)
+	
+	-- Verifica se pode construir a casa
+	if force ~= true then
+		local verif, vila = sunos.estruturas.loja.verif(pos, dist, verif_area)
+		if verif ~= true then
+			return verif
+		end
+	end
+	
+	local pos1 = {x=pos.x-dist, y=pos.y, z=pos.z-dist}
+	local pos2 = {x=pos.x+dist, y=pos.y+14, z=pos.z+dist}
+	
+	-- Limpar metadados dos nodes que possam estar la
+	sunos.limpar_metadados(pos1, pos2)
 	
 	-- Escolhe uma rotação aleatória
 	local rotat = tb_rotat[math.random(1, 4)]
@@ -236,8 +242,8 @@ end
 minetest.register_node("sunos:fundamento_loja", {
 	description = S("Fundamento de Loja dos Sunos"),
 	tiles = {"default_tree_top.png^sunos_fundamento.png", "default_tree_top.png", "default_tree.png"},
-	inventory_image = "sunos_inv_fundamento.png^sunos_inv_fundamento_loja.png",
-	wield_image = "sunos_inv_fundamento.png^sunos_inv_fundamento_loja.png",
+	inventory_image = "sunos_fundamento_fundo_inv.png^sunos_fundamento_loja_inv.png",
+	wield_image = "sunos_fundamento_estrutura_namao.png^sunos_fundamento_loja_namao.png",
 	paramtype2 = "facedir",
 	is_ground_content = false,
 	groups = {tree = 1, choppy = 2, oddly_breakable_by_hand = 1, flammable = 2},
@@ -247,20 +253,38 @@ minetest.register_node("sunos:fundamento_loja", {
 	-- Colocar uma loja
 	on_place = function(itemstack, placer, pointed_thing)
 		
-		sunos.criar_caixa_de_area(pointed_thing.under, 3+1)
+		local pos = pointed_thing.under
 		
-		local r = sunos.estruturas.loja.construir(pointed_thing.under, 3, nil, true)
+		local r, vila = sunos.estruturas.loja.verif(pos, 3, true)
+		
 		if r == true then
 			
 			-- Coloca rua em torno
-			sunos.colocar_rua(pointed_thing.under, 2)
+			sunos.colocar_rua(pos, 3)
+			
+			-- Coloca fundamento step para construir estrutura
+			minetest.set_node(pointed_thing.under, {name="sunos:fundamento_step"})
+			local meta = minetest.get_meta(pos)
+			meta:set_string("tipo", "loja")
+			meta:set_string("dist", 3)
+			meta:set_string("versao", sunos.versao)
+			meta:set_string("vila", vila)
+			meta:set_string("step", 1)
+			meta:set_string("data_inicio", minetest.get_day_count())
+			meta:set_string("tempo_inicio", minetest.get_timeofday())
+			meta:set_string("duracao", 24000) -- 1,5 dias no jogo
+			meta:set_string("schem", "feirinha")
+			meta:set_string("rotat", sunos.pegar_rotat())
+			minetest.get_node_timer(pos):set(0.1, 0) -- Inicia temporizador
 			
 			-- Retorna mensagem de montagem concluida
-			minetest.chat_send_player(placer:get_player_name(), S("Loja construida"))
+			minetest.chat_send_player(placer:get_player_name(), S("Loja sendo construida"))
 			itemstack:take_item()
 			return itemstack
 			
 		else
+			-- Marcar area necessaria
+			sunos.criar_caixa_de_area(pointed_thing.under, 3+1)
 			-- Retorna mensagem de falha
 			minetest.chat_send_player(placer:get_player_name(), r)
 			return itemstack

@@ -1,0 +1,174 @@
+--[[
+	Mod Sunos para Minetest
+	Copyright (C) 2017 BrunoMine (https://github.com/BrunoMine)
+	
+	Recebeste uma cópia da GNU Lesser General
+	Public License junto com esse software,
+	se não, veja em <http://www.gnu.org/licenses/>. 
+	
+	Fundamento de estruturas em construção
+  ]]
+
+-- Tradução de strings
+local S = sunos.S
+
+-- Animacao de colocar assentamento para estrutura
+local add_efeito = function(pos, dist)
+	
+	-- Adicionar particulas
+	local w = dist-1
+	local vetores = {
+		vector.add(pos, {x=w,y=0,z=w}),
+		vector.add(pos, {x=-w,y=0,z=w}),
+		vector.add(pos, {x=-w,y=0,z=-w}),
+		vector.add(pos, {x=w,y=0,z=-w})
+	}
+	for _,p in ipairs(vetores) do
+		minetest.add_particlespawner({
+			amount = 64,
+			time = 1.5,
+			minpos = vector.subtract(p, dist / 2),
+			maxpos = vector.add(p, dist / 2),
+			minvel = {x = -10, y = -10, z = -10},
+			maxvel = {x = 10, y = 10, z = 10},
+			minacc = vector.new(),
+			maxacc = vector.new(),
+			minexptime = 1,
+			maxexptime = 2.5,
+			minsize = 3,
+			maxsize = 6,
+			texture = "tnt_smoke.png",
+		})
+	end
+	
+	-- Tocar som
+	minetest.sound_play("sunos_iniciando_estrutura", {
+		pos = pos,
+		max_hear_distance = 15,
+		gain = 0.7,
+	})
+end
+
+
+-- Fundamento dos sunos
+--[[
+	Esse é o node de fundamento de estruturas em construção
+]]
+minetest.register_node("sunos:fundamento_step", {
+	description = S("Fundamento dos Sunos STEP"),
+	tiles = {"default_tree_top.png^sunos_fundamento.png", "default_tree_top.png", "default_tree.png"},
+	paramtype2 = "facedir",
+	is_ground_content = false,
+	groups = {choppy = 2, oddly_breakable_by_hand = 1, not_in_creative_inventory=1},
+	sounds = default.node_sound_wood_defaults(),
+	drop = "default:tree",
+	
+	-- Nao pode ser escavado/quebrado por jogadores
+	on_dig = function() end,
+	
+	-- Chamada de temporizador
+	on_timer = function(pos, elapsed)
+		local meta = minetest.get_meta(pos)
+		local versao = meta:get_string("versao")
+		
+		-- Verificar versao antes de tudo
+		if sunos.verif_comp(versao) == false then return end
+		
+		-- Coleta dados
+		local tipo = meta:get_string("tipo")
+		local dist = meta:get_string("dist")
+		local vila = meta:get_string("vila")
+		local step = tonumber(meta:get_string("step")) or 0
+		local dia_inicio = tonumber(meta:get_string("data_inicio"))
+		local tempo_inicio = tonumber(meta:get_string("tempo_inicio"))
+		local duracao = tonumber(meta:get_string("duracao"))
+		local schem = meta:get_string("schem")
+		local rotat = meta:get_string("rotat")
+		
+		-- Conjugado do momento de inicio
+		local inicio = (dia_inicio * 24000) + (tempo_inicio*24000)
+		
+		-- Conjugado do momento atual
+		local agora = (minetest.get_day_count() * 24000) + (minetest.get_timeofday()*24000)
+		
+		-- Decorrido
+		local decorrido = agora - inicio
+		
+		-- Verifica se ja terminou
+		if decorrido > duracao then
+			
+			-- evita jogador, adia procedimento
+			if not sunos.verif_player_perto(pos, 25) then
+				-- Reinicia o ciclo com um tempo definido
+				minetest.get_node_timer(pos):set(10, 0)
+				return false -- Evita que repita com um tempo diferente do definido
+			end
+			
+			local r 
+			
+			-- Construir de acordo com o tipo
+			if tipo == "casa" then
+				local itens_repo = minetest.deserialize(meta:get_string("itens_repo"))
+				r = sunos.estruturas.casa.construir(pos, dist, vila, false, itens_repo, true)
+			elseif tipo == "comunal" then
+				r = sunos.estruturas.comunal.construir(pos, 1, false)
+			elseif tipo == "emporio" then
+				r = sunos.estruturas.emporio.construir(pos, false)
+			elseif tipo == "taverna" then
+				r = sunos.estruturas.taverna.construir(pos, false)
+			elseif tipo == "loja" then
+				r = sunos.estruturas.loja.construir(pos, 3, false)
+			else
+				r = "tipo de estrutura "..dump(tipo).." nao planejado"
+			end
+			
+			if r ~= true then
+				-- Informa o ocorrido no depurador
+				minetest.log("action", "[Sunos] Construção de "..tipo.." cancelada em "..minetest.pos_to_string(pos).." : "..r)
+				minetest.set_node(pos, {name="default:tree"})
+				
+				-- Monta ruina
+				sunos.montar_ruinas(pos, dist)
+			end
+			
+			return
+			
+		-- Verifica se está entre o inicio e o fim (evita bug ao voltar no tempo)
+		elseif agora > inicio then
+			
+			-- evita jogador, adia procedimento
+			if not sunos.verif_player_perto(pos, 15) then
+				-- Reinicia o ciclo com um tempo definido
+				minetest.get_node_timer(pos):set(10, 0)
+				return false -- Evita que repita com um tempo diferente do definido
+			end
+			
+			-- Calcula o passo novo
+			local nstep = (decorrido*5)/duracao
+			nstep = math.ceil(nstep)
+			if nstep == 0 then nstep = 1 end
+			if nstep == 6 then nstep = 5 end
+			step = nstep
+			
+			-- Faz efeito de colocacao caso seja a primeira parte
+			if step == 1 and meta:get_string("iniciado") ~= "sim" then
+				meta:set_string("iniciado", "sim")
+				add_efeito(pos, dist)
+			end
+			
+			-- Constroi estrutura do novo passo
+			local table = meta:to_table() -- salva metadados numa tabela
+			sunos.montar_estrutura(pos, dist, tipo, rotat, schem.."."..((dist*2)+1)..".mts-step"..step)
+			-- Restaura dados do fundamento step
+			minetest.set_node(pos, {name="sunos:fundamento_step"})
+			minetest.get_meta(pos):from_table(table)
+		end
+		
+		-- Reinicia o ciclo com um tempo definido
+		minetest.get_node_timer(pos):set(10, 0)
+		return false -- Evita que repita com um tempo diferente do definido
+	end,
+	
+	-- Impede explosão
+	on_blast = function() end,
+})

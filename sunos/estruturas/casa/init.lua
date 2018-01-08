@@ -283,7 +283,13 @@ minetest.register_abm({
 		local schem = meta:get_string("schem")
 		local rotat = meta:get_string("rotat")
 		if schem == "" then return end
-	
+		
+		local pos1 = {x=pos.x-dist, y=pos.y, z=pos.z-dist}
+		local pos2 = {x=pos.x+dist, y=pos.y+14, z=pos.z+dist}
+		
+		-- Limpar metadados dos nodes que possam estar la
+		sunos.limpar_metadados(pos1, pos2)
+		
 		-- Remonta estrutura
 		sunos.montar_estrutura(pos, dist, "casa", rotat, schem)
 		

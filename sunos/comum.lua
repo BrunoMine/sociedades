@@ -205,7 +205,7 @@ sunos.encontrar_vila = function(pos, dist)
 		
 		-- Pegar dados da vila encontrada
 		local meta = minetest.get_meta(fund)
-		vila = meta:get_string("vila")
+		local vila = meta:get_string("vila")
 		
 		-- Verificar se vila existe
 		if sunos.verificar_vila_existente(vila) == true then

@@ -66,7 +66,11 @@ minetest.register_lbm({
 			if tipo == "casa" then
 				local itens_repo = sunos.estruturas.casa.gerar_itens_repo[dist]()
 				sunos.estruturas.casa.construir(pos, dist, vila, false, itens_repo, false, true)
-				
+			
+			-- Reconstroi taverna
+			elseif tipo == "taverna" then
+				sunos.estruturas.taverna.construir(pos, vila, true)
+			
 			-- Destroi outras estruturas
 			else
 				-- Remover fundamento

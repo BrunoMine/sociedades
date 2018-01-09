@@ -6,7 +6,7 @@
 [![bower](https://img.shields.io/badge/bower-mod-green.svg?style=flat-square)](https://minetest-bower.herokuapp.com/mods/sociedades)
 
 ## Requitos
-* Minetest 0.5.0
+* Minetest 0.4.16 ou superior
 * mobs
 * default
 * vessels

@@ -646,9 +646,6 @@ sunos.criar_vila = function(pos_ref)
 		
 		-- Variavel que verifica se ja colocou ao menos uma casa
 		local tem_casa = false
-	
-		-- Variavel que verifica se tem uma feirinha
-		local tem_loja = false
 		
 		-- Registra a nova vila
 		local vila = registrar_vila(table.maxn(assent))
@@ -661,7 +658,7 @@ sunos.criar_vila = function(pos_ref)
 			
 			-- Largura
 			local largura = dados.dist*2+1
-			
+		
 			-- Verifica se deve colocar uma feirinha
 			if largura == 5 and tem_casa and tem_loja == false then tipo = "loja" end
 			
@@ -689,7 +686,7 @@ sunos.criar_vila = function(pos_ref)
 				
 			elseif tipo == "loja" then
 				
-				sunos.estruturas.loja.construir(dados.pos, dados.dist, vila, true)
+				sunos.estruturas.loja.construir(dados.pos, dados.dist, vila, false, true)
 				
 				tem_loja = true
 			end

@@ -91,7 +91,7 @@ local tb_rotat = {"0", "90", "180", "270"}
 
 
 -- Verificar se pode construir
-sunos.estruturas.loja.verif = function(pos, dist, verif_area)
+sunos.estruturas.loja.verif = function(pos, dist, vila, verif_area)
 	
 	-- Validar argumentos de entrada
 	if pos == nil then
@@ -105,7 +105,6 @@ sunos.estruturas.loja.verif = function(pos, dist, verif_area)
 	
 	-- Variaveis auxiliares
 	local largura = (dist*2)+1
-	local vila
 	
 	-- Verificar se vila existe (caso especificado)
 	if vila and sunos.verificar_vila_existente(vila) == false then
@@ -142,11 +141,11 @@ end
 		<vila> OPCIONAL | é o numero da vila a qual a estrutura decorativa pertence
 		<verif_area> OPCIONAL | true verificar a area antes de montar a estrutura (retorna strings dos erros)
 ]]
-sunos.estruturas.loja.construir = function(pos, dist, verif_area, force)
+sunos.estruturas.loja.construir = function(pos, dist, vila, verif_area, force)
 	
 	-- Verifica se pode construir a casa
 	if force ~= true then
-		local verif, vila = sunos.estruturas.loja.verif(pos, dist, verif_area)
+		local verif, vila = sunos.estruturas.loja.verif(pos, dist, vila, verif_area)
 		if verif ~= true then
 			return verif
 		end
@@ -255,7 +254,7 @@ minetest.register_node("sunos:fundamento_loja", {
 		
 		local pos = pointed_thing.under
 		
-		local r, vila = sunos.estruturas.loja.verif(pos, 3, true)
+		local r, vila = sunos.estruturas.loja.verif(pos, 3, nil, true)
 		
 		if r == true then
 			

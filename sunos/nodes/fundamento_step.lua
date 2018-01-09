@@ -117,7 +117,7 @@ minetest.register_node("sunos:fundamento_step", {
 			elseif tipo == "taverna" then
 				r = sunos.estruturas.taverna.construir(pos, false)
 			elseif tipo == "loja" then
-				r = sunos.estruturas.loja.construir(pos, 3, false)
+				r = sunos.estruturas.loja.construir(pos, 3, vila, false)
 			else
 				r = "tipo de estrutura "..dump(tipo).." nao planejado"
 			end

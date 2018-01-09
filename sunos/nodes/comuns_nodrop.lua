@@ -12,6 +12,21 @@
 -- Tradução de strings
 local S = sunos.S
 
+-- Correcao para versoes antigas
+
+if not minetest.registered_nodes[nodename] then 
+	minetest.register_alias("stairs:stair_straw", "farming:straw")
+	minetest.register_alias("stairs:stair_inner_straw", "farming:straw")
+	minetest.register_alias("stairs:stair_outer_straw", "farming:straw")
+	minetest.register_alias("stairs:stair_wood", "default:wood")
+	minetest.register_alias("stairs:stair_inner_wood", "default:wood")
+	minetest.register_alias("stairs:stair_outer_wood", "default:wood")
+	minetest.register_alias("stairs:stair_cobble", "default:cobble")
+	minetest.register_alias("stairs:stair_inner_cobble", "default:cobble")
+	minetest.register_alias("stairs:stair_outer_cobble", "default:cobble")
+end
+
+-- Tabela de nodes
 local nodes_trocaveis_nodrop = {
 	["default:tree"] = {name="sunos:tree_nodrop"},
 	["default:glass"] = {name="sunos:glass_nodrop"},
@@ -37,21 +52,23 @@ local nodes_trocaveis_nodrop = {
 
 -- Criar cópia sem Drop (para evitar furtos em estruturas dos sunos)
 for nodename,dados in pairs(nodes_trocaveis_nodrop) do
-
-	-- Copiar tabela de definições
-	local def = {}
-	for n,d in pairs(minetest.registered_nodes[nodename]) do
-		def[n] = d
+	
+	if minetest.registered_nodes[nodename] then 
+		-- Copiar tabela de definições
+		local def = {}
+		for n,d in pairs(minetest.registered_nodes[nodename]) do
+			def[n] = d
+		end
+		
+		-- Mantem a tabela groups separada
+		def.groups = minetest.deserialize(minetest.serialize(def.groups))
+		
+		-- Altera alguns paremetros
+		def.description = def.description .. " ("..S("Sem Drop")..")"
+		def.groups.not_in_creative_inventory = 1
+		def.drop = ""
+		
+		-- Registra o novo node
+		minetest.register_node(dados.name, def)
 	end
-	
-	-- Mantem a tabela groups separada
-	def.groups = minetest.deserialize(minetest.serialize(def.groups))
-	
-	-- Altera alguns paremetros
-	def.description = def.description .. " ("..S("Sem Drop")..")"
-	def.groups.not_in_creative_inventory = 1
-	def.drop = ""
-	
-	-- Registra o novo node
-	minetest.register_node(dados.name, def)
 end

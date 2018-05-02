@@ -1,6 +1,6 @@
 --[[
 	Mod Sunos para Minetest
-	Copyright (C) 2017 BrunoMine (https://github.com/BrunoMine)
+	Copyright (C) 2018 BrunoMine (https://github.com/BrunoMine)
 	
 	Recebeste uma cópia da GNU Lesser General
 	Public License junto com esse software,
@@ -8,6 +8,9 @@
 	
 	NPC das casas
   ]]
+
+-- Programas de atividades
+dofile(minetest.get_modpath("sunos").."/estruturas/casa/programs.lua") 
 
 -- Cronograma de atividades do NPC da casa (carregamento de script)
 dofile(minetest.get_modpath("sunos").."/estruturas/casa/cronograma_npc.lua") 
@@ -61,7 +64,7 @@ local set_npc_places = function(self)
 		local bau = sunos.copy_tb(self.mypos)
 		local v = minetest.facedir_to_dir(minetest.get_node(bau).param2)
 		local acesso = vector.subtract(bau, v)
-		npc.places.add_shared(self, "bau_primario", "bau", bau, acesso)
+		npc.locations.add_shared(self, "bau_primario", "bau", bau, acesso)
 	end
 	
 	-- Cama
@@ -70,7 +73,7 @@ local set_npc_places = function(self)
 		local cama = camas[1]
 		local v = minetest.facedir_to_dir(minetest.get_node(cama).param2)
 		local acesso = vector.subtract(cama, v)
-		npc.places.add_owned(self, "cama_1", "bed_primary", cama, acesso)
+		npc.locations.add_owned(self, "cama_1", "bed_primary", cama, acesso)
 	end
 	
 	-- Interior e exterior da casa
@@ -80,8 +83,8 @@ local set_npc_places = function(self)
 		local v = minetest.facedir_to_dir(minetest.get_node(porta).param2)
 		local dentro = vector.subtract(porta, v)
 		local fora = vector.add(porta, v)
-		npc.places.add_shared(self, "casa_dentro_1", "home_inside", dentro, nil)
-		npc.places.add_shared(self, "casa_fora_1", "home_outside", fora, nil)
+		npc.locations.add_shared(self, "casa_dentro_1", "home_inside", dentro, nil)
+		npc.locations.add_shared(self, "casa_fora_1", "home_outside", fora, nil)
 	end
 	
 	local nodes
@@ -92,9 +95,9 @@ local set_npc_places = function(self)
 		local v = minetest.facedir_to_dir(minetest.get_node(node).param2)
 		local acesso = vector.subtract(node, v)
 		if n == 1 then
-			npc.places.add_owned(self, "forno_1", "furnace_primary", node, acesso)
+			npc.locations.add_owned(self, "forno_1", "forno", node, acesso)
 		else
-			npc.places.add_shared(self, "forno_"..n, "furnace_shared", node, acesso)
+			npc.locations.add_shared(self, "forno_"..n, "forno", node, acesso)
 		end
 	end
 	
@@ -103,7 +106,7 @@ local set_npc_places = function(self)
 	for n,node in ipairs(nodes) do
 		local v = minetest.facedir_to_dir(minetest.get_node(node).param2)
 		local acesso = vector.subtract(node, v)
-		npc.places.add_shared(self, "compostagem_"..n, "compostagem", node, acesso)
+		npc.locations.add_shared(self, "compostagem_"..n, "compostagem", node, acesso)
 	end
 	
 	-- Tear
@@ -112,7 +115,7 @@ local set_npc_places = function(self)
 		local v = minetest.facedir_to_dir(minetest.get_node(node).param2)
 		local acesso = vector.subtract(node, v)
 		acesso.y = acesso.y-1
-		npc.places.add_shared(self, "tear_"..n, "tear", node, acesso)
+		npc.locations.add_shared(self, "tear_"..n, "tear", node, acesso)
 	end
 	
 	-- Bancada de Trabalho
@@ -120,7 +123,7 @@ local set_npc_places = function(self)
 	for n,node in ipairs(nodes) do
 		local v = minetest.facedir_to_dir(minetest.get_node(node).param2)
 		local acesso = vector.subtract(node, v)
-		npc.places.add_shared(self, "bancada_de_trabalho_"..n, "bancada_de_trabalho", node, acesso)
+		npc.locations.add_shared(self, "bancada_de_trabalho_"..n, "bancada_de_trabalho", node, acesso)
 	end
 	
 	-- Kit culinario
@@ -129,62 +132,37 @@ local set_npc_places = function(self)
 		local v = minetest.facedir_to_dir(minetest.get_node(node).param2)
 		local acesso = vector.subtract(node, v)
 		acesso.y = acesso.y-1
-		npc.places.add_shared(self, "kit_culinario_"..n, "kit_culinario", node, acesso)
+		npc.locations.add_shared(self, "kit_culinario_"..n, "movel_caseiro", node, acesso)
 	end
+	
+	minetest.chat_send_all("Lugares salvos")
 end
 
 -- Criar entidade NPC
 sunos.npcs.npc.registrar("caseiro", {
 	max_dist = 100,	
 	node_spawner = "sunos:bau_casa",
+	drops = {
+		{name = "default:apple", chance = 2, min = 1, max = 2},
+	},
 	
-	after_activate = function(self)
-		-- Corrige animação se estiver durmindo (sempre para a cama primaria)
-		if self.actions.move_state.is_laying == true then
-			local target = sunos.copy_tb(npc.places.get_by_type(self, "bed_primary")[1])
-			npc.add_task(self, npc.actions.cmd.USE_BED, 
-				{
-					pos = "bed_primary",
-					action = npc.actions.const.beds.LAY
-				}
-			)
-			npc.add_action(self, npc.actions.cmd.FREEZE, {freeze = true})
-		end
+	on_spawn = function(self)
 		
 		local meta = minetest.get_meta(self.mypos)
 		
 		-- Verifica se ja tem roteiro salvo em si mesmo
-		if self.data_roteiro 
-			and self.roteiro
-			-- Está dentro do periodo de validade do roteiro
-			and self.data_roteiro + 2 >= minetest.get_day_count() 
-		then
-			-- Reatribui agenda de tarefas
-			sunos.estruturas.casa.atribuir_cronograma_npc(self, self.roteiro, self.data_roteiro)
-		
-		
-		-- Verifica se o bau proprio tem roteiro
-		elseif meta:get_string("roteiro") ~= ""
-			and meta:get_string("data_roteiro") ~= ""
-			-- Está dentro do periodo de validade do roteiro
-			and tonumber(meta:get_string("data_roteiro")) + 2 >= minetest.get_day_count() 
-		then			
-			-- Reatribui agenda de tarefas
-			sunos.estruturas.casa.atribuir_cronograma_npc(self, meta:get_string("roteiro"), meta:get_string("data_roteiro"))
-		
-		
-		else
-			-- Cria nova agenda de tarefas
-			sunos.estruturas.casa.atribuir_cronograma_npc(self)
+		if self.roteiro == nil then
+			self.roteiro = meta:get_string("roteiro")
 		end
 		
-		-- Configurar lugares
-		set_npc_places(self)
+		sunos.estruturas.casa.atribuir_cronograma_npc(self, self.roteiro)
+		
+		-- Verifica se ja tem lugares salvos
+		if not npc.locations.get_by_type(self, "bau")[1] then
+			-- Configurar lugares
+			set_npc_places(self)
+		end
 	end,
-	
-	drops = {
-		{name = "default:apple", chance = 2, min = 1, max = 2},
-	},
 })
 
 

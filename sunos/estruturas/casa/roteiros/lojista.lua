@@ -19,12 +19,15 @@ local interagir_casa = sunos.estruturas.casa.interagir_casa
 local interagir_feirinha = {
 	-- Força ir para perto do centro da loja
 	[1] = {
-		property = "flag",
-		args = {
-			action = "set",
-			flag_name = "sunos_target_status",
-			flag_value = "sunos_feirinha",
-		}
+		program_name = "advanced_npc:internal_property_change",
+		arguments = {
+			property = "flag",
+			args = {
+				action = "set",
+				flag_name = "sunos_target_status",
+				flag_value = "sunos_feirinha",
+			}
+		},
 	},
 	-- Anda no carpete ou olha os baus da loja
 	[2] = {
@@ -41,8 +44,8 @@ local interagir_feirinha = {
 			-- Andar até o carpete
 			["sunos:carpete_palha_nodrop"] = {
 				[1] = {
-					task = npc.actions.cmd.WALK_TO_POS,
-					args = {
+					program_name = "advanced_npc:walk_to_pos",
+					arguments = {
 						end_pos = "schedule_target_pos",
 						walkable = sunos.estruturas.casa.walkable_nodes
 					},
@@ -52,17 +55,16 @@ local interagir_feirinha = {
 			-- Olhar para um bau da loja
 			["sunos:bau_loja"] = {
 				[1] = {
-					action = npc.actions.cmd.ROTATE,
-					args = {
+					program_name = "advanced_npc:rotate",
+					arguments = {
 						end_pos = "schedule_target_pos",
-					}
+					},
 				},
 				[2] = {
-					action = npc.actions.cmd.SET_INTERVAL,
-					args = {
-						interval = 5,
-						freeze = true,
-					}
+					program_name = "advanced_npc:wait",
+					arguments = {
+						time = 5,
+					},
 				},
 			}
 		},

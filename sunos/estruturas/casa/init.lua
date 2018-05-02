@@ -65,8 +65,11 @@ local set_bau = function(pos, vila, dist)
 		meta:set_string("vila", vila) -- Numero da vila
 		meta:set_string("pos_fundamento", minetest.serialize(pos)) -- Pos do fundamento
 		meta:set_string("infotext", S("Bau da Casa dos Sunos"))
+		
+		-- Configura cronograma do bau
+		sunos.estruturas.casa.atribuir_cronograma_bau(pos_bau)
 	end
-
+	
 end
 
 -- Verifica a possibilidade de construir uma casa no local

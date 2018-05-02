@@ -1,6 +1,6 @@
 --[[
 	Mod Sunos para Minetest
-	Copyright (C) 2017 BrunoMine (https://github.com/BrunoMine)
+	Copyright (C) 2018 BrunoMine (https://github.com/BrunoMine)
 	
 	Recebeste uma cópia da GNU Lesser General
 	Public License junto com esse software,
@@ -56,18 +56,6 @@ sunos.npcs.npc.get_time = function()
 	return time
 end
 
--- Configurar schekin
-sunos.npcs.npc.set_checkin = function(self, lugar, inicio, fim)
-	if inicio > fim then return end
-	for h=inicio, fim do
-		self.sunos_checkin[h] = sunos.copy_tb(lugar)
-	end
-	
-	-- Atualiza dados do bau
-	minetest.get_meta(self.mypos):set_string("checkin_npc", minetest.serialize(self.sunos_checkin))
-end
-local set_checkin = sunos.npcs.npc.set_checkin
-
 -- Spawners
 tabela_spawners = {}
 
@@ -77,6 +65,15 @@ tabela_spawners = {}
 	caso esteja nulo, o objeto não esta mais carregado ou morreu.
   ]]
 sunos.npcs.npc.ativos = {}
+
+-- Verificar se o NPC de um node está ativo
+sunos.npcs.is_active = function(pos)
+	local hash = minetest.get_meta(pos):get_string("sunos_npchash")
+	if hash ~= "" and sunos.npcs.npc.ativos[hash] and sunos.npcs.npc.ativos[hash]:getpos() then
+		return true
+	end
+	return false
+end
 
 -- Spawnar um NPC
 sunos.npcs.npc.spawn = function(tipo, vila, pos, spos)
@@ -132,20 +129,21 @@ sunos.npcs.npc.spawn = function(tipo, vila, pos, spos)
 		
 		ent.sunos_npchash = hash -- Salva no npc
 		sunos.npcs.npc.ativos[hash] = ent.object -- salva na tabela de npcs ativos
-		minetest.get_meta(ent.mypos):set_string("npchash", hash) -- Salva no bau
-		
-		-- Tabela de checkins da agenda
-		--[[
-			Quando da o horario o NPC se dirige ao local, 
-			ao estar la ele volta as atividades que deve fazer la
-		  ]]
-		ent.sunos_checkin = {}
-		set_checkin(ent, ent.sunos_fundamento, 0, 23) -- configura checkin no npc e bau
+		minetest.get_meta(ent.mypos):set_string("sunos_npchash", hash) -- Salva no bau
 		
 		-- Flags
 		ent.flags["sunos_checkin_status"] = "dentro"
 		ent.flags["sunos_target_status"] = "nenhum"
 		ent.flags["sunos_repouso_status"] = "nenhum"
+		
+		-- Finaliza registro nos sunos
+		ent.sunos_registrado = true
+		
+		-- Realiza chamadas que foram impedidas
+		-- 'on_spawn'
+		if sunos.npcs.npc.registrados[tipo].on_spawn then
+			sunos.npcs.npc.registrados[tipo].on_spawn(ent)
+		end
 		
 		-- Retorna a entidade
 		return ent
@@ -192,19 +190,17 @@ sunos.npcs.npc.send_to_checkin = function(self)
 			-- Atualiza numero do comando
 			cmds = cmds + 1 
 			-- Salva o local para andar
-			npc.places.add_shared_accessible_place(
+			npc.locations.add_shared_accessible_place(
 				self, 
 				{owner="", node_pos=alvo}, 
 				"sunos_npc_walk_"..cmds, 
 				true,
 				{}
 			)
-			npc.add_task(self, npc.actions.cmd.WALK_TO_POS,
-				{
-					end_pos = "sunos_npc_walk_"..cmds,
-					walkable = sunos_walkable_nodes,
-				}
-			)
+			npc.programs.execute(self, "advanced_npc:walk_to_pos", {
+				end_pos = "sunos_npc_walk_"..cmds,
+				walkable = {}
+			})
 		end
 		
 		-- Atualiza para proximo loop
@@ -259,19 +255,17 @@ sunos.npcs.npc.send_to_target = function(self, pos)
 			-- Atualiza numero do comando
 			cmds = cmds + 1 
 			-- Salva o local para andar
-			npc.places.add_shared_accessible_place(
+			npc.locations.add_shared_accessible_place(
 				self, 
 				{owner="", node_pos=alvo}, 
 				"sunos_npc_walk_target_"..cmds, 
 				true,
 				{}
 			)
-			npc.add_task(self, npc.actions.cmd.WALK_TO_POS,
-				{
-					end_pos = "sunos_npc_walk_target_"..cmds,
-					walkable = sunos_walkable_nodes,
-				}
-			)
+			npc.programs.execute(self, "advanced_npc:walk_to_pos", {
+				end_pos = "sunos_npc_walk_target_"..cmds,
+				walkable = sunos_walkable_nodes
+			})
 		end
 		
 		-- Atualiza para proximo loop
@@ -295,15 +289,13 @@ end
 sunos.npcs.npc.send_to_bed = function(self, pos)
 	if not self or not self.object or not self.object:getpos() then return end
 	
-	-- Remove todas atividades atuais do NPC
-	self.actions.queue = {}
-	
 	local pos1 = sunos.copy_tb(self.object:getpos())
 	local pos2 = sunos.copy_tb(pos)
 	local cmds = 0
 	local dist = sunos.p1_to_p2(pos1, pos2)
 	
 	while (dist > 6) do
+	
 		local pos_indo = sunos.ir_p1_to_p2(pos1, pos2, 7)
 		
 		-- Escolher caminho
@@ -327,19 +319,17 @@ sunos.npcs.npc.send_to_bed = function(self, pos)
 			-- Atualiza numero do comando
 			cmds = cmds + 1 
 			-- Salva o local para andar
-			npc.places.add_shared_accessible_place(
+			npc.locations.add_shared_accessible_place(
 				self, 
 				{owner="", node_pos=alvo}, 
 				"sunos_npc_walk_target_"..cmds, 
 				true,
 				{}
 			)
-			npc.add_task(self, npc.actions.cmd.WALK_TO_POS,
-				{
-					end_pos = "sunos_npc_walk_target_"..cmds,
-					walkable = sunos_walkable_nodes,
-				}
-			)
+			npc.exec.enqueue_program(self, "advanced_npc:walk_to_pos", {
+				end_pos = "sunos_npc_walk_target_"..cmds,
+				walkable = sunos_walkable_nodes,
+			})
 		else
 			-- Impossivel avançar em direção ao alvo (sem caminho)
 			break
@@ -355,21 +345,21 @@ sunos.npcs.npc.send_to_bed = function(self, pos)
 	
 	-- Se for chegar na cama, durmir
 	if dist <= 6 then
-		npc.add_task(self, npc.actions.cmd.WALK_TO_POS, 
-			{
-				end_pos = {
-					place_type="bed_primary", 
-					use_access_node=true
-				}
+		minetest.chat_send_all("mandando ir durmir")
+		npc.exec.enqueue_program(self, "advanced_npc:walk_to_pos", {
+			end_pos = {
+				place_type="bed_primary", 
+				use_access_node=true
 			}
-		)
-		npc.add_task(self, npc.actions.cmd.USE_BED, 
-			{
-				pos = "bed_primary",
-				action = npc.actions.const.beds.LAY
-			}
-		)
-		npc.add_action(self, npc.actions.cmd.FREEZE, {freeze = true})
+		})
+		npc.exec.enqueue_program(self, "advanced_npc:use_bed", {
+			pos = "bed_primary",
+			action = npc.programs.const.node_ops.beds.LAY
+		})
+		npc.exec.enqueue_program(self, "advanced_npc:idle", {
+			acknowledge_nearby_objs = false,
+			wander_chance = 0
+		})
 	end
 	
 	
@@ -443,37 +433,38 @@ sunos.npcs.npc.registrar = function(tipo, def)
 		
 		
 		on_spawn = function(self)
+		
 			if self.initialized == nil then
 				npc.initialize(self, self.object:getpos(), true)
 				self.tamed = false
-				
-				-- Realiza procedimento personalizado
-				if def.on_spawn then
-					def.on_spawn(self)
-				end
+			end
+			
+			-- Verifica se já está registrado
+			if self.sunos_registrado == true and sunos.npcs.npc.registrados[tipo].on_spawn then
+				sunos.npcs.npc.registrados[tipo].on_spawn(self)
 			end
 			
 		end,
 		
 		-- Atualiza dados com tabela de NPCs ativos
 		after_activate = function(self, staticdata, def, dtime)
-			
-			if not self.sunos_npchash then
-				return
-			end
 
-			-- Verifica se é o npc atual de seu node
-			if not sunos.npcs.npc.ativos[self.sunos_npchash] then
-				-- Atualiza tabela de npcs ativos
-				sunos.npcs.npc.ativos[self.sunos_npchash] = self.object
-			else
-				-- Esse NPC ja está ativo em outro objeto
-				self.object:remove()
-			end
-			
-			-- Realiza procedimento personalizado
-			if sunos.npcs.npc.registrados[tipo].after_activate then
-				sunos.npcs.npc.registrados[tipo].after_activate(self, staticdata, def, dtime)
+			-- Verifica se está registrado
+			if self.sunos_registrado == true then
+				
+				-- Verifica se é o npc atual de seu node
+				if not sunos.npcs.npc.ativos[self.sunos_npchash] then
+					-- Atualiza tabela de npcs ativos
+					sunos.npcs.npc.ativos[self.sunos_npchash] = self.object
+				else
+					-- Esse NPC ja está ativo em outro objeto
+					self.object:remove()
+				end
+				
+				-- Realiza procedimento personalizado
+				if sunos.npcs.npc.registrados[tipo].after_activate then
+					sunos.npcs.npc.registrados[tipo].after_activate(self, staticdata, def, dtime)
+				end
 			end
 		end,
 	
@@ -482,20 +473,6 @@ sunos.npcs.npc.registrar = function(tipo, def)
 			if not self.tipo then
 				self.object:remove()
 				return
-			end
-			
-			-- Correção do NPC_advanced para tornar NPC em modo de ataque interrompedo qualquer atividade
-			if self.state == "attack" then
-				-- Interrompe atividades
-				if self.actions.current_action_state ~= npc.action_state.interrupted then
-					npc.lock_actions(self)
-					self.freeze = false
-				end
-				-- Permite API Mobs Redo controlar ataque
-				return true
-			end
-			if self.actions.current_action_state == npc.action_state.interrupted and self.state ~= "attack" then
-				npc.execute_action(self)
 			end
 			
 			-- Verifica se esta perto do bau de origem
@@ -557,10 +534,14 @@ sunos.npcs.npc.registrar = function(tipo, def)
 				end
 				
 				-- Verificar se deve ir para proximo de uma coordenada
-				if self.flags["sunos_target_status"] ~= "nenhum" then
-					local target = sunos.copy_tb(npc.places.get_by_type(self, self.flags["sunos_target_status"])[1])
-					if not target.pos then
-					elseif sunos.p1_to_p2(self.object:getpos(), target.pos) > 6 then
+				if self.flags["sunos_target_status"] and self.flags["sunos_target_status"] ~= "nenhum" then
+					local target = sunos.copy_tb(npc.locations.get_by_type(self, self.flags["sunos_target_status"])[1])
+					if not target or not target.pos then
+						self.flags["sunos_target_status"] = "nenhum"
+						return
+					end
+					
+					if sunos.p1_to_p2(self.object:getpos(), target.pos) > 6 then
 						
 						local caminho = sunos.npcs.npc.send_to_target(self, target.pos)
 						
@@ -577,11 +558,16 @@ sunos.npcs.npc.registrar = function(tipo, def)
 				end
 				
 				-- Verifica se deve ir durmir
+				
 				if self.flags["sunos_repouso_status"] == "durmir" then
-					local target = sunos.copy_tb(npc.places.get_by_type(self, "bed_primary")[1])
+					local target = sunos.copy_tb(npc.locations.get_by_type(self, "bed_primary")[1])
+					if not target or not target.pos then
+						self.object:remove()
+						return
+					end
 					
 					-- Verifica se ja esta durmindo 
-					if self.actions.move_state.is_laying ~= true
+					if self.npc_state.movement.is_laying ~= true
 						or sunos.p1_to_p2(self.object:getpos(), target.pos) > 2
 					then
 						local caminho = sunos.npcs.npc.send_to_bed(self, target.pos)
@@ -728,21 +714,6 @@ sunos.npcs.npc.registrar = function(tipo, def)
 			minetest.get_node_timer(pos):set(timeout_bau, 0)
 			return false -- Evita que repita com um tempo diferente do definido
 		end
-	})
-	
-	-- Insere spawner na lista
-	table.insert(tabela_spawners, def.node_spawner)
-	
-	-- LBM para iniciar nodetimer caso ainda nao tenha
-	minetest.register_lbm({
-		name = "sunos:casa_start_nodetimer",
-		nodenames = tabela_spawners,
-		run_at_every_load = true,
-		action = function(pos, node)
-			if minetest.get_node_timer(pos):is_started() == false then
-				minetest.get_node_timer(pos):set(2, 0)
-			end
-		end,
 	})
 	
 end

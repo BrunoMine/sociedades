@@ -16,7 +16,7 @@ local S = sunos.S
 npc.programs.register("sunos:interagir", function(self, args)
 	local tempo = args.tempo or 5
 	local pos = npc.programs.helper.get_pos_argument(self, args.pos)
-	minetest.chat_send_all("olhando para "..dump(args.pos))
+	
 	-- Vira para "pos"
 	npc.exec.proc.enqueue(self, "advanced_npc:rotate", {
 		start_pos = self.object:getpos(),

@@ -67,7 +67,7 @@ local set_bau = function(pos, vila, dist)
 		meta:set_string("infotext", S("Bau da Casa dos Sunos"))
 		
 		-- Configura cronograma do bau
-		sunos.estruturas.casa.atribuir_cronograma_bau(pos_bau)
+		sunos.estruturas.casa.set_npc_bau(pos_bau)
 	end
 	
 end

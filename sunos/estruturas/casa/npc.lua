@@ -12,9 +12,6 @@
 -- Programas de atividades
 dofile(minetest.get_modpath("sunos").."/estruturas/casa/programs.lua") 
 
--- Cronograma de atividades do NPC da casa (carregamento de script)
-dofile(minetest.get_modpath("sunos").."/estruturas/casa/cronograma_npc.lua") 
-
 -- Tradução de strings
 local S = sunos.S
 
@@ -134,8 +131,6 @@ local set_npc_places = function(self)
 		acesso.y = acesso.y-1
 		npc.locations.add_shared(self, "kit_culinario_"..n, "movel_caseiro", node, acesso)
 	end
-	
-	minetest.chat_send_all("Lugares salvos")
 end
 
 -- Criar entidade NPC
@@ -151,11 +146,12 @@ sunos.npcs.npc.registrar("caseiro", {
 		local meta = minetest.get_meta(self.mypos)
 		
 		-- Verifica se ja tem roteiro salvo em si mesmo
-		if self.roteiro == nil then
-			self.roteiro = meta:get_string("roteiro")
+		if self.sunos_occupation == nil then
+			self.sunos_occupation = meta:get_string("sunos_npc_occupation")
+			
+			-- Inicializa variaveis de ocupação
+			npc.occupations.initialize_occupation_values(self, self.sunos_occupation)
 		end
-		
-		sunos.estruturas.casa.atribuir_cronograma_npc(self, self.roteiro)
 		
 		-- Verifica se ja tem lugares salvos
 		if not npc.locations.get_by_type(self, "bau")[1] then
@@ -165,4 +161,96 @@ sunos.npcs.npc.registrar("caseiro", {
 	end,
 })
 
+-- Escolhe uma tarefa para o npc
+sunos.estruturas.casa.select_occupation = function(pos, vila)
+	
+	-- Escolha padrao "caseiro"
+	local escolha = "sunos_npc_caseiro"
+	
+	-- Checkin padrão
+	local checkin = {
+		["0"] = pos,
+		["1"] = pos,
+		["2"] = pos,
+		["3"] = pos,
+		["4"] = pos,
+		["5"] = pos,
+		["6"] = pos,
+		["7"] = pos,
+		["8"] = pos,
+		["9"] = pos,
+		["10"] = pos,
+		["11"] = pos,
+		["12"] = pos,
+		["13"] = pos,
+		["14"] = pos,
+		["15"] = pos,
+		["16"] = pos,
+		["17"] = pos,
+		["18"] = pos,
+		["19"] = pos,
+		["20"] = pos,
+		["21"] = pos,
+		["22"] = pos,
+		["23"] = pos,
+	}
+	
+	local loja = sunos.verif_estrutura_existe(vila, "loja")
+	
+	-- Sorteia numero entre 1 e 100
+	local s = math.random(1, 100)
+	
+	if s >= 1 and s <= 40 then -- minimo 40% é caseiro
+		
+		return "caseiro", checkin
+		
+	elseif s >= 41 and s <= 70 and loja then -- 30% é lojista
+	
+		local dados_loja = sunos.bd.pegar("vila_"..vila, sunos.verif_estrutura_existe(vila, "loja"))
+		
+		checkin["7"] = dados_loja.estrutura.pos
+		checkin["8"] = dados_loja.estrutura.pos
+		checkin["9"] = dados_loja.estrutura.pos
+		checkin["10"] = dados_loja.estrutura.pos
+		checkin["11"] = dados_loja.estrutura.pos
+		checkin["12"] = dados_loja.estrutura.pos
+		
+		return "sunos_npc_caseiro_lojista", checkin
+	end
+	
+	-- Os outros 30% tambem vira caseiro
+	-- Se nao houver o escolhido, vira caseiro
+	return "sunos_npc_caseiro", checkin
+end
 
+-- Atribuir roteiro ao bau
+sunos.estruturas.casa.set_npc_bau = function(pos)
+
+	local meta = minetest.get_meta(pos)
+	local vila = tonumber(meta:get_string("vila"))
+	
+	-- Escolher novo roteiro
+	local occupation, checkin = sunos.estruturas.casa.select_occupation(pos, vila)
+	
+	-- Data da escolha
+	local data = minetest.get_day_count()
+	
+	-- Registra checkins
+	for time,pc in pairs(checkin) do
+		sunos.npc_checkin.add_checkin(pc, pos, time)
+	end
+	
+	-- Armazena dados no bau
+	meta:set_string("sunos_npc_tipo", "caseiro")
+	meta:set_string("sunos_npc_occupation", occupation)
+	meta:set_string("sunos_mynpc_checkin", minetest.serialize(checkin))
+	meta:set_string("sunos_mynpc_data_occupation", data)
+	
+end
+
+-- Atividades estruturadas
+dofile(minetest.get_modpath("sunos").."/estruturas/casa/atividades.lua") 
+
+-- Carregar roteiros
+dofile(minetest.get_modpath("sunos").."/estruturas/casa/occupations/lojista.lua") 
+dofile(minetest.get_modpath("sunos").."/estruturas/casa/occupations/caseiro.lua") 

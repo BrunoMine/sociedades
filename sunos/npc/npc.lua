@@ -112,7 +112,7 @@ sunos.npcs.npc.spawn = function(tipo, vila, npcnode_pos, spos)
 		ent.sunos_fundamento = minetest.deserialize(minetest.get_meta(npcnode_pos):get_string("pos_fundamento"))
 		
 		-- Gera um hash numerico com a data e coordenada
-		local hash = minetest.pos_to_string(npcnode_pos)..tostring(os.date("*t"))
+		local hash = minetest.pos_to_string(npcnode_pos)..os.date("%Y%m%d%H%M%S")
 		
 		ent.sunos_npchash = hash -- Salva no npc
 		sunos.npcs.npc.ativos[hash] = ent.object -- salva na tabela de npcs ativos
@@ -371,7 +371,6 @@ sunos.npcs.npc.registrar = function(tipo, def)
 	
 	-- Cria o registro na tabela global
 	sunos.npcs.npc.registrados[tipo] = def
-	sunos.npcs.npc.registrados[tipo].max_dist = def.max_dist or 10
 	
 	-- Registrar um mob
 	mobs:register_mob("sunos:npc_"..tipo, {
@@ -475,19 +474,13 @@ sunos.npcs.npc.registrar = function(tipo, def)
 				if self.loop >= qtd_loops_npc then
 					self.loop = 0
 				
-					local node = minetest.get_node(self.mypos)
+					local node = sunos.pegar_node(self.mypos)
 					if node.name ~= self.mynode then
 						self.object:remove()
 						return
 					end
 				end 
-				
-				-- Verificar se está muito longe do bau
-				if verif_dist_pos(self.object:getpos(), self.mypos) > def_npc.max_dist then
-					self.object:remove()
-					return
-				end
-				
+								
 				-- Verifica se algum dos jogadores proximos é um inimigo
 				if self.state ~= "attack" then -- Verifica se ja não está em um ataque
 					for _,obj in ipairs(minetest.get_objects_inside_radius(self.object:getpos(), 13)) do

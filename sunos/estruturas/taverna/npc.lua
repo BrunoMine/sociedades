@@ -21,7 +21,7 @@ do
 	end
 	-- Altera alguns paremetros
 	def.description = S("Solo de Barman dos Sunos")
-	def.tiles = {"default_cobble.png^sunos_solo_barman.png"}
+	def.tiles = {"default_cobble.png^sunos_solo_atendente.png"}
 	def.drop = "default:cobble"
 	-- Registra o novo node
 	minetest.register_node("sunos:solo_barman", def)

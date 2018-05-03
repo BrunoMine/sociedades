@@ -22,6 +22,16 @@ sunos.npc_checkin.spawners = {}
 sunos.npc_checkin.registered_spawners = {}
 
 
+-- Montar checkin
+sunos.npc_checkin.montar_checkin_simples = function(pos)
+	local checkin = {}
+	for x=0, 23 do
+		checkin[tostring(x)] = pos
+	end
+	return checkin
+end
+
+
 -- Conversões padrão para indexição de coordenadas
 local pos_to_string = function(pos)
 	return pos.x.." "..pos.y.." "..pos.z
@@ -67,17 +77,6 @@ end
 -- Salvar dados do NPC
 local set_mynpc = function(pos, mynpc)
 	minetest.get_meta(pos):set_string("sunos_mynpc_checkin", minetest.serialize(mynpc))
-end
-
-
--- Pegar node forçadamente
-local get_nodename = function(pos)
-	local node = minetest.get_node(pos)
-	if node.name == "ignore" then
-		minetest.get_voxel_manip():read_from_map(pos, pos)
-		node = minetest.get_node(pos)
-	end
-	return node.name
 end
 
 -- Registrar Node spawner para marcar checkin
@@ -149,7 +148,7 @@ sunos.npc_checkin.register_spawner = function(nodename, def)
 						
 						-- Verifica se registrador coincide com o que foi registrado
 						-- Nodename
-						if get_nodename(pos_npc) == dados.nodename then
+						if sunos.pegar_node(pos_npc).name == dados.nodename then
 							
 							-- Verificar dados do npc
 							local mynpc_checkin = get_mynpc_checkin(pos_npc)

@@ -31,5 +31,32 @@ minetest.register_node("sunos:bau_comunal", {
 	on_dig = function() end,
 })
 
-
+-- Registrar Spawner
+sunos.npc_checkin.register_spawner("sunos:bau_comunal", {
+	func_spawn = function(pos, npc_tipo)
+		
+		local meta = minetest.get_meta(pos)
+		
+		-- Verifica fundamento
+		local pf = sunos.verificar_fundamento_bau_sunos(pos)
+		if not pf then return end
+		
+		local spos
+		if npc_tipo == "comunal" then
+			spos = sunos.npcs.select_pos_spawn(pf, {
+				tipo = "fundamento",
+				nodes = {"sunos:solo_atendente_comunal"},
+			})
+		else
+			spos = sunos.npcs.select_pos_spawn(pf, {
+				tipo = "fundamento",
+			})
+		end
+		
+		if spos then
+			-- Spawnar um novo npc na casa
+			sunos.npcs.npc.spawn(npc_tipo, minetest.get_meta(pos):get_string("vila"), pos, spos)
+		end
+	end,
+})
 

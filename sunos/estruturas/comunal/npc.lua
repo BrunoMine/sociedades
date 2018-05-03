@@ -12,11 +12,24 @@
 -- Tradução de strings
 local S = sunos.S
 
+-- Solo de barman (separa as areas do barman)
+do
+	-- Copiar tabela de definições do bau comum
+	local def = {}
+	for n,d in pairs(minetest.registered_nodes["default:cobble"]) do
+		def[n] = d
+	end
+	-- Altera alguns paremetros
+	def.description = S("Solo de Atendente Comunal dos Sunos")
+	def.tiles = {"default_cobble.png^sunos_solo_atendente.png"}
+	def.drop = "default:cobble"
+	-- Registra o novo node
+	minetest.register_node("sunos:solo_atendente_comunal", def)
+end
+
+-- Registrar NPC comunal (atendente)
 sunos.npcs.npc.registrar("comunal", {
-	
-	node_spawner = "sunos:bau_comunal",
-	nodes_spawn = {"sunos:wood_nodrop"},
-	
+		
 	drops = {
 		{name = "default:wood", chance = 1, min = 1, max = 3},
 		{name = "default:apple", chance = 2, min = 1, max = 2},

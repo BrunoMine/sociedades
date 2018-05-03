@@ -96,15 +96,6 @@ local verif_nivel = function(pop)
 	
 end
 
--- Montar checkin
-local montar_checkin = function(pos)
-	local checkin = {}
-	for x=0, 23 do
-		checkin[tostring(x)] = pos
-	end
-	return checkin
-end
-
 local set_bau = function(pos, vila, dist)
 
 	-- Verifica se tem baus na estrutura montada
@@ -123,8 +114,8 @@ local set_bau = function(pos, vila, dist)
 		
 		sunos.npcnode.set_npcnode(pos_bau, {
 			tipo = "barman",
-			occupation = "barman",
-			checkin = montar_checkin(pos_bau),
+			occupation = "sunos:barman",
+			checkin = sunos.npc_checkin.montar_checkin_simples(pos_bau),
 		})
 	end
 	

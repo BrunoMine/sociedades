@@ -2,63 +2,63 @@ API do Mod Sunos v1.4
 
 Variaveis Auxiliares
 --------------------
-Essas variaveis ficam armazenadas na tabela global `sunos.var` e podem ser encontradas no arquivo `diretrizes.lua`.
-Não é recomendado modificar essas variaveis manualmente para que seja mantida a reprodução integral do repositório oficial.
+Essas variaveis ficam armazenadas na tabela global `sunos.var` e 
+podem ser encontradas no arquivo `diretrizes.lua`.
+Não é recomendado modificar essas variaveis manualmente para que seja 
+mantida a reprodução integral do repositório oficial.
 
 
 Estruturas
 ----------
-Devem ser criadas dentro da tabela `sunos.estruturas`. Alguns valores dentro 
-do índice da estrutura na tabela são para propositos especificos.
+Um determinado tipo de estrutura deve estanciar suas funções, 
+tabelas e outros valores em uma tabela `sunos.estruturas` cujo 
+indice é o tipo de estrutura devendo ser apenas uma talavra como os 
+demais existentes (casa, comunal, decor e etc). 
 
-sunos.estruturas.estrut : armazenara todos os dados da estrutura.
-    índices padrões para estruturas
-    {
-        pop = [true] : Define que a estrutura possui população.
-        
-        fund_on_rightclick = function(...) end : chamada `on_rightclick` do node de fundamento.
-        
-        fund_on_destruct = function(...) end : chamada `on_destruct` do node de fundamento.
-        
-        fund_on_timer = function(...) end : chamada `on_timer` do node de fundamento.
-        
-        defendido = function(pos) end : função que verifica se a estrutura está defendida.
-            * `pos` é a coordenada do fundamento da estrutura.
-            * Deve retornar `true` caso a estrutura esteja defendida.
-            
-        verificar = function(pos) end : verifica se uma estrutura está destruida e toma as providencias caso esteja.
-            * `pos` é a coordenada do fundamento da estrutura.    
-    }
+Alguns valores dentro dessa tabela são reservado para fins especificos:
+* pop = [true] : Informa para a API dos sunos se essa estrutura contabiliza população
+* fund_on_rightclick = function(...) end : Chamada do node de fundamento da estrutura receber chamada `on_rightclick`.
+* fund_on_destruct = function(...) end : Chamada do node de fundamento da estrutura receber chamada `on_destruct`.
+* fund_on_timer = function(...) end : Chamada do node de fundamento da estrutura receber chamada `on_timer`.
+* defendido = function(pos) end : A API executa essa função para saber se a estrutura está defendida.
+  * `pos` é a coordenada do fundamento da estrutura.
+  * Deve retornar `true` caso a estrutura esteja defendida.
+* verificar = function(pos) end : A API executa essa função para verificar se uma estrutura está destruida e toma as providencias caso esteja.
+  * `pos` é a coordenada do fundamento da estrutura. 
 
 
 NPCs
 ----
+Os NPCs podem ser registrados com a função `sunos.npcs.npc.registrar` que é 
+apenas uma interface para realizar o registro em mobs_redo e gerenciar outros 
+sistemas dos NPCs sunos.
 
-### Registro de NPC
+### npcnode
+Os npcnodes são nodes que guardam dados sobre um npc, esses nodes são usados 
+por spawners para consutar dados de NPCs a serem spawnados
+
 * `sunos.npcs.npc.registrar(tipo, Definições de NPC)` : Registrar um NPC comum
   * `tipo` é o nome da tipagem particular do npc (exemplo: "casa", "comunal")
-
-### Registro e spawner
 * `sunos.npc_checkin.register_spawner(nodename, Definições de Spawner)` : Registra um node spawner
   * `nodename` é o itemstring do node spawner
+* `sunos.npcnode.set_npcnode(pos, Definições de npcnode)` : Configura um npcnode
+* `sunos.npcs.select_pos_spawn(pos, Definições da escolha do spawn)` : Seleciona uma coordenada de spawn
+  * `pos` é uma coordenada em torno da qual será feita a seleção
+
 
 ### Definições de NPC
     {
-        max_dist = 15,
-            ^ Distancia maxima que o mob pode ficar da coordenada de origem
-
-        node_spawner = "sunos:nodename",
-            ^ Node do bau que vai spawnar o npc no sentido de estar associado com o mesmo
-    
-        nodes_spawn = {"sunos:meu_bau"},
-            ^ Node sobre o qual o npc pode spawnar aleatoriamente
-            ^ Por padrao será madeira, pedregulho e tijolos de pedra
+        on_rightclick = function(self, player) end,
+            ^ Função executada junto com on_rightclick da API mobs_redo
+            
+        on_spawn = function(self) end,
+            ^ Função executada junto com on_spawn da API mobs_npc
         
-        on_step = function(self),
-            ^ O tempo entre cada iteração é o valor definido em `tempo_verif_bau` (não documentado)
+        after_activate = function(self, staticdata, def, dtime) end,
+            ^ Função executada junto com after_activate da API mobs_npc
         
-        on_rightclick(self, player)
-            ^ função on_rightclick padrão (você pode atribuir argumentos extras #3, #4, ...)
+        do_custom = function(self, dtime) end,
+            ^ Função executada junto com do_custom da API mobs_npc
         
         drops = {{name = "default:wood", chance = 1, min = 1, max = 3}}
             ^ lista de itens que caem quando o npc morre (conforme definido nos mobs do mobs_redo)
@@ -70,6 +70,44 @@ NPCs
             ^ pos é a coordenada do spawner que vai spawnar um npc
             ^ tipo é o tipo de NPC registrado
     }
+
+### Definições de npcnode
+    {
+        -- Tipo de NPC registrado nos sunos
+        tipo = "",
+    
+        -- Ocupação do NPC (registrada na API advanced_npc). Não usado
+        occupation = "",
+    
+        -- Node spawner de cada horario
+        checkin = {
+            ["0"] = {x=0, y=0, z=0}, 
+            ["1"] = {x=0, y=0, z=0},
+            ["2"] = {x=0, y=0, z=0},
+            ...
+            ["23"] = {x=0, y=0, z=0}
+        },
+    }
+
+### Definições da escolha do spawn
+    {
+        tipo = "", 
+            ^ Tipo escolhido
+            ^ "fundamento" : Escolhe um node dentro de area de uma estrutura.
+                             A coordenada `pos` deve ser o proprio fundamento.
+        
+        no_players = true, -- OPICIONAL, Se quer evitar jogadores, retorna nil se houver.
+        
+        nodes = {"nodename1", "nodename2", "nodename2"}, 
+            ^ OPICIONAL. Tabela de nodes sobre o qual vai spawnar
+            ^ Padrão é {"sunos:wood_nodrop", "default:stonebrick", "sunos:cobble_nodrop"}
+        
+        carpete = "nodename",
+            ^ OPICIONAL. Node a ser considerado como carpete e deve estar acima do node, 
+            ^ Colocar "air" para evitar qualquer carpete
+            ^ Padrão é "sunos:carpete_palha_nodrop"
+    }
+
 
 Tabelas Globais
 -----------------
@@ -101,17 +139,19 @@ Essa seção busca informar alguns dados de registro que não devem ser mexidos 
 
 ### Metadados do node de fundamento
 Metadados do fundamento de uma estrutura (todos são armazenados no formato de strings)
-* "vila" : numero da vila correspondente (exemplo: "12")
-* "tipo" : nome do tipo de estrutura (exemplo: "casa")
-* "dist" : distância do centro até a borda em blocos (exemplo: "3")
+* `"vila"` : numero da vila correspondente (exemplo: "12")
+* `"tipo"` : nome do tipo de estrutura (exemplo: "casa")
+* `"dist"` : distância do centro até a borda em blocos (exemplo: "3")
 
-### Dados estáticos de entidades
+### Metadados de entidades
 * variaveis da engine : Variaveis reservadas pela engine mobs_redo (veja a documentação da engine)
 * `tipo` : Nome do tipo de npc suno
+* `vila` : Vila do NPC
 * `loop` : Controle de temporizador
 * `temp` : Temporizador gerenciado pelo mod sunos
 * `mypos` : Coordenada do node de origem
 * `mynode` : Nome do node onde o npc spawnou
+* `sunos_fundamento` : Coordenada do fundamento da estrutura do NPC
 
 ### Metadados de spawner
 * `"sunos_npc_checkin_"..time`: Armazena tabelas de dados serializados
@@ -126,7 +166,7 @@ Metadados do fundamento de uma estrutura (todos são armazenados no formato de s
         },
     }
 
-### Metadados de nodes de NPCs
+### Metadados do nodes de NPC (npcnode)
 * `"sunos_npchash"` : Hash do NPC
 * `"sunos_npc_tipo"` : Tipo do NPC registrado nos sunos
 * `"sunos_mynpc_checkin"`: Armazena tabelas de dados serializados

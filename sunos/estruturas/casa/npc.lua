@@ -223,31 +223,6 @@ sunos.estruturas.casa.select_occupation = function(pos, vila)
 	return "sunos_npc_caseiro", checkin
 end
 
--- Atribuir roteiro ao bau
-sunos.estruturas.casa.set_npc_bau = function(pos)
-
-	local meta = minetest.get_meta(pos)
-	local vila = tonumber(meta:get_string("vila"))
-	
-	-- Escolher novo roteiro
-	local occupation, checkin = sunos.estruturas.casa.select_occupation(pos, vila)
-	
-	-- Data da escolha
-	local data = minetest.get_day_count()
-	
-	-- Registra checkins
-	for time,pc in pairs(checkin) do
-		sunos.npc_checkin.add_checkin(pc, pos, time)
-	end
-	
-	-- Armazena dados no bau
-	meta:set_string("sunos_npc_tipo", "caseiro")
-	meta:set_string("sunos_npc_occupation", occupation)
-	meta:set_string("sunos_mynpc_checkin", minetest.serialize(checkin))
-	meta:set_string("sunos_mynpc_data_occupation", data)
-	
-end
-
 -- Atividades estruturadas
 dofile(minetest.get_modpath("sunos").."/estruturas/casa/atividades.lua") 
 

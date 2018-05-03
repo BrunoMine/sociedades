@@ -39,77 +39,19 @@ sunos.npc_checkin.register_spawner("sunos:bau_casa", {
 	func_spawn = function(pos, npc_tipo)
 		
 		local meta = minetest.get_meta(pos)
-			
-		-- Verificar a coordenada do fundamento
-		local pf = meta:get_string("pos_fundamento")
-		if pf == "" then
-			minetest.set_node(pos, {name="default:chest", param2=minetest.get_node(pos).param2})
-			return
-		end
-		pf = minetest.deserialize(pf)
 		
-		-- Verificar se o fundamento ainda existe
-		if minetest.get_node(pf).name ~= "sunos:fundamento" then
-			minetest.set_node(pos, {name="default:chest", param2=minetest.get_node(pos).param2})
-			return
-		end
-		
-		-- Verifica se NPC já está ativo
-		if sunos.npcs.is_active(pos) then
-			return
-		end
-		
+		-- Verifica fundamento
+		local pf = sunos.verificar_fundamento_bau_sunos(pos)
+		if not pf then return end
+				
 		local dist = tonumber(minetest.get_meta(pf):get_string("dist"))
 		
-		-- Verifica se a area está carregada
-		if minetest.get_node(pf).name == "ignore" then
-			minetest.get_voxel_manip():read_from_map(
-				{x=pf.x-dist, y=pf.y, z=pf.z-dist},
-				{x=pf.x+dist, y=pf.y+14, z=pf.z+dist}
-			)
+		local spos = sunos.npcs.select_pos_spawn(pf, {tipo = "fundamento"})
+		
+		if spos then
+			-- Spawnar um novo npc na casa
+			sunos.npcs.npc.spawn(npc_tipo, minetest.get_meta(pos):get_string("vila"), pos, spos)
 		end
-		
-		-- Analizar objetos (possiveis npcs) perto
-		do
-			for i = 0, math.floor(15/dist)-1 do
-				for _,obj in ipairs(minetest.get_objects_inside_radius({x=pf.x, y=pf.y+(i*dist), z=pf.z}, dist)) do
-				
-					-- Evita jogadores por perto para nao spawnar de repente
-					if obj:is_player() then
-						return
-					end
-				end
-			end
-		end
-		
-		-- Escolher uma coordenada para spawnar
-		local spos = {}
-		do
-			local nok = {} -- tabela de nodes ok 
-			-- Pegar nodes de madeira
-			local nodes = minetest.find_nodes_in_area(
-				{x=pf.x-dist, y=pf.y, z=pf.z-dist}, 
-				{x=pf.x+dist, y=pf.y+14, z=pf.z+dist}, 
-				{"sunos:wood_nodrop", "default:stonebrick", "sunos:cobble_nodrop"})
-			for _,p in ipairs(nodes) do
-				if minetest.get_node({x=p.x, y=p.y+1, z=p.z}).name == "sunos:carpete_palha_nodrop"
-					and minetest.get_node({x=p.x, y=p.y+2, z=p.z}).name == "air"
-				then
-					table.insert(nok, {x=p.x, y=p.y+1.5, z=p.z})
-				end
-			end
-			-- Verifica se achou algum
-			if not nok[1] then 
-				return
-			end
-			
-			-- Sorteia uma coordenada
-			spos = nok[math.random(1, table.maxn(nok))]
-		end
-		
-		-- Spawnar um novo npc na casa
-		sunos.npcs.npc.spawn(npc_tipo, minetest.get_meta(pos):get_string("vila"), pos, spos)
-		
 	end,
 })
 

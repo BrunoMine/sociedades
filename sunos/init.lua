@@ -91,6 +91,8 @@ dofile(modpath.."/comandos.lua")
 -- NPCs e interface basica
 sunos.npcs = {} -- Tabela global de NPCs
 dofile(modpath.."/npc/npc.lua")
+dofile(modpath.."/npc/npcnode.lua")
+dofile(modpath.."/npc/select_pos_spawn.lua")
 dofile(modpath.."/npc/spawner.lua")
 -- Estruturas básicas
 dofile(modpath.."/estruturas/comunal/init.lua")

@@ -573,3 +573,25 @@ sunos.limpar_metadados = function(pos1, pos2, nodes)
 		meta:from_table() -- limpa metadados
 	end
 end
+
+-- Verificar fundamento de um bau dos sunos
+-- Coloca bau comum no lugar se der falha
+sunos.verificar_fundamento_bau_sunos = function(pos)
+	
+	local meta = minetest.get_meta(pos)	
+	
+	-- Verificar a coordenada do fundamento
+	local pf = meta:get_string("pos_fundamento")
+	if pf == "" then
+		minetest.set_node(pos, {name="default:chest", param2=minetest.get_node(pos).param2})
+		return
+	end
+	pf = minetest.deserialize(pf)
+	
+	-- Verificar se o fundamento ainda existe
+	if minetest.get_node(pf).name ~= "sunos:fundamento" then
+		minetest.set_node(pos, {name="default:chest", param2=minetest.get_node(pos).param2})
+		return
+	end
+	return pf
+end

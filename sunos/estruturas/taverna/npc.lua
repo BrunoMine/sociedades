@@ -6,7 +6,7 @@
 	Public License junto com esse software,
 	se não, veja em <http://www.gnu.org/licenses/>. 
 	
-	NPC das casas
+	NPC da taverna
   ]]
 
 -- Tradução de strings
@@ -31,7 +31,6 @@ end
 sunos.npcs.npc.registrar("barman", {
 	
 	node_spawner = "sunos:bau_taverna",
-	nodes_spawn = {"sunos:solo_barman"},	
 	
 	drops = {
 		{name = "default:wood", chance = 1, min = 1, max = 3},

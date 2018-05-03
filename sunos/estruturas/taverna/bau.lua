@@ -30,3 +30,32 @@ minetest.register_node("sunos:bau_taverna", {
 	-- Nao pode ser escavado/quebrado por jogadores
 	on_dig = function() end,
 })
+
+-- Registrar Spawner
+sunos.npc_checkin.register_spawner("sunos:bau_taverna", {
+	func_spawn = function(pos, npc_tipo)
+		
+		local meta = minetest.get_meta(pos)
+		
+		-- Verifica fundamento
+		local pf = sunos.verificar_fundamento_bau_sunos(pos)
+		if not pf then return end
+		
+		local spos
+		if npc_tipo == "barman" then
+			spos = sunos.npcs.select_pos_spawn(pf, {
+				tipo = "fundamento",
+				nodes = {"sunos:solo_barman"},
+			})
+		else
+			spos = sunos.npcs.select_pos_spawn(pf, {
+				tipo = "fundamento",
+			})
+		end
+		
+		if spos then
+			-- Spawnar um novo npc na casa
+			sunos.npcs.npc.spawn(npc_tipo, minetest.get_meta(pos):get_string("vila"), pos, spos)
+		end
+	end,
+})

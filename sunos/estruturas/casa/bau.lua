@@ -43,8 +43,6 @@ sunos.npc_checkin.register_spawner("sunos:bau_casa", {
 		-- Verifica fundamento
 		local pf = sunos.verificar_fundamento_bau_sunos(pos)
 		if not pf then return end
-				
-		local dist = tonumber(minetest.get_meta(pf):get_string("dist"))
 		
 		local spos = sunos.npcs.select_pos_spawn(pf, {tipo = "fundamento"})
 		

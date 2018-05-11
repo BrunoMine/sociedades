@@ -332,7 +332,6 @@ sunos.npcs.npc.send_to_bed = function(self, pos)
 	
 	-- Se for chegar na cama, durmir
 	if dist <= 6 then
-		minetest.chat_send_all("mandando ir durmir")
 		npc.exec.enqueue_program(self, "advanced_npc:walk_to_pos", {
 			end_pos = {
 				place_type="bed_primary", 
@@ -343,10 +342,14 @@ sunos.npcs.npc.send_to_bed = function(self, pos)
 			pos = "bed_primary",
 			action = npc.programs.const.node_ops.beds.LAY
 		})
-		npc.exec.enqueue_program(self, "advanced_npc:idle", {
-			acknowledge_nearby_objs = false,
-			wander_chance = 0
-		})
+		npc.exec.enqueue_program(self, "advanced_npc:idle", 
+			{
+				acknowledge_nearby_objs = false,
+				wander_chance = 0
+			},
+			{},
+			true
+		)
 	end
 	
 	
@@ -439,7 +442,9 @@ sunos.npcs.npc.registrar = function(tipo, def)
 			if self.sunos_registrado == true then
 				
 				-- Verifica se é o npc atual de seu node
-				if not sunos.npcs.npc.ativos[self.sunos_npchash] then
+				if not sunos.npcs.npc.ativos[self.sunos_npchash] 
+					or not sunos.npcs.npc.ativos[self.sunos_npchash]:getpos() 
+				then
 					-- Atualiza tabela de npcs ativos
 					sunos.npcs.npc.ativos[self.sunos_npchash] = self.object
 				else
@@ -464,6 +469,14 @@ sunos.npcs.npc.registrar = function(tipo, def)
 			-- Verifica se esta perto do bau de origem
 			self.temp = (self.temp or 0) + dtime
 			if self.temp >= sunos.timer_npc_check then
+				
+				-- Verifica se é o npc atual de seu node
+				if not sunos.npcs.npc.ativos[self.sunos_npchash] 
+					or not sunos.npcs.npc.ativos[self.sunos_npchash]:getpos() 
+				then
+					-- Esse NPC ja está ativo em outro objeto
+					self.object:remove()					
+				end
 				
 				local def_npc = sunos.npcs.npc.registrados[self.tipo]
 				

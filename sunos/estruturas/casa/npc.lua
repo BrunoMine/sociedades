@@ -61,7 +61,7 @@ local set_npc_places = function(self)
 		local bau = sunos.copy_tb(self.mypos)
 		local v = minetest.facedir_to_dir(minetest.get_node(bau).param2)
 		local acesso = vector.subtract(bau, v)
-		npc.locations.add_shared(self, "bau_primario", "bau", bau, acesso)
+		npc.locations.add_shared(self, "bau_primario", "mobilia", bau, acesso)
 	end
 	
 	-- Cama
@@ -92,9 +92,9 @@ local set_npc_places = function(self)
 		local v = minetest.facedir_to_dir(minetest.get_node(node).param2)
 		local acesso = vector.subtract(node, v)
 		if n == 1 then
-			npc.locations.add_owned(self, "forno_1", "forno", node, acesso)
+			npc.locations.add_owned(self, "forno_1", "furnace_primary", node, acesso)
 		else
-			npc.locations.add_shared(self, "forno_"..n, "forno", node, acesso)
+			npc.locations.add_shared(self, "forno_"..n, "furnace_shared", node, acesso)
 		end
 	end
 	
@@ -103,7 +103,7 @@ local set_npc_places = function(self)
 	for n,node in ipairs(nodes) do
 		local v = minetest.facedir_to_dir(minetest.get_node(node).param2)
 		local acesso = vector.subtract(node, v)
-		npc.locations.add_shared(self, "compostagem_"..n, "compostagem", node, acesso)
+		npc.locations.add_shared(self, "compostagem_"..n, "mobilia", node, acesso)
 	end
 	
 	-- Tear
@@ -112,7 +112,7 @@ local set_npc_places = function(self)
 		local v = minetest.facedir_to_dir(minetest.get_node(node).param2)
 		local acesso = vector.subtract(node, v)
 		acesso.y = acesso.y-1
-		npc.locations.add_shared(self, "tear_"..n, "tear", node, acesso)
+		npc.locations.add_shared(self, "tear_"..n, "mobilia", node, acesso)
 	end
 	
 	-- Bancada de Trabalho
@@ -120,7 +120,7 @@ local set_npc_places = function(self)
 	for n,node in ipairs(nodes) do
 		local v = minetest.facedir_to_dir(minetest.get_node(node).param2)
 		local acesso = vector.subtract(node, v)
-		npc.locations.add_shared(self, "bancada_de_trabalho_"..n, "bancada_de_trabalho", node, acesso)
+		npc.locations.add_shared(self, "bancada_de_trabalho_"..n, "mobilia", node, acesso)
 	end
 	
 	-- Kit culinario
@@ -129,8 +129,9 @@ local set_npc_places = function(self)
 		local v = minetest.facedir_to_dir(minetest.get_node(node).param2)
 		local acesso = vector.subtract(node, v)
 		acesso.y = acesso.y-1
-		npc.locations.add_shared(self, "kit_culinario_"..n, "movel_caseiro", node, acesso)
+		npc.locations.add_shared(self, "kit_culinario_"..n, "mobilia", node, acesso)
 	end
+	
 end
 
 -- Criar entidade NPC

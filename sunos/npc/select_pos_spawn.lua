@@ -93,7 +93,7 @@ sunos.npcs.select_pos_spawn = function(pos, def)
 				{x=pf.x+dist, y=pf.y+14, z=pf.z+dist}, 
 				def.nodes or {"sunos:wood_nodrop", "default:stonebrick", "sunos:cobble_nodrop"})
 			for _,p in ipairs(nodes) do
-				if minetest.get_node({x=p.x, y=p.y+1, z=p.z}).name == def.carpete or "sunos:carpete_palha_nodrop"
+				if minetest.get_node({x=p.x, y=p.y+1, z=p.z}).name == (def.carpete or "sunos:carpete_palha_nodrop")
 					and minetest.get_node({x=p.x, y=p.y+2, z=p.z}).name == "air"
 				then
 					table.insert(nok, {x=p.x, y=p.y+1.5, z=p.z})
@@ -127,7 +127,7 @@ sunos.npcs.select_pos_spawn = function(pos, def)
 		local v = minetest.facedir_to_dir(minetest.get_node(def.node_pos).param2)
 		local f = vector.subtract(node_pos, v)
 		
-		if minetest.get_node({x=f.x, y=f.y, z=f.z}).name == def.carpete or "sunos:carpete_palha_nodrop"
+		if minetest.get_node({x=f.x, y=f.y, z=f.z}).name == (def.carpete or "sunos:carpete_palha_nodrop")
 			and minetest.get_node({x=f.x, y=f.y, z=f.z}).name == "air"
 		then
 			return {x=f.x, y=f.y+0.5, z=f.z}

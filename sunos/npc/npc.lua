@@ -484,12 +484,12 @@ sunos.npcs.npc.registrar = function(tipo, def)
 				self.temp = 0
 				self.loop = self.loop + 1
 			
-				-- Verifica o se o bau de origem ainda existe
+				-- Verifica o se o bau de origem possui seu hash
 				if self.loop >= qtd_loops_npc then
 					self.loop = 0
-				
-					local node = sunos.pegar_node(self.mypos)
-					if node.name ~= self.mynode then
+					
+					local node = sunos.pegar_node(self.mypos) -- Certifica que carregou no node
+					if minetest.get_meta(self.mypos):get_string("sunos_npchash") ~= self.sunos_npchash then
 						self.object:remove()
 						return
 					end

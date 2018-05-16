@@ -442,14 +442,13 @@ sunos.npcs.npc.registrar = function(tipo, def)
 			if self.sunos_registrado == true then
 				
 				-- Verifica se é o npc atual de seu node
-				if not sunos.npcs.npc.ativos[self.sunos_npchash] 
-					or not sunos.npcs.npc.ativos[self.sunos_npchash]:getpos() 
-				then
+				local node = sunos.pegar_node(self.mypos) -- Certifica que carregou no node
+				if minetest.get_meta(self.mypos):get_string("sunos_npchash") ~= self.sunos_npchash then
+					self.object:remove()
+					return
+				else
 					-- Atualiza tabela de npcs ativos
 					sunos.npcs.npc.ativos[self.sunos_npchash] = self.object
-				else
-					-- Esse NPC ja está ativo em outro objeto
-					self.object:remove()
 				end
 				
 				-- Realiza procedimento personalizado

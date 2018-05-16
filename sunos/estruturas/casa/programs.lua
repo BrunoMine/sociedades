@@ -25,10 +25,21 @@ local verif_dist_pos = function(pos1, pos2)
 end
 
 npc.programs.instr.register("sunos:rotate_to_pos", function(self, args)
+	minetest.chat_send_all("sunos:rotate_to_pos")
 	npc.programs.instr.execute(self, "advanced_npc:rotate", {
 		start_pos = self.object:getpos(), 
 		end_pos = args.pos,
 	})
+end)
+
+npc.programs.instr.register("sunos:set_animation", function(self, args)
+	minetest.chat_send_all("sunos:set_animation")
+	self.object:set_properties({mesh = args.mesh})
+	self.object:set_animation(
+		{x = args.start_frame, y = args.end_frame},
+        	args.frame_speed, 
+        	0
+        )
 end)
 
 -- Interagir aleatoriamente com a mobilia da casa
@@ -62,6 +73,14 @@ npc.programs.register("sunos:interagir_mobilia", function(self, args)
 		pos = p.pos,
 	})
 	
+	-- Muda animação
+	npc.exec.proc.enqueue(self, "sunos:set_animation", {
+		mesh = "sunos_movimento_bancada.b3d",
+		start_frame = 20,
+		end_frame = 60,
+		frame_speed = 25,
+	})
+	        
 	-- Fica parado por um tempo
 	npc.exec.proc.enqueue(self, "advanced_npc:wait", {
 		time = 5,

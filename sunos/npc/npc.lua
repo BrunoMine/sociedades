@@ -594,18 +594,10 @@ sunos.npcs.npc.registrar = function(tipo, def)
 	
 		-- Clique direito (acessar)
 		on_rightclick = function(self, player)
-			--[[
 			if sunos.npcs.npc.registrados[self.tipo].on_rightclick then 
 				sunos.npcs.npc.registrados[self.tipo].on_rightclick(self, player) 
-			end]]
-			minetest.chat_send_all("self.state = "..dump(self.state))
+			end
 		end, 
-		--[[
-		-- Clique esquerdo ou Golpe
-		do_punch = function(self, hitter, time_from_last_punch, tool_capabilities, direction)
-			minetest.chat_send_all("toma")
-		end,
-		]]
 		
 	})
 	

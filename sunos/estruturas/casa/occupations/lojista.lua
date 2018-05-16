@@ -75,7 +75,10 @@ local interagir_feirinha = {
 -- Registra ocupação padrão no NPC caseiro
 npc.occupations.register_occupation("sunos_npc_caseiro_lojista", {
 	dialogues = {},
-	textures = {},
+	textures = {
+		{name="sunos_npc_male.png", tags={"male", "adult", "sunos_npc_caseiro_lojista"}},
+		{name="sunos_npc_female.png", tags={"female", "adult", "sunos_npc_caseiro_lojista"}}
+	},
 	building_types = {},
 	surrounding_building_types = {},
 	walkable_nodes = sunos.estruturas.casa.walkable_nodes,

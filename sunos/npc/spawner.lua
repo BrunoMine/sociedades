@@ -146,10 +146,6 @@ sunos.npc_checkin.register_spawner = function(nodename, def)
 					-- Verifica se NPC desse node já está ativo
 					if sunos.npcs.is_active(pos) ~= true then
 						
-						-- Verifica se registrador coincide com o que foi registrado
-						-- Nodename
-						if sunos.pegar_node(pos_npc).name == dados.nodename then
-							
 							-- Verificar dados do npc
 							local mynpc_checkin = get_mynpc_checkin(pos_npc)
 							
@@ -171,10 +167,7 @@ sunos.npc_checkin.register_spawner = function(nodename, def)
 							else -- Registro do npc não existe
 								checkin[pos_npc_st] = nil
 							end
-						
-						else -- Nodename não coincide
-							checkin[pos_npc_st] = nil
-						end				
+									
 					end
 				end
 				

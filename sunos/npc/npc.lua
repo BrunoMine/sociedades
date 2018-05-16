@@ -391,8 +391,8 @@ sunos.npcs.npc.registrar = function(tipo, def)
 		mesh = "character.b3d",
 		drawtype = "front",
 		textures = {
-			{"sunos_npc.png"},
-			{"sunos_npc2.png"},
+			{"sunos_npc_male.png"},
+			{"sunos_npc_female.png"},
 		},
 		makes_footstep_sound = true,
 		sounds = {},
@@ -465,7 +465,7 @@ sunos.npcs.npc.registrar = function(tipo, def)
 				self.object:remove()
 				return
 			end
-			
+								
 			-- Verifica se esta perto do bau de origem
 			self.temp = (self.temp or 0) + dtime
 			if self.temp >= sunos.timer_npc_check then
@@ -475,7 +475,8 @@ sunos.npcs.npc.registrar = function(tipo, def)
 					or not sunos.npcs.npc.ativos[self.sunos_npchash]:getpos() 
 				then
 					-- Esse NPC ja está ativo em outro objeto
-					self.object:remove()					
+					self.object:remove()
+					return					
 				end
 				
 				local def_npc = sunos.npcs.npc.registrados[self.tipo]
@@ -493,7 +494,7 @@ sunos.npcs.npc.registrar = function(tipo, def)
 						return
 					end
 				end 
-								
+				
 				-- Verifica se algum dos jogadores proximos é um inimigo
 				if self.state ~= "attack" then -- Verifica se ja não está em um ataque
 					for _,obj in ipairs(minetest.get_objects_inside_radius(self.object:getpos(), 13)) do
@@ -593,11 +594,18 @@ sunos.npcs.npc.registrar = function(tipo, def)
 	
 		-- Clique direito (acessar)
 		on_rightclick = function(self, player)
+			--[[
 			if sunos.npcs.npc.registrados[self.tipo].on_rightclick then 
 				sunos.npcs.npc.registrados[self.tipo].on_rightclick(self, player) 
-			end
+			end]]
+			minetest.chat_send_all("self.state = "..dump(self.state))
 		end, 
-		
+		--[[
+		-- Clique esquerdo ou Golpe
+		do_punch = function(self, hitter, time_from_last_punch, tool_capabilities, direction)
+			minetest.chat_send_all("toma")
+		end,
+		]]
 		
 	})
 	

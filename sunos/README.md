@@ -55,3 +55,8 @@ Desconhecido (CC0)
 	sunos_comendo_crocante.1.ogg
 	sunos_comendo_crocante.2.ogg
 	sunos_comendo_crocante.ogg
+	sunos_batidas_bancada.ogg (parcial)
+	sunos_revirando_terra.ogg (parcial)
+
+mshahen (CC-BY)
+	sunos_batidas_bancada.ogg (parcial)

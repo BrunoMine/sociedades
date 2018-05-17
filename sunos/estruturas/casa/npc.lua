@@ -166,7 +166,7 @@ sunos.npcs.npc.registrar("caseiro", {
 sunos.estruturas.casa.select_occupation = function(pos, vila)
 	
 	-- Escolha padrao "caseiro"
-	local escolha = "sunos_npc_caseiro"
+	local occupation = "sunos_npc_caseiro"
 	
 	-- Checkin padrão
 	local checkin = {
@@ -203,7 +203,7 @@ sunos.estruturas.casa.select_occupation = function(pos, vila)
 	
 	if s >= 1 and s <= 40 then -- minimo 40% é caseiro
 		
-		return "caseiro", checkin
+		return occupation, checkin
 		
 	elseif s >= 41 and s <= 70 and loja then -- 30% é lojista
 	
@@ -216,12 +216,12 @@ sunos.estruturas.casa.select_occupation = function(pos, vila)
 		checkin["11"] = dados_loja.estrutura.pos
 		checkin["12"] = dados_loja.estrutura.pos
 		
-		return "sunos_npc_caseiro_lojista", checkin
+		return "sunos:npc_caseiro_lojista", checkin
 	end
 	
 	-- Os outros 30% tambem vira caseiro
 	-- Se nao houver o escolhido, vira caseiro
-	return "sunos_npc_caseiro", checkin
+	return occupation, checkin
 end
 
 -- Atividades estruturadas

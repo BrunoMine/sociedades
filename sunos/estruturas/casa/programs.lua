@@ -25,7 +25,6 @@ local verif_dist_pos = function(pos1, pos2)
 end
 
 npc.programs.instr.register("sunos:rotate_to_pos", function(self, args)
-	minetest.chat_send_all("sunos:rotate_to_pos")
 	npc.programs.instr.execute(self, "advanced_npc:rotate", {
 		start_pos = self.object:getpos(), 
 		end_pos = args.pos,
@@ -33,7 +32,6 @@ npc.programs.instr.register("sunos:rotate_to_pos", function(self, args)
 end)
 
 npc.programs.instr.register("sunos:set_animation", function(self, args)
-	minetest.chat_send_all("sunos:set_animation")
 	self.object:set_properties({mesh = args.mesh})
 	self.object:set_animation(
 		{x = args.start_frame, y = args.end_frame},

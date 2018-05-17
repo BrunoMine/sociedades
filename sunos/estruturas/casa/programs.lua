@@ -15,13 +15,13 @@ local S = sunos.S
 -- Sons
 local sons = {
 	["sunos_batidas_bancada"] = {
-		gain = 5,
+		gain = 0.1,
 	},
 	["sunos_revirando_terra"] = {
-		gain = 5,
+		gain = 0.8,
 	},
 	["sunos_pilao"] = {
-		gain = 4,
+		gain = 0.1,
 	},
 }
 
@@ -63,7 +63,24 @@ local mobilias = {
 		som = {
 			name = "sunos_batidas_bancada",
 			gain = sons["sunos_batidas_bancada"].gain,
-			alcance = 3,
+			alcance = 7,
+		},
+	},
+	["sunos:bau_casa"] = {
+		-- Tempo de atividade
+		time = 5,
+		-- Animações
+		anim = animacoes["sunos_movimento_bancada.b3d"],
+		-- Particulas
+		particulas = {
+			tipo = "simples",
+			textura = "sunos_poeirinha.png",
+		},
+		-- Som
+		som = {
+			name = "sunos_batidas_bancada",
+			gain = sons["sunos_batidas_bancada"].gain,
+			alcance = 7,
 		},
 	},
 	["sunos:kit_culinario"] = {
@@ -80,7 +97,7 @@ local mobilias = {
 		som = {
 			name = "sunos_pilao",
 			gain = sons["sunos_pilao"].gain,
-			alcance = 3,
+			alcance = 7,
 		},
 	},
 	["sunos:tear_palha"] = {
@@ -97,7 +114,7 @@ local mobilias = {
 		som = {
 			name = "sunos_batidas_bancada",
 			gain = sons["sunos_batidas_bancada"].gain,
-			alcance = 3,
+			alcance = 7,
 		},
 	},
 	["sunos:wood_barrel"] = {
@@ -114,7 +131,7 @@ local mobilias = {
 		som = {
 			name = "sunos_revirando_terra",
 			gain = sons["sunos_revirando_terra"].gain,
-			alcance = 3,
+			alcance = 7,
 		},
 	},
 }
@@ -187,7 +204,7 @@ npc.programs.instr.register("sunos:add_efeito_interacao_mobilia", function(self,
 	
 	-- Tocar som
 	self.sunos_particlespawner_sound_handle = minetest.sound_play(args.m.som.name, {
-		pos = args.m.som.pos,
+		pos = args.pos,
 		max_hear_distance = args.m.som.alcance,
 		gain = args.m.som.gain,
 		loop = true,

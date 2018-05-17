@@ -16,7 +16,7 @@ local S = sunos.S
 local alcance_som = 20
 
 -- Tempo minimo entre as musicas
-local tempo_min = 45
+local tempo_min = 120
 
 -- Tabela ordenada das musicas
 local musicas = {}
@@ -24,6 +24,12 @@ for musica,dados in pairs(sunos.var.musicas) do
 	table.insert(musicas, musica)
 end
 
+-- Vilas onde esta tocando
+local tocando = {}
+-- Zerar vila
+local reset_tocando = function(vila)
+	tocando[vila] = nil
+end
 
 -- Caixa de musica dos sunos
 --[[
@@ -40,6 +46,12 @@ minetest.register_node("sunos:caixa_de_musica", {
 	on_timer = function(pos, elapsed)
 		local meta = minetest.get_meta(pos)
 		local status = meta:get_string("status")
+		local vila = meta:get_string("vila")
+		
+		-- sistema global
+		if tocando[vila] then
+			minetest.get_node_timer(pos):set(tempo_min, 0)
+		end
 		
 		-- Verifica se está tocando (presume que acabou)
 		if status == "tocando" then
@@ -85,6 +97,10 @@ minetest.register_node("sunos:caixa_de_musica", {
 			max_hear_distance = alcance_som,
 			gain = dados.gain * 0.2, -- reduz o ganho para a musica ficar sempre de fundo
 		})
+		
+		-- Sistema global de musicas dos sunos
+		tocando[vila] = true
+		minetest.after(dados.duracao+tempo_min, reset_tocando, vila)
 		
 		-- Informa que está tocando
 		meta:set_string("status", "tocando")

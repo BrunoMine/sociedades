@@ -20,6 +20,9 @@ local sons = {
 	["sunos_revirando_terra"] = {
 		gain = 5,
 	},
+	["sunos_pilao"] = {
+		gain = 4,
+	},
 }
 
 -- tabela de animações
@@ -71,12 +74,12 @@ local mobilias = {
 		-- Particulas
 		particulas = {
 			tipo = "simples",
-			textura = "sunos_poeirinha.png",
+			textura = "sunos_poeirinha_comida.png",
 		},
 		-- Som
 		som = {
-			name = "sunos_batidas_bancada",
-			gain = sons["sunos_batidas_bancada"].gain,
+			name = "sunos_pilao",
+			gain = sons["sunos_pilao"].gain,
 			alcance = 3,
 		},
 	},

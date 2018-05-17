@@ -58,5 +58,8 @@ Desconhecido (CC0)
 	sunos_batidas_bancada.ogg (parcial)
 	sunos_revirando_terra.ogg (parcial)
 
-mshahen (CC-BY)
+mshahen - freesound.org (CC-BY)
 	sunos_batidas_bancada.ogg (parcial)
+
+thecityrings - freesound.org (CC-BY)
+	sunos_pilao.ogg

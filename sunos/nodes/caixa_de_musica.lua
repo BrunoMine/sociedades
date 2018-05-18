@@ -16,7 +16,7 @@ local S = sunos.S
 local alcance_som = 20
 
 -- Tempo minimo entre as musicas
-local tempo_min = 120
+local tempo_min = 180
 
 -- Tabela ordenada das musicas
 local musicas = {}
@@ -95,7 +95,7 @@ minetest.register_node("sunos:caixa_de_musica", {
 		minetest.sound_play(musica, {
 			pos = pos,
 			max_hear_distance = alcance_som,
-			gain = dados.gain * 0.2, -- reduz o ganho para a musica ficar sempre de fundo
+			gain = dados.gain*0.35, -- reduz o ganho para a musica ficar sempre de fundo
 		})
 		
 		-- Sistema global de musicas dos sunos
@@ -109,6 +109,11 @@ minetest.register_node("sunos:caixa_de_musica", {
 		minetest.get_node_timer(pos):set(dados.duracao, 0)
 		return false
 		
+	end,
+	
+	-- Força tocar
+	on_punch = function(pos, node, player, pointed_thing)
+		minetest.registered_nodes["sunos:caixa_de_musica"].on_timer(pos, minetest.get_node_timer(pos):get_elapsed())
 	end,
 })
 

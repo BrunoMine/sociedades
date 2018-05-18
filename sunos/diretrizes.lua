@@ -112,11 +112,11 @@ sunos.var.vendas = {
 
 -- Tabela de musicas dos sunos
 sunos.var.musicas = {
-	["sunos_sol"] = {duracao=37, gain=0.1},
-	["sunos_bondade"] = {duracao=37, gain=0.1},
-	["sunos_coragem"] = {duracao=26, gain=0.1},
-	["sunos_alegria"] = {duracao=21, gain=0.1},
-	["sunos_colheita"] = {duracao=29, gain=0.1},
+	["sunos_sol"] = {duracao=37, gain=0.5},
+	["sunos_bondade"] = {duracao=37, gain=0.5},
+	["sunos_coragem"] = {duracao=26, gain=0.5},
+	["sunos_alegria"] = {duracao=21, gain=0.5},
+	["sunos_colheita"] = {duracao=29, gain=0.5},
 }
 
 -- Tabela de grupos de nodes

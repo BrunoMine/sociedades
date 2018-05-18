@@ -15,13 +15,13 @@ local S = sunos.S
 -- Sons
 local sons = {
 	["sunos_batidas_bancada"] = {
-		gain = 0.1,
+		gain = 0.9,
 	},
 	["sunos_revirando_terra"] = {
-		gain = 0.8,
+		gain = 1,
 	},
 	["sunos_pilao"] = {
-		gain = 0.1,
+		gain = 0.8,
 	},
 }
 

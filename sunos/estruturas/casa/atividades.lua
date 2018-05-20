@@ -38,29 +38,3 @@ sunos.estruturas.casa.durmir = {
 	}
 }
 
--- Durmir
-sunos.estruturas.casa.acordar = {
-	[1] = {
-		program_name = "advanced_npc:use_bed",
-		arguments = {
-			pos = "bed_primary",
-			action = npc.programs.const.node_ops.beds.GET_UP
-		}
-	},
-	[2] = {
-		program_name = "advanced_npc:walk_to_pos",
-		arguments = {
-			end_pos = "kit_culinario",
-			walkable = sunos.estruturas.casa.walkable_nodes
-		}
-	},
-	[3] = {
-			program_name = "sunos:interagir",
-			arguments = {
-				pos = "kit_culinario",
-				time = tempo,
-			},
-		},
-	[4] = sunos.estruturas.casa.interagir_casa[1],
-}
-

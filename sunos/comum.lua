@@ -578,11 +578,15 @@ end
 -- Coloca bau comum no lugar se der falha
 sunos.verificar_fundamento_bau_sunos = function(pos)
 	
+	-- Força o caregamento do node
+	local node = sunos.pegar_node(pos)
+	
 	local meta = minetest.get_meta(pos)	
 	
 	-- Verificar a coordenada do fundamento
 	local pf = meta:get_string("pos_fundamento")
 	if pf == "" then
+		minetest.chat_send_all("bau nao tem pos_fundamento")
 		minetest.set_node(pos, {name="default:chest", param2=minetest.get_node(pos).param2})
 		return
 	end
@@ -590,6 +594,7 @@ sunos.verificar_fundamento_bau_sunos = function(pos)
 	
 	-- Verificar se o fundamento ainda existe
 	if minetest.get_node(pf).name ~= "sunos:fundamento" then
+		minetest.chat_send_all("bau teve fundamento removido de "..minetest.pos_to_string(pf))
 		minetest.set_node(pos, {name="default:chest", param2=minetest.get_node(pos).param2})
 		return
 	end

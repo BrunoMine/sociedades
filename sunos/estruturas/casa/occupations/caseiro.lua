@@ -35,8 +35,8 @@ npc.occupations.register_occupation("sunos_npc_caseiro", {
 		[3] = sunos.estruturas.casa.durmir,
 		[4] = sunos.estruturas.casa.durmir,
 		[5] = sunos.estruturas.casa.durmir,
-		[6] = sunos.estruturas.casa.acordar,
 		-- Mecher em casa
+		[6] = interagir_casa,
 		[7] = interagir_casa,
 		[8] = interagir_casa,
 		[9] = interagir_casa,

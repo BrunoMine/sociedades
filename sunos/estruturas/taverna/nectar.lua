@@ -12,32 +12,67 @@
 -- Tradução de strings
 local S = sunos.S
 
--- Node Garrafa de Nectar (decorativo)
+-- Node Garrafa de Nectar (item comestivel)
 minetest.register_node("sunos:nectar", {
 	description = S("Nectar de Frutas dos Sunos"),
-	tiles = {
-		"sunos_nectar_cima.png", -- cima
-		"sunos_nectar_baixo.png", -- baixo
-		"sunos_nectar_lado.png", -- direita
-		"sunos_nectar_lado.png", -- esquerda
-		"sunos_nectar_lado.png", -- fundo
-		"sunos_nectar_lado.png" -- frente
-	},
-	drawtype = "nodebox",
+	tiles = {"sunos_nectar.png"},
+	drawtype = "mesh",
+	mesh = "sunos_nectar_tool.b3d",
 	paramtype = "light",
-	node_box = {
-		type = "fixed",
-		fixed = {
-			{-0.125, -0.5, -0.125, 0.125, 0.125, 0.125}, -- Centro
-			{-0.1875, -0.4375, -0.0625, 0.1875, 0, 0.0625}, -- Face_1
-			{-0.0625, -0.4375, -0.1875, 0.0625, 0, 0.1875}, -- Face_2
-			{-0.0625, -0.5, -0.0625, 0.0625, 0.375, 0.0625}, -- tubo_fino
-		}
-	},
 	stack_max = 10,
 	on_use = core.item_eat(tonumber(minetest.setting_get("sunos_item_nectar_eat") or 4)),
 	groups = {attached_node=1,choppy=2,dig_immediate=3},
 	sounds = default.node_sound_defaults(),
+	on_place = function(itemstack, placer, pointed_thing)
+		if pointed_thing.type ~= "node" then
+			return itemstack
+		end
+		
+		-- Verifica se esta acessando outro node
+		local under = pointed_thing.under
+		local node = minetest.get_node(under)
+		local defnode = minetest.registered_nodes[node.name]
+		if defnode and defnode.on_rightclick and
+			((not placer) or (placer and not placer:get_player_control().sneak)) then
+			return defnode.on_rightclick(under, node, placer, itemstack,
+				pointed_thing) or itemstack
+		end
+		
+		itemstack:set_name("sunos:nectar_node")
+		
+		if not minetest.item_place(itemstack, placer, pointed_thing) then
+			return itemstack
+		end
+			
+		-- Remove item do inventario
+		itemstack:take_item()
+
+		return itemstack
+	end,
+})
+-- Node Garrafa de Nectar (decorativo)
+minetest.register_node("sunos:nectar_node", {
+	description = S("Nectar de Frutas dos Sunos"),
+	tiles = {"sunos_nectar.png"},
+	drawtype = "mesh",
+	mesh = "sunos_nectar.b3d",
+	paramtype = "light",
+	groups = {attached_node=1,choppy=2,dig_immediate=3,not_in_creative_inventory=1},
+	sounds = default.node_sound_defaults(),
+	collision_box = {
+		type = "fixed",
+		fixed = {
+			{-0.1,  -0.5,  -0.1, 0.1, 0, 0.1}
+		}
+	},
+	selection_box = {
+		type = "fixed",
+		fixed = {
+			{-0.1,  -0.5,  -0.1, 0.1, 0, 0.1}
+		}
+	},
+	drop = "sunos:nectar",
+	
 })
 
 -- Registrar comida no hbhunger

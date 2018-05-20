@@ -40,7 +40,7 @@ local animacoes = {
 		act_frame_end = 60,
 		act_frame_speed = 25,
 		-- Animação para fim
-		pos_act_time = 1,
+		pos_act_time = 0,
 		pos_act_frame_start = 55,
 		pos_act_frame_end = 160,
 		pos_act_frame_speed = 20,
@@ -226,7 +226,7 @@ npc.programs.register("sunos:interagir_mobilia", function(self, args)
 	
 	local places = npc.locations.get_by_type(self, "mobilia")
 	
-	p = places[math.random(1, #places)]
+	local p = places[math.random(1, #places)]
 	
 	-- Analisa node escolhido
 	local m = mobilias[sunos.pegar_node(p.pos).name]

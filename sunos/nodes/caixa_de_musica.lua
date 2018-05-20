@@ -28,7 +28,7 @@ end
 local tocando = {}
 -- Zerar vila
 local reset_tocando = function(vila)
-	tocando[vila] = nil
+	tocando[tostring(vila)] = nil
 end
 
 -- Caixa de musica dos sunos
@@ -49,7 +49,7 @@ minetest.register_node("sunos:caixa_de_musica", {
 		local vila = meta:get_string("vila")
 		
 		-- sistema global
-		if tocando[vila] then
+		if tocando[tostring(vila)] == true then
 			minetest.get_node_timer(pos):set(tempo_min, 0)
 		end
 		
@@ -99,8 +99,8 @@ minetest.register_node("sunos:caixa_de_musica", {
 		})
 		
 		-- Sistema global de musicas dos sunos
-		tocando[vila] = true
-		minetest.after(dados.duracao+tempo_min, reset_tocando, vila)
+		tocando[tostring(vila)] = true
+		minetest.after(dados.duracao, reset_tocando, vila)
 		
 		-- Informa que está tocando
 		meta:set_string("status", "tocando")

@@ -63,3 +63,11 @@ mshahen - freesound.org (CC-BY)
 
 thecityrings - freesound.org (CC-BY)
 	sunos_pilao.ogg
+	
+sofar, derived of several files mixed together
+	sunos_bau_abrir_fechar.ogg
+		- http://www.freesound.org/people/Sevin7/sounds/269722/ CC0
+		- http://www.freesound.org/people/Percy%20Duke/sounds/23448/ CC-BY-3.0
+		- http://www.freesound.org/people/kingsamas/sounds/135576/ CC-BY-3.0
+		- http://www.freesound.org/people/bulbastre/sounds/126887/ CC-BY-3.0
+		- http://www.freesound.org/people/Yoyodaman234/sounds/183541/ CC0

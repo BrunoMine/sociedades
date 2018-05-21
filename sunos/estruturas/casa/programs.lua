@@ -23,6 +23,9 @@ local sons = {
 	["sunos_pilao"] = {
 		gain = 0.8,
 	},
+	["sunos_bau_abrir_fechar"] = {
+		gain = 0.8,
+	},
 }
 
 -- tabela de animações
@@ -40,11 +43,20 @@ local animacoes = {
 		act_frame_end = 60,
 		act_frame_speed = 25,
 		-- Animação para fim
-		pos_act_time = 0,
+		pos_act_time = 1.7,
 		pos_act_frame_start = 55,
 		pos_act_frame_end = 160,
 		pos_act_frame_speed = 20,
-	}
+	},
+	["sunos_movimento_bau.b3d"] = {
+		-- Arquivo de malha
+		name = "sunos_movimento_bau.b3d",
+		-- Animação principal
+		act_frame_start = 1,
+		act_frame_end = 80,
+		act_frame_speed = 25,
+		act_time = 1.7,
+	},
 }
 
 -- Tabela de caracteristicas de interação com cada mobilia
@@ -66,20 +78,31 @@ local mobilias = {
 			alcance = 7,
 		},
 	},
+	["sunos:caixa_de_musica"] = {
+		-- Tempo de atividade
+		time = 0,
+		-- Animações
+		anim = animacoes["sunos_movimento_bau.b3d"],
+		-- Particulas
+		-- Nenhum
+		-- Som
+		-- Nenhum
+		-- Função pos ação
+		pos_func = function(self, pos)
+			minetest.registered_nodes["sunos:caixa_de_musica"].on_timer(pos, minetest.get_node_timer(pos):get_elapsed())
+		end,
+	},
 	["sunos:bau_casa"] = {
 		-- Tempo de atividade
-		time = 5,
+		time = 0,
 		-- Animações
-		anim = animacoes["sunos_movimento_bancada.b3d"],
+		anim = animacoes["sunos_movimento_bau.b3d"],
 		-- Particulas
-		particulas = {
-			tipo = "simples",
-			textura = "sunos_poeirinha.png",
-		},
+		-- Nenhuma
 		-- Som
 		som = {
-			name = "sunos_batidas_bancada",
-			gain = sons["sunos_batidas_bancada"].gain,
+			name = "sunos_bau_abrir_fechar",
+			gain = sons["sunos_bau_abrir_fechar"].gain,
 			alcance = 7,
 		},
 	},
@@ -140,6 +163,7 @@ mobilias["sunos:bancada_de_trabalho_nodrop"] = mobilias["sunos:bancada_de_trabal
 mobilias["sunos:tear_palha_nodrop"] = mobilias["sunos:tear_palha"]
 mobilias["sunos:kit_culinario_nodrop"] = mobilias["sunos:kit_culinario"]
 mobilias["sunos:wood_barrel_nodrop"] = mobilias["sunos:wood_barrel"]
+mobilias["sunos:caixa_de_musica_nodrop"] = mobilias["sunos:caixa_de_musica"]
 
 -- Verificar distancia entre duas pos
 local verif_dist_pos = function(pos1, pos2)
@@ -163,9 +187,14 @@ npc.programs.instr.register("sunos:set_animation", function(self, args)
 	self.object:set_properties({mesh = args.mesh})
 	self.object:set_animation(
 		{x = args.start_frame, y = args.end_frame},
-        	args.frame_speed, 
-        	0
-        )
+		args.frame_speed, 
+		0
+	)
+
+	-- Reset programado da animação
+	if args.pos_reset_time then
+		minetest.after(args.pos_reset_time, npc.programs.instr.execute, self, "sunos:reset_animation", {})
+	end
 end)
 
 npc.programs.instr.register("sunos:reset_animation", function(self, args)
@@ -177,40 +206,63 @@ npc.programs.instr.register("sunos:reset_animation", function(self, args)
         )
 end)
 
+-- Executa funcao mobilia do node
+npc.programs.instr.register("sunos:execute_func_mobilia", function(self, args)
+	-- Função para inicio do trabalho na mobilia
+	if args.tipo == "pre" then
+		args.m.pre_func(self, args.pos)
+	elseif args.tipo == "pos" then
+		args.m.pos_func(self, args.pos)
+	end
+end)
+
 -- Cria particular de movimento
 npc.programs.instr.register("sunos:add_efeito_interacao_mobilia", function(self, args)
 	
 	local mypos = self.object:getpos()
 	
 	-- Adiciona particulas em cima da bancada
-	if args.m.particulas.tipo == "simples" then
-		self.sunos_particlespawner_id = minetest.add_particlespawner({
-			amount = args.m.time*10,
-			time = args.m.time,
-			minpos = {x = args.pos.x - 0.6, y = mypos.y + 1, z = args.pos.z - 0.6},
-			maxpos = {x = args.pos.x + 0.6, y = mypos.y + 1.4, z = args.pos.z + 0.6},
-			minvel = {x= -0.02, y= -0.02, z= -0.02},
-			maxvel = {x= 0.02, y= 0.02, z= 0.02},
-			minacc = {x= -0.02, y= -0.02, z= -0.02},
-			maxacc = {x= 0.02, y= 0.05, z= 0.02},
-			minexptime = 3,
-			maxexptime = 3,
-			minsize = 4,
-			maxsize = 5,
-			collisiondetection = false,
-			texture = args.m.particulas.textura,
-		})
+	if args.m.particulas then
+		-- Simples
+		if args.m.particulas.tipo == "simples" then
+			self.sunos_particlespawner_id = minetest.add_particlespawner({
+				amount = args.m.time*10,
+				time = args.m.time,
+				minpos = {x = args.pos.x - 0.6, y = mypos.y + 1, z = args.pos.z - 0.6},
+				maxpos = {x = args.pos.x + 0.6, y = mypos.y + 1.4, z = args.pos.z + 0.6},
+				minvel = {x= -0.02, y= -0.02, z= -0.02},
+				maxvel = {x= 0.02, y= 0.02, z= 0.02},
+				minacc = {x= -0.02, y= -0.02, z= -0.02},
+				maxacc = {x= 0.02, y= 0.05, z= 0.02},
+				minexptime = 3,
+				maxexptime = 3,
+				minsize = 4,
+				maxsize = 5,
+				collisiondetection = false,
+				texture = args.m.particulas.textura,
+			})
+		end
 	end
 	
 	-- Tocar som
-	self.sunos_particlespawner_sound_handle = minetest.sound_play(args.m.som.name, {
-		pos = args.pos,
-		max_hear_distance = args.m.som.alcance,
-		gain = args.m.som.gain,
-		loop = true,
-	})
-	
-	minetest.after(args.m.time, minetest.sound_stop, self.sunos_particlespawner_sound_handle)
+	if args.m.som then
+		if (args.m.time or 0) > 0 then
+			self.sunos_particlespawner_sound_handle = minetest.sound_play(args.m.som.name, {
+				pos = args.pos,
+				max_hear_distance = args.m.som.alcance,
+				gain = args.m.som.gain,
+				loop = true,
+			})
+			minetest.after(args.m.time, minetest.sound_stop, self.sunos_particlespawner_sound_handle)
+		else
+			self.sunos_particlespawner_sound_handle = minetest.sound_play(args.m.som.name, {
+				pos = args.pos,
+				max_hear_distance = args.m.som.alcance,
+				gain = args.m.som.gain,
+				loop = false,
+			})
+		end
+	end
 end)
 
 
@@ -256,13 +308,13 @@ npc.programs.register("sunos:interagir_mobilia", function(self, args)
 	})
 	
 	-- Pré animação
-	npc.exec.proc.enqueue(self, "sunos:set_animation", {
-		mesh = m.anim.name,
-		start_frame = m.anim.pre_act_frame_start,
-		end_frame = m.anim.pre_act_frame_end,
-		frame_speed = m.anim.pre_act_frame_speed,
-	})
-	if m.anim.pre_act_time > 0 then
+	if (m.anim.pre_act_time or 0) > 0 then
+		npc.exec.proc.enqueue(self, "sunos:set_animation", {
+			mesh = m.anim.name,
+			start_frame = m.anim.pre_act_frame_start,
+			end_frame = m.anim.pre_act_frame_end,
+			frame_speed = m.anim.pre_act_frame_speed,
+		})
 		npc.exec.proc.enqueue(self, "advanced_npc:wait", {
 			time = m.anim.pre_act_time,
 		})
@@ -274,31 +326,51 @@ npc.programs.register("sunos:interagir_mobilia", function(self, args)
 		start_frame = m.anim.act_frame_start,
 		end_frame = m.anim.act_frame_end,
 		frame_speed = m.anim.act_frame_speed,
+		-- Caso seja animação rapida sem loop
+		pos_reset_time = m.anim.act_time,
 	})
+	
 	-- Particulas
 	npc.exec.proc.enqueue(self, "sunos:add_efeito_interacao_mobilia", {
 		pos = p.pos,
 		m = m,
 	})
-	-- Mantem trabalhando
-	npc.exec.proc.enqueue(self, "advanced_npc:wait", {
-		time = m.time,
-	})
 	
-	-- Pós animação
-	npc.exec.proc.enqueue(self, "sunos:set_animation", {
-		mesh = m.anim.name,
-		start_frame = m.anim.pos_act_frame_start,
-		end_frame = m.anim.pos_act_frame_end,
-		frame_speed = m.anim.pos_act_frame_speed,
-	})
-	if m.anim.pos_act_time > 0 then
-		npc.exec.proc.enqueue(self, "advanced_npc:wait", {
-			time = m.anim.pos_act_time,
+	-- Executa pré funcao da mobilia
+	if m.pre_func then
+		npc.exec.proc.enqueue(self, "sunos:execute_func_mobilia", {
+			tipo = "pre",
+			pos = p.pos,
+			m = m,
 		})
 	end
 	
-	-- Restaura animação
-	npc.exec.proc.enqueue(self, "sunos:reset_animation", {})
+	-- Mantem trabalhando
+	if (m.time or 0) > 0 then
+		npc.exec.proc.enqueue(self, "advanced_npc:wait", {
+			time = m.time,
+		})
+	end
+	
+	-- Executa pos funcao da mobilia
+	if m.pos_func then
+		npc.exec.proc.enqueue(self, "sunos:execute_func_mobilia", {
+			tipo = "pos",
+			pos = p.pos,
+			m = m,
+		})
+	end
+	
+	-- Pós animação
+	if (m.anim.pos_act_time or 0) > 0 then
+		npc.exec.proc.enqueue(self, "sunos:set_animation", {
+			mesh = m.anim.name,
+			start_frame = m.anim.pos_act_frame_start,
+			end_frame = m.anim.pos_act_frame_end,
+			frame_speed = m.anim.pos_act_frame_speed,
+			pos_reset = true,
+			pos_reset_time = m.anim.pos_act_time,
+		})
+	end
 	
 end)

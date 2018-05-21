@@ -24,11 +24,14 @@ for musica,dados in pairs(sunos.var.musicas) do
 	table.insert(musicas, musica)
 end
 
+-- Tocar sozinho aleatoriamente
+local tocar_sozinho = false
+
 -- Vilas onde esta tocando
 local tocando = {}
 -- Zerar vila
-local reset_tocando = function(vila)
-	tocando[tostring(vila)] = nil
+local reset_tocando = function(index)
+	tocando[index] = nil
 end
 
 -- Caixa de musica dos sunos
@@ -45,21 +48,13 @@ minetest.register_node("sunos:caixa_de_musica", {
 	
 	on_timer = function(pos, elapsed)
 		local meta = minetest.get_meta(pos)
-		local status = meta:get_string("status")
-		local vila = meta:get_string("vila")
 		
-		-- sistema global
-		if tocando[tostring(vila)] == true then
-			minetest.get_node_timer(pos):set(tempo_min, 0)
-		end
-		
-		-- Verifica se está tocando (presume que acabou)
-		if status == "tocando" then
-			-- Informa que parou de tocar
-			meta:set_string("status", "desligado")
-			-- Reinicia o ciclo com um tempo definido
-			minetest.get_node_timer(pos):set(tempo_min, 0)
-			return false
+		-- Sistema global para evitar repeticao na mesma regiao/vila
+		if tocando[minetest.pos_to_string(pos)] == true then
+			if tocar_sozinho == true then
+				minetest.get_node_timer(pos):set(tempo_min, 0)
+			end
+			return
 		end
 		
 		-- Verifica se está perto de um fundamento suno
@@ -77,9 +72,11 @@ minetest.register_node("sunos:caixa_de_musica", {
 			)
 			-- Verifica se algum deles está tocando
 			for _,p in ipairs(caixas) do
-				if minetest.get_meta(p):get_string("status") == "tocando" then
+				if tocando[minetest.pos_to_string(p)] == true then
 					-- Tenta novamente apos alguns segundos
-					minetest.get_node_timer(pos):set(tempo_min, 0)
+					if tocar_sozinho == true then
+						minetest.get_node_timer(pos):set(tempo_min, 0)
+					end
 					return false
 				end
 			end
@@ -99,14 +96,13 @@ minetest.register_node("sunos:caixa_de_musica", {
 		})
 		
 		-- Sistema global de musicas dos sunos
-		tocando[tostring(vila)] = true
-		minetest.after(dados.duracao, reset_tocando, vila)
-		
-		-- Informa que está tocando
-		meta:set_string("status", "tocando")
+		tocando[minetest.pos_to_string(pos)] = true
+		minetest.after(dados.duracao, reset_tocando, minetest.pos_to_string(pos))
 		
 		-- Volta quando terminar a musica
-		minetest.get_node_timer(pos):set(dados.duracao, 0)
+		if tocar_sozinho == true then
+			minetest.get_node_timer(pos):set(dados.duracao, 0)
+		end
 		return false
 		
 	end,
@@ -138,13 +134,15 @@ end
 
 
 -- LBM para iniciar timer das caixas
-minetest.register_lbm({
-	name = "sunos:tocar_caixa_de_musica",
-	nodenames = {"sunos:caixa_de_musica", "sunos:caixa_de_musica_nodrop"},
-	run_at_every_load = true,
-	action = function(pos, node)
-		if minetest.get_node_timer(pos):is_started() == false then
-			minetest.get_node_timer(pos):set(2, 0)
-		end
-	end,
-})
+if tocar_sozinho == true then
+	minetest.register_lbm({
+		name = "sunos:tocar_caixa_de_musica",
+		nodenames = {"sunos:caixa_de_musica", "sunos:caixa_de_musica_nodrop"},
+		run_at_every_load = true,
+		action = function(pos, node)
+			if minetest.get_node_timer(pos):is_started() == false then
+				minetest.get_node_timer(pos):set(2, 0)
+			end
+		end,
+	})
+end

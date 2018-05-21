@@ -132,6 +132,13 @@ local set_npc_places = function(self)
 		npc.locations.add_shared(self, "kit_culinario_"..n, "mobilia", node, acesso)
 	end
 	
+	-- Caixa de Musica
+	nodes = pegar_nodes_casa(pf, dist, {"sunos:caixa_de_musica_nodrop"})
+	for n,node in ipairs(nodes) do
+		local v = minetest.facedir_to_dir(minetest.get_node(node).param2)
+		local acesso = vector.subtract(node, v)
+		npc.locations.add_shared(self, "caixa_de_musica", "mobilia", node, acesso)
+	end
 end
 
 -- Criar entidade NPC

@@ -12,12 +12,20 @@
 -- Tradução de strings
 local S = sunos.S
 
-
 -- Interagir em casa
 sunos.estruturas.casa.interagir_casa = {
 	[1] = {
 		program_name = "sunos:interagir_mobilia",
-		arguments = {},
+		arguments = {
+			place_names = {
+				"bau_primario",
+				"compostagem",
+				"tear",
+				"bancada_de_trabalho",
+				"kit_culinario",
+				"caixa_de_musica",
+			},
+		},
 		is_state_program = true,
 	},
 }
@@ -35,6 +43,6 @@ sunos.estruturas.casa.durmir = {
 				flag_value = "durmir",
 			}
 		},
-	}
+	},
 }
 

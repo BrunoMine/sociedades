@@ -360,6 +360,15 @@ sunos.npcs.npc.send_to_bed = function(self, pos)
 	end
 end
 
+-- Instrução para manter deitado
+npc.programs.instr.register("sunos:definir_deitado", function(self, args)
+	local node = minetest.get_node(args.pos)
+	local dir = minetest.facedir_to_dir(node.param2)
+	local bed_pos = npc.programs.instr.nodes.beds[node.name].get_lay_pos(args.pos, dir)
+	-- Sit down on bed, rotate to correct direction
+	npc.programs.instr.execute(self, npc.programs.instr.default.SIT, {pos=bed_pos, dir=(node.param2 + 2) % 4})
+	npc.programs.instr.execute(self, npc.programs.instr.default.LAY, {})
+end)
 
 -- Registrar um NPC
 sunos.npcs.npc.registrar = function(tipo, def)
@@ -431,6 +440,16 @@ sunos.npcs.npc.registrar = function(tipo, def)
 			-- Verifica se já está registrado
 			if self.sunos_registrado == true and sunos.npcs.npc.registrados[tipo].on_spawn then
 				sunos.npcs.npc.registrados[tipo].on_spawn(self)
+			end
+			
+			-- Verifica se está durmindo
+			if self.npc_state.movement.is_laying == true then
+				local target = sunos.copy_tb(npc.locations.get_by_type(self, "bed_primary")[1])
+				if not target or not target.pos then
+					self.object:remove()
+					return
+				end
+				npc.programs.instr.execute(self, "sunos:definir_deitado", {pos=target.pos})
 			end
 			
 		end,

@@ -9,8 +9,6 @@
 	NPC das casas
   ]]
 
--- Programas de atividades
-dofile(minetest.get_modpath("sunos").."/estruturas/casa/programs.lua") 
 
 -- Tradução de strings
 local S = sunos.S
@@ -49,6 +47,16 @@ local pegar_nodes_casa = function(pos, dist, nodes)
 		{x=pos.x+dist, y=pos.y+14, z=pos.z+dist}, 
 		nodes)
 end
+
+-- Registra mobilias
+sunos.nodes_de_mobilias["bau_primario"] = {"sunos:bau_casa"}
+sunos.nodes_de_mobilias["cama"] = {"beds:bed_bottom"}
+sunos.nodes_de_mobilias["forno"] = {"default:furnace", "default:furnace_active"}
+sunos.nodes_de_mobilias["compostagem"] = {"sunos:wood_barrel_nodrop"}
+sunos.nodes_de_mobilias["tear"] = {"sunos:tear_palha_nodrop"}
+sunos.nodes_de_mobilias["bancada_de_trabalho"] = {"sunos:bancada_de_trabalho_nodrop"}
+sunos.nodes_de_mobilias["kit_culinario"] = {"sunos:kit_culinario_nodrop"}
+sunos.nodes_de_mobilias["caixa_de_musica"] = {"sunos:caixa_de_musica_nodrop"}
 
 -- Configurar lugares do npc
 local set_npc_places = function(self)
@@ -96,6 +104,7 @@ local set_npc_places = function(self)
 		else
 			npc.locations.add_shared(self, "forno_"..n, "furnace_shared", node, acesso)
 		end
+		break -- Registra só um
 	end
 	
 	-- Compostagens
@@ -103,7 +112,8 @@ local set_npc_places = function(self)
 	for n,node in ipairs(nodes) do
 		local v = minetest.facedir_to_dir(minetest.get_node(node).param2)
 		local acesso = vector.subtract(node, v)
-		npc.locations.add_shared(self, "compostagem_"..n, "mobilia", node, acesso)
+		npc.locations.add_shared(self, "compostagem", "mobilia", node, acesso)
+		break -- Registra só um
 	end
 	
 	-- Tear
@@ -112,7 +122,8 @@ local set_npc_places = function(self)
 		local v = minetest.facedir_to_dir(minetest.get_node(node).param2)
 		local acesso = vector.subtract(node, v)
 		acesso.y = acesso.y-1
-		npc.locations.add_shared(self, "tear_"..n, "mobilia", node, acesso)
+		npc.locations.add_shared(self, "tear", "mobilia", node, acesso)
+		break -- Registra só um
 	end
 	
 	-- Bancada de Trabalho
@@ -120,7 +131,8 @@ local set_npc_places = function(self)
 	for n,node in ipairs(nodes) do
 		local v = minetest.facedir_to_dir(minetest.get_node(node).param2)
 		local acesso = vector.subtract(node, v)
-		npc.locations.add_shared(self, "bancada_de_trabalho_"..n, "mobilia", node, acesso)
+		npc.locations.add_shared(self, "bancada_de_trabalho", "mobilia", node, acesso)
+		break -- Registra só um
 	end
 	
 	-- Kit culinario
@@ -129,7 +141,8 @@ local set_npc_places = function(self)
 		local v = minetest.facedir_to_dir(minetest.get_node(node).param2)
 		local acesso = vector.subtract(node, v)
 		acesso.y = acesso.y-1
-		npc.locations.add_shared(self, "kit_culinario_"..n, "mobilia", node, acesso)
+		npc.locations.add_shared(self, "kit_culinario", "mobilia", node, acesso)
+		break -- Registra só um
 	end
 	
 	-- Caixa de Musica
@@ -138,6 +151,7 @@ local set_npc_places = function(self)
 		local v = minetest.facedir_to_dir(minetest.get_node(node).param2)
 		local acesso = vector.subtract(node, v)
 		npc.locations.add_shared(self, "caixa_de_musica", "mobilia", node, acesso)
+		break -- Registra só um
 	end
 end
 

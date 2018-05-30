@@ -6,11 +6,14 @@
 	Public License junto com esse software,
 	se não, veja em <http://www.gnu.org/licenses/>. 
 	
-	Programas de atividades do npc
+	Programa para interagir com um node de mobilia próximo do NPC
   ]]
 
 -- Tradução de strings
 local S = sunos.S
+
+-- Tabela interna
+local interagir_mobilia = {}
 
 -- Sons
 local sons = {
@@ -58,6 +61,9 @@ local animacoes = {
 		act_time = 1.7,
 	},
 }
+
+-- Nodes de mobilias (index é o place_name)
+sunos.nodes_de_mobilias = {}
 
 -- Tabela de caracteristicas de interação com cada mobilia
 local mobilias = {
@@ -266,24 +272,58 @@ npc.programs.instr.register("sunos:add_efeito_interacao_mobilia", function(self,
 end)
 
 
+-- Escolher mobilia valida
+interagir_mobilia.escolher_mobilia = function(self, place_names)
+	if table.maxn(place_names) == 0 then return end
+	-- Escolhe um aleatorio
+	local i = math.random(1, #place_names)
+	local name = place_names[i]
+	
+	-- Verifica se local está registrado no NPC
+	if self.places_map[name] == nil then 
+		table.remove(place_names, i)
+		return interagir_mobilia.escolher_mobilia(self, place_names)
+	end
+	
+	-- Verificar node
+	local nn = minetest.get_node(self.places_map[name].pos).name
+	if nn == "air" or nn == "ignore" then 
+		table.remove(place_names, i)
+		return interagir_mobilia.escolher_mobilia(self, place_names)
+	end
+	if sunos.nodes_de_mobilias[nn] then
+		for _,n in ipairs(sunos.nodes_de_mobilias[nn]) do
+			if n == nn then
+				-- Node certo
+				return sunos.copy_tb(self.places_map[name])
+			end
+		end
+		-- Repete com o que restar
+		table.remove(place_names, i)
+		return interagir_mobilia.escolher_mobilia(self, place_names)
+	end
+	
+	-- Nao precisa verificar
+	return sunos.copy_tb(self.places_map[name])
+end
+local escolher_mobilia = interagir_mobilia.escolher_mobilia
+
+
 -- Interagir aleatoriamente com a mobilia da casa
 npc.programs.register("sunos:interagir_mobilia", function(self, args)
 	
 	local mypos = self.object:getpos()
 	
-	-- Verificar distancia de casa
-	if verif_dist_pos(mypos, self.sunos_fundamento) > 16 then
-		return
+	local p = escolher_mobilia(self, sunos.copy_tb(args.place_names))
+	if p == nil then 
+		minetest.log("error", "[Sunos] Nenhuma localizacao aceitavel no NPC (programa 'sunos:interagir_mobilia')")
+		return 
 	end
-	
-	local places = npc.locations.get_by_type(self, "mobilia")
-	
-	local p = places[math.random(1, #places)]
 	
 	-- Analisa node escolhido
 	local m = mobilias[sunos.pegar_node(p.pos).name]
 	if not m then
-		minetest.chat_send_all("node nao catalogado para interagir ("..sunos.pegar_node(p.pos).name..")")
+		minetest.log("error", "[Sunos] Node '"..sunos.pegar_node(p.pos).name.."' nao catalogado para interagir (programa 'sunos:interagir_mobilia')")
 		return
 	end
 	
@@ -295,7 +335,7 @@ npc.programs.register("sunos:interagir_mobilia", function(self, args)
 			optimize_one_node_distance = verif_dist_pos(p.pos, mypos) > 3,
 			end_pos = {
 				place_type="sunos_alvo_mobilia",
-				use_access_node=true
+				use_access_node=true,
 			},
 			walkable = sunos.estruturas.casa.walkable_nodes
 		},

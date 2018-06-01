@@ -1,4 +1,4 @@
-API do Mod Sunos v1.4
+API do Mod Sunos v1.5
 
 Variaveis Auxiliares
 --------------------
@@ -16,15 +16,17 @@ indice é o tipo de estrutura devendo ser apenas uma talavra como os
 demais existentes (casa, comunal, decor e etc). 
 
 Alguns valores dentro dessa tabela são reservado para fins especificos:
-* pop = [true] : Informa para a API dos sunos se essa estrutura contabiliza população
+* construir = function(pos, dist) end : A API executa essa função que constrói a estrutura.
+* pop = [true] : Informa para a API se essa estrutura contabiliza população
 * fund_on_rightclick = function(...) end : Chamada do node de fundamento da estrutura receber chamada `on_rightclick`.
 * fund_on_destruct = function(...) end : Chamada do node de fundamento da estrutura receber chamada `on_destruct`.
-* fund_on_timer = function(...) end : Chamada do node de fundamento da estrutura receber chamada `on_timer`.
 * defendido = function(pos) end : A API executa essa função para saber se a estrutura está defendida.
   * `pos` é a coordenada do fundamento da estrutura.
   * Deve retornar `true` caso a estrutura esteja defendida.
 * verificar = function(pos) end : A API executa essa função para verificar se uma estrutura está destruida e toma as providencias caso esteja.
   * `pos` é a coordenada do fundamento da estrutura. 
+* antes_restaurar_estrutura = function(pos) end: Função executada antes da estrutura ser restaurada.
+* apos_restaurar_estrutura = function(pos) end: Função executada apos estrutura ser restaurada.
 
 
 NPCs

@@ -33,12 +33,6 @@ dofile(minetest.get_modpath("sunos").."/estruturas/casa/npc.lua")
 -- Registros do NPC da casa (carregamento de script)
 dofile(minetest.get_modpath("sunos").."/estruturas/casa/interface.lua") 
 
-
-
-
--- Nodes estruturais de uma casa
-local nodes_estruturais = sunos.estruturas.casa.var.nodes_estruturais
-
 -- Buscar nodes numa casa
 sunos.estruturas.casa.buscar_nodes = function(pos, nodes)
 	local meta = minetest.get_meta(pos)
@@ -77,47 +71,6 @@ local set_bau = function(pos, vila, dist)
 	
 end
 
--- Verifica a possibilidade de construir uma casa no local
-sunos.estruturas.casa.verif = function(pos, dist, vila, verif_area, verif_pop)
-
-	-- Validar argumentos de entrada
-	if pos == nil then
-		minetest.log("error", "[Sunos] Tabela pos nula (sunos.estruturas.casa.construir)")
-		return "Erro interno (pos nula)"
-	end
-	if dist == nil then
-		minetest.log("error", "[Sunos] variavel dist nula (em sunos.estruturas.casa.construir)")
-		return "Erro interno (tamanho de casa inexistente)"
-	end
-	
-	-- Verificar se vila existe (caso especificado)
-	if vila and sunos.verificar_vila_existente(vila) == false then
-		return S("Vila abandonada")
-		
-	-- Encontrar vila ativa
-	else
-		vila = sunos.encontrar_vila(pos, 25)
-		if not vila then
-			return S("Nenhuma vila habitavel encontrada")
-		end
-	end
-	
-	-- Verificar limite populacional
-	if sunos.verif_pop_vila(vila) ~= true then
-		return S("Limite de @1 habitantes foi atingido", sunos.var.max_pop)
-	end
-	
-	-- Verificações de area
-	if verif_area == true then
-		local r = sunos.verificar_area_para_fundamento(pos, dist)
-		if r ~= true then
-			return r
-		end
-	end
-	
-	return true, vila
-end
-
 -- Tabela para valores de rotação
 local tb_rotat = {"0", "90", "180", "270"}
 
@@ -131,21 +84,9 @@ local tb_rotat = {"0", "90", "180", "270"}
 		<pos> é a coordenada do fundamento da estrutura
 		<dist> distancia centro a borda da nova estrutura
 		<vila> OPCIONAL | é o numero da vila a qual a casa pertence
-		<verif_area> OPCIONAL | para verificar a area a ser usada
-		<itens_repo> OPCIONAL | Repassado ao comando sunos.decor_repo para substituir itens de reposição
-		<verif_pop> OPCIONAL | Para verificações de população da vila
-		<force> OPCIONAL | ignora todas as verificações
   ]]
-sunos.estruturas.casa.construir = function(pos, dist, vila, verif_area, itens_repo, verif_pop, force)
-	
-	-- Verifica se pode construir a casa
-	if force ~= true then
-		local verif, vila = sunos.estruturas.casa.verif(pos, dist, vila, verif_area, verif_pop)
-		if verif ~= true then
-			return verif
-		end
-	end
-	
+sunos.estruturas.casa.construir = function(pos, dist, vila)
+		
 	-- Variaveis auxiliares
 	local largura = (dist*2)+1
 	local pos1 = {x=pos.x-dist, y=pos.y, z=pos.z-dist}
@@ -161,9 +102,7 @@ sunos.estruturas.casa.construir = function(pos, dist, vila, verif_area, itens_re
 	local rm, schem = sunos.montar_estrutura(pos, dist, "casa", rotat)
 	
 	-- Recoloca itens reais (apartir dos itens de reposição)
-	if itens_repo then
-		sunos.decor_repo(pos, dist, sunos.estruturas.casa.gerar_itens_repo[tostring(dist)]())
-	end
+	sunos.decor_repo(pos, dist, sunos.estruturas.casa.gerar_itens_repo[tostring(dist)]())
 	
 	-- Ajustar fornos
 	sunos.ajustar_fornos(pos, dist)
@@ -175,20 +114,15 @@ sunos.estruturas.casa.construir = function(pos, dist, vila, verif_area, itens_re
 	-- Numero da estrutura da nova casa
 	local n_estrutura = sunos.nova_estrutura(vila) -- Numero da nova estrutura
 	
-	-- Criar fundamento e configurar
-	minetest.set_node(pos, {name="sunos:fundamento"})
-	local meta = minetest.get_meta(pos)
-	meta:set_string("versao", sunos.versao) -- Salva a versão atual do projeto
-	meta:set_string("schem", schem) -- Nome do arquivo da esquematico da estrutura
-	meta:set_string("rotat", rotat) -- Rotação da estrutura
-	meta:set_string("vila", vila) -- Numero da vila
-	meta:set_string("tipo", "casa") -- Tipo da estrutura
-	meta:set_string("estrutura", n_estrutura) -- Numero da estrutura
-	meta:set_string("dist", dist) -- Distancia centro a borda da estrutura
-	sunos.contabilizar_blocos_estruturais(pos, nodes_estruturais) -- Armazena quantidade de nodes estruturais
-	
-	-- Configurar bau de casas
-	minetest.after(1, set_bau, {x=pos.x,y=pos.y,z=pos.z}, vila, dist)
+	-- Colocar fundamento e configurar
+	sunos.colocar_fundamento(pos, {
+		vila = vila,
+		tipo = "casa",
+		dist = dist,
+		num = n_estrutura,
+		schem = schem,
+		rotat = rotat,
+	})
 	
 	-- Registros a serem salvos
 	local registros = {
@@ -208,110 +142,40 @@ sunos.estruturas.casa.construir = function(pos, dist, vila, verif_area, itens_re
 	-- Salvar novo total de estruturas da vila
 	sunos.bd.salvar("vila_"..vila, "estruturas", n_estrutura)
 	
+	-- Configurar bau de casas
+	minetest.after(1, set_bau, {x=pos.x,y=pos.y,z=pos.z}, vila, dist)
+	
 	-- Remover jogadores da area construida (evitar travar em paredes)
 	sunos.ajustar_jogadores(pos)
+	
+	-- Atualiza banco de dados com nova estrutura (ajuste de população)
+	sunos.atualizar_bd_vila(vila)
 	
 	return true
 end
 
--- Verificação do fundamento
-sunos.estruturas.casa.verificar = function(pos)
+-- Executado apos reestruturar casa
+sunos.estruturas.casa.apos_restaurar_estrutura = function(pos)
+	
 	local meta = minetest.get_meta(pos)
-	local vila = meta:get_string("vila")
-	if not vila then return end
-	vila = tonumber(vila)
-	local tipo = meta:get_string("tipo")
 	local dist = tonumber(meta:get_string("dist"))
-	local nd = tonumber(meta:get_string("nodes")) -- numero de nodes inicial
+	local vila = meta:get_string("dist")
 	
-	-- Pega o numero de nodes real
-	local ndrl = sunos.verificar_blocos_estruturais(pos, nodes_estruturais)
+	-- Troca os itens de reposição
+	sunos.decor_repo(pos, dist, sunos.estruturas.casa.gerar_itens_repo[tostring(dist)]())	
 	
-	-- Verifica se a casa está muito destruida
-	if ndrl < nd - 4 then
-	
-		-- Exclui o arquivo da estrutura do banco de dados
-		sunos.bd.remover("vila_"..meta:get_string("vila"), tipo.."_"..meta:get_string("estrutura"))
-		
-		-- Trocar bloco de fundamento por madeira
-		minetest.set_node(pos, {name="default:tree"})
-	
-		-- Atualizar banco de dados da vila
-		sunos.atualizar_bd_vila(vila)
-		
-	end
-	
+	-- Configura novos baus
+	set_bau({x=pos.x,y=pos.y,z=pos.z}, vila, dist)
 end
 
 -- Verificação de estrutura de casa defendida
 sunos.estruturas.casa.defendido = function(pos)
 	
-	-- Verificar se tem um mob dos sunos comum por perto pertencente à mesma vila
-	
-	-- Verificar vila do fundamento
-	local vila = minetest.get_meta(pos):get_string("vila")
-	
-	-- Analizar objetos (possiveis npcs) perto
-	for _,obj in ipairs(minetest.get_objects_inside_radius(pos, (tonumber(minetest.get_meta(pos):get_string("dist"))))) do
-		local ent = obj:get_luaentity() or {}
-		if ent 
-			and ent.name == "sunos:npc" -- Verifica se for npc comum
-			and tonumber(ent.vila) == tonumber(vila) -- Verifica se é da mesma vila
-		then 
-			return true
-		end
-	end
-	
-	return false
+	-- Sempre protegido
+	return true
 	
 end
 
 -- Nodes (carregamento de script)
 dofile(minetest.get_modpath("sunos").."/estruturas/casa/nodes.lua") 
-
--- Caminho do diretório do mod
-local modpath = minetest.get_modpath("sunos")
-
--- Reforma as casas aleatoriamente
-minetest.register_abm({
-	label = "Reforma da casa",
-	nodenames = {"sunos:fundamento"},
-	interval = 600,
-	chance = 4,
-	action = function(pos)
-	
-		local meta = minetest.get_meta(pos)
-		local table = meta:to_table() -- salva metadados numa tabela
-		local vila = meta:get_string("vila")
-		if vila == "" then return end
-		vila = tonumber(vila)
-		local tipo = meta:get_string("tipo")
-		if tipo ~= "casa" then return end
-		local dist = tonumber(meta:get_string("dist"))
-		local schem = meta:get_string("schem")
-		local rotat = meta:get_string("rotat")
-		if schem == "" then return end
-		
-		local pos1 = {x=pos.x-dist, y=pos.y, z=pos.z-dist}
-		local pos2 = {x=pos.x+dist, y=pos.y+14, z=pos.z+dist}
-		
-		-- Limpar metadados dos nodes que possam estar la
-		sunos.limpar_metadados(pos1, pos2)
-		
-		-- Remonta estrutura
-		sunos.montar_estrutura(pos, dist, "casa", rotat, schem)
-		
-		-- Troca os itens de reposição
-		sunos.decor_repo(pos, dist, sunos.estruturas.casa.gerar_itens_repo[tostring(dist)]())
-		
-		-- Estantes e fornos se mantem altomaticamente por sobreposição
-		
-		-- Reestabelece fundamento
-		minetest.set_node(pos, {name="sunos:fundamento"})
-		minetest.get_meta(pos):from_table(table) -- recoloca metadados no novo fumdamento
-		
-		-- Configura novos baus
-		set_bau({x=pos.x,y=pos.y,z=pos.z}, vila, dist)
-	end,
-})
 

@@ -12,41 +12,6 @@
 -- Tabela de variaveis da estrutura personalizadas
 sunos.estruturas.casa.var = {}
 
--- Nodes estruturais
-sunos.estruturas.casa.var.nodes_estruturais = {
-	-- Palha
-	"farming:straw", 
-	"stairs:stair_straw", 
-	"stairs:slab_straw", 
-	-- Madeiras
-	"default:wood", 
-	"default:fence_wood", 
-	"stairs:stair_wood",
-	-- Pedrosos
-	"default:cobble", 
-	"stairs:stair_cobble",
-	"walls:cobble",
-	"default:stonebrick",
-	"default:furnace",
-	"default:furnace_active",
-	-- Moveis domesticos
-	"vessels:shelf",
-	"default:bookshelf",
-	"sunos:bancada_nodrop",
-	"sunos:bancada_de_trabalho_nodrop",
-	"sunos:wood_barrel_nodrop",
-	-- Vidro
-	"xpanes:pane",
-	"xpanes:pane_flat",
-	-- Portas
-	"doors:door_wood_a",
-	"doors:door_wood_b",
-	-- Iluminação
-	"default:torch",
-	"default:torch_wall",
-	"default:torch_ceiling"
-}
-
 -- Nodes decorativos simples
 sunos.estruturas.casa.var.decor_simples = {
 	"flowers:rose",

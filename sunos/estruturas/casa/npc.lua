@@ -62,7 +62,7 @@ sunos.nodes_de_mobilias["caixa_de_musica"] = {"sunos:caixa_de_musica_nodrop"}
 local set_npc_places = function(self)
 	local pf = self.sunos_fundamento
 	if not pf then return end
-	local dist = minetest.get_meta(pf):get_string("dist")
+	local dist = tonumber(minetest.get_meta(pf):get_string("dist"))
 	
 	-- Bau
 	do

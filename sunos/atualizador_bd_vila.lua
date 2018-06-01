@@ -27,7 +27,6 @@ local worldpath = minetest.get_worldpath()
 sunos.atualizar_bd_vila = function(vila)
 	sunos.checkvar(vila, "Nenhuma vila fornecida para atualizar o banco de dados")
 	
-	
 	-- Pegar lista de tabelas da vila
 	local list = minetest.get_dir_list(worldpath.."/sunos/vila_"..vila)
 	if not list then
@@ -115,54 +114,5 @@ sunos.atualizar_bd_vila = function(vila)
 	return true
 end
 
--- Funcao para verificar fundamentos
-local verificar_fundamento = function(pos)
-	if not pos then return end
-	
-	local node = minetest.get_node(pos)
-	
-	if node.name ~= "sunos:fundamento" then return end
-	
-	local meta = minetest.get_meta(pos)
-	local vila = meta:get_string("vila")
-	if not vila then return end
-	vila = tonumber(vila)
-	local tipo = meta:get_string("tipo")
-	local dist = tonumber(meta:get_string("dist"))
-	
-	if not vila then return end
-	
-	-- Verificar mapa carregado antes de verificar estruturas
-	if sunos.verif_carregamento(pos, tonumber(dist)) == false then
-		return
-	end
-	
-	-- Verifica se o registro da vila ainda existe no banco de dados
-	if table.maxn(minetest.get_dir_list(worldpath.."/sunos/vila_"..vila)) == 0 then
-		
-		-- Trocar bloco de fundamento por madeira
-		minetest.set_node(pos, {name="default:tree"})
-		return
-	end
-	
-	-- Verificação da estrutura
-	if sunos.estruturas[tipo] then
-		
-		sunos.estruturas[tipo].verificar(pos)
-		
-	-- Caso nao seja de nenhum tipo encontrado
-	else
-		minetest.set_node(pos, {name="default:tree"})
-	end
-end
 
--- Atualiza as estruturas verificando se estao obstruidas
-minetest.register_abm({
-	nodenames = {"sunos:fundamento"},
-	interval = sunos.var.tempo_verif_estruturas,
-	chance = 2,
-	action = function(pos)
-		minetest.after(4, verificar_fundamento, {x=pos.x, y=pos.y, z=pos.z})	
-	end,
-})
 

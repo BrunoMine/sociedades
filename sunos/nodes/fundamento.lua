@@ -96,4 +96,3 @@ minetest.register_node("sunos:fundamento", {
 	-- Impede explosão
 	on_blast = function() end,
 })
-

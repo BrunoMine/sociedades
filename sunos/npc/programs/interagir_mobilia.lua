@@ -190,6 +190,10 @@ npc.programs.instr.register("sunos:rotate_to_pos", function(self, args)
 end)
 
 npc.programs.instr.register("sunos:set_animation", function(self, args)
+	
+	-- Verifica se está perto da coordenada desejada
+	if args.check_pos and verif_dist_pos(args.check_pos, self.object:getpos()) > 1.5 then return end
+	
 	self.object:set_properties({mesh = args.mesh})
 	self.object:set_animation(
 		{x = args.start_frame, y = args.end_frame},
@@ -214,6 +218,10 @@ end)
 
 -- Executa funcao mobilia do node
 npc.programs.instr.register("sunos:execute_func_mobilia", function(self, args)
+	
+	-- Verifica se está perto da coordenada desejada
+	if args.check_pos and verif_dist_pos(args.check_pos, self.object:getpos()) > 1.5 then return end
+	
 	-- Função para inicio do trabalho na mobilia
 	if args.tipo == "pre" then
 		args.m.pre_func(self, args.pos)
@@ -224,6 +232,9 @@ end)
 
 -- Cria particular de movimento
 npc.programs.instr.register("sunos:add_efeito_interacao_mobilia", function(self, args)
+	
+	-- Verifica se está perto da coordenada desejada
+	if args.check_pos and verif_dist_pos(args.check_pos, self.object:getpos()) > 1.5 then return end
 	
 	local mypos = self.object:getpos()
 	
@@ -275,6 +286,7 @@ end)
 -- Escolher mobilia valida
 interagir_mobilia.escolher_mobilia = function(self, place_names)
 	if table.maxn(place_names) == 0 then return end
+	
 	-- Escolhe um aleatorio
 	local i = math.random(1, #place_names)
 	local name = place_names[i]
@@ -282,6 +294,7 @@ interagir_mobilia.escolher_mobilia = function(self, place_names)
 	-- Verifica se local está registrado no NPC
 	if self.places_map[name] == nil then 
 		table.remove(place_names, i)
+		self.places_map[name] = nil -- Remove local
 		return interagir_mobilia.escolher_mobilia(self, place_names)
 	end
 	
@@ -289,6 +302,7 @@ interagir_mobilia.escolher_mobilia = function(self, place_names)
 	local nn = minetest.get_node(self.places_map[name].pos).name
 	if nn == "air" or nn == "ignore" then 
 		table.remove(place_names, i)
+		self.places_map[name] = nil -- Remove local
 		return interagir_mobilia.escolher_mobilia(self, place_names)
 	end
 	if sunos.nodes_de_mobilias[nn] then
@@ -300,6 +314,7 @@ interagir_mobilia.escolher_mobilia = function(self, place_names)
 		end
 		-- Repete com o que restar
 		table.remove(place_names, i)
+		self.places_map[name] = nil -- Remove local
 		return interagir_mobilia.escolher_mobilia(self, place_names)
 	end
 	
@@ -312,105 +327,137 @@ local escolher_mobilia = interagir_mobilia.escolher_mobilia
 -- Interagir aleatoriamente com a mobilia da casa
 npc.programs.register("sunos:interagir_mobilia", function(self, args)
 	
+	-- Verificar total de lugares disponiveis no NPC
+	local t = 0
+	-- Conta o total
+	for _,n in ipairs(args.place_names) do
+		if self.places_map[n] ~= nil then
+			t = t + 1
+		end
+	end
+	
+	-- Verificar tabela de mobilias
+	if self.sunos_interagir_mobilia_tb == nil then
+		self.sunos_interagir_mobilia_tb = sunos.copy_tb(args.place_names)
+	end
+	
 	local mypos = self.object:getpos()
 	
 	local p = escolher_mobilia(self, sunos.copy_tb(args.place_names))
-	if p == nil then 
-		minetest.log("error", "[Sunos] Nenhuma localizacao aceitavel no NPC (programa 'sunos:interagir_mobilia')")
-		return 
+	
+	-- Interagir com uma mobilia
+	if p ~= nil then 
+	
+		-- Analisa node escolhido
+		local m = mobilias[sunos.pegar_node(p.pos).name]
+		if not m then
+			minetest.log("error", "[Sunos] Node '"..sunos.pegar_node(p.pos).name.."' nao catalogado para interagir (programa 'sunos:interagir_mobilia')")
+		else
+			
+			npc.locations.add_shared(self, "sunos_alvo_mobilia", "sunos_alvo_mobilia", p.pos, p.access_node)
+			
+			npc.exec.proc.enqueue(self, "advanced_npc:interrupt", {
+				new_program = "advanced_npc:walk_to_pos",
+				new_args = {
+					optimize_one_node_distance = verif_dist_pos(p.pos, mypos) > 3,
+					end_pos = {
+						place_type="sunos_alvo_mobilia",
+						use_access_node=true,
+					},
+					walkable = sunos.estruturas.casa.walkable_nodes
+				},
+				interrupt_options = {}
+			})
+			
+			-- Vira para "pos"
+			npc.exec.proc.enqueue(self, "sunos:rotate_to_pos", {
+				pos = p.pos,
+			})
+			
+			-- Pré animação
+			if (m.anim.pre_act_time or 0) > 0 then
+				npc.exec.proc.enqueue(self, "sunos:set_animation", {
+					mesh = m.anim.name,
+					start_frame = m.anim.pre_act_frame_start,
+					end_frame = m.anim.pre_act_frame_end,
+					frame_speed = m.anim.pre_act_frame_speed,
+					check_pos = p.pos,
+				})
+				npc.exec.proc.enqueue(self, "advanced_npc:wait", {
+					time = m.anim.pre_act_time,
+				})
+			end
+			
+			-- Muda animação
+			npc.exec.proc.enqueue(self, "sunos:set_animation", {
+				mesh = m.anim.name,
+				start_frame = m.anim.act_frame_start,
+				end_frame = m.anim.act_frame_end,
+				frame_speed = m.anim.act_frame_speed,
+				-- Caso seja animação rapida sem loop
+				pos_reset_time = m.anim.act_time,
+				check_pos = p.pos,
+			})
+			
+			-- Particulas
+			npc.exec.proc.enqueue(self, "sunos:add_efeito_interacao_mobilia", {
+				pos = p.pos,
+				m = m,
+				check_pos = p.pos,
+			})
+			
+			-- Executa pré funcao da mobilia
+			if m.pre_func then
+				npc.exec.proc.enqueue(self, "sunos:execute_func_mobilia", {
+					tipo = "pre",
+					pos = p.pos,
+					m = m,
+					check_pos = p.pos,
+				})
+			end
+			
+			-- Mantem trabalhando
+			if (m.time or 0) > 0 then
+				npc.exec.proc.enqueue(self, "advanced_npc:wait", {
+					time = m.time,
+				})
+			end
+			
+			-- Executa pos funcao da mobilia
+			if m.pos_func then
+				npc.exec.proc.enqueue(self, "sunos:execute_func_mobilia", {
+					tipo = "pos",
+					pos = p.pos,
+					m = m,
+					check_pos = p.pos,
+				})
+			end
+			
+			-- Pós animação
+			if (m.anim.pos_act_time or 0) > 0 then
+				npc.exec.proc.enqueue(self, "sunos:set_animation", {
+					mesh = m.anim.name,
+					start_frame = m.anim.pos_act_frame_start,
+					end_frame = m.anim.pos_act_frame_end,
+					frame_speed = m.anim.pos_act_frame_speed,
+					pos_reset = true,
+					pos_reset_time = m.anim.pos_act_time,
+					check_pos = p.pos,
+				})
+			end
+		end
 	end
-	
-	-- Analisa node escolhido
-	local m = mobilias[sunos.pegar_node(p.pos).name]
-	if not m then
-		minetest.log("error", "[Sunos] Node '"..sunos.pegar_node(p.pos).name.."' nao catalogado para interagir (programa 'sunos:interagir_mobilia')")
-		return
-	end
-	
-	npc.locations.add_shared(self, "sunos_alvo_mobilia", "sunos_alvo_mobilia", p.pos, p.access_node)
-	
-	npc.exec.proc.enqueue(self, "advanced_npc:interrupt", {
-		new_program = "advanced_npc:walk_to_pos",
-		new_args = {
-			optimize_one_node_distance = verif_dist_pos(p.pos, mypos) > 3,
-			end_pos = {
-				place_type="sunos_alvo_mobilia",
-				use_access_node=true,
+	-- Se estiver poucas mobilias fica um tempo parado apos interagir
+	if t <= 3 then
+		npc.exec.proc.enqueue(self, "advanced_npc:interrupt", {
+			new_program = "advanced_npc:idle",
+			new_args = {
+				acknowledge_nearby_objs = true,
 			},
-			walkable = sunos.estruturas.casa.walkable_nodes
-		},
-		interrupt_options = {}
-	})
-	
-	-- Vira para "pos"
-	npc.exec.proc.enqueue(self, "sunos:rotate_to_pos", {
-		pos = p.pos,
-	})
-	
-	-- Pré animação
-	if (m.anim.pre_act_time or 0) > 0 then
-		npc.exec.proc.enqueue(self, "sunos:set_animation", {
-			mesh = m.anim.name,
-			start_frame = m.anim.pre_act_frame_start,
-			end_frame = m.anim.pre_act_frame_end,
-			frame_speed = m.anim.pre_act_frame_speed,
+			interrupt_options = {}
 		})
 		npc.exec.proc.enqueue(self, "advanced_npc:wait", {
-			time = m.anim.pre_act_time,
+			time = math.random(5, 10),
 		})
 	end
-	
-	-- Muda animação
-	npc.exec.proc.enqueue(self, "sunos:set_animation", {
-		mesh = m.anim.name,
-		start_frame = m.anim.act_frame_start,
-		end_frame = m.anim.act_frame_end,
-		frame_speed = m.anim.act_frame_speed,
-		-- Caso seja animação rapida sem loop
-		pos_reset_time = m.anim.act_time,
-	})
-	
-	-- Particulas
-	npc.exec.proc.enqueue(self, "sunos:add_efeito_interacao_mobilia", {
-		pos = p.pos,
-		m = m,
-	})
-	
-	-- Executa pré funcao da mobilia
-	if m.pre_func then
-		npc.exec.proc.enqueue(self, "sunos:execute_func_mobilia", {
-			tipo = "pre",
-			pos = p.pos,
-			m = m,
-		})
-	end
-	
-	-- Mantem trabalhando
-	if (m.time or 0) > 0 then
-		npc.exec.proc.enqueue(self, "advanced_npc:wait", {
-			time = m.time,
-		})
-	end
-	
-	-- Executa pos funcao da mobilia
-	if m.pos_func then
-		npc.exec.proc.enqueue(self, "sunos:execute_func_mobilia", {
-			tipo = "pos",
-			pos = p.pos,
-			m = m,
-		})
-	end
-	
-	-- Pós animação
-	if (m.anim.pos_act_time or 0) > 0 then
-		npc.exec.proc.enqueue(self, "sunos:set_animation", {
-			mesh = m.anim.name,
-			start_frame = m.anim.pos_act_frame_start,
-			end_frame = m.anim.pos_act_frame_end,
-			frame_speed = m.anim.pos_act_frame_speed,
-			pos_reset = true,
-			pos_reset_time = m.anim.pos_act_time,
-		})
-	end
-	
 end)

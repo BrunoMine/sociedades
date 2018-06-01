@@ -660,7 +660,7 @@ sunos.criar_vila = function(pos_ref)
 			local largura = dados.dist*2+1
 		
 			-- Verifica se deve colocar uma feirinha
-			if largura == 5 and tem_casa and tem_loja == false then tipo = "loja" end
+			--if largura == 5 and tem_casa and tem_loja == false then tipo = "loja" end
 			
 			-- Troca o tipo para decor caso a largura seja 3
 			if largura == 3 then tipo = "decor" end

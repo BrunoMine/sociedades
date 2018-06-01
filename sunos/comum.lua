@@ -479,7 +479,7 @@ end
 		<pos> é a coordenada do fundamento da possivel nova estrutura
 		<dist> do centro a borda da possivel nova estrutura
   ]]
-sunos.verif_fundamento = function(pos, dist)
+sunos.verif_fundamento_muito_perto = function(pos, dist)
 	sunos.checkvar(pos, dist, "Parametro(s) invalido(s) para verificar fundamento")
 	
 	-- Distancia a verificar
@@ -600,3 +600,30 @@ sunos.verificar_fundamento_bau_sunos = function(pos)
 	end
 	return pf
 end
+
+-- Contar nodes estruturais na estrutura
+sunos.contar_nodes_estruturais = function(pos, dist)
+
+	local pos1 = {x=pos.x-dist, y=pos.y, z=pos.z-dist}
+	local pos2 = {x=pos.x+dist, y=pos.y+14, z=pos.z+dist}	
+	
+	return table.maxn(minetest.find_nodes_in_area(
+		pos1, 
+		pos2,	
+		sunos.var.node_group.estrutura
+	))
+end 
+
+-- Contar diferença de blocos estruturais originais e atuais
+sunos.contar_blocos_destruidos = function(pos)
+	
+	local meta = minetest.get_meta(pos)
+	local dist = tonumber(meta:get_string("dist"))
+	
+	-- Verifica integridade da estrutura
+	local nd = tonumber(meta:get_string("nodes")) -- Numero de nodes inicial
+	local ndrl = sunos.contar_nodes_estruturais(pos, dist) -- Numero de nodes real atual
+	
+	return (nd - ndrl)
+end
+

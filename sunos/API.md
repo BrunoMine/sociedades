@@ -7,7 +7,6 @@ podem ser encontradas no arquivo `diretrizes.lua`.
 Não é recomendado modificar essas variaveis manualmente para que seja 
 mantida a reprodução integral do repositório oficial.
 
-
 Estruturas
 ----------
 Um determinado tipo de estrutura deve estanciar suas funções, 
@@ -16,7 +15,7 @@ indice é o tipo de estrutura devendo ser apenas uma talavra como os
 demais existentes (casa, comunal, decor e etc). 
 
 Alguns valores dentro dessa tabela são reservado para fins especificos:
-* construir = function(pos, dist) end : A API executa essa função que constrói a estrutura.
+* construir = function(pos, dist, vila) end : A API executa essa função que constrói a estrutura.
 * pop = [true] : Informa para a API se essa estrutura contabiliza população
 * fund_on_rightclick = function(...) end : Chamada do node de fundamento da estrutura receber chamada `on_rightclick`.
 * fund_on_destruct = function(...) end : Chamada do node de fundamento da estrutura receber chamada `on_destruct`.
@@ -27,6 +26,68 @@ Alguns valores dentro dessa tabela são reservado para fins especificos:
   * `pos` é a coordenada do fundamento da estrutura. 
 * antes_restaurar_estrutura = function(pos) end: Função executada antes da estrutura ser restaurada.
 * apos_restaurar_estrutura = function(pos) end: Função executada apos estrutura ser restaurada.
+
+Nodes de Reposição
+------------------
+Nodes de reposição são usados para definir nodes que serão 
+substituidos em uma estrutura ao ser construido, a substituição 
+dos nodes pode mudar a cada nova estrutura tornando as estruturas 
+menos repetidas. 
+Atualmente os nodes só servem para substituir mobilias numa estrutura:
+* Bancada : deve ficar sobre o chão
+* Sobrebancada : Deve ficar sobre a bancada
+* Decorativo : Pode ficar em qualquer local
+
+### Metodos
+* `sunos.decor_repo(pos, dist, Definições de nodes de reposição)`: Troca os itens de uma estrutura
+  * `pos` é a coordenada do fundamento
+  * `dist` é a distancia de centro até a borda da estrutura
+
+### Definições de nodes de reposição
+    {
+        bancadas = {
+            {
+            	"itemstring", -- Item string do node 
+            	<qtd>, -- Quantidade de itens que devem ser colocados
+            	[sem sobrebancada] -- Define se deve deixar o espaço acima da bancada vazio (´true´ para deixar vazio)
+            },
+            {...},
+            {...},
+        },
+        sobrebancadas = {
+            {
+            	"itemstring", -- Item string do node 
+            	<qtd>, -- Quantidade de itens que devem ser colocados
+            },
+            {...},
+            {...},
+        },
+        simples = {
+            {
+            	"itemstring", -- Item string do node 
+            	<qtd>, -- Quantidade de itens que devem ser colocados
+            },
+            {...},
+            {...},
+        }
+    }
+
+
+Fundamento STEP
+---------------
+O fundamento step é usado para iniciar o processo de construção de uma estrutura.
+Ao término da construção será executada a função `construir` da estrutura registrada.
+sunos.colocar_fundamento_step(pos, Definições de Fundamento STEP)
+
+### Definições de Fundamento STEP
+    {
+        tipo = "tipo_estrutura", -- Tipo de estrutura
+        dist = 2, -- Distancia centro a borda da estrutura
+        vila = vila, -- Numero da vila
+        dias = 1, -- Dias em Minetest que demora para ficar pronta
+        schem = schem, -- Nome do schem da estrutura (AVISO: não é o arquivo)
+        rotat = "graus", -- Umas das quatro rotações em graus "0", "90", "180" ou "270" (sugestão: ´sunos.pegar_rotat()´)
+    }
 
 
 NPCs
@@ -192,10 +253,12 @@ Métodos Auxiliares
     * `timeofday`: `nil` for current time, `0` for night, `0.5` for day
     * Returns a number between `0` and `15` or `nil`
     
-* `sunos.montar_estrutura(pos, dist, tipo, rotat)`
+* `sunos.montar_estrutura(pos, dist, tipo, rotat[, screm][, step])`
     * Monta uma estrutura aleatoria de um `tipo` definido dentre as estruturas salvas no formato esquemático
     * `pos` é a coordenada do centro do chão da estrutura
     * `dist` é a distancia do centro até a borda
     * `rotat` é a rotação opcional da estrutura ("0", "90", "180" ou "270")
+    * `schem` [OPICIONAL] é um nome de schem (AVESI: não é o nome exato do arquivo), caso nulo, ele escolhe um aleatoriamente
+    * `step` [OPICIONAL] é um número do STEP/estagio da estrutura para ser acrescentado o prefixo `-step` na busca do arquivo
     * Retorna um valor booleano `true` e `arquivo esquemático` se ocorrer corretamente 
     * Ocorre uma troca de itens durante a montagem da estrutura conforme definido em `sunos.var.nodes_trocados`

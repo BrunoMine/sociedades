@@ -19,11 +19,9 @@ sunos.restaurar_estrutura = function(pos)
 	local table = meta:to_table() -- salva metadados numa tabela
 	local vila = meta:get_string("vila")
 	local tipo = meta:get_string("tipo")
-	if tipo ~= "casa" then return end
 	local dist = tonumber(meta:get_string("dist"))
 	local schem = meta:get_string("schem")
 	local rotat = meta:get_string("rotat")
-	if schem == "" then return end
 	
 	if sunos.estruturas[tipo].antes_restaurar_estrutura then
 		sunos.estruturas[tipo].antes_restaurar_estrutura(pos)
@@ -36,7 +34,7 @@ sunos.restaurar_estrutura = function(pos)
 	sunos.limpar_metadados(pos1, pos2)
 	
 	-- Remonta estrutura
-	sunos.montar_estrutura(pos, dist, "casa", rotat, schem)
+	sunos.montar_estrutura(pos, dist, tipo, rotat, schem)
 	
 	-- Estantes e fornos se mantem altomaticamente por sobreposição
 	
@@ -56,10 +54,8 @@ minetest.register_abm({
 	interval = 5,
 	chance = 1,
 	action = function(pos)
-	
 		-- Verifica se a casa está muito destruida
 		if sunos.contar_blocos_destruidos(pos) > 1 then
-			
 			-- Verificando estrutura
 			sunos.verificar_fundamento(pos)
 			

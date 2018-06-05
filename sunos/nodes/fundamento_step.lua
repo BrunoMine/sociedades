@@ -104,20 +104,17 @@ minetest.register_node("sunos:fundamento_step", {
 				return false -- Evita que repita com um tempo diferente do definido
 			end
 			
-			local r 
+			local r
 			
+			-- Verifica se vila ainda existe
+			if sunos.verificar_vila_existente(vila) ~= true then
+				r = "Vila "..dump(vila).." inexistente"
+				
 			-- Construir de acordo com o tipo
-			if tipo == "casa" then
-				local itens_repo = minetest.deserialize(meta:get_string("itens_repo"))
-				r = sunos.estruturas.casa.construir(pos, dist, vila, false, itens_repo, true)
-			elseif tipo == "comunal" then
-				r = sunos.estruturas.comunal.construir(pos, 1, false)
-			elseif tipo == "emporio" then
-				r = sunos.estruturas.emporio.construir(pos, false)
-			elseif tipo == "taverna" then
-				r = sunos.estruturas.taverna.construir(pos, false)
-			elseif tipo == "loja" then
-				r = sunos.estruturas.loja.construir(pos, 3, vila, false)
+			elseif tipo ~= "" then
+				r = sunos.estruturas[tipo].construir(pos, dist, vila)
+			
+			-- Nenhum tipo encontrado
 			else
 				r = "tipo de estrutura "..dump(tipo).." nao planejado"
 			end
@@ -158,7 +155,7 @@ minetest.register_node("sunos:fundamento_step", {
 			
 			-- Constroi estrutura do novo passo
 			local table = meta:to_table() -- salva metadados numa tabela
-			sunos.montar_estrutura(pos, dist, tipo, rotat, schem.."."..((dist*2)+1)..".mts-step"..step)
+			sunos.montar_estrutura(pos, dist, tipo, rotat, schem, step)
 			-- Restaura dados do fundamento step
 			minetest.set_node(pos, {name="sunos:fundamento_step"})
 			minetest.get_meta(pos):from_table(table)
@@ -172,3 +169,23 @@ minetest.register_node("sunos:fundamento_step", {
 	-- Impede explosão
 	on_blast = function() end,
 })
+
+
+-- Colocar fundamento step
+sunos.colocar_fundamento_step = function(pos, def)
+	
+	-- Coloca fundamento step para construir estrutura
+	minetest.set_node(pos, {name="sunos:fundamento_step"})
+	local meta = minetest.get_meta(pos)
+	meta:set_string("tipo", def.tipo)
+	meta:set_string("dist", def.dist)
+	meta:set_string("versao", sunos.versao)
+	meta:set_string("vila", def.vila)
+	meta:set_string("step", 1)
+	meta:set_string("data_inicio", minetest.get_day_count())
+	meta:set_string("tempo_inicio", minetest.get_timeofday())
+	meta:set_string("duracao", (def.dias*24000))
+	meta:set_string("schem", def.schem)
+	meta:set_string("rotat", def.rotat)
+	minetest.get_node_timer(pos):set(0.1, 0) -- Inicia temporizador
+end

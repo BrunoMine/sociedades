@@ -131,13 +131,13 @@ end
 		<vila> OPCIONAL | é o numero da vila a qual a estrutura decorativa pertence
 		<verif_area> OPCIONAL | true verificar a area antes de montar a estrutura (retorna strings dos erros)
 ]]
-sunos.estruturas.emporio.construir = function(pos, verif_area)
+sunos.estruturas.emporio.construir = function(pos, dist, vila)
 	
-	-- Verifica se pode construir a casa
-	local verif, vila = sunos.estruturas.emporio.verif(pos, verif_area)
-	if verif ~= true then
-		return verif
-	end
+	-- Remover jogadores da area construida (evitar travar em paredes)
+	sunos.ajustar_jogadores(pos)
+	
+	-- Distancia centro a borda padrão
+	dist = 5
 	
 	-- Variaveis auxiliares
 	local dist = 5

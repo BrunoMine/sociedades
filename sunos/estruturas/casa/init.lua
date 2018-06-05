@@ -83,10 +83,10 @@ local tb_rotat = {"0", "90", "180", "270"}
 	Argumentos:
 		<pos> é a coordenada do fundamento da estrutura
 		<dist> distancia centro a borda da nova estrutura
-		<vila> OPCIONAL | é o numero da vila a qual a casa pertence
+		<vila> é o numero da vila a qual a casa pertence
   ]]
 sunos.estruturas.casa.construir = function(pos, dist, vila)
-		
+	
 	-- Variaveis auxiliares
 	local largura = (dist*2)+1
 	local pos1 = {x=pos.x-dist, y=pos.y, z=pos.z-dist}
@@ -96,10 +96,22 @@ sunos.estruturas.casa.construir = function(pos, dist, vila)
 	sunos.limpar_metadados(pos1, pos2)
 	
 	-- Escolhe uma rotação aleatória
-	local rotat = sunos.pegar_rotat()
+	local rotat = minetest.get_meta(pos):get_string("rotat")
+	if rotat == "" then
+		rotat = sunos.pegar_rotat()
+	end
 	
-	-- Criar casa e pega o nome do arquivo da estrutura
-	local rm, schem = sunos.montar_estrutura(pos, dist, "casa", rotat)
+	-- Largura
+	local largura = (2*dist+1)
+	
+	-- Pega ou gera nome aleatório
+	local schem = minetest.get_meta(pos):get_string("schem")
+	if schem == "" then
+		schem = sunos.pegar_arquivo(largura, "casa")
+	end
+	
+	-- Cria estrutura
+	local rm = sunos.montar_estrutura(pos, dist, "casa", rotat, schem)
 	
 	-- Recoloca itens reais (apartir dos itens de reposição)
 	sunos.decor_repo(pos, dist, sunos.estruturas.casa.gerar_itens_repo[tostring(dist)]())
@@ -177,5 +189,5 @@ sunos.estruturas.casa.defendido = function(pos)
 end
 
 -- Nodes (carregamento de script)
-dofile(minetest.get_modpath("sunos").."/estruturas/casa/nodes.lua") 
+dofile(minetest.get_modpath("sunos").."/estruturas/casa/fundamento.lua") 
 

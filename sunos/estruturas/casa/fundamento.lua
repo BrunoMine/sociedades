@@ -14,36 +14,19 @@ local S = sunos.S
 
 -- Verificar terreno antes de construir casa
 local verificar_terreno = function(pos, dist)
-
-	-- Validar argumentos de entrada
-	if pos == nil then
-		minetest.log("error", "[Sunos] Tabela pos nula (sunos.estruturas.casa.construir)")
-		return "Erro interno (pos nula)"
-	end
-	if dist == nil then
-		minetest.log("error", "[Sunos] variavel dist nula (em sunos.estruturas.casa.construir)")
-		return "Erro interno (tamanho de casa inexistente)"
-	end
 	
-	-- Verificar se vila existe (caso especificado)
-	if vila and sunos.verificar_vila_existente(vila) == false then
-		return S("Vila abandonada")
-		
 	-- Encontrar vila ativa
-	else
-		vila = sunos.encontrar_vila(pos, 25)
-		if not vila then
-			return S("Nenhuma vila habitavel encontrada")
-		end
+	vila = sunos.encontrar_vila(pos, 25)
+	if not vila then
+		return S("Nenhuma vila habitavel encontrada")
 	end
 	
 	-- Verifica se está muito perto de outras estruturas atravez de areas protegidas
 	for x=-1, 1 do
 		for y=-1, 1 do
 			for z=-1, 1 do
-				if minetest.is_protected({x=pos.x+((dist+2)*x), y=pos.y+((dist+2)*x), z=pos.z+((dist+2)*x)}, name) == true then
-					minetest.chat_send_player(name, S("Muito perto de estruturas protegidas"))
-					return itemstack 
+				if minetest.is_protected({x=pos.x+((dist+2)*x), y=pos.y+((8*y)+7), z=pos.z+((dist+2)*z)}, "") == true then
+					return S("Muito perto de estruturas protegidas")
 				end
 			end
 		end
@@ -89,8 +72,18 @@ minetest.register_node("sunos:fundamento_casa_pequena", {
 			-- Coloca rua em torno
 			sunos.colocar_rua(pos, 2)
 			
+			local schem = sunos.pegar_arquivo(((2*2)+1), "casa")
+			
 			-- Construir estrutura
-			sunos.estruturas.casa.construir(pos, 2, vila)
+			-- Colocar fundamento step
+			sunos.colocar_fundamento_step(pos, {
+				tipo = "casa",
+				dist = 2,
+				vila = vila,
+				dias = 1,
+				schem = schem,
+				rotat = sunos.pegar_rotat(),
+			})
 			
 			-- Retorna mensagem de montagem concluida
 			minetest.chat_send_player(placer:get_player_name(), S("Casa sendo construida"))
@@ -131,8 +124,18 @@ minetest.register_node("sunos:fundamento_casa_mediana", {
 			-- Coloca rua em torno
 			sunos.colocar_rua(pos, 3)
 			
+			local schem = sunos.pegar_arquivo(((2*3)+1), "casa")
+			
 			-- Construir estrutura
-			sunos.estruturas.casa.construir(pos, 3, vila)
+			-- Colocar fundamento step
+			sunos.colocar_fundamento_step(pos, {
+				tipo = "casa",
+				dist = 3,
+				vila = vila,
+				dias = 2,
+				schem = schem,
+				rotat = sunos.pegar_rotat(),
+			})
 			
 			-- Retorna mensagem de montagem concluida
 			minetest.chat_send_player(placer:get_player_name(), S("Casa sendo construida"))
@@ -175,8 +178,18 @@ minetest.register_node("sunos:fundamento_casa_grande", {
 			-- Coloca rua em torno
 			sunos.colocar_rua(pos, 4)
 			
+			local schem = sunos.pegar_arquivo((2*4)+1, "casa")
+			
 			-- Construir estrutura
-			sunos.estruturas.casa.construir(pos, 4, vila)
+			-- Colocar fundamento step
+			sunos.colocar_fundamento_step(pos, {
+				tipo = "casa",
+				dist = 4,
+				vila = vila,
+				dias = 3,
+				schem = schem,
+				rotat = sunos.pegar_rotat(),
+			})
 			
 			-- Retorna mensagem de montagem concluida
 			minetest.chat_send_player(placer:get_player_name(), S("Casa sendo construida"))

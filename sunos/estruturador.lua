@@ -13,7 +13,7 @@
 local modpath = minetest.get_modpath("sunos")
 
 -- Montar uma estrutura
-sunos.montar_estrutura = function(cpos, dist, tipo, rotat, schem)
+sunos.montar_estrutura = function(cpos, dist, tipo, rotat, schem, step)
 	sunos.checkvar(cpos, "Coordenada central nula ao montar estrutura")
 	sunos.checkvar(dist, "Nenhuma distancia centro-borda fornecida ao montar estrutura")
 	sunos.checkvar(tipo, "Nenhum tipo fornecido ao montar estrutura")
@@ -25,10 +25,15 @@ sunos.montar_estrutura = function(cpos, dist, tipo, rotat, schem)
 	local largura = 2*dist+1
 	
 	-- Nome do arquivo esquematico da estrutura
-	schem = schem or sunos.pegar_arquivo(largura, tipo).."."..largura..".mts"
+	schem = schem or sunos.pegar_arquivo(largura, tipo)
 	
 	-- Caminho do arquivo da estrutura
-	local caminho_arquivo = modpath.."/schems/"..tipo.."/"..schem
+	local caminho_arquivo = modpath.."/schems/"..tipo.."/"..schem.."."..largura..".mts"
+	
+	-- Verifica se é STEP
+	if step ~= nil then
+		caminho_arquivo = caminho_arquivo .. "-step"..step
+	end
 	
 	-- Criar estrutura
 	minetest.place_schematic(pos, caminho_arquivo, rotat, sunos.var.nodes_trocados, true)
@@ -36,19 +41,3 @@ sunos.montar_estrutura = function(cpos, dist, tipo, rotat, schem)
 	return true, schem
 end
 
--- Verificar estagio
-sunos.verif_estrutura_step = function(pos)
-	local meta = minetest.get_meta(pos)
-	local tipo = meta:get_string("tipo")
-	local schem = meta:get_string("schem")
-	local step = tonumber(meta:get_string("step"))
-	
-	-- Verifica se terminou
-	if step == 5 then
-	
-	--
-	else
-		
-	end
-	
-end

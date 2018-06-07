@@ -63,6 +63,7 @@ local set_npc_places = function(self)
 	local pf = self.sunos_fundamento
 	if not pf then return end
 	local dist = tonumber(minetest.get_meta(pf):get_string("dist"))
+	if not dist then return end
 	
 	-- Bau
 	do

@@ -20,31 +20,34 @@ sunos.montar_ruinas = function(pos, dist)
 	local pos1 = {x=pos.x-dist, y=pos.y, z=pos.z-dist}
 	local pos2 = {x=pos.x+dist, y=pos.y+14, z=pos.z+dist}
 	
-	-- Pegar blocos a serem removidos
-	local nodes_rem = minetest.find_nodes_in_area(
-		pos1, 
-		pos2, 
-		sunos.var.node_group.remover_da_ruina
-	)
-	
 	-- Limpar metadados
 	sunos.limpar_metadados(pos1, pos2)
-	
-	-- Limpar nodes a serem removidos
-	for _,p in ipairs(nodes_rem) do
-		minetest.remove_node(p)
-	end
 	
 	-- Pega todos elementos pedrosos
 	local nodes = minetest.find_nodes_in_area(
 		{x=pos.x-dist, y=pos.y, z=pos.z-dist}, 
 		{x=pos.x+dist, y=pos.y+14, z=pos.z+dist}, 
-		{"group:stone"}
+		{"group:stone", "default:furnace", "default:furnace_active"}
 	)
+	
+	-- Remove todos os nodes na regiao
+	sunos.remover_todos_nodes_area(pos1, pos2)
 	
 	-- Recoloca pedregulho no lugar de elementos pedrosos
 	for _,p in ipairs(nodes) do
 		minetest.set_node(p, {name="default:cobble"})
+	end
+	
+	-- Completa espaços com terra no solo
+	do
+		for _,p in ipairs(minetest.find_nodes_in_area(
+			{x=pos.x-dist, y=pos.y, z=pos.z-dist}, 
+			{x=pos.x+dist, y=pos.y, z=pos.z+dist}, 
+			{"air"}
+		)) do
+			minetest.set_node(p, {name="default:dirt_with_grass"})
+		end
+		
 	end
 	
 	return true

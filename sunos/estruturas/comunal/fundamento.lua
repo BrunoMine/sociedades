@@ -23,7 +23,7 @@ verificar_terreno = function(pos)
 	
 	-- Verificar casa comunal ja existente
 	if sunos.bd.verif("vila_"..vila, "comunal") == true then
-		return S("Ja existe @1 nessa vila", "Casa Comunal")
+		return S("Ja existe @1 nessa vila", S("Casa Comunal"))
 	end
 	
 	-- Distancia centro a borda padrão
@@ -42,6 +42,11 @@ verificar_terreno = function(pos)
 				end
 			end
 		end
+	end
+	
+	-- Verificar população minima
+	if sunos.verif_nivel(sunos.bd.pegar("vila_"..vila, "pop_total"), sunos.estruturas.comunal.var.niveis) == 0 then
+		return S("A vila precisa ter habitantes")
 	end
 	
 	local r = sunos.verificar_area_para_fundamento(pos, dist)

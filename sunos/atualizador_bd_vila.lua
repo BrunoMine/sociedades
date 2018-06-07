@@ -91,10 +91,20 @@ sunos.atualizar_bd_vila = function(vila)
 			
 			-- Caso o arquivo seja de uma estrutura com população
 			if stdata == true and sunos.estruturas[v[1]].pop then
-	
-				-- Contabiliza a população
-				pop_total = pop_total + reg.pop	
 				
+				-- Verifica se ja atingiu limite populacional
+				if pop_total >= sunos.var.max_pop then
+					-- Remove registro e manda verificar estrutura para ser destruida
+					sunos.bd.remover("vila_"..vila, arq)
+					sunos.verificar_fundamento(reg.estrutura.pos)
+				else
+					-- Contabiliza a população
+					pop_total = pop_total + reg.pop	
+					-- Corrije limite para evitar que o total oficial ultrapasse o limite maximo permitido
+					if pop_total > sunos.var.max_pop then
+						pop_total = sunos.var.max_pop
+					end
+				end
 			end
 			
 		end

@@ -46,25 +46,6 @@ local function pegar_node(pos)
 end
 
 
--- Verificar nivel de acordo com a populacao
-local verif_nivel = function(pop)
-	if not pop then return end
-	local pop = tonumber(pop)
-	for n,p in ipairs(sunos.estruturas.comunal.var.niveis) do
-		if n == table.maxn(sunos.estruturas.comunal.var.niveis) then
-			return n
-		end
-		if pop >= p and pop < sunos.estruturas.comunal.var.niveis[n+1] then
-			return n
-		end
-	end
-	
-	-- Caso pop nao seja menor que nenhum dos niveis (maior que todos os exigidos) retorna nivel maximo
-	return table.maxn(sunos.estruturas.comunal.var.niveis)
-	
-end
-
-
 -- Configurar baus de uma estrutura
 local set_bau = function(pos, vila, dist)
 
@@ -91,9 +72,6 @@ local set_bau = function(pos, vila, dist)
 		})
 	end
 end
-
--- Tabela para valores de rotação
-local tb_rotat = {"0", "90", "180", "270"}
 
 -- Construir casa comunal
 --[[
@@ -122,7 +100,21 @@ sunos.estruturas.comunal.construir = function(pos, dist, vila)
 	dist = 6 
 	
 	-- Pegar nivel
-	local nivel = verif_nivel(sunos.bd.pegar("vila_"..vila, "pop_total"))
+	local nivel = sunos.verif_nivel(sunos.bd.pegar("vila_"..vila, "pop_total"), sunos.estruturas.comunal.var.niveis)
+	
+	-- Criar casa comunal
+	
+	-- Escolhe uma rotação aleatória ou pega a já existente
+	local rotat = minetest.get_meta(pos):get_string("rotat")
+	if rotat == "" then
+		rotat = sunos.pegar_rotat()
+	end
+	
+	-- Atualizar schem do nivel
+	local schem = "nivel_" .. nivel
+	
+	-- Caminho do arquivo da estrutura
+	local caminho_arquivo = modpath.."/schems/comunal/"..schem..".13.mts"
 	
 	-- Variaveis auxiliares
 	local largura = 13
@@ -132,22 +124,8 @@ sunos.estruturas.comunal.construir = function(pos, dist, vila)
 	-- Limpar metadados dos nodes que possam estar la
 	sunos.limpar_metadados(pos1, pos2)
 	
-	-- Criar casa comunal
-	
-	-- Escolhe uma rotação aleatória ou pega a já existente
-	local rotat = minetest.get_meta(pos):get_string("rotat")
-	if rotat == "" then
-		rotat = tb_rotat[math.random(1, 4)]
-	end
-	
-	-- Atualizar schem do nivel
-	local schem = "nivel_" .. nivel
-	
-	-- Caminho do arquivo da estrutura
-	local arquivo = modpath.."/schems/comunal/"..schem..".13.mts"
-	
 	-- Criar estrutura
-	minetest.place_schematic({x=pos.x-dist,y=pos.y,z=pos.z-dist}, arquivo, rotat, sunos.var.nodes_trocados, true)
+	minetest.place_schematic({x=pos.x-dist,y=pos.y,z=pos.z-dist}, caminho_arquivo, rotat, sunos.var.nodes_trocados, true)
 	
 	-- Verifica se já tem fundamento
 	if old_meta_tb ~= nil then
@@ -212,12 +190,20 @@ sunos.estruturas.comunal.verificar = function(pos)
 	local meta = minetest.get_meta(pos)
 	local vila = meta:get_string("vila")
 	local dist = tonumber(meta:get_string("dist"))
-	-- Verifica nivel
+	
+	-- Verificar nivel minimo
+	if sunos.verif_nivel(sunos.bd.pegar("vila_"..vila, "pop_total"), sunos.estruturas.comunal.var.niveis) == 0 then
+		return false
+	end
+	
+	-- Atualizar nivel
 	-- Pegar nivel que a estrutura está
 	local nivel_atual = meta:get_string("nivel")
 	-- Pegar nivel que deve estar
-	local nivel_novo = verif_nivel(sunos.bd.pegar("vila_"..vila, "pop_total"))
+	local nivel_novo = sunos.verif_nivel(sunos.bd.pegar("vila_"..vila, "pop_total"), sunos.estruturas.comunal.var.niveis)
 	if tonumber(nivel_atual) ~= tonumber(nivel_novo) then
+		-- Atualiza fundamento
+		minetest.get_meta(pos):set_string("schem", "nivel_"..nivel_novo)
 		sunos.estruturas.comunal.construir(pos, dist, vila)
 	end
 	

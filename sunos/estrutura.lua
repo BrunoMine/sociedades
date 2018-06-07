@@ -75,7 +75,7 @@ minetest.register_node("sunos:fundamento", {
 		-- Remover do banco de dados caso o bloco seja removido
 		sunos.bd.remover("vila_"..meta:get_string("vila"), tipo.."_"..meta:get_string("estrutura"))
 		
-		sunos.atualizar_bd_vila(vila)
+		minetest.after(0.1, sunos.atualizar_bd_vila, vila)
 	end,
 	
 	-- Impede explosão
@@ -102,14 +102,17 @@ sunos.verificar_fundamento = function(pos)
 	
 	-- Verificar mapa carregado antes de verificar estruturas
 	if sunos.verif_carregamento(pos, tonumber(dist)) == false then
+		minetest.chat_send_all("2")
 		return
 	end
 	
 	-- Verifica se o registro da vila ainda existe no banco de dados
 	if table.maxn(minetest.get_dir_list(worldpath.."/sunos/vila_"..vila)) == 0 then
-		minetest.chat_send_all("2")
 		-- Trocar bloco de fundamento por madeira
 		minetest.set_node(pos, {name="default:tree"})
+		-- Montar ruinas
+		sunos.montar_ruinas(pos, dist)
+		minetest.chat_send_all("3")
 		return
 	end
 	
@@ -117,15 +120,33 @@ sunos.verificar_fundamento = function(pos)
 	if sunos.bd.verif("vila_"..vila, tipo.."_"..numero) == false -- Caso seja uma estrutura repetivel
 		and sunos.bd.verif("vila_"..vila, tipo) == false -- Caso seja uma estrutura única
 	then
-		minetest.chat_send_all("3")
 		-- Trocar bloco de fundamento por madeira
 		minetest.set_node(pos, {name="default:tree"})
+		-- Montar ruinas
+		sunos.montar_ruinas(pos, dist)
+		minetest.chat_send_all("4")
 		return
+	end
+	
+	-- Verifica se o registro no BD coincide na coordenada (podem existir estruturas duplicadas) apenas estruturas unicas
+	if sunos.bd.verif("vila_"..vila, tipo) == true then
+		local p = sunos.bd.pegar("vila_"..vila, tipo).estrutura.pos
+		if p.x ~= pos.x or p.y ~= pos.y or p.z ~= pos.z then
+			minetest.chat_send_all("5")
+			-- Exclui o arquivo da estrutura do banco de dados
+			sunos.bd.remover("vila_"..vila, tipo)
+			-- Trocar bloco de fundamento por madeira
+			minetest.set_node(pos, {name="default:tree"})
+			-- Atualizar banco de dados da vila
+			minetest.after(0.1, sunos.atualizar_bd_vila, vila)
+			-- Montar ruinas
+			sunos.montar_ruinas(pos, dist)
+			return
+		end
 	end
 	
 	-- Verifica se a casa está muito destruida
 	if sunos.contar_blocos_destruidos(pos) > 8 then
-		minetest.chat_send_all("4")
 		-- Exclui o arquivo da estrutura do banco de dados
 		sunos.bd.remover("vila_"..vila, tipo.."_"..numero) -- Caso seja repetivel
 		sunos.bd.remover("vila_"..vila, tipo) -- Caso seja unico
@@ -134,15 +155,21 @@ sunos.verificar_fundamento = function(pos)
 		minetest.set_node(pos, {name="default:tree"})
 	
 		-- Atualizar banco de dados da vila
-		sunos.atualizar_bd_vila(vila)
+		minetest.after(0.1, sunos.atualizar_bd_vila, vila)
+		
+		-- Montar ruinas
+		sunos.montar_ruinas(pos, dist)
+		minetest.chat_send_all("6")
 		return
 	end
 	
 	-- Chamadas de verificação registradas na estrutura
 	if sunos.estruturas[tipo].verificar ~= nil and sunos.estruturas[tipo].verificar(pos) == false then
-		minetest.chat_send_all("5")
 		-- Trocar bloco de fundamento por madeira
 		minetest.set_node(pos, {name="default:tree"})
+		-- Montar ruinas
+		sunos.montar_ruinas(pos, dist)
+		minetest.chat_send_all("7")
 		return
 	end
 end

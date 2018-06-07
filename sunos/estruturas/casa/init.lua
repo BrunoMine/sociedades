@@ -71,9 +71,6 @@ local set_bau = function(pos, vila, dist)
 	
 end
 
--- Tabela para valores de rotação
-local tb_rotat = {"0", "90", "180", "270"}
-
 -- Construir casa de sunos
 --[[
 	Essa função construi uma casa de sunos e configura o fundamento
@@ -86,14 +83,6 @@ local tb_rotat = {"0", "90", "180", "270"}
 		<vila> é o numero da vila a qual a casa pertence
   ]]
 sunos.estruturas.casa.construir = function(pos, dist, vila)
-	
-	-- Variaveis auxiliares
-	local largura = (dist*2)+1
-	local pos1 = {x=pos.x-dist, y=pos.y, z=pos.z-dist}
-	local pos2 = {x=pos.x+dist, y=pos.y+14, z=pos.z+dist}
-	
-	-- Limpar metadados dos nodes que possam estar la
-	sunos.limpar_metadados(pos1, pos2)
 	
 	-- Escolhe uma rotação aleatória
 	local rotat = minetest.get_meta(pos):get_string("rotat")
@@ -109,6 +98,14 @@ sunos.estruturas.casa.construir = function(pos, dist, vila)
 	if schem == "" then
 		schem = sunos.pegar_arquivo(largura, "casa")
 	end
+	
+	-- Variaveis auxiliares
+	local largura = (dist*2)+1
+	local pos1 = {x=pos.x-dist, y=pos.y, z=pos.z-dist}
+	local pos2 = {x=pos.x+dist, y=pos.y+14, z=pos.z+dist}
+	
+	-- Limpar metadados dos nodes que possam estar la
+	sunos.limpar_metadados(pos1, pos2)
 	
 	-- Cria estrutura
 	local rm = sunos.montar_estrutura(pos, dist, "casa", rotat, schem)

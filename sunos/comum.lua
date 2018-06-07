@@ -627,3 +627,48 @@ sunos.contar_blocos_destruidos = function(pos)
 	return (nd - ndrl)
 end
 
+-- Verificar nivel de acordo com a populacao
+sunos.verif_nivel = function(pop, tb)
+	if not pop then return end
+	pop = tonumber(pop)
+	for n,p in ipairs(tb) do
+		-- Nivel maximo?
+		if n == table.maxn(tb) and pop >= p then
+			return n
+		end
+		-- Ultrapassou esse nivel?
+		if pop >= p -- É maior que a pop desse nivel
+			and pop < tb[n+1] -- Menor que o pop do proximo nivel
+		then
+			return n
+		end
+	end
+	
+	-- Não atingiu requisito pra nenhum nivel
+	return 0
+end
+
+-- Remover todos os nodes em uma area
+sunos.remover_todos_nodes_area = function(minp, maxp)
+	local c_air = minetest.get_content_id"air"	
+	
+	-- Get the vmanip mapgen object and the nodes and VoxelArea
+	local manip = minetest.get_voxel_manip()
+	local e1, e2 = manip:read_from_map(minp, maxp)
+	local area = VoxelArea:new{MinEdge=e1, MaxEdge=e2}
+	local data = manip:get_data()
+ 
+	-- Replace air with cobble
+	for i in area:iter(
+		minp.x, minp.y, minp.z,
+		maxp.x, maxp.y, maxp.z
+	) do
+		data[i] = c_air
+	end
+ 
+	-- Return the changed nodes data, fix light and change map
+	manip:set_data(data)
+	manip:write_to_map()
+	manip:update_map() -- update_map is deprecated soon
+end
+

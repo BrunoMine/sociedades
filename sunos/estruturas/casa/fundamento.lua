@@ -32,9 +32,9 @@ local verificar_terreno = function(pos, dist)
 		end
 	end
 	
-	-- Verificar limite populacional
-	if sunos.verif_pop_vila(vila) ~= true then
-		return S("Limite de @1 habitantes foi atingido", sunos.var.max_pop)
+	-- Verifica limite de população
+	if tonumber(sunos.bd.pegar("vila_"..vila, "pop_total")) >= sunos.var.max_pop then
+		return S("Limite @1 habitantes da vila ja foi atingido", sunos.var.max_pop)
 	end
 	
 	-- Verificações de area

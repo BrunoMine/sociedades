@@ -23,6 +23,18 @@ minetest.register_node("sunos:nectar", {
 	on_use = core.item_eat(tonumber(minetest.setting_get("sunos_item_nectar_eat") or 4)),
 	groups = {attached_node=1,choppy=2,dig_immediate=3},
 	sounds = default.node_sound_defaults(),
+	collision_box = {
+		type = "fixed",
+		fixed = {
+			{-0.1,  -0.5,  -0.1, 0.1, 0, 0.1}
+		}
+	},
+	selection_box = {
+		type = "fixed",
+		fixed = {
+			{-0.1,  -0.5,  -0.1, 0.1, 0, 0.1}
+		}
+	},
 	on_place = function(itemstack, placer, pointed_thing)
 		if pointed_thing.type ~= "node" then
 			return itemstack
@@ -81,6 +93,23 @@ if minetest.get_modpath("hbhunger") then
 end
 
 -- Criar cópia sem Drop (para evitar furtos em estruturas dos sunos)
+do
+	-- Copiar tabela de definições
+	local def = {}
+	for n,d in pairs(minetest.registered_nodes["sunos:nectar_node"]) do
+		def[n] = d
+	end
+	-- Mantem a tabela groups separada
+	def.groups = minetest.deserialize(minetest.serialize(def.groups))
+	
+	-- Altera alguns paremetros
+	def.description = def.description .. " ("..S("Sem Drop")..")"
+	def.groups.not_in_creative_inventory = 1
+	def.drop = ""
+	-- Registra o novo node
+	minetest.register_node("sunos:nectar_node_nodrop", def)
+end
+
 do
 	-- Copiar tabela de definições
 	local def = {}

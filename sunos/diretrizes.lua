@@ -23,6 +23,9 @@ sunos.var.CHANCE = tonumber(minetest.setting_get("sunos_chance") or 100)
 -- Intervalo de tempo (em segundos) que uma vila se mantem inimigo de um jogador apos ser atacada
 sunos.var.tempo_inimigo = 300
 
+-- Intervalo para verificar se estrutura esta danificada para tentar reformar
+sunos.var.tempo_verif_restauro = 600
+
 -- Intervalo de tempo (em segundos) de verificação dos rastreadores de jogadores perto de fundamentos dos sunos
 sunos.var.tempo_atualizar_jogadores_perto = 5
 
@@ -34,6 +37,9 @@ sunos.var.tempo_decadencia = tonumber(minetest.setting_get("sunos_comunal_decade
 
 -- Moeda monetaria usada para trocas comerciais mais formais
 sunos.var.moeda = minetest.setting_get("sunos_moeda") or "default:apple"
+
+-- Limite de nodes destruidos em uma estrutura para justificar abandono
+sunos.var.limite_nodes_destruidos_abandonar = 8
 
 -- Limite de população das vilas
 sunos.var.max_pop = 40
@@ -78,6 +84,8 @@ sunos.var.nodes_trocados = {
 	["sunos:carpete_palha"] = "sunos:carpete_palha_nodrop",
 	["sunos:tear_palha"] = "sunos:tear_palha_nodrop",
 	["sunos:kit_culinario"] = "sunos:kit_culinario_nodrop",
+	["sunos:nectar"] = "sunos:nectar_nodrop",
+	["sunos:nectar_node"] = "sunos:nectar_node_nodrop",
 	
 }
 
@@ -124,6 +132,13 @@ sunos.var.node_group = {
 	
 	-- Nodes a terem metadados removidos quando schem for alterada
 	remover_metadados = {
+		-- Baus
+		"sunos:bau_casa",
+		"sunos:bau_comunal",
+		"sunos:bau_taverna",
+		"sunos:bau_loja",
+		
+		-- Outros
 		"default:furnace",
 		"default:furnace_active",
 		"default:bookshelf", 
@@ -150,6 +165,13 @@ sunos.var.node_group = {
 		"sunos:stonebrick_nodrop",
 		"sunos:straw_nodrop",
 		"sunos:glass_nodrop",
+		"sunos:carpete_palha_nodrop",
+		
+		-- Portas
+		"doors:door_wood_a",
+		"doors:door_wood_b",
+		"doors:gate_wood_open",
+		"doors:gate_wood_closed",
 				
 		-- Stairs
 		"stairs:stair_straw",
@@ -171,14 +193,25 @@ sunos.var.node_group = {
 		"sunos:torch_wall_nodrop",
 		
 		-- Moveis
-		"sunos:kit_culinario_nodrop",
-		"sunos:tear_palha_nodrop",
-		"sunos:carpete_palha_nodrop",
 		"sunos:bancada_de_trabalho_nodrop",
-		"sunos:bau_nodrop",
 		"sunos:bancada_nodrop",
 		"sunos:vessels_shelf_nodrop",
 		"sunos:default_bookshelf_nodrop",
+		"sunos:barril",
+		
+		-- Baus
+		"sunos:bau_nodrop",
+		"sunos:bau_casa",
+		"sunos:bau_comunal",
+		"sunos:bau_taverna",
+		"sunos:bau_loja",
+		
+		-- Objetos simples
+		"sunos:nectar_node_nodrop",
+		"sunos:nectar_nodrop", -- usado em mostruario
+		"sunos:kit_culinario_nodrop",
+		"sunos:tear_palha_nodrop",
+		"sunos:expositor_petisco_fruta",
 	},
 	
 	-- Nodes que devem ser removidos quando uma estrutura se torna em ruina

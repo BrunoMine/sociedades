@@ -21,7 +21,7 @@ sunos.estruturas.taverna.gerar_itens_repo["1"] = function()
 			{"sunos:barril", 1},
 		},
 		simples = {
-			{"sunos:nectar_nodrop", 3},
+			{"sunos:nectar_node_nodrop", 3},
 		},
 	}
 end
@@ -35,7 +35,7 @@ sunos.estruturas.taverna.gerar_itens_repo["2"] = function()
 			{"sunos:barril", 2},
 		},
 		simples = {
-			{"sunos:nectar_nodrop", 5},
+			{"sunos:nectar_node_nodrop", 5},
 		},
 	}
 end

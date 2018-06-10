@@ -105,6 +105,9 @@ sunos.npc_checkin.register_spawner = function(nodename, def)
 		chance = 1,
 		action = function(pos)
 			
+			-- Pegar node atual
+			local node = minetest.get_node(pos)
+			
 			-- Pega metadados
 			local meta = minetest.get_meta(pos)
 			
@@ -146,27 +149,27 @@ sunos.npc_checkin.register_spawner = function(nodename, def)
 					-- Verifica se NPC desse node já está ativo
 					if sunos.npcs.is_active(pos) ~= true then
 						
-							-- Verificar dados do npc
-							local mynpc_checkin = get_mynpc_checkin(pos_npc)
+						-- Verificar dados do npc
+						local mynpc_checkin = get_mynpc_checkin(pos_npc)
+						
+						-- Registro de checkins
+						if mynpc_checkin then
 							
-							-- Registro de checkins
-							if mynpc_checkin then
+							if pos_to_string(mynpc_checkin[tostring(time)]) == pos_to_string(pos) then
 								
-								if pos_to_string(mynpc_checkin[tostring(time)]) == pos_to_string(pos) then
-									
-									-- Spawna o NPC na região comum
-									sunos.npc_checkin.registered_spawners[nodename].func_spawn(
-										pos, 
-										minetest.get_meta(pos_npc):get_string("sunos_npc_tipo")
-									)
-									
-								else -- Registro não coincide
-									checkin[pos_npc_st] = nil
-								end
+								-- Spawna o NPC na região comum
+								sunos.npc_checkin.registered_spawners[node.name].func_spawn(
+									pos, 
+									minetest.get_meta(pos_npc):get_string("sunos_npc_tipo")
+								)
 								
-							else -- Registro do npc não existe
+							else -- Registro não coincide
 								checkin[pos_npc_st] = nil
 							end
+							
+						else -- Registro do npc não existe
+							checkin[pos_npc_st] = nil
+						end
 									
 					end
 				end

@@ -76,7 +76,7 @@ sunos.npcs.npc.registrados.comunal.on_rightclick = function(ent, player, fields)
 		
 		-- Verifica se existe casa comunal na vila
 		if sunos.bd.verif("vila_"..ent.vila, "comunal") == false then
-			return minetest.chat_send_player(player:get_player_name(), S("Nenhuma Casa Comunal nessa vila"))
+			return minetest.chat_send_player(player:get_player_name(), S("Nenhuma Casa Comunal nessa vila "..dump(ent.vila)))
 		end
 		
 		-- Coletar dados da vila

@@ -47,7 +47,7 @@ sunos.npc_checkin.register_spawner("sunos:bau_comunal", {
 				tipo = "fundamento",
 				nodes = {"sunos:solo_atendente_comunal"},
 			})
-		else
+		else	
 			spos = sunos.npcs.select_pos_spawn(pf, {
 				tipo = "fundamento",
 			})

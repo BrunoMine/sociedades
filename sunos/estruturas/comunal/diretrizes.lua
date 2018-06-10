@@ -17,44 +17,9 @@ sunos.estruturas.comunal.var = {}
 -- Tabela de niveis de acordo com população
 sunos.estruturas.comunal.var.niveis = {
 	1, -- nivel 1
-	15,--20, -- nivel 2
+	12, -- nivel 2
 }
 
--- Nodes estruturais
-sunos.estruturas.comunal.var.nodes_estruturais = {
-	-- Palha
-	"farming:straw", 
-	"stairs:stair_straw", 
-	"stairs:slab_straw", 
-	-- Madeiras
-	"default:wood", 
-	"default:fence_wood", 
-	"stairs:stair_wood",
-	-- Pedrosos
-	"default:cobble", 
-	"stairs:stair_cobble",
-	"walls:cobble",
-	"default:stonebrick",
-	"default:furnace",
-	"default:furnace_active",
-	-- Moveis domesticos
-	"vessels:shelf",
-	"default:bookshelf",
-	"sunos:bancada_nodrop",
-	"sunos:bancada_de_trabalho_nodrop",
-	-- Vidro
-	"xpanes:pane",
-	"xpanes:pane_flat",
-	-- Portas
-	"doors:door_wood_a",
-	"doors:door_wood_b",
-	"doors:gate_wood_closed",
-	"doors:gate_wood_open",
-	-- Iluminação
-	"default:torch",
-	"default:torch_wall",
-	"default:torch_ceiling"
-}
 
 -- Tabela do menu da casa comunal 
 sunos.estruturas.comunal.var.tb_menu_comunal = {

@@ -1,6 +1,6 @@
 --[[
 	Mod Sunos para Minetest
-	Copyright (C) 2017 BrunoMine (https://github.com/BrunoMine)
+	Copyright (C) 2018 BrunoMine (https://github.com/BrunoMine)
 	
 	Recebeste uma cópia da GNU Lesser General
 	Public License junto com esse software,
@@ -101,17 +101,19 @@ sunos.estruturas.comunal.construir = function(pos, dist, vila)
 	
 	-- Pegar nivel
 	local nivel = sunos.verif_nivel(sunos.bd.pegar("vila_"..vila, "pop_total"), sunos.estruturas.comunal.var.niveis)
+	if nivel == 0 then nivel = 1 end -- evita pegar nivel 0
 	
 	-- Criar casa comunal
 	
-	-- Escolhe uma rotação aleatória ou pega a já existente
-	local rotat = minetest.get_meta(pos):get_string("rotat")
-	if rotat == "" then
-		rotat = sunos.pegar_rotat()
-	end
+	local rotat = sunos.pegar_rotat()
+	local schem = "nivel_"..nivel
 	
+	-- Pega schem ja existente
 	-- Atualizar schem do nivel
-	local schem = "nivel_" .. nivel
+	if old_meta_tb ~= nil and old_meta_tb.schem ~= nil then
+		rotat = old_meta_tb.rotat
+		schem = old_meta_tb.schem
+	end
 	
 	-- Caminho do arquivo da estrutura
 	local caminho_arquivo = modpath.."/schems/comunal/"..schem..".13.mts"
@@ -126,6 +128,9 @@ sunos.estruturas.comunal.construir = function(pos, dist, vila)
 	
 	-- Criar estrutura
 	minetest.place_schematic({x=pos.x-dist,y=pos.y,z=pos.z-dist}, caminho_arquivo, rotat, sunos.var.nodes_trocados, true)
+	
+	-- Colocar saidas para rua
+	sunos.saida_para_rua(pos, dist)
 	
 	-- Verifica se já tem fundamento
 	if old_meta_tb ~= nil then
@@ -178,7 +183,7 @@ sunos.estruturas.comunal.apos_restaurar_estrutura = function(pos)
 	
 	local meta = minetest.get_meta(pos)
 	local dist = tonumber(meta:get_string("dist"))
-	local vila = meta:get_string("dist")
+	local vila = tonumber(meta:get_string("vila"))
 	
 	-- Configura novos baus
 	set_bau({x=pos.x,y=pos.y,z=pos.z}, vila, dist)
@@ -210,3 +215,10 @@ sunos.estruturas.comunal.verificar = function(pos)
 	return true
 end
 
+-- Verificação de estrutura defendida
+sunos.estruturas.comunal.defendido = function(pos)
+	
+	-- Sempre protegido
+	return true
+	
+end

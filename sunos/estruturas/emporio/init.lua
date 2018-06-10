@@ -1,6 +1,6 @@
 --[[
 	Mod Sunos para Minetest
-	Copyright (C) 2017 BrunoMine (https://github.com/BrunoMine)
+	Copyright (C) 2018 BrunoMine (https://github.com/BrunoMine)
 	
 	Recebeste uma cópia da GNU Lesser General
 	Public License junto com esse software,
@@ -25,41 +25,6 @@ dofile(minetest.get_modpath("sunos").."/estruturas/emporio/diretrizes.lua")
 dofile(minetest.get_modpath("sunos").."/estruturas/emporio/placa.lua") 
 
 
--- Nodes estruturais
-local nodes_estruturais = {
-	-- Palha
-	"farming:straw", 
-	"stairs:stair_straw", 
-	"stairs:slab_straw", 
-	-- Madeiras
-	"default:wood", 
-	"default:fence_wood", 
-	"stairs:stair_wood",
-	-- Pedrosos
-	"default:cobble", 
-	"stairs:stair_cobble",
-	"walls:cobble",
-	"default:stonebrick",
-	"default:furnace",
-	"default:furnace_active",
-	-- Moveis domesticos
-	"vessels:shelf",
-	"default:bookshelf",
-	"sunos:bancada_nodrop",
-	"sunos:bancada_de_trabalho_nodrop",
-	-- Vidro
-	"xpanes:pane",
-	"xpanes:pane_flat",
-	-- Portas
-	"doors:door_wood_a",
-	"doors:door_wood_b",
-	-- Iluminação
-	"default:torch",
-	"default:torch_wall",
-	"default:torch_ceiling"
-}
-
-
 -- Construir emporio de sunos
 --[[
 	Essa função construi uma emporio de sunos e configura o fundamento
@@ -68,8 +33,8 @@ local nodes_estruturais = {
 		^ string de erro caso algo de errado
 	Argumentos:
 		<pos> é a coordenada do fundamento da estrutura
+		<dist>
 		<vila> OPCIONAL | é o numero da vila a qual a estrutura decorativa pertence
-		<verif_area> OPCIONAL | true verificar a area antes de montar a estrutura (retorna strings dos erros)
 ]]
 sunos.estruturas.emporio.construir = function(pos, dist, vila)
 	
@@ -88,9 +53,9 @@ sunos.estruturas.emporio.construir = function(pos, dist, vila)
 	
 	-- Pegar nivel
 	local nivel = sunos.verif_nivel(sunos.bd.pegar("vila_"..vila, "pop_total"), sunos.estruturas.emporio.var.niveis)
+	if nivel == 0 then nivel = 1 end -- evita pegar nivel 0
 	
 	-- Variaveis auxiliares
-	local dist = 5
 	local largura = (dist*2)+1
 	local pos1 = {x=pos.x-dist, y=pos.y, z=pos.z-dist}
 	local pos2 = {x=pos.x+dist, y=pos.y+14, z=pos.z+dist}
@@ -100,16 +65,14 @@ sunos.estruturas.emporio.construir = function(pos, dist, vila)
 	
 	-- Criar estrutura
 	
-	-- Escolhe uma rotação aleatória ou pega a já existente
-	local rotat = minetest.get_meta(pos):get_string("rotat")
-	if rotat == "" then
-		rotat = sunos.pegar_rotat()
-	end
+	local rotat = sunos.pegar_rotat()
+	local schem = "nivel_"..nivel
 	
+	-- Pega schem ja existente
 	-- Atualizar schem do nivel
-	local schem = minetest.get_meta(pos):get_string("schem")
-	if schem == "" then
-		schem = "nivel_"..nivel
+	if old_meta_tb ~= nil and old_meta_tb.schem ~= nil then
+		rotat = old_meta_tb.rotat
+		schem = old_meta_tb.schem
 	end
 	
 	-- Caminho do arquivo da estrutura
@@ -117,6 +80,9 @@ sunos.estruturas.emporio.construir = function(pos, dist, vila)
 	
 	-- Criar estrutura
 	minetest.place_schematic({x=pos.x-dist, y=pos.y, z=pos.z-dist}, caminho_arquivo, rotat, sunos.var.nodes_trocados, true)
+	
+	-- Colocar saidas para rua
+	sunos.saida_para_rua(pos, dist)
 	
 	-- Verifica se já tem fundamento
 	if old_meta_tb ~= nil then
@@ -183,6 +149,13 @@ sunos.estruturas.emporio.verificar = function(pos)
 	return true
 end
 
+-- Verificação de estrutura defendida
+sunos.estruturas.emporio.defendido = function(pos)
+	
+	-- Sempre protegido
+	return true
+	
+end
 
 -- Verificar terreno e vila
 local verificar_terreno = function(pos, dist)
@@ -277,5 +250,4 @@ minetest.register_node("sunos:fundamento_emporio", {
 	end,
 })
 
--- Caminho do diretório do mod
-local modpath = minetest.get_modpath("sunos")
+

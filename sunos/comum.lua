@@ -603,7 +603,7 @@ end
 
 -- Contar nodes estruturais na estrutura
 sunos.contar_nodes_estruturais = function(pos, dist)
-
+	dist = tonumber(dist)
 	local pos1 = {x=pos.x-dist, y=pos.y, z=pos.z-dist}
 	local pos2 = {x=pos.x+dist, y=pos.y+14, z=pos.z+dist}	
 	

@@ -391,136 +391,6 @@ local montar_rua_estrutura = function(pos, dist)
 	end
 end
 
--- Cria saidas para a rua nas estruturas
---[[
-	O objetivo é evidenciar as saidas que não tem portas na estrutura 
-	mas que são saidas normais como lojas, quintais e etc. Sempre com pedregulhos
-	Arquimentos:
-		<pos> coordenada do centro do solo da estrutura
-		<dist> distancia de centro a borda da estrutura
-  ]]
-local saida_para_rua = function(pos, dist)
-
-	-- Pegar todos os nodes de terra no solo até + 1 em volta da estrutura
-	local terras = minetest.find_nodes_in_area(
-		{x=pos.x-dist-1, y=pos.y, z=pos.z-dist-1}, 
-		{x=pos.x+dist+1, y=pos.y, z=pos.z+dist+1}, 
-		{"default:dirt_with_grass"}
-	)
-	
-	for _,p in ipairs(terras) do
-		
-			-- Verifica os 4 nodes ao redor
-			local n1 =  minetest.get_node({x=p.x+1, y=p.y, z=p.z}).name -- X+
-			local n2 =  minetest.get_node({x=p.x-1, y=p.y, z=p.z}).name -- X-
-			local n3 =  minetest.get_node({x=p.x, y=p.y, z=p.z+1}).name -- Z+
-			local n4 =  minetest.get_node({x=p.x, y=p.y, z=p.z-1}).name -- Z-
-			
-			-- Coordenada do node de pedra
-			local pp = {}
-			
-			-- Valida se existe rua perto da saida
-			local tem_rua = false
-			if n1 == "sunos:rua_calcetada" or n1 == "stairs:slab_rua_calcetada"
-				or n2 == "sunos:rua_calcetada" or n2 == "stairs:slab_rua_calcetada"
-				or n3 == "sunos:rua_calcetada" or n3 == "stairs:slab_rua_calcetada"
-				or n4 == "sunos:rua_calcetada" or n4 == "stairs:slab_rua_calcetada"
-			then
-				tem_rua = true
-			end
-			
-			if tem_rua then
-			
-				-- Verifica se um dos nodes é de pedra
-				if n1 == "default:cobble" then
-					pp = {x=p.x+1, y=p.y, z=p.z}
-				elseif n2 == "default:cobble" then
-					pp = {x=p.x-1, y=p.y, z=p.z}
-				elseif n3 == "default:cobble" then
-					pp = {x=p.x, y=p.y, z=p.z+1}
-				elseif n4 == "default:cobble" then
-					pp = {x=p.x, y=p.y, z=p.z-1}
-				end
-			
-			
-				-- Verifica se tem nada nas duas coordenadas acima
-				if pp then
-					if minetest.get_node({x=pp.x, y=p.y+1, z=pp.z}).name == "air"
-						and minetest.get_node({x=pp.x, y=p.y+2, z=pp.z}).name == "air"
-					then
-						-- Altera a terra para rua
-						colocar_rua(p)
-					end
-				end
-			end
-		end
-	
-end
-
--- Coloca uma rua calcetada na porta para rua de uma estrutura
---[[
-	Argumentos:
-		<pos> coordenada do centro do solo da estrutura
-		<dist> distancia de centro a borda da estrutura
-  ]]
-local porta_para_rua = function(pos, dist)
-	
-	-- Localiza todas as portas da estrutura
-	local portas = minetest.find_nodes_in_area(
-		{x=pos.x-dist, y=pos.y, z=pos.z-dist}, 
-		{x=pos.x+dist, y=pos.y+14, z=pos.z+dist}, 
-		{"doors:door_wood_a"}
-	)
-	
-	-- Separar portas para a rua
-	do
-		-- Coordenadas das portas para a rua
-		local pr = {}
-	
-		for _,p in ipairs(portas) do
-		
-			-- Procura node de rua perto da porta (do solo da porta para pegar a rua caso ela esteja mais para baixo)
-			local r =  minetest.find_node_near({x=p.x, y=p.y-1, z=p.z}, 2, {"sunos:rua_calcetada"})
-			if r then
-				table.insert(pr, p)
-			end
-		end
-		
-		-- Atualiza lista de portas analizadas
-		portas = pr
-	end
-	
-	-- Coloca nodes para a rua nas portas para a rua
-	for _,p in ipairs(portas) do
-		
-		-- Pega a altura da rua para os verificadores posteriores acertarem a altura do node desejado
-		local y = minetest.find_node_near({x=p.x, y=p.y-1, z=p.z}, 2, {"sunos:rua_calcetada", "stairs:slab_rua_calcetada"}).y
-		
-		-- Verifica para que lado está a rua
-		if minetest.get_node({x=p.x+2, y=y, z=p.z}).name == "sunos:rua_calcetada" 
-			or minetest.get_node({x=p.x+2, y=y, z=p.z}).name == "stairs:slab_rua_calcetada"
-		then -- X+
-			colocar_rua({x=p.x+1, y=p.y-1, z=p.z})
-			
-		elseif minetest.get_node({x=p.x-2, y=y, z=p.z}).name == "sunos:rua_calcetada" 
-			or minetest.get_node({x=p.x-2, y=y, z=p.z}).name == "stairs:slab_rua_calcetada"
-		then -- X-
-			colocar_rua({x=p.x-1, y=p.y-1, z=p.z})
-			
-		elseif minetest.get_node({x=p.x, y=y, z=p.z+2}).name == "sunos:rua_calcetada" 
-			or minetest.get_node({x=p.x, y=y, z=p.z+2}).name == "stairs:slab_rua_calcetada"
-
-		then -- Z+
-			colocar_rua({x=p.x, y=p.y-1, z=p.z+1})
-			
-		elseif minetest.get_node({x=p.x, y=y, z=p.z-2}).name == "sunos:rua_calcetada" 
-			or minetest.get_node({x=p.x, y=y, z=p.z-2}).name == "stairs:slab_rua_calcetada"
-		then -- Z-
-			colocar_rua({x=p.x, y=p.y-1, z=p.z-1})
-		end
-	end
-end
-
 
 -- Montar uma vila
 --[[
@@ -665,6 +535,8 @@ sunos.criar_vila = function(pos_ref)
 			-- Troca o tipo para decor caso a largura seja 3
 			if largura == 3 then tipo = "decor" end
 			
+			-- Colocar rua em volta da estrutura montada
+			montar_rua_estrutura(dados.pos, dados.dist)
 			
 			if tipo == "casa" then
 				
@@ -690,15 +562,6 @@ sunos.criar_vila = function(pos_ref)
 				
 				tem_loja = true
 			end
-			
-			-- Colocar rua em volta da estrutura montada
-			montar_rua_estrutura(dados.pos, dados.dist)
-			
-			-- Levar rua até as portas para a rua da estrutura
-			porta_para_rua(dados.pos, dados.dist)
-			
-			-- Preparar caminhos para a rua
-			saida_para_rua(dados.pos, dados.dist)
 			
 		end
 		

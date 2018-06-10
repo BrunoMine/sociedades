@@ -318,8 +318,8 @@ interagir_mobilia.escolher_mobilia = function(self, place_names)
 		return interagir_mobilia.escolher_mobilia(self, place_names)
 	end
 	
-	-- Nao precisa verificar
-	return sunos.copy_tb(self.places_map[name])
+	-- Nao catalogado
+	return nil
 end
 local escolher_mobilia = interagir_mobilia.escolher_mobilia
 

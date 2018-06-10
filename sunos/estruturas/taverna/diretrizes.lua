@@ -17,7 +17,7 @@ sunos.estruturas.taverna.var = {}
 -- Tabela de niveis de acordo com população
 sunos.estruturas.taverna.var.niveis = {
 	15, -- nivel 1
-	35, -- nivel 2
+	30, -- nivel 2
 }
 
 -- Insere o item para ser vendido na casa comunal

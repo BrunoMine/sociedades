@@ -1,6 +1,6 @@
 --[[
 	Mod Sunos para Minetest
-	Copyright (C) 2017 BrunoMine (https://github.com/BrunoMine)
+	Copyright (C) 2018 BrunoMine (https://github.com/BrunoMine)
 	
 	Recebeste uma cópia da GNU Lesser General
 	Public License junto com esse software,
@@ -113,6 +113,9 @@ sunos.estruturas.casa.construir = function(pos, dist, vila)
 	-- Recoloca itens reais (apartir dos itens de reposição)
 	sunos.decor_repo(pos, dist, sunos.estruturas.casa.gerar_itens_repo[tostring(dist)]())
 	
+	-- Colocar saidas para rua
+	sunos.saida_para_rua(pos, dist)
+	
 	-- Ajustar fornos
 	sunos.ajustar_fornos(pos, dist)
 	
@@ -172,12 +175,13 @@ sunos.estruturas.casa.apos_restaurar_estrutura = function(pos)
 	
 	-- Troca os itens de reposição
 	sunos.decor_repo(pos, dist, sunos.estruturas.casa.gerar_itens_repo[tostring(dist)]())	
+	meta:set_string("nodes", sunos.contar_nodes_estruturais(pos, dist)) -- Atualiza nodes estruturais
 	
 	-- Configura novos baus
 	set_bau({x=pos.x,y=pos.y,z=pos.z}, vila, dist)
 end
 
--- Verificação de estrutura de casa defendida
+-- Verificação de estrutura defendida
 sunos.estruturas.casa.defendido = function(pos)
 	
 	-- Sempre protegido

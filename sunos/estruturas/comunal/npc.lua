@@ -35,6 +35,18 @@ sunos.npcs.npc.registrar("comunal", {
 		{name = "default:apple", chance = 2, min = 1, max = 2},
 		{name = "default:axe_stone", chance = 5, min = 1, max = 1},
 	},
+	
+	on_spawn = function(self)
+		
+		-- Fica observando o ambiente
+		npc.exec.enqueue_program(self, "advanced_npc:idle", 
+			{
+				acknowledge_nearby_objs = true,
+			},
+			{},
+			true
+		)
+	end,
 })
 
 

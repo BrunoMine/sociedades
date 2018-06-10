@@ -51,11 +51,23 @@ end
 minetest.register_abm({
 	label = "Reforma de estruturas",
 	nodenames = {"sunos:fundamento"},
-	interval = 5,
-	chance = 1,
+	interval = sunos.var.tempo_verif_restauro,
+	chance = 3,
 	action = function(pos)
+		
 		-- Verifica se a casa está muito destruida
-		if sunos.contar_blocos_destruidos(pos) > 1 then
+		if sunos.contar_blocos_destruidos(pos) ~= 0 then
+			local meta = minetest.get_meta(pos)
+			local dist = tonumber(meta:get_string("dist"))
+			local vila = tonumber(meta:get_string("vila"))
+			
+			-- Verifica se tem jogadores no interior da estrutura
+			for _,obj in ipairs(minetest.get_objects_inside_radius({x=pos.x, y=pos.y+7, z=pos.z}, 7)) do
+				if obj:is_player() then
+					return -- Cancela
+				end
+			end
+			
 			-- Verificando estrutura
 			sunos.verificar_fundamento(pos)
 			

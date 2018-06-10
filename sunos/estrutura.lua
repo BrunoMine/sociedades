@@ -33,7 +33,7 @@ minetest.register_node("sunos:fundamento", {
 	
 	-- Clique direito para restaurar
 	on_rightclick = function(pos, node, player, itemstack, pointed_thing)	
-	
+		sunos.verificar_fundamento(pos)
 		local meta = minetest.get_meta(pos)
 		local vila = meta:get_string("vila")
 		local tipo = meta:get_string("tipo")
@@ -84,6 +84,7 @@ minetest.register_node("sunos:fundamento", {
 
 -- Funcao para verificar fundamentos
 sunos.verificar_fundamento = function(pos)
+
 	if not pos then return end
 	
 	local node = minetest.get_node(pos)
@@ -98,11 +99,9 @@ sunos.verificar_fundamento = function(pos)
 	local numero = meta:get_string("estrutura")
 	local dist = tonumber(meta:get_string("dist"))
 	
-	if not vila then return end
-	
 	-- Verificar mapa carregado antes de verificar estruturas
 	if sunos.verif_carregamento(pos, tonumber(dist)) == false then
-		minetest.chat_send_all("2")
+		minetest.chat_send_all("nao carregado")
 		return
 	end
 	
@@ -146,7 +145,7 @@ sunos.verificar_fundamento = function(pos)
 	end
 	
 	-- Verifica se a casa está muito destruida
-	if sunos.contar_blocos_destruidos(pos) > 8 then
+	if sunos.contar_blocos_destruidos(pos) > sunos.var.limite_nodes_destruidos_abandonar then
 		-- Exclui o arquivo da estrutura do banco de dados
 		sunos.bd.remover("vila_"..vila, tipo.."_"..numero) -- Caso seja repetivel
 		sunos.bd.remover("vila_"..vila, tipo) -- Caso seja unico

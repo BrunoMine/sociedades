@@ -30,13 +30,23 @@ end
 -- Registrar npc
 sunos.npcs.npc.registrar("barman", {
 	
-	node_spawner = "sunos:bau_taverna",
-	
 	drops = {
 		{name = "default:wood", chance = 1, min = 1, max = 3},
 		{name = "default:apple", chance = 2, min = 1, max = 2},
 		{name = "default:axe_stone", chance = 5, min = 1, max = 1},
 	},
+	
+	on_spawn = function(self)
+		
+		-- Fica observando o ambiente
+		npc.exec.enqueue_program(self, "advanced_npc:idle", 
+			{
+				acknowledge_nearby_objs = true,
+			},
+			{},
+			true
+		)
+	end,
 })
 
 -- interface do npc (carregamento de script)

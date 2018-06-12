@@ -27,7 +27,7 @@ npc.occupations.register_occupation("sunos_npc_caseiro", {
 	surrounding_building_types = {},
 	walkable_nodes = sunos.estruturas.casa.walkable_nodes,
 	initial_inventory = {},
-	schedules_entries = sunos.copy_tb({
+	schedules_entries = {
 		-- Durmir
 		[0] = sunos.estruturas.casa.durmir,
 		[1] = sunos.estruturas.casa.durmir,
@@ -55,6 +55,6 @@ npc.occupations.register_occupation("sunos_npc_caseiro", {
 		-- Durmir
 		[22] = sunos.estruturas.casa.durmir,
 		[23] = sunos.estruturas.casa.durmir
-	})
+	}
 			
 })

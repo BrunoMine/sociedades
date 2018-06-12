@@ -30,6 +30,19 @@ sunos.estruturas.casa.interagir_casa = {
 	},
 }
 
+-- Interagir na feirinha
+sunos.estruturas.casa.interagir_feirinha = {
+	[1] = {
+		program_name = "sunos:interagir_mobilia",
+		arguments = {
+			search = {
+				"sunos:bau_loja",
+			},
+			search_dist = 5,
+		},
+		is_state_program = true,
+	},
+}
 
 -- Durmir
 sunos.estruturas.casa.durmir = {

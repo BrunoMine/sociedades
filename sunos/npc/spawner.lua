@@ -148,7 +148,7 @@ sunos.npc_checkin.register_spawner = function(nodename, def)
 					
 					-- Verifica se NPC desse node já está ativo
 					if sunos.npcs.is_active(pos) ~= true then
-						
+						minetest.chat_send_all("nao esta ativo")
 						-- Verificar dados do npc
 						local mynpc_checkin = get_mynpc_checkin(pos_npc)
 						

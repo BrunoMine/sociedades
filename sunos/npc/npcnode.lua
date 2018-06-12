@@ -53,3 +53,17 @@ sunos.npcnode.set_npcnode = function(pos, def)
 	meta:set_string("sunos_mynpc_checkin", minetest.serialize(def.checkin))
 	
 end
+
+sunos.npcnode.atribuir_npc = function(pos, self)
+	
+	local meta = minetest.get_meta(pos)
+	
+	-- Salva ocupação informando que está sendo usada
+	self.sunos_occupation = meta:get_string("sunos_npc_occupation")
+	
+	-- Salva checkin do node no NPC
+	self.sunos_checkin = minetest.deserialize(meta:get_string("sunos_mynpc_checkin"))
+	minetest.chat_send_all("inicializando")
+	-- Inicializa variaveis de ocupação
+	npc.occupations.initialize_occupation_values(self, self.sunos_occupation)
+end

@@ -112,6 +112,20 @@ local mobilias = {
 			alcance = 7,
 		},
 	},
+	["sunos:bau_loja"] = {
+		-- Tempo de atividade
+		time = 0,
+		-- Animações
+		anim = animacoes["sunos_movimento_bau.b3d"],
+		-- Particulas
+		-- Nenhuma
+		-- Som
+		som = {
+			name = "sunos_bau_abrir_fechar",
+			gain = sons["sunos_bau_abrir_fechar"].gain,
+			alcance = 7,
+		},
+	},
 	["sunos:kit_culinario"] = {
 		-- Tempo de atividade
 		time = 8,
@@ -170,6 +184,7 @@ mobilias["sunos:tear_palha_nodrop"] = mobilias["sunos:tear_palha"]
 mobilias["sunos:kit_culinario_nodrop"] = mobilias["sunos:kit_culinario"]
 mobilias["sunos:wood_barrel_nodrop"] = mobilias["sunos:wood_barrel"]
 mobilias["sunos:caixa_de_musica_nodrop"] = mobilias["sunos:caixa_de_musica"]
+
 
 -- Verificar distancia entre duas pos
 local verif_dist_pos = function(pos1, pos2)
@@ -290,7 +305,6 @@ interagir_mobilia.escolher_mobilia = function(self, place_names)
 	-- Escolhe um aleatorio
 	local i = math.random(1, #place_names)
 	local name = place_names[i]
-	
 	-- Verifica se local está registrado no NPC
 	if self.places_map[name] == nil then 
 		table.remove(place_names, i)
@@ -305,10 +319,10 @@ interagir_mobilia.escolher_mobilia = function(self, place_names)
 		self.places_map[name] = nil -- Remove local
 		return interagir_mobilia.escolher_mobilia(self, place_names)
 	end
-	if sunos.nodes_de_mobilias[nn] then
-		for _,n in ipairs(sunos.nodes_de_mobilias[nn]) do
+	if sunos.nodes_de_mobilias[name] then
+		for _,n in ipairs(sunos.nodes_de_mobilias[name]) do
 			if n == nn then
-				-- Node certo
+				-- Node certonn
 				return sunos.copy_tb(self.places_map[name])
 			end
 		end
@@ -317,24 +331,45 @@ interagir_mobilia.escolher_mobilia = function(self, place_names)
 		self.places_map[name] = nil -- Remove local
 		return interagir_mobilia.escolher_mobilia(self, place_names)
 	end
-	
 	-- Nao catalogado
 	return nil
 end
 local escolher_mobilia = interagir_mobilia.escolher_mobilia
 
+-- Encontrar node por perto e salva-lo no place map para interagir
+local buscar_node_para_interagir = function(self, list, dist)
+	local pos = self.object:getpos()
+	local nodes = minetest.find_nodes_in_area(
+		{x=pos.x-dist, y=pos.y-dist, z=pos.z-dist}, 
+		{x=pos.x+dist, y=pos.y+dist, z=pos.z+dist}, 
+		list
+	)
+	if nodes[1] == nil then return end
+	
+	-- Sorteia um dos encontrados
+	local i = math.random(1, table.maxn(nodes))
+	local v = minetest.facedir_to_dir(minetest.get_node(nodes[i]).param2)
+	local acesso = vector.subtract(nodes[i], v)
+	npc.locations.add_shared(self, "sunos_alvo_mobilia", "sunos_alvo_mobilia", nodes[i], acesso)
+	return sunos.copy_tb(self.places_map["sunos_alvo_mobilia"])
+end
+
 
 -- Interagir aleatoriamente com a mobilia da casa
 npc.programs.register("sunos:interagir_mobilia", function(self, args)
-	
 	-- Verificar total de lugares disponiveis no NPC
 	local t = 0
 	-- Conta o total
-	for _,n in ipairs(args.place_names) do
-		if self.places_map[n] ~= nil then
-			t = t + 1
+	if args.place_names then
+		for _,n in ipairs(args.place_names) do
+			if self.places_map[n] ~= nil then
+				t = t + 1
+			end
 		end
 	end
+	
+	-- Tabela do local no Place map
+	local p = nil
 	
 	-- Verificar tabela de mobilias
 	if self.sunos_interagir_mobilia_tb == nil then
@@ -343,11 +378,18 @@ npc.programs.register("sunos:interagir_mobilia", function(self, args)
 	
 	local mypos = self.object:getpos()
 	
-	local p = escolher_mobilia(self, sunos.copy_tb(args.place_names))
+	if args.place_names ~= nil then
+		p = escolher_mobilia(self, sunos.copy_tb(args.place_names))
+	elseif args.search ~= nil then
+		p = buscar_node_para_interagir(self, args.search, (args.search_dist or 5))
+		if p == nil then
+			self.flags["sunos_checkin_status"] = "fora"
+		end
+	end
 	
 	-- Interagir com uma mobilia
 	if p ~= nil then 
-	
+		
 		-- Analisa node escolhido
 		local m = mobilias[sunos.pegar_node(p.pos).name]
 		if not m then
@@ -364,7 +406,7 @@ npc.programs.register("sunos:interagir_mobilia", function(self, args)
 						place_type="sunos_alvo_mobilia",
 						use_access_node=true,
 					},
-					walkable = sunos.estruturas.casa.walkable_nodes
+					walkable = sunos.var.node_group.walkable,
 				},
 				interrupt_options = {}
 			})

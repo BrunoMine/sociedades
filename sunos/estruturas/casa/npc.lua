@@ -168,13 +168,8 @@ sunos.npcs.npc.registrar("caseiro", {
 		
 		local meta = minetest.get_meta(self.mypos)
 		
-		-- Verifica se ja tem roteiro salvo em si mesmo
-		if self.sunos_occupation == nil then
-			self.sunos_occupation = meta:get_string("sunos_npc_occupation")
-			
-			-- Inicializa variaveis de ocupação
-			npc.occupations.initialize_occupation_values(self, self.sunos_occupation)
-		end
+		-- Realiza atribuições do npcnode ao npc spawnado
+		sunos.npcnode.atribuir_npc(self.mypos, self)
 		
 		-- Verifica se ja tem lugares salvos
 		if not npc.locations.get_by_type(self, "bau")[1] then
@@ -218,18 +213,19 @@ sunos.estruturas.casa.select_occupation = function(pos, vila)
 		["23"] = pos,
 	}
 	
-	local loja = sunos.verif_estrutura_existe(vila, "loja")
+	local loja = sunos.bd.verif("vila_"..vila, "loja")
 	
-	-- Sorteia numero entre 1 e 100
+	-- CASEIRO 40%
 	local s = math.random(1, 100)
 	
 	if s >= 1 and s <= 40 then -- minimo 40% é caseiro
 		
-		return occupation, checkin
-		
-	elseif s >= 41 and s <= 70 and loja then -- 30% é lojista
+		return "sunos_npc_caseiro", checkin
 	
-		local dados_loja = sunos.bd.pegar("vila_"..vila, sunos.verif_estrutura_existe(vila, "loja"))
+	-- LOJISTA 30%
+	elseif s >= 41 and s <= 70 and loja == true then 
+	
+		local dados_loja = sunos.bd.pegar("vila_"..vila, "loja")
 		
 		checkin["7"] = dados_loja.estrutura.pos
 		checkin["8"] = dados_loja.estrutura.pos
@@ -237,8 +233,7 @@ sunos.estruturas.casa.select_occupation = function(pos, vila)
 		checkin["10"] = dados_loja.estrutura.pos
 		checkin["11"] = dados_loja.estrutura.pos
 		checkin["12"] = dados_loja.estrutura.pos
-		
-		return "sunos:npc_caseiro_lojista", checkin
+		return "sunos_npc_caseiro_lojista", checkin
 	end
 	
 	-- Os outros 30% tambem vira caseiro

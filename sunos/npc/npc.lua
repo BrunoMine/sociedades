@@ -150,11 +150,8 @@ end
 sunos.npcs.npc.send_to_checkin = function(self)
 	if not self or not self.object or not self.object:getpos() then return end
 	
-	-- Remove todas atividades atuais do NPC
-	self.actions.queue = {}
-	
 	local pos1 = sunos.copy_tb(self.object:getpos())
-	local pos2 = sunos.copy_tb(self.sunos_checkin[sunos.npcs.npc.get_time()])
+	local pos2 = sunos.copy_tb(self.sunos_checkin[tostring(sunos.npcs.npc.get_time())])
 	local cmds = 0
 	local dist = sunos.p1_to_p2(pos1, pos2)
 	
@@ -201,72 +198,6 @@ sunos.npcs.npc.send_to_checkin = function(self)
 		return false
 	end
 end
-
--- Envia o npc para uma coordenada alvo
---[[
-    Retorna true se conseguir enviar ação
-    Retorna false se nao conseguir
-  ]]
-sunos.npcs.npc.send_to_target = function(self, pos)
-	if not self or not self.object or not self.object:getpos() then return end
-	
-	-- Remove todas atividades atuais do NPC
-	self.actions.queue = {}
-	
-	local pos1 = sunos.copy_tb(self.object:getpos())
-	local pos2 = sunos.copy_tb(pos)
-	local cmds = 0
-	local dist = sunos.p1_to_p2(pos1, pos2)
-	
-	while (dist > 6) do
-		local pos_indo = sunos.ir_p1_to_p2(pos1, pos2, 7)
-		
-		-- Escolher caminho
-		-- 1º Rua calcetada
-		local alvo = minetest.find_node_near(pos_indo, 4, {"sunos:rua_calcetada"}, true)
-		-- 2º Gramado
-		if not alvo then
-			alvo = minetest.find_node_near(pos_indo, 4, {"default:dirt_with_grass"}, true)
-		end
-		-- 3º Carpete da casa
-		if not alvo then
-			alvo = minetest.find_node_near(pos_indo, 4, {"sunos:carpete_palha", "sunos:carpete_palha_nodrop"}, true)
-			if alvo then alvo.y = alvo.y-1 end
-		end
-		
-		if alvo then
-			if alvo then alvo.y = alvo.y+1 end
-		end
-		
-		if alvo then
-			-- Atualiza numero do comando
-			cmds = cmds + 1 
-			-- Salva o local para andar
-			npc.locations.add_shared_accessible_place(
-				self, 
-				{owner="", node_pos=alvo}, 
-				"sunos_npc_walk_target_"..cmds, 
-				true,
-				{}
-			)
-			npc.programs.execute(self, "advanced_npc:walk_to_pos", {
-				end_pos = "sunos_npc_walk_target_"..cmds,
-				walkable = sunos_walkable_nodes
-			})
-		end
-		
-		-- Atualiza para proximo loop
-		pos1 = sunos.copy_tb(pos_indo)
-		dist = sunos.p1_to_p2(pos1, pos2)
-	end
-	
-	if cmds > 0 then 
-		return true
-	else
-		return false
-	end
-end
-
 
 -- Envia o npc durmir
 --[[
@@ -446,6 +377,7 @@ sunos.npcs.npc.registrar = function(tipo, def)
 			if self.npc_state.movement.is_laying == true then
 				local target = sunos.copy_tb(npc.locations.get_by_type(self, "bed_primary")[1])
 				if not target or not target.pos then
+					minetest.chat_send_all("g")
 					self.object:remove()
 					return
 				end
@@ -463,6 +395,7 @@ sunos.npcs.npc.registrar = function(tipo, def)
 				-- Verifica se é o npc atual de seu node
 				local node = sunos.pegar_node(self.mypos) -- Certifica que carregou no node
 				if minetest.get_meta(self.mypos):get_string("sunos_npchash") ~= self.sunos_npchash then
+					minetest.chat_send_all("s")
 					self.object:remove()
 					return
 				else
@@ -480,6 +413,7 @@ sunos.npcs.npc.registrar = function(tipo, def)
 		do_custom = function(self, dtime)
 			
 			if not self.tipo then
+				minetest.chat_send_all("c")
 				self.object:remove()
 				return
 			end
@@ -493,6 +427,7 @@ sunos.npcs.npc.registrar = function(tipo, def)
 					or not sunos.npcs.npc.ativos[self.sunos_npchash]:getpos() 
 				then
 					-- Esse NPC ja está ativo em outro objeto
+					minetest.chat_send_all("z")
 					self.object:remove()
 					return					
 				end
@@ -508,6 +443,7 @@ sunos.npcs.npc.registrar = function(tipo, def)
 					
 					local node = sunos.pegar_node(self.mypos) -- Certifica que carregou no node
 					if minetest.get_meta(self.mypos):get_string("sunos_npchash") ~= self.sunos_npchash then
+						minetest.chat_send_all("k")
 						self.object:remove()
 						return
 					end
@@ -530,43 +466,15 @@ sunos.npcs.npc.registrar = function(tipo, def)
 				end
 				
 				-- Verificiar se deve ir para o checkin atual
-				if self.flags["sunos_checkin_status"] == "fora" then
-					if sunos.p1_to_p2(self.object:getpos(), sunos.copy_tb(self.sunos_checkin[sunos.npcs.npc.get_time()])) > 15 then
-						self.flags["sunos_checkin_status"] = "dentro"
-						local caminho = sunos.npcs.npc.send_to_checkin(self)
-						-- Impossivel andar ate o local destino
-						if caminho == false then
-							self.object:remove()
-							return
-						end
-					else
-						-- Ignora pois ja esta perto do edificio
-						self.flags["sunos_checkin_status"] = "dentro"
-					end
-				end
-				
-				-- Verificar se deve ir para proximo de uma coordenada
-				if self.flags["sunos_target_status"] and self.flags["sunos_target_status"] ~= "nenhum" then
-					local target = sunos.copy_tb(npc.locations.get_by_type(self, self.flags["sunos_target_status"])[1])
-					if not target or not target.pos then
-						self.flags["sunos_target_status"] = "nenhum"
-						return
-					end
-					
-					if sunos.p1_to_p2(self.object:getpos(), target.pos) > 6 then
-						
-						local caminho = sunos.npcs.npc.send_to_target(self, target.pos)
-						
-						self.flags["sunos_target_status"] = "nenhum"
-						-- Impossivel andar ate o local destino
-						if caminho == false then
-							self.object:remove()
-							return
-						end
-					else
-						-- Ignora pois ja esta perto do edificio
-						self.flags["sunos_target_status"] = "nenhum"
-					end
+				if sunos.p1_to_p2(
+					self.object:getpos(), 
+					sunos.copy_tb(self.sunos_checkin[tostring(sunos.npcs.npc.get_time())])) > 10 
+				then
+					minetest.chat_send_all("enviando")
+					npc.exec.enqueue_program(self, "sunos:walk_to_checkin", {
+						end_pos = sunos.copy_tb(self.sunos_checkin[tostring(sunos.npcs.npc.get_time())]),
+						dist_min = 10,
+					})
 				end
 				
 				-- Verifica se deve ir durmir
@@ -574,6 +482,7 @@ sunos.npcs.npc.registrar = function(tipo, def)
 				if self.flags["sunos_repouso_status"] == "durmir" then
 					local target = sunos.copy_tb(npc.locations.get_by_type(self, "bed_primary")[1])
 					if not target or not target.pos then
+						minetest.chat_send_all("b")
 						self.object:remove()
 						return
 					end
@@ -586,6 +495,7 @@ sunos.npcs.npc.registrar = function(tipo, def)
 						
 						-- Impossivel andar ate o local destino
 						if caminho == false then
+							minetest.chat_send_all("f")
 							self.object:remove()
 							return
 						end

@@ -130,6 +130,15 @@ sunos.var.musicas = {
 -- Tabela de grupos de nodes
 sunos.var.node_group = {
 	
+	-- Nodes andaveis para os NPCs
+	walkable = {
+		"sunos:carpete_palha",
+		"sunos:carpete_palha_nodrop",
+		"sunos:torch_nodrop",
+		"sunos:torch_ceiling_nodrop",
+		"sunos:torch_wall_nodrop"
+	},
+	
 	-- Nodes a terem metadados removidos quando schem for alterada
 	remover_metadados = {
 		-- Baus

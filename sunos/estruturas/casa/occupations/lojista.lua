@@ -16,74 +16,20 @@ local S = sunos.S
 
 local interagir_casa = sunos.estruturas.casa.interagir_casa
 
-local interagir_feirinha = {
-	-- Força ir para perto do centro da loja
-	[1] = {
-		program_name = "advanced_npc:internal_property_change",
-		arguments = {
-			property = "flag",
-			args = {
-				action = "set",
-				flag_name = "sunos_target_status",
-				flag_value = "sunos_feirinha",
-			}
-		},
-	},
-	-- Anda no carpete ou olha os baus da loja
-	[2] = {
-		check = true,
-		range = 3,
-		count = 5,
-		nodes = {
-			"sunos:carpete_palha_nodrop",
-			"sunos:bau_loja",
-		},
-		walkable_nodes = sunos.estruturas.casa.walkable_nodes,
-		prefer_last_acted_upon_node = false,
-		actions = {
-			-- Andar até o carpete
-			["sunos:carpete_palha_nodrop"] = {
-				[1] = {
-					program_name = "advanced_npc:walk_to_pos",
-					arguments = {
-						end_pos = "schedule_target_pos",
-						walkable = sunos.estruturas.casa.walkable_nodes
-					},
-					chance = 50
-				},
-			},
-			-- Olhar para um bau da loja
-			["sunos:bau_loja"] = {
-				[1] = {
-					program_name = "advanced_npc:rotate",
-					arguments = {
-						end_pos = "schedule_target_pos",
-					},
-				},
-				[2] = {
-					program_name = "advanced_npc:wait",
-					arguments = {
-						time = 5,
-					},
-				},
-			}
-		},
-		none_actions = sunos.estruturas.casa.alertar_fora_checkin,
-	},
-}
+local interagir_feirinha = sunos.estruturas.casa.interagir_feirinha
 
 -- Registra ocupação padrão no NPC caseiro
 npc.occupations.register_occupation("sunos_npc_caseiro_lojista", {
 	dialogues = {},
 	textures = {
-		{name="sunos_npc_male.png", tags={"male", "adult", "sunos_npc_caseiro"}},
-		{name="sunos_npc_female.png", tags={"female", "adult", "sunos_npc_caseiro"}}
+		{name="sunos_npc_male.png", tags={"male", "adult", "sunos_npc_caseiro_lojista"}},
+		{name="sunos_npc_female.png", tags={"female", "adult", "sunos_npc_caseiro_lojista"}}
 	},
 	building_types = {},
 	surrounding_building_types = {},
 	walkable_nodes = sunos.estruturas.casa.walkable_nodes,
 	initial_inventory = {},
-	schedules_entries = sunos.copy_tb({
+	schedules_entries = {
 		
 		-- Durmir
 		[0] = sunos.estruturas.casa.durmir,
@@ -113,7 +59,6 @@ npc.occupations.register_occupation("sunos_npc_caseiro_lojista", {
 		-- Durmir
 		[22] = sunos.estruturas.casa.durmir,
 		[23] = sunos.estruturas.casa.durmir
-		
-	})
+	}
 			
 })

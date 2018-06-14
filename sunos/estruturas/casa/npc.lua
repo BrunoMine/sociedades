@@ -165,16 +165,18 @@ sunos.npcs.npc.registrar("caseiro", {
 	},
 	
 	on_spawn = function(self)
-		
-		local meta = minetest.get_meta(self.mypos)
-		
-		-- Realiza atribuições do npcnode ao npc spawnado
-		sunos.npcnode.atribuir_npc(self.mypos, self)
-		
-		-- Verifica se ja tem lugares salvos
-		if not npc.locations.get_by_type(self, "bau")[1] then
-			-- Configurar lugares
-			set_npc_places(self)
+		-- Salva ocupação informando que está sendo usada
+		if self.sunos_occupation == nil then
+			local meta = minetest.get_meta(self.mypos)
+			self.sunos_occupation = meta:get_string("sunos_npc_occupation")
+			-- Realiza atribuições do npcnode ao npc spawnado
+			sunos.npcnode.atribuir_npc(self.mypos, self)
+			
+			-- Verifica se ja tem lugares salvos
+			if not npc.locations.get_by_type(self, "bau")[1] then
+				-- Configurar lugares
+				set_npc_places(self)
+			end
 		end
 	end,
 })
@@ -214,9 +216,8 @@ sunos.estruturas.casa.select_occupation = function(pos, vila)
 	}
 	
 	local loja = sunos.bd.verif("vila_"..vila, "loja")
-	
 	-- CASEIRO 40%
-	local s = math.random(1, 100)
+	local s = math.random(41, 70)
 	
 	if s >= 1 and s <= 40 then -- minimo 40% é caseiro
 		
@@ -226,7 +227,6 @@ sunos.estruturas.casa.select_occupation = function(pos, vila)
 	elseif s >= 41 and s <= 70 and loja == true then 
 	
 		local dados_loja = sunos.bd.pegar("vila_"..vila, "loja")
-		
 		checkin["7"] = dados_loja.estrutura.pos
 		checkin["8"] = dados_loja.estrutura.pos
 		checkin["9"] = dados_loja.estrutura.pos

@@ -89,7 +89,7 @@ sunos.npcs.npc.spawn = function(tipo, vila, npcnode_pos, spos)
 		minetest.log("error", "[Sunos] vila nula (em sunos.npcs.npc.spawn)")
 		return false
 	end
-	if not npcnode_pos then
+	if not npcnode_pos or not npcnode_pos.x then
 		minetest.log("error", "[Sunos] npcnode_pos nula (em sunos.npcs.npc.spawn)")
 		return false
 	end
@@ -110,6 +110,7 @@ sunos.npcs.npc.spawn = function(tipo, vila, npcnode_pos, spos)
 		ent.mypos = npcnode_pos -- pos do npcnode de spawn (bau)
 		ent.mynode = minetest.get_node(npcnode_pos).name -- nome do node de spawn (bau)
 		ent.sunos_fundamento = minetest.deserialize(minetest.get_meta(npcnode_pos):get_string("pos_fundamento"))
+		ent.sunos_checkin_status = "dentro"
 		
 		-- Gera um hash numerico com a data e coordenada
 		local hash = minetest.pos_to_string(npcnode_pos)..os.date("%Y%m%d%H%M%S")
@@ -377,7 +378,6 @@ sunos.npcs.npc.registrar = function(tipo, def)
 			if self.npc_state.movement.is_laying == true then
 				local target = sunos.copy_tb(npc.locations.get_by_type(self, "bed_primary")[1])
 				if not target or not target.pos then
-					minetest.chat_send_all("g")
 					self.object:remove()
 					return
 				end
@@ -395,7 +395,6 @@ sunos.npcs.npc.registrar = function(tipo, def)
 				-- Verifica se é o npc atual de seu node
 				local node = sunos.pegar_node(self.mypos) -- Certifica que carregou no node
 				if minetest.get_meta(self.mypos):get_string("sunos_npchash") ~= self.sunos_npchash then
-					minetest.chat_send_all("s")
 					self.object:remove()
 					return
 				else
@@ -413,7 +412,6 @@ sunos.npcs.npc.registrar = function(tipo, def)
 		do_custom = function(self, dtime)
 			
 			if not self.tipo then
-				minetest.chat_send_all("c")
 				self.object:remove()
 				return
 			end
@@ -427,7 +425,6 @@ sunos.npcs.npc.registrar = function(tipo, def)
 					or not sunos.npcs.npc.ativos[self.sunos_npchash]:getpos() 
 				then
 					-- Esse NPC ja está ativo em outro objeto
-					minetest.chat_send_all("z")
 					self.object:remove()
 					return					
 				end
@@ -443,7 +440,6 @@ sunos.npcs.npc.registrar = function(tipo, def)
 					
 					local node = sunos.pegar_node(self.mypos) -- Certifica que carregou no node
 					if minetest.get_meta(self.mypos):get_string("sunos_npchash") ~= self.sunos_npchash then
-						minetest.chat_send_all("k")
 						self.object:remove()
 						return
 					end
@@ -465,12 +461,21 @@ sunos.npcs.npc.registrar = function(tipo, def)
 					end
 				end
 				
+				if not self.sunos_checkin then
+					self.object:remove()
+					return
+				end
+				
 				-- Verificiar se deve ir para o checkin atual
-				if sunos.p1_to_p2(
-					self.object:getpos(), 
-					sunos.copy_tb(self.sunos_checkin[tostring(sunos.npcs.npc.get_time())])) > 10 
+				if self.sunos_checkin_status ~= "indo" -- Não está indo
+					and self.sunos_checkin_status ~= "enviado" -- Não foi enviado
+					and sunos.p1_to_p2(
+						self.object:getpos(), 
+						sunos.copy_tb(self.sunos_checkin[tostring(sunos.npcs.npc.get_time())])) > 10 
+					
 				then
-					minetest.chat_send_all("enviando")
+					self.sunos_checkin_status = "enviado"
+					
 					npc.exec.enqueue_program(self, "sunos:walk_to_checkin", {
 						end_pos = sunos.copy_tb(self.sunos_checkin[tostring(sunos.npcs.npc.get_time())]),
 						dist_min = 10,
@@ -478,11 +483,9 @@ sunos.npcs.npc.registrar = function(tipo, def)
 				end
 				
 				-- Verifica se deve ir durmir
-				
 				if self.flags["sunos_repouso_status"] == "durmir" then
 					local target = sunos.copy_tb(npc.locations.get_by_type(self, "bed_primary")[1])
 					if not target or not target.pos then
-						minetest.chat_send_all("b")
 						self.object:remove()
 						return
 					end
@@ -495,7 +498,6 @@ sunos.npcs.npc.registrar = function(tipo, def)
 						
 						-- Impossivel andar ate o local destino
 						if caminho == false then
-							minetest.chat_send_all("f")
 							self.object:remove()
 							return
 						end

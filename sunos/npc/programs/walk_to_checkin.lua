@@ -12,6 +12,7 @@
 
 -- Andar trecho de caminho até o checkin
 npc.programs.instr.register("sunos:walk_to_checkin_check", function(self, args)
+	--minetest.chat_send_all("sunos:walk_to_checkin_check")
 	-- Verifica distancia atual
 	if sunos.p1_to_p2(
 		self.object:getpos(), 
@@ -20,14 +21,15 @@ npc.programs.instr.register("sunos:walk_to_checkin_check", function(self, args)
 		-- Adiciona instrução para andar mais um trecho
 		npc.exec.proc.enqueue(self, "sunos:walk_to_checkin_step", args)
 	else
-		self.flags["sunos_checkin_status"] = "dentro"
+		self.sunos_checkin_status = "dentro"
+		--minetest.chat_send_all("chegou")
 	end
 end)
 
 
 -- Verificar se ja andou até o checkin
 npc.programs.instr.register("sunos:walk_to_checkin_step", function(self, args)
-	
+	--minetest.chat_send_all("sunos:walk_to_checkin_step")
 	-- Encontra um node para ir caminhando na direção do alvo
 	local pos_indo = sunos.ir_p1_to_p2(self.object:getpos(), args.end_pos, 7)
 	-- Escolher caminho
@@ -85,10 +87,14 @@ end)
 	}
   ]]
 npc.programs.register("sunos:walk_to_checkin", function(self, args)
+	--minetest.chat_send_all("sunos:walk_to_checkin")
+	--minetest.chat_send_all("self.sunos_checkin_status = "..dump(self.sunos_checkin_status))
 	-- Verifica se ja esta acaminho do checkin
-	if self.flags["sunos_checkin_status"] ~= "indo" then
-		self.flags["sunos_checkin_status"] = "indo"
+	if self.sunos_checkin_status ~= "indo" then
+		self.sunos_checkin_status = "indo"
 		-- Realiza primeira verificação (daí em diante um loop ira continuar)
 		npc.programs.instr.execute(self, "sunos:walk_to_checkin_check", args)
+	else
+		--minetest.chat_send_all("ja esta indo")
 	end
 end)

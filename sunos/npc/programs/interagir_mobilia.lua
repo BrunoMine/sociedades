@@ -62,9 +62,6 @@ local animacoes = {
 	},
 }
 
--- Nodes de mobilias (index é o place_name)
-sunos.nodes_de_mobilias = {}
-
 -- Tabela de caracteristicas de interação com cada mobilia
 local mobilias = {
 	["sunos:bancada_de_trabalho"] = {
@@ -357,6 +354,24 @@ end
 
 -- Interagir aleatoriamente com a mobilia da casa
 npc.programs.register("sunos:interagir_mobilia", function(self, args)
+	
+	-- Verifica se esta minimamente perto do checkin
+	if sunos.p1_to_p2(
+		self.object:getpos(), 
+		sunos.copy_tb(self.sunos_checkin[tostring(sunos.npcs.npc.get_time())])) > 9
+	then
+		npc.exec.proc.enqueue(self, "advanced_npc:interrupt", {
+			new_program = "advanced_npc:idle",
+			new_args = {
+				acknowledge_nearby_objs = true,
+			},
+			interrupt_options = {}
+		})
+		npc.exec.proc.enqueue(self, "advanced_npc:wait", {
+			time = math.random(5, 10),
+		})
+	end
+	
 	-- Verificar total de lugares disponiveis no NPC
 	local t = 0
 	-- Conta o total

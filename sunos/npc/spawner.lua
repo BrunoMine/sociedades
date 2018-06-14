@@ -38,7 +38,7 @@ local pos_to_string = function(pos)
 end
 local string_to_pos = function(st)
 	local p = string.split(st, " ")
-	return {x=p[1], y=p[2], z=p[3]}
+	return {x=tonumber(p[1]), y=tonumber(p[2]), z=tonumber(p[3])}
 end
 local ppp = ""
 -- Pegar checkin de um node
@@ -101,7 +101,7 @@ sunos.npc_checkin.register_spawner = function(nodename, def)
 	minetest.register_abm{
 		label = "sunos:spawner_checkin",
 		nodenames = sunos.npc_checkin.spawners,
-		interval = 10,
+		interval = 5,--10,
 		chance = 1,
 		action = function(pos)
 			
@@ -116,7 +116,6 @@ sunos.npc_checkin.register_spawner = function(nodename, def)
 			
 			-- Verifica metadados de checkin
 			local checkin = get_checkin(pos, time)
-			
 			-- Verifica checkins registrados
 			--[[
 				Tabela de checkins possui uma tabela chamada registros de checkins
@@ -143,24 +142,25 @@ sunos.npc_checkin.register_spawner = function(nodename, def)
 			if checkin then
 				
 				for pos_npc_st,dados in pairs(checkin) do
-					
+				
+					-- npcnode que registrou o checkin nesse spawner
 					local pos_npc = string_to_pos(pos_npc_st)
-					
 					-- Verifica se NPC desse node já está ativo
-					if sunos.npcs.is_active(pos) ~= true then
-						minetest.chat_send_all("nao esta ativo")
+					if sunos.npcs.is_active(pos_npc) ~= true then
+					
 						-- Verificar dados do npc
 						local mynpc_checkin = get_mynpc_checkin(pos_npc)
 						
 						-- Registro de checkins
 						if mynpc_checkin then
-							
+						
 							if pos_to_string(mynpc_checkin[tostring(time)]) == pos_to_string(pos) then
-								
+							
 								-- Spawna o NPC na região comum
 								sunos.npc_checkin.registered_spawners[node.name].func_spawn(
-									pos, 
-									minetest.get_meta(pos_npc):get_string("sunos_npc_tipo")
+									pos,
+									minetest.get_meta(pos_npc):get_string("sunos_npc_tipo"),
+									pos_npc
 								)
 								
 							else -- Registro não coincide
@@ -183,3 +183,19 @@ sunos.npc_checkin.register_spawner = function(nodename, def)
 	}
 
 end
+
+-- Registrar Spawner
+sunos.npc_checkin.register_spawner("sunos:fundamento", {
+	func_spawn = function(pos, npc_tipo, npcnode_pos)
+		
+		local meta = minetest.get_meta(pos)
+		
+		local spos = sunos.npcs.select_pos_spawn(pos, {tipo = "fundamento"})
+		
+		if spos then
+			-- Spawnar um novo npc na casa
+			sunos.npcs.npc.spawn(npc_tipo, minetest.get_meta(pos):get_string("vila"), npcnode_pos, spos)
+		end
+	end,
+})
+

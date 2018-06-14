@@ -171,7 +171,7 @@ sunos.estruturas.casa.apos_restaurar_estrutura = function(pos)
 	
 	local meta = minetest.get_meta(pos)
 	local dist = tonumber(meta:get_string("dist"))
-	local vila = meta:get_string("dist")
+	local vila = meta:get_string("vila")
 	
 	-- Troca os itens de reposição
 	sunos.decor_repo(pos, dist, sunos.estruturas.casa.gerar_itens_repo[tostring(dist)]())	

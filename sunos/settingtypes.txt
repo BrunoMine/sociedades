@@ -67,6 +67,9 @@ sunos_chance (Probabilidade de surgimento de vilas) int 100 0 100
 # de reconhecimento das vilas
 sunos_verif_fundamento (Tempo de verificador do Fundamentos) int 10
 
+# Habilita mensagens no depurador (para desenvolvimento)
+sunos_enable_debug_notify (Depurador) bool false
+
 
 
 

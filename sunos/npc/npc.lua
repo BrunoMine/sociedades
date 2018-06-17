@@ -89,7 +89,7 @@ sunos.npcs.npc.spawn = function(tipo, vila, npcnode_pos, spos)
 		minetest.log("error", "[Sunos] vila nula (em sunos.npcs.npc.spawn)")
 		return false
 	end
-	if not npcnode_pos or not npcnode_pos.x then
+	if not npcnode_pos then
 		minetest.log("error", "[Sunos] npcnode_pos nula (em sunos.npcs.npc.spawn)")
 		return false
 	end
@@ -302,6 +302,27 @@ npc.programs.instr.register("sunos:definir_deitado", function(self, args)
 	npc.programs.instr.execute(self, npc.programs.instr.default.LAY, {})
 end)
 
+-- Tabela de temporizadores
+local tb_timers = {}
+
+-- Register temporizador STEP
+--[[
+	Argumentos
+	#1 String do tipo de NPC (conferido para realizar o temporizador)
+	#2 Tabela de definições
+		{
+			time = 5, -- Tempo em segundos
+			func = function(self), -- Funçao executada ao termino do tempo 
+			  --(se retornar algo diferente de nulo, o retorno é enviado para a API mobs_redo como retorno da callback do_custom)
+		}
+  ]]
+sunos.npcs.npc.register_step = function(tipo, def)
+	if tb_timers[tipo] == nil then tb_timers[tipo] = {} end
+	
+	-- Tabela de dados do registro
+	table.insert(tb_timers[tipo], def)
+end
+
 -- Registrar um NPC
 sunos.npcs.npc.registrar = function(tipo, def)
 	if not tipo then
@@ -369,6 +390,12 @@ sunos.npcs.npc.registrar = function(tipo, def)
 				self.tamed = false
 			end
 			
+			-- Constroi temporizadores de acordo com os atualmente registrados
+			self.sunos_t = {}
+			for n,d in ipairs(tb_timers[tipo]) do
+				self.sunos_t[n] = 0
+			end
+			
 			-- Verifica se já está registrado
 			if self.sunos_registrado == true and sunos.npcs.npc.registrados[tipo].on_spawn then
 				sunos.npcs.npc.registrados[tipo].on_spawn(self)
@@ -378,7 +405,7 @@ sunos.npcs.npc.registrar = function(tipo, def)
 			if self.npc_state.movement.is_laying == true then
 				local target = sunos.copy_tb(npc.locations.get_by_type(self, "bed_primary")[1])
 				if not target or not target.pos then
-					self.object:remove()
+					sunos.debug("NPC sem cama no place map em "..minetest.pos_to_string(self.object:getpos()))
 					return
 				end
 				npc.programs.instr.execute(self, "sunos:definir_deitado", {pos=target.pos})
@@ -411,105 +438,22 @@ sunos.npcs.npc.registrar = function(tipo, def)
 	
 		do_custom = function(self, dtime)
 			
+			-- Verifica se spawnou corretamente
 			if not self.tipo then
 				self.object:remove()
 				return
 			end
-								
-			-- Verifica se esta perto do bau de origem
-			self.temp = (self.temp or 0) + dtime
-			if self.temp >= sunos.timer_npc_check then
-				
-				-- Verifica se é o npc atual de seu node
-				if not sunos.npcs.npc.ativos[self.sunos_npchash] 
-					or not sunos.npcs.npc.ativos[self.sunos_npchash]:getpos() 
-				then
-					-- Esse NPC ja está ativo em outro objeto
-					self.object:remove()
-					return					
-				end
-				
-				local def_npc = sunos.npcs.npc.registrados[self.tipo]
-				
-				self.temp = 0
-				self.loop = self.loop + 1
 			
-				-- Verifica o se o bau de origem possui seu hash
-				if self.loop >= qtd_loops_npc then
-					self.loop = 0
-					
-					local node = sunos.pegar_node(self.mypos) -- Certifica que carregou no node
-					if minetest.get_meta(self.mypos):get_string("sunos_npchash") ~= self.sunos_npchash then
-						self.object:remove()
-						return
+			-- Realiza timers registrados
+			for n,d in ipairs(tb_timers[tipo]) do
+				self.sunos_t[n] = self.sunos_t[n] + dtime
+				-- Verifica se atingiu o tempo
+				if self.sunos_t[n] >= tb_timers[tipo][n].time then
+					self.sunos_t[n] = 0 -- zera temporizador
+					local r = tb_timers[tipo][n].func(self)
+					if r ~= nil then
+						return r
 					end
-				end 
-				
-				-- Verifica se algum dos jogadores proximos é um inimigo
-				if self.state ~= "attack" then -- Verifica se ja não está em um ataque
-					for _,obj in ipairs(minetest.get_objects_inside_radius(self.object:getpos(), 13)) do
-						if obj:is_player() then
-						
-							-- Verifica se o jogador é inimigo
-							if sunos.verif_inimigo(self.vila, obj:get_player_name()) == true then
-								self.attack = obj
-								self.state = "attack"
-								return npc.step(self, dtime)
-							end
-					
-						end
-					end
-				end
-				
-				if not self.sunos_checkin then
-					self.object:remove()
-					return
-				end
-				
-				-- Verificiar se deve ir para o checkin atual
-				if self.sunos_checkin_status ~= "indo" -- Não está indo
-					and self.sunos_checkin_status ~= "enviado" -- Não foi enviado
-					and sunos.p1_to_p2(
-						self.object:getpos(), 
-						sunos.copy_tb(self.sunos_checkin[tostring(sunos.npcs.npc.get_time())])) > 10 
-					
-				then
-					self.sunos_checkin_status = "enviado"
-					
-					npc.exec.enqueue_program(self, "sunos:walk_to_checkin", {
-						end_pos = sunos.copy_tb(self.sunos_checkin[tostring(sunos.npcs.npc.get_time())]),
-						dist_min = 10,
-					})
-				end
-				
-				-- Verifica se deve ir durmir
-				if self.flags["sunos_repouso_status"] == "durmir" then
-					local target = sunos.copy_tb(npc.locations.get_by_type(self, "bed_primary")[1])
-					if not target or not target.pos then
-						self.object:remove()
-						return
-					end
-					
-					-- Verifica se ja esta durmindo 
-					if self.npc_state.movement.is_laying ~= true
-						or sunos.p1_to_p2(self.object:getpos(), target.pos) > 2
-					then
-						local caminho = sunos.npcs.npc.send_to_bed(self, target.pos)
-						
-						-- Impossivel andar ate o local destino
-						if caminho == false then
-							self.object:remove()
-							return
-						end
-					end
-					
-					self.flags["sunos_repouso_status"] = "nenhum"
-					
-				end
-				
-				-- Realiza procedimento personalizado
-				if def_npc.on_step_timed then
-					def_npc.on_step_timed(self)
 				end
 			end
 			
@@ -529,6 +473,102 @@ sunos.npcs.npc.registrar = function(tipo, def)
 			end
 		end, 
 		
+	})
+	
+	-- Verifica se quer durmir (atravez de uma flag)
+	sunos.npcs.npc.register_step(tipo, {
+		time = 30,
+		func = function(self)
+			
+			-- Verifica se deve ir durmir
+			if self.flags["sunos_repouso_status"] == "durmir" then
+				local target = sunos.copy_tb(npc.locations.get_by_type(self, "bed_primary")[1])
+				if not target or not target.pos then
+					sunos.debug("NPC sem cama no place map em "..minetest.pos_to_string(self.object:getpos()))
+					return
+				end
+				
+				-- Verifica se ja esta durmindo 
+				if self.npc_state.movement.is_laying ~= true
+					or sunos.p1_to_p2(self.object:getpos(), target.pos) > 2
+				then
+					local caminho = sunos.npcs.npc.send_to_bed(self, target.pos)
+					
+					-- Impossivel andar ate o local destino
+					if caminho == false then
+						return
+					end
+				end
+				sunos.debug("NPC "..minetest.pos_to_string(self.object:getpos())
+					.." indo durmir na cama "..minetest.pos_to_string(target.pos))
+				self.flags["sunos_repouso_status"] = "nenhum"
+				
+			end
+		end, 
+		
+	})
+	
+	-- Verifica se é o NPC atual do proprio npcnode (confere hash)
+	sunos.npcs.npc.register_step(tipo, {
+		time = 11,
+		func = function(self)
+			local node = sunos.pegar_node(self.mypos) -- Certifica que carregou no node
+			if minetest.get_meta(self.mypos):get_string("sunos_npchash") ~= self.sunos_npchash then
+				sunos.debug("NPC "..minetest.pos_to_string(self.object:getpos())
+					.." possui hash invalido")
+				return
+			end
+		end, 
+		
+	})
+					
+	-- Verifica se algum dos jogadores proximos é um inimigo
+	sunos.npcs.npc.register_step(tipo, {
+		time = 8,
+		func = function(self)
+			if self.state ~= "attack" then -- Verifica se ja não está em um ataque
+				for _,obj in ipairs(minetest.get_objects_inside_radius(self.object:getpos(), 13)) do
+					if obj:is_player() then
+					
+						-- Verifica se o jogador é inimigo
+						if sunos.verif_inimigo(self.vila, obj:get_player_name()) == true then
+							self.attack = obj
+							self.state = "attack"
+							return npc.step(self, dtime)
+						end
+				
+					end
+				end
+			end
+		end,
+	})
+	
+	-- Registra envio ao checkin
+	sunos.npcs.npc.register_step(tipo, {
+		time = 9,
+		func = function(self)
+			
+			-- Verifica se tem checkin
+			if not self.sunos_checkin then
+				return
+			end
+			
+			-- Verificiar se deve ir para o checkin atual
+			if self.sunos_checkin_status ~= "indo" -- Não está indo
+				and self.sunos_checkin_status ~= "enviado" -- Não foi enviado
+				and sunos.p1_to_p2(
+					self.object:getpos(), 
+					sunos.copy_tb(self.sunos_checkin[tostring(sunos.npcs.npc.get_time())])) > 10 
+				
+			then
+				self.sunos_checkin_status = "enviado"
+				
+				npc.exec.enqueue_program(self, "sunos:walk_to_checkin", {
+					end_pos = sunos.copy_tb(self.sunos_checkin[tostring(sunos.npcs.npc.get_time())]),
+					dist_min = 10,
+				})
+			end
+		end,
 	})
 	
 	

@@ -216,6 +216,14 @@ sunos.encontrar_vila = function(pos, dist)
 	
 end
 
+-- Envia mensagem informativa no depurador se ativado
+if sunos.var.debug_info ~= false then
+	sunos.debug = function(msg)
+		npc.log("DEBUG", "[Sunos] "..msg)
+	end
+else
+	sunos.debug = function() end
+end
 
 -- Pegar uma arquivo de estrutura aleatoriamente
 --[[

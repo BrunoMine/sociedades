@@ -44,6 +44,9 @@ sunos.var.limite_nodes_destruidos_abandonar = 8
 -- Limite de população das vilas
 sunos.var.max_pop = 40
 
+-- Notificar mensagens de depuração (para desenvolvimento)
+sunos.var.debug_info = (minetest.settings:get("sunos_enable_debug_notify") == "true") or false
+
 -- Nodes de mobilias (index é o place_name)
 -- Exemplo: sunos.nodes_de_mobilias["bau_primario"] = {"sunos:bau_casa"}
 sunos.nodes_de_mobilias = {}

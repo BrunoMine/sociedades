@@ -47,6 +47,19 @@ sunos.var.max_pop = 40
 -- Notificar mensagens de depuração (para desenvolvimento)
 sunos.var.debug_info = (minetest.settings:get("sunos_enable_debug_notify") == "true") or false
 
+-- Nomes de NPCs (derivados do esperanto)
+sunos.var.npc_names = {
+	masculino = {
+		"Lumo", -- Luz
+		"Racio", -- Razão
+		"Honoro", -- Honra
+	},
+	feminino = {
+		"Hela", -- Luminosa, luzente
+		"Brava", -- valente
+	},
+}
+
 -- Nodes de mobilias (index é o place_name)
 -- Exemplo: sunos.nodes_de_mobilias["bau_primario"] = {"sunos:bau_casa"}
 sunos.nodes_de_mobilias = {}
@@ -157,6 +170,7 @@ sunos.var.node_group = {
 		"default:furnace",
 		"default:furnace_active",
 		"default:bookshelf", 
+		"beds:bed_bottom",
 		"vessels:shelf", 
 		"sunos:kit_culinario",
 		"sunos:kit_culinario_nodrop",

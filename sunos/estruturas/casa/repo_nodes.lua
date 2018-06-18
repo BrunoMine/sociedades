@@ -37,7 +37,7 @@ end
 sunos.estruturas.casa.gerar_itens_repo["3"] = function()
 	return {
 		bancadas = {
-			{"sunos:bau_casa", 1, true},
+			{"sunos:bau_casa", 2, true},
 			{"sunos:bancada_de_trabalho_nodrop", 1, true},
 			{"sunos:caixa_de_musica_nodrop", 1},
 			{"sunos:wood_barrel_nodrop", 1, true},
@@ -56,7 +56,7 @@ end
 sunos.estruturas.casa.gerar_itens_repo["4"] = function()
 	return {
 		bancadas = {
-			{"sunos:bau_casa", 1, true},
+			{"sunos:bau_casa", 3, true},
 			{"sunos:bancada_de_trabalho_nodrop", 1, true},
 			{"sunos:caixa_de_musica_nodrop", 1},
 			{"sunos:wood_barrel_nodrop", 2, true},

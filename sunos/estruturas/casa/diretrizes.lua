@@ -25,10 +25,9 @@ sunos.estruturas.casa.var.decor_simples = {
 -- Tabela de população por tamanho de casa
 sunos.estruturas.casa.var.tb_pop_casa = {
 	-- Largura da casa	População
-	["5"] = 		2,
-	["7"] =			3,
-	["9"] =			4,
-	["11"] =		6,
+	["5"] = 		1,
+	["7"] =			2,
+	["9"] =			3,
 }
 
 -- Itens que aparecem nas estantes de livros

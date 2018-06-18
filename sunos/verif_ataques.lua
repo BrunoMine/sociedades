@@ -157,7 +157,7 @@ function minetest.is_protected(pos, name)
 			
 			-- Verifica se estava defendida (caso esteja funciona como se fosse uma area protegida normal)
 			for _,pf in ipairs(f) do
-				if sunos.verificar_defesa(pf) == true then return true	end
+				if sunos.verificar_defesa(pf) == true then return true end
 			end
 			
 		end

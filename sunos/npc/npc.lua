@@ -56,6 +56,16 @@ sunos.npcs.npc.get_time = function()
 	return time
 end
 
+-- Encontrar lugar desocupado dentre lugares fornecidos
+local buscar_node_livre = function(self, place_names)
+	for _,name in ipairs(place_names) do
+		if self.places_map[name] and minetest.get_meta(self.places_map[name].pos):get_string("advanced_npc:used") ~= "true" then
+			return name
+		end
+	end
+	return nil
+end
+
 -- Spawners
 tabela_spawners = {}
 
@@ -200,106 +210,17 @@ sunos.npcs.npc.send_to_checkin = function(self)
 	end
 end
 
--- Envia o npc durmir
---[[
-    Retorna true se conseguir enviar ação
-    Retorna false se nao conseguir
-  ]]
-sunos.npcs.npc.send_to_bed = function(self, pos)
-	if not self or not self.object or not self.object:getpos() then return end
-	
-	local pos1 = sunos.copy_tb(self.object:getpos())
-	local pos2 = sunos.copy_tb(pos)
-	local cmds = 0
-	local dist = sunos.p1_to_p2(pos1, pos2)
-	
-	while (dist > 6) do
-	
-		local pos_indo = sunos.ir_p1_to_p2(pos1, pos2, 7)
-		
-		-- Escolher caminho
-		-- 1º Rua calcetada
-		local alvo = minetest.find_node_near(pos_indo, 4, {"sunos:rua_calcetada"}, true)
-		-- 2º Gramado
-		if not alvo then
-			alvo = minetest.find_node_near(pos_indo, 4, {"default:dirt_with_grass"}, true)
-		end
-		-- 3º Carpete da casa
-		if not alvo then
-			alvo = minetest.find_node_near(pos_indo, 4, {"sunos:carpete_palha", "sunos:carpete_palha_nodrop"}, true)
-			if alvo then alvo.y = alvo.y-1 end
-		end
-		
-		if alvo then
-			if alvo then alvo.y = alvo.y+1 end
-		end
-		
-		if alvo then
-			-- Atualiza numero do comando
-			cmds = cmds + 1 
-			-- Salva o local para andar
-			npc.locations.add_shared_accessible_place(
-				self, 
-				{owner="", node_pos=alvo}, 
-				"sunos_npc_walk_target_"..cmds, 
-				true,
-				{}
-			)
-			npc.exec.enqueue_program(self, "advanced_npc:walk_to_pos", {
-				end_pos = "sunos_npc_walk_target_"..cmds,
-				walkable = sunos_walkable_nodes,
-			})
-		else
-			-- Impossivel avançar em direção ao alvo (sem caminho)
-			break
-		end
-		
-		-- Atualiza para proximo loop
-		pos1 = sunos.copy_tb(pos_indo)
-		dist = sunos.p1_to_p2(pos1, pos2)
-	end
-	
-	-- Certifica que dist foi atualizada (caso o loop tenha interrompido antes)
-	dist = sunos.p1_to_p2(pos1, pos2)
-	
-	-- Se for chegar na cama, durmir
-	if dist <= 6 then
-		npc.exec.enqueue_program(self, "advanced_npc:walk_to_pos", {
-			end_pos = {
-				place_type="bed_primary", 
-				use_access_node=true
-			}
-		})
-		npc.exec.enqueue_program(self, "advanced_npc:use_bed", {
-			pos = "bed_primary",
-			action = npc.programs.const.node_ops.beds.LAY
-		})
-		npc.exec.enqueue_program(self, "advanced_npc:idle", 
-			{
-				acknowledge_nearby_objs = false,
-				wander_chance = 0
-			},
-			{},
-			true
-		)
-	end
-	
-	
-	if cmds > 0 or dist <= 6 then 
-		return true
-	else
-		return false
-	end
-end
 
 -- Instrução para manter deitado
 npc.programs.instr.register("sunos:definir_deitado", function(self, args)
 	local node = minetest.get_node(args.pos)
 	local dir = minetest.facedir_to_dir(node.param2)
 	local bed_pos = npc.programs.instr.nodes.beds[node.name].get_lay_pos(args.pos, dir)
-	-- Sit down on bed, rotate to correct direction
+	
 	npc.programs.instr.execute(self, npc.programs.instr.default.SIT, {pos=bed_pos, dir=(node.param2 + 2) % 4})
 	npc.programs.instr.execute(self, npc.programs.instr.default.LAY, {})
+	-- Marca cama em uso
+	npc.locations.mark_place_used(args.pos, "true")
 end)
 
 -- Tabela de temporizadores
@@ -403,12 +324,11 @@ sunos.npcs.npc.registrar = function(tipo, def)
 			
 			-- Verifica se está durmindo
 			if self.npc_state.movement.is_laying == true then
-				local target = sunos.copy_tb(npc.locations.get_by_type(self, "bed_primary")[1])
-				if not target or not target.pos then
-					sunos.debug("NPC sem cama no place map em "..minetest.pos_to_string(self.object:getpos()))
-					return
+				if minetest.get_node(self.sunos_cama_usada).name == "beds:bed_bottom" then
+					npc.programs.instr.execute(self, "sunos:definir_deitado", {pos=self.sunos_cama_usada})
+				else
+					sunos.debug("NPC teve sua cama removida enquanto durmia "..minetest.pos_to_string(self.object:getpos()))
 				end
-				npc.programs.instr.execute(self, "sunos:definir_deitado", {pos=target.pos})
 			end
 			
 		end,
@@ -477,28 +397,64 @@ sunos.npcs.npc.registrar = function(tipo, def)
 	
 	-- Verifica se quer durmir (atravez de uma flag)
 	sunos.npcs.npc.register_step(tipo, {
-		time = 30,
+		time = 1,
 		func = function(self)
 			
 			-- Verifica se deve ir durmir
 			if self.flags["sunos_repouso_status"] == "durmir" then
-				local target = sunos.copy_tb(npc.locations.get_by_type(self, "bed_primary")[1])
-				if not target or not target.pos then
-					sunos.debug("NPC sem cama no place map em "..minetest.pos_to_string(self.object:getpos()))
+				
+				-- Verifica se ja esta durmindo
+				if self.npc_state.movement.is_laying == true then
+					self.flags["sunos_repouso_status"] = "nenhum"
 					return
 				end
 				
-				-- Verifica se ja esta durmindo 
-				if self.npc_state.movement.is_laying ~= true
-					or sunos.p1_to_p2(self.object:getpos(), target.pos) > 2
-				then
-					local caminho = sunos.npcs.npc.send_to_bed(self, target.pos)
-					
-					-- Impossivel andar ate o local destino
-					if caminho == false then
-						return
-					end
+				local target_name = buscar_node_livre(self, {"cama_1", "cama_2", "cama_3"})
+				
+				if target_name == nil then
+					sunos.debug("NPC sem cama livre no place map em "..minetest.pos_to_string(self.object:getpos()))
+					return
 				end
+				local target = self.places_map[target_name]
+				
+				-- Verific se esta muito distante da cama
+				if sunos.p1_to_p2(
+					self.object:getpos(), 
+					target.pos) > 10
+				then
+					self.flags["sunos_repouso_status"] = "nenhum"
+					return
+				end
+				
+				-- Verifica se alvo tem cama ainda e se está livre
+				if minetest.get_node(target.pos).name ~= "beds:bed_bottom"
+					or minetest.get_meta(target.pos):get_string("advanced_npc:used") == "true" 
+				then
+					self.flags["sunos_repouso_status"] = "nenhum"
+					return
+				end
+				
+				-- Envia NPC pra cama
+				npc.exec.enqueue_program(self, "advanced_npc:walk_to_pos", {
+					end_pos = target.access_node,
+				})
+				npc.exec.enqueue_program(self, "advanced_npc:use_bed", {
+					pos = target.pos,
+					action = npc.programs.const.node_ops.beds.LAY
+				})
+				npc.exec.enqueue_program(self, "advanced_npc:idle", 
+					{
+						acknowledge_nearby_objs = false,
+						wander_chance = 0
+					},
+					{},
+					true
+				)
+				-- Salva ultima cama usada para recoloca-lo caso precise
+				self.sunos_cama_usada = sunos.copy_tb(target.pos)
+				-- Trava o local mesmo antes de o NPC chegar na cama (evitar que outro a pegue)
+				npc.locations.mark_place_used(target.pos, "true")
+				
 				sunos.debug("NPC "..minetest.pos_to_string(self.object:getpos())
 					.." indo durmir na cama "..minetest.pos_to_string(target.pos))
 				self.flags["sunos_repouso_status"] = "nenhum"
@@ -575,3 +531,20 @@ sunos.npcs.npc.registrar = function(tipo, def)
 end
 
 
+-- Verifica se cama está liberada para destrava-la
+minetest.register_abm({
+	nodenames = {"beds:bed_bottom"},
+	interval = 2,
+	chance = 1,
+	action = function(pos)
+		-- Verifica se tem algum objeto perto da cama
+		for _,obj in ipairs(minetest.get_objects_inside_radius({x=pos.x, y=pos.y+1, z=pos.z}, 1.5)) do
+			return -- Ja retorna sem mexer nada
+		end 
+		
+		-- Verifica se ja esta liberada
+		if minetest.get_meta(pos):get_string("advanced_npc:used") ~= "false" then
+			npc.locations.mark_place_used(pos, "false")
+		end
+	end,
+})

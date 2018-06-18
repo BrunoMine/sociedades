@@ -201,6 +201,10 @@ npc.programs.instr.register("sunos:rotate_to_pos", function(self, args)
 	})
 end)
 
+npc.programs.instr.register("sunos:mark_place_used", function(self, args)
+	npc.locations.mark_place_used(args.pos, args.value)
+end)
+
 npc.programs.instr.register("sunos:set_animation", function(self, args)
 	
 	-- Verifica se está perto da coordenada desejada
@@ -316,10 +320,16 @@ interagir_mobilia.escolher_mobilia = function(self, place_names)
 		self.places_map[name] = nil -- Remove local
 		return interagir_mobilia.escolher_mobilia(self, place_names)
 	end
+	-- Verifica se está em uso
+	if minetest.get_meta(self.places_map[name].pos):get_string("advanced_npc:used") == "true" then
+		table.remove(place_names, i)
+		return interagir_mobilia.escolher_mobilia(self, place_names)
+	end
+	-- Verifica se nodename é aceitavel
 	if sunos.nodes_de_mobilias[name] then
 		for _,n in ipairs(sunos.nodes_de_mobilias[name]) do
 			if n == nn then
-				-- Node certonn
+				-- Node certo
 				return sunos.copy_tb(self.places_map[name])
 			end
 		end
@@ -413,6 +423,12 @@ npc.programs.register("sunos:interagir_mobilia", function(self, args)
 			
 			npc.locations.add_shared(self, "sunos_alvo_mobilia", "sunos_alvo_mobilia", p.pos, p.access_node)
 			
+			-- Marca node como em uso para evitar outros NPCs usarem
+			npc.programs.instr.execute(self, "sunos:mark_place_used", {
+				pos = p.pos,
+				value = "true",
+			})
+			
 			npc.exec.proc.enqueue(self, "advanced_npc:interrupt", {
 				new_program = "advanced_npc:walk_to_pos",
 				new_args = {
@@ -502,6 +518,12 @@ npc.programs.register("sunos:interagir_mobilia", function(self, args)
 					check_pos = p.pos,
 				})
 			end
+			
+			-- Desmarca local em uso para outros NPCs poderem usar
+			npc.exec.proc.enqueue(self, "sunos:mark_place_used", {
+				pos = p.pos,
+				value = "false",
+			})
 		end
 	end
 	-- Se estiver poucas mobilias fica um tempo parado apos interagir

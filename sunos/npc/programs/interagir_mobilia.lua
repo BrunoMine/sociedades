@@ -298,6 +298,24 @@ npc.programs.instr.register("sunos:add_efeito_interacao_mobilia", function(self,
 	end
 end)
 
+-- Verificar se tem algum objeto obstruindos
+local verif_obj_obs = function(pos)
+	
+	for _,obj in ipairs(minetest.get_objects_inside_radius({x=pos.x, y=pos.y, z=pos.z}, 0.5)) do
+		return true
+	end 
+	for _,obj in ipairs(minetest.get_objects_inside_radius({x=pos.x, y=pos.y+1, z=pos.z}, 0.5)) do
+		return true
+	end 
+	return false
+end
+
+-- Liberar mobilia para uso (caso fique travada a tag de uso impedindo outros NPCs)
+local verif_mobilia_em_uso = function(pos, access_node)
+	if verif_obj_obs(access_node) == false and minetest.get_meta(pos):get_string("advanced_npc:used") == "true" then
+		npc.locations.mark_place_used(pos, "false")
+	end
+end
 
 -- Escolher mobilia valida
 interagir_mobilia.escolher_mobilia = function(self, place_names)
@@ -312,19 +330,32 @@ interagir_mobilia.escolher_mobilia = function(self, place_names)
 		self.places_map[name] = nil -- Remove local
 		return interagir_mobilia.escolher_mobilia(self, place_names)
 	end
-	
 	-- Verificar node
 	local nn = minetest.get_node(self.places_map[name].pos).name
-	if nn == "air" or nn == "ignore" then 
+	if nn == "air" then 
+		table.remove(place_names, i)
+		self.places_map[name] = nil -- Remove local
+		return interagir_mobilia.escolher_mobilia(self, place_names)
+	end
+	if nn == "ignore" then 
 		table.remove(place_names, i)
 		self.places_map[name] = nil -- Remove local
 		return interagir_mobilia.escolher_mobilia(self, place_names)
 	end
 	-- Verifica se está em uso
 	if minetest.get_meta(self.places_map[name].pos):get_string("advanced_npc:used") == "true" then
+		minetest.after(5, verif_mobilia_em_uso, 
+			sunos.copy_tb(self.places_map[name].pos), 
+			sunos.copy_tb(self.places_map[name].access_node)) -- Tenta liberar apos 5 segundos
 		table.remove(place_names, i)
 		return interagir_mobilia.escolher_mobilia(self, place_names)
 	end
+	-- Verifica se tem objeto obstruindo o acesso
+	if verif_obj_obs(self.places_map[name].access_node) == true then
+		table.remove(place_names, i)
+		return interagir_mobilia.escolher_mobilia(self, place_names)
+	end
+	
 	-- Verifica se nodename é aceitavel
 	if sunos.nodes_de_mobilias[name] then
 		for _,n in ipairs(sunos.nodes_de_mobilias[name]) do

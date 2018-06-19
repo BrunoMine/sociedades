@@ -388,8 +388,8 @@ sunos.npcs.npc.registrar = function(tipo, def)
 	
 		-- Clique direito (acessar)
 		on_rightclick = function(self, player)
-			if sunos.npcs.npc.registrados[self.tipo].on_rightclick then 
-				sunos.npcs.npc.registrados[self.tipo].on_rightclick(self, player) 
+			if sunos.npcs.npc.registrados[tipo].on_rightclick then 
+				return sunos.npcs.npc.registrados[tipo].on_rightclick(self, player) 
 			end
 		end, 
 		
@@ -534,7 +534,7 @@ end
 -- Verifica se cama está liberada para destrava-la
 minetest.register_abm({
 	nodenames = {"beds:bed_bottom"},
-	interval = 2,
+	interval = 20,
 	chance = 1,
 	action = function(pos)
 		-- Verifica se tem algum objeto perto da cama

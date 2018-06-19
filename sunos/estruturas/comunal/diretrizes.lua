@@ -57,7 +57,7 @@ sunos.estruturas.comunal.var.tb_menu_comunal = {
 	-- Fundamento de Loja
 	[S("Feirinha")] = {
 		desc = S("Uma feirinha simples para trocar itens"),
-		pop = 7,
+		pop = 5,
 		item_add = "sunos:fundamento_loja", 
 		item_rem = {"default:tree 10", "default:cobble 20", "default:torch 4", "farming:straw 15"}
 	},

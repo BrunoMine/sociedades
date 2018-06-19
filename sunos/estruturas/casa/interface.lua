@@ -54,7 +54,7 @@ sunos.npcs.npc.registrados.caseiro.on_rightclick = function(ent, player)
 		local formspec = "size[6,3]"
 			..default.gui_bg
 			..default.gui_bg_img
-			.."label[0,0;"..S("Oi. Ajude essa vila a \nmontar uma Casa Comunal").."]"
+			.."textarea[0.225,-0.1;6,1.3;;"..S("Oi. Ajude essa vila a montar uma Casa Comunal")..";]"
 			.."item_image_button[0,1;1,1;default:tree 20;item1;]" -- Item 1
 			.."item_image_button[1,1;1,1;default:stone 70;item2;]" -- Item 2
 			.."item_image_button[2,1;1,1;farming:straw 30;item3;]" -- Item 3

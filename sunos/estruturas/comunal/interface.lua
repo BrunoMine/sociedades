@@ -39,10 +39,10 @@ local avisar = function(player, texto)
 		return false
 	end
 	
-	minetest.show_formspec(player:get_player_name(), "sunos:npc_comunal", "size[12,1]"
+	minetest.show_formspec(player:get_player_name(), "sunos:npc_comunal", "size[8,3]"
 		..default.gui_bg
 		..default.gui_bg_img
-		.."label[0.5,0;"..S("Aviso").." \n"..texto.."]")
+		.."textarea[0.5,0.2;7.6,3.1;;"..S("Aviso").."\n"..S(texto)..";]")
 	return true
 end
 
@@ -189,12 +189,12 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 			sunos.atualizar_bd_vila(ent.vila)
 			local pop_atual = sunos.bd.pegar("vila_"..ent.vila, "pop_total")
 			if pop_atual == nil or pop_atual < dados.pop then
-				return avisar(player, S("A vila precisa de mais habitantes para isso"))
+				return avisar(player, S("A vila precisa ter ao menos @1 habitantes", dados.pop))
 			end   
 			
 			-- Tenta trocar
 			if sunos.trocar_plus(player, dados.item_rem, {dados.item_add}) == false then
-				return avisar(player, S("Precisa dos itens exigidos para a trocar por \n@1", titulo))
+				return avisar(player, S("Precisa dos itens exigidos para obter @1", titulo))
 			else
 				-- Pegar descrição do item
 				local desc_item = "fail" 

@@ -108,28 +108,28 @@ minetest.register_node("sovagxas:bau", {
 				player_inv:add_item("main", itens[1][1].." "..itens[1][2])
 				itens[1] = false
 			else
-				minetest.chat_send_player(sender:get_player_name(), S("Inventario lotado. Esvazie um pouco."))
+				minetest.chat_send_player(sender:get_player_name(), S("Inventario lotado. Esvazie um pouco"))
 			end
 		elseif fields.item2 and itens[2] ~= false then
 			if player_inv:room_for_item("main", itens[2][1].." "..itens[2][2]) then
 				player_inv:add_item("main", itens[2][1].." "..itens[2][2])
 				itens[2] = false
 			else
-				minetest.chat_send_player(sender:get_player_name(), S("Inventario lotado. Esvazie um pouco."))
+				minetest.chat_send_player(sender:get_player_name(), S("Inventario lotado. Esvazie um pouco"))
 			end
 		elseif fields.item3 and itens[3] ~= false  then
 			if player_inv:room_for_item("main", itens[3][1].." "..itens[3][2]) then
 				player_inv:add_item("main", itens[3][1].." "..itens[3][2])
 				itens[3] = false
 			else
-				minetest.chat_send_player(sender:get_player_name(), S("Inventario lotado. Esvazie um pouco."))
+				minetest.chat_send_player(sender:get_player_name(), S("Inventario lotado. Esvazie um pouco"))
 			end
 		elseif fields.item4 and itens[4] ~= false then
 			if player_inv:room_for_item("main", itens[4][1].." "..itens[4][2]) then
 				player_inv:add_item("main", itens[4][1].." "..itens[4][2])
 				itens[4] = false
 			else
-				minetest.chat_send_player(sender:get_player_name(), S("Inventario lotado. Esvazie um pouco."))
+				minetest.chat_send_player(sender:get_player_name(), S("Inventario lotado. Esvazie um pouco"))
 			end
 		end
 		meta:set_string("itens", minetest.serialize(itens))
@@ -156,7 +156,8 @@ minetest.register_node("sovagxas:bau", {
 			formspec = formspec.."item_image_button[6,1;2,2;"..itens[4][1]..";item4;"..itens[4][2].."]"
 		end
 		if itens[1] == false and itens[2] == false and itens[3] == false and itens[4] == false then 
-			formspec = formspec.."label[1.5,1.5;"..S("Bau vazio no momento. Aguarde ate \nque um sovagxa coloque algo aqui").."]"
+			--formspec = formspec.."label[1.5,1.5;]"
+			formspec = formspec.."textarea[1.2,1.5;6.1,2;;"..S("Bau vazio no momento").."\n"..S("Aguarde ate que um sovagxa coloque algo dentro")..";]"
 		end
 		meta:set_string("formspec", formspec)
 	end,
@@ -182,7 +183,7 @@ minetest.register_abm({
 		local p_arv = minetest.deserialize(meta:get_string("arvore"))
 		local folhas = minetest.find_nodes_in_area(
 			{x=p_arv.x-8, y=p_arv.y-3, z=p_arv.z-8}, 
-			{x=p_arv.x+8, y=p_arv.y+3, z=p_arv.z+8}, {"default:jungleleaves"})
+			{x=p_arv.x+8, y=p_arv.y+3, z=p_arv.z+8}, {"sovagxas:jungleleaves"})
 		if table.maxn(folhas) < 800 then
 			local node = minetest.get_node(pos)
 			minetest.set_node(pos, {name="default:chest", param2 = node.param2})

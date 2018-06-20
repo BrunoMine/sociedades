@@ -167,15 +167,15 @@ sunos.verificar_area_para_fundamento = function(pos, dist)
 	
 	-- Problema: em cima da faixa de solo existem obstrucoes (nao esta limpo e plano)
 	if st == 1 then
-		return S("O local precisa estar limpo e plano em uma area de @1x@1 blocos da largura", (largura+2))
+		return S("O local precisa estar limpo e plano em uma area de @1x@2 blocos da largura", (largura+2), (largura+2))
 	
 	-- Problema: faixa de solo (superficial) falta blocos de terra
 	elseif st == 2 then
-		return S("O solo precisa estar plano e gramado em uma area de @1x@1 blocos da largura", (largura+2))
+		return S("O solo precisa estar plano e gramado em uma area de @1x@2 blocos da largura", (largura+2), (largura+2))
 	
 	-- Problema: faixa de subsolo (considerando 2 faixas) falta blocos de terra
 	elseif st == 3 then
-		return S("O subsolo precisa estar preenchido (ao menos 2 blocos de profundidade) em uma area de @1x@1 blocos da largura", (largura+2))
+		return S("O subsolo precisa estar preenchido (ao menos 2 blocos de profundidade) em uma area de @1x@2 blocos da largura", (largura+2), (largura+2))
 	end
 	
 	return true
@@ -594,7 +594,6 @@ sunos.verificar_fundamento_bau_sunos = function(pos)
 	-- Verificar a coordenada do fundamento
 	local pf = meta:get_string("pos_fundamento")
 	if pf == "" then
-		minetest.chat_send_all("bau nao tem pos_fundamento")
 		minetest.set_node(pos, {name="default:chest", param2=minetest.get_node(pos).param2})
 		return
 	end
@@ -602,7 +601,6 @@ sunos.verificar_fundamento_bau_sunos = function(pos)
 	
 	-- Verificar se o fundamento ainda existe
 	if minetest.get_node(pf).name ~= "sunos:fundamento" then
-		minetest.chat_send_all("bau teve fundamento removido de "..minetest.pos_to_string(pf))
 		minetest.set_node(pos, {name="default:chest", param2=minetest.get_node(pos).param2})
 		return
 	end

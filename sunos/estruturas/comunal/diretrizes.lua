@@ -10,7 +10,7 @@
   ]]
 
 -- Tradução de strings
-local S = sunos.S
+local S = sunos.Sfake
 
 sunos.estruturas.comunal.var = {}
 

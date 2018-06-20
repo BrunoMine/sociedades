@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-27 11:36-0300\n"
-"PO-Revision-Date: 2017-02-27 12:11-0300\n"
+"POT-Creation-Date: 2018-06-20 16:32-0300\n"
+"PO-Revision-Date: 2018-06-20 16:32-0300\n"
 "Last-Translator: BrunoMine <borgesdossantosbruno@gmail.com>\n"
 "Language-Team: Brazilian Portuguese\n"
 "Language: pt_BR\n"
@@ -16,11 +16,15 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Gtranslator 2.91.7\n"
+"X-Generator: Poedit 2.0.6\n"
 
 #: craftitens.lua
 msgid "Muda de Arvore Sovagxa"
 msgstr "Muda de Arvore Sovagxa"
+
+#: nodes/bancada.lua
+msgid "Craftador"
+msgstr "Craftador"
 
 #: nodes/bancada.lua
 msgid "Bancada de Trabalho Sovagxa"
@@ -35,16 +39,20 @@ msgid "Bau Sovagxa"
 msgstr "Bau Sovagxa"
 
 #: nodes/bau.lua
-msgid "Inventario lotado. Esvazie um pouco."
-msgstr "Inventario lotado. Esvazie um pouco."
+msgid "Inventario lotado. Esvazie um pouco"
+msgstr "Inventario lotado. Esvazie um pouco"
 
 #: nodes/bau.lua
-msgid ""
-"Bau vazio no momento. Aguarde ate \n"
-"que um sovagxa coloque algo aqui"
-msgstr ""
-"Bau vazio no momento. Aguarde ate \n"
-"que um sovagxa coloque algo aqui"
+msgid "Bau vazio no momento"
+msgstr "Bau vazio no momento"
+
+#: nodes/bau.lua
+msgid "Aguarde ate que um sovagxa coloque algo dentro"
+msgstr "Aguarde ate que um sovagxa coloque algo dentro"
+
+#: nodes/jungleleaves.lua
+msgid "de arvore sovagxa"
+msgstr "de arvore sovagxa"
 
 #: nodes/totem.lua
 msgid "Totem Sovagxa"

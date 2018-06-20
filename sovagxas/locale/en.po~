@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-06-20 16:32-0300\n"
-"PO-Revision-Date: 2018-06-20 16:37-0300\n"
+"POT-Creation-Date: 2018-06-20 16:28-0300\n"
+"PO-Revision-Date: 2018-06-20 16:30-0300\n"
 "Last-Translator: BrunoMine <borgesdossantosbruno@gmail.com>\n"
 "Language-Team: English\n"
 "Language: en\n"
@@ -21,10 +21,6 @@ msgstr ""
 #: craftitens.lua
 msgid "Muda de Arvore Sovagxa"
 msgstr "Sovagxian Tree Sapling"
-
-#: nodes/bancada.lua
-msgid "Craftador"
-msgstr "Crafting"
 
 #: nodes/bancada.lua
 msgid "Bancada de Trabalho Sovagxa"

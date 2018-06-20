@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-06-19 15:15-0300\n"
-"PO-Revision-Date: 2018-06-19 15:22-0300\n"
+"POT-Creation-Date: 2018-06-19 17:34-0300\n"
+"PO-Revision-Date: 2018-06-19 17:09-0300\n"
 "Last-Translator: Bruno <borgesdossantosbruno@gmail.com>\n"
 "Language-Team: English\n"
 "Language: en\n"
@@ -20,20 +20,20 @@ msgstr ""
 
 #: comum.lua
 msgid ""
-"O local precisa estar limpo e plano em uma area de @1x@1 blocos da largura"
-msgstr "The land must be clean and flat in an area of @1x@1 blocks of width"
+"O local precisa estar limpo e plano em uma area de @1x@2 blocos da largura"
+msgstr "The land must be clean and flat in an area of @1x@2 blocks of width"
 
 #: comum.lua
 msgid ""
-"O solo precisa estar plano e gramado em uma area de @1x@1 blocos da largura"
-msgstr "The soil must be flat and lawn in an area of @1x@1 blocks of width"
+"O solo precisa estar plano e gramado em uma area de @1x@2 blocos da largura"
+msgstr "The soil must be flat and lawn in an area of @1x@2 blocks of width"
 
 #: comum.lua
 msgid ""
 "O subsolo precisa estar preenchido (ao menos 2 blocos de profundidade) em "
-"uma area de @1x@1 blocos da largura"
+"uma area de @1x@2 blocos da largura"
 msgstr ""
-"The subsoil must be filled (at least 2 blocks deep) in an area of @1x@1 "
+"The subsoil must be filled (at least 2 blocks deep) in an area of @1x@2 "
 "blocks of width"
 
 #: editor_schems.lua
@@ -77,11 +77,13 @@ msgid "Salvar nova estrutura"
 msgstr "Save new structure"
 
 #: editor_schems.lua
-msgid "Defina o tipo e estrutura desejada."
+#, fuzzy
+msgid "Defina o tipo e estrutura desejada"
 msgstr "Define the desired type and structure."
 
 #: editor_schems.lua
-msgid "Estrutura carregada."
+#, fuzzy
+msgid "Estrutura carregada"
 msgstr "Structure loaded."
 
 #: editor_schems.lua
@@ -89,18 +91,21 @@ msgid "Falha ao carregar estrutura."
 msgstr "Failed to load structure."
 
 #: editor_schems.lua
-msgid "Falha ao remover arquivo antigo."
+#, fuzzy
+msgid "Falha ao remover arquivo antigo"
 msgstr "Failed to remove old file."
 
 #: editor_schems.lua
+#, fuzzy
 msgid ""
 "Estrutura foi salva. Mas precisa reiniciar o minetest para carregar ela "
-"novamente."
+"novamente"
 msgstr ""
 "Structure has been saved. But need to restart the minetest to load it again."
 
 #: editor_schems.lua
-msgid "Defina um nome da estrutura."
+#, fuzzy
+msgid "Defina um nome da estrutura"
 msgstr "Define a structure name."
 
 #: editor_schems.lua
@@ -108,11 +113,13 @@ msgid "Use apenas letras e sublinhado (_)"
 msgstr "Use only letters and underline (_)"
 
 #: editor_schems.lua
-msgid "Nenhum tipo definido."
+#, fuzzy
+msgid "Nenhum tipo definido"
 msgstr "No type defined."
 
 #: editor_schems.lua
-msgid "Estrutura nova foi salva."
+#, fuzzy
+msgid "Estrutura nova foi salva"
 msgstr "New structure saved."
 
 #: editor_schems.lua
@@ -125,7 +132,7 @@ msgstr "Structural Basis of Sunes"
 
 #: inimigos.lua
 msgid "Acabaste de se tornar inimigo de uma vila dos Sunos"
-msgstr "You have just become an enemy of a sunean village."
+msgstr "You have just become an enemy of a sunean village"
 
 #: nodes/bancada.lua
 msgid "Bancada dos Sunos"
@@ -244,12 +251,8 @@ msgid "Aviso"
 msgstr "Notice"
 
 #: estruturas/casa/interface.lua
-msgid ""
-"Oi. Ajude essa vila a \n"
-"montar uma Casa Comunal"
-msgstr ""
-"Hi. Help this village \n"
-"set up a Communal House"
+msgid "Oi. Ajude essa vila a montar uma Casa Comunal"
+msgstr "Hi. Help this village set up a Communal House"
 
 #: estruturas/casa/interface.lua
 msgid "Trocar por Fundamento"
@@ -318,7 +321,7 @@ msgstr "@1 already exists in this village"
 
 #: estruturas/comunal/fundamento.lua
 msgid "A vila precisa ter habitantes"
-msgstr "The village must have at least @1 inhabitants"
+msgstr "The village must have inhabitants"
 
 #: estruturas/comunal/fundamento.lua
 msgid "Fundamento de Casa Comunal dos Sunos"
@@ -329,7 +332,6 @@ msgid "Casa Comunal sendo construida"
 msgstr "Communal House being built"
 
 #: estruturas/comunal/interface.lua
-#, fuzzy
 msgid "Nenhuma Casa Comunal nessa vila "
 msgstr "No Community House in this village"
 

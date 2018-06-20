@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-06-19 15:25-0300\n"
-"PO-Revision-Date: 2018-06-19 15:27-0300\n"
+"POT-Creation-Date: 2018-06-19 17:36-0300\n"
+"PO-Revision-Date: 2018-06-19 17:36-0300\n"
 "Last-Translator: BrunoMine <borgesdossantosbruno@gmail.com>\n"
 "Language-Team: Brazilian Portuguese\n"
 "Language: pt_BR\n"
@@ -21,23 +21,23 @@ msgstr ""
 
 #: comum.lua
 msgid ""
-"O local precisa estar limpo e plano em uma area de @1x@1 blocos da largura"
+"O local precisa estar limpo e plano em uma area de @1x@2 blocos da largura"
 msgstr ""
-"O local precisa estar limpo e plano em uma area de @1x@1 blocos da largura"
+"O local precisa estar limpo e plano em uma area de @1x@2 blocos da largura"
 
 #: comum.lua
 msgid ""
-"O solo precisa estar plano e gramado em uma area de @1x@1 blocos da largura"
+"O solo precisa estar plano e gramado em uma area de @1x@2 blocos da largura"
 msgstr ""
-"O solo precisa estar plano e gramado em uma area de @1x@1 blocos da largura"
+"O solo precisa estar plano e gramado em uma area de @1x@2 blocos da largura"
 
 #: comum.lua
 msgid ""
 "O subsolo precisa estar preenchido (ao menos 2 blocos de profundidade) em "
-"uma area de @1x@1 blocos da largura"
+"uma area de @1x@2 blocos da largura"
 msgstr ""
 "O subsolo precisa estar preenchido (ao menos 2 blocos de profundidade) em "
-"uma area de @1x@1 blocos da largura"
+"uma area de @1x@2 blocos da largura"
 
 #: editor_schems.lua
 msgid "Editor de Estruturas Esquematicas (Schems)"
@@ -80,44 +80,44 @@ msgid "Salvar nova estrutura"
 msgstr "Salvar nova estrutura"
 
 #: editor_schems.lua
-msgid "Defina o tipo e estrutura desejada."
-msgstr "Defina o tipo e estrutura desejada."
+msgid "Defina o tipo e estrutura desejada"
+msgstr "Defina o tipo e estrutura desejada"
 
 #: editor_schems.lua
-msgid "Estrutura carregada."
-msgstr "Estrutura carregada."
+msgid "Estrutura carregada"
+msgstr "Estrutura carregada"
 
 #: editor_schems.lua
-msgid "Falha ao carregar estrutura."
-msgstr "Falha ao carregar estrutura."
+msgid "Falha ao carregar estrutura"
+msgstr "Falha ao carregar estrutura"
 
 #: editor_schems.lua
-msgid "Falha ao remover arquivo antigo."
-msgstr "Falha ao remover arquivo antigo."
+msgid "Falha ao remover arquivo antigo"
+msgstr "Falha ao remover arquivo antigo"
 
 #: editor_schems.lua
 msgid ""
 "Estrutura foi salva. Mas precisa reiniciar o minetest para carregar ela "
-"novamente."
+"novamente"
 msgstr ""
 "Estrutura foi salva. Mas precisa reiniciar o minetest para carregar ela "
-"novamente."
+"novamente"
 
 #: editor_schems.lua
-msgid "Defina um nome da estrutura."
-msgstr "Defina um nome da estrutura."
+msgid "Defina um nome da estrutura"
+msgstr "Defina um nome da estrutura"
 
 #: editor_schems.lua
 msgid "Use apenas letras e sublinhado (_)"
 msgstr "Use apenas letras e sublinhado (_)"
 
 #: editor_schems.lua
-msgid "Nenhum tipo definido."
-msgstr "Nenhum tipo definido."
+msgid "Nenhum tipo definido"
+msgstr "Nenhum tipo definido"
 
 #: editor_schems.lua
-msgid "Estrutura nova foi salva."
-msgstr "Estrutura nova foi salva."
+msgid "Estrutura nova foi salva"
+msgstr "Estrutura nova foi salva"
 
 #: editor_schems.lua
 msgid "Editor de estruturas dos Sunos"
@@ -355,7 +355,7 @@ msgstr "Escolha algo da lista"
 #: estruturas/comunal/interface.lua estruturas/emporio/init.lua
 #: estruturas/taverna/fundamento.lua
 msgid "A vila precisa ter ao menos @1 habitantes"
-msgstr "A vila precisa de mais habitantes para issoCarpete de Palha"
+msgstr "A vila precisa ter ao menos @1 habitantes"
 
 #: estruturas/comunal/interface.lua
 msgid "Precisa dos itens exigidos para obter @1"
@@ -371,7 +371,7 @@ msgstr "Solo de Atendente Comunal dos Sunos"
 
 #: estruturas/emporio/diretrizes.lua estruturas/emporio/init.lua
 msgid "Emporio"
-msgstr "Carpete de Palha"
+msgstr "Emporio"
 
 #: estruturas/emporio/diretrizes.lua
 msgid "O principal lugar para comprar itens comuns dos sunos."
@@ -383,11 +383,11 @@ msgstr "Fundamento de Emporio dos Sunos"
 
 #: estruturas/emporio/init.lua
 msgid "Emporio construido"
-msgstr "Loja construidaCarpete de Palha"
+msgstr "Emporio construido"
 
 #: estruturas/emporio/placa.lua
 msgid "Placa de Emporio dos Sunos"
-msgstr "Bancada de Trabalho dos SunosCarpete de Palha"
+msgstr "Placa de Emporio dos Sunos"
 
 #: estruturas/loja/bau.lua estruturas/loja/init.lua
 msgid "Bau de Venda dos Sunos"
@@ -419,7 +419,7 @@ msgstr "Troque alguns itens aqui"
 
 #: estruturas/taverna/barril.lua
 msgid "Barril"
-msgstr "Carpete de Palha"
+msgstr "Barril"
 
 #: estruturas/taverna/bau.lua estruturas/taverna/init.lua
 msgid "Bau de Taverna dos Sunos"

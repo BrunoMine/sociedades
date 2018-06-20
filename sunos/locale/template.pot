@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-06-19 15:26-0300\n"
+"POT-Creation-Date: 2018-06-19 17:36-0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,18 +19,18 @@ msgstr ""
 
 #: comum.lua
 msgid ""
-"O local precisa estar limpo e plano em uma area de @1x@1 blocos da largura"
+"O local precisa estar limpo e plano em uma area de @1x@2 blocos da largura"
 msgstr ""
 
 #: comum.lua
 msgid ""
-"O solo precisa estar plano e gramado em uma area de @1x@1 blocos da largura"
+"O solo precisa estar plano e gramado em uma area de @1x@2 blocos da largura"
 msgstr ""
 
 #: comum.lua
 msgid ""
 "O subsolo precisa estar preenchido (ao menos 2 blocos de profundidade) em "
-"uma area de @1x@1 blocos da largura"
+"uma area de @1x@2 blocos da largura"
 msgstr ""
 
 #: editor_schems.lua
@@ -74,29 +74,29 @@ msgid "Salvar nova estrutura"
 msgstr ""
 
 #: editor_schems.lua
-msgid "Defina o tipo e estrutura desejada."
+msgid "Defina o tipo e estrutura desejada"
 msgstr ""
 
 #: editor_schems.lua
-msgid "Estrutura carregada."
+msgid "Estrutura carregada"
 msgstr ""
 
 #: editor_schems.lua
-msgid "Falha ao carregar estrutura."
+msgid "Falha ao carregar estrutura"
 msgstr ""
 
 #: editor_schems.lua
-msgid "Falha ao remover arquivo antigo."
+msgid "Falha ao remover arquivo antigo"
 msgstr ""
 
 #: editor_schems.lua
 msgid ""
 "Estrutura foi salva. Mas precisa reiniciar o minetest para carregar ela "
-"novamente."
+"novamente"
 msgstr ""
 
 #: editor_schems.lua
-msgid "Defina um nome da estrutura."
+msgid "Defina um nome da estrutura"
 msgstr ""
 
 #: editor_schems.lua
@@ -104,11 +104,11 @@ msgid "Use apenas letras e sublinhado (_)"
 msgstr ""
 
 #: editor_schems.lua
-msgid "Nenhum tipo definido."
+msgid "Nenhum tipo definido"
 msgstr ""
 
 #: editor_schems.lua
-msgid "Estrutura nova foi salva."
+msgid "Estrutura nova foi salva"
 msgstr ""
 
 #: editor_schems.lua

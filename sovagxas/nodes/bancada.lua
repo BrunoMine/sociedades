@@ -18,7 +18,7 @@ default.crafttable_formspec = -- Inventario da Bancada de Trabalho
 	default.gui_bg..
 	default.gui_bg_img..
 	default.gui_slots..
-	"label[1.75,0;Craftador]"..
+	"label[1.75,0;"..S("Craftador").."]"..
 	"list[current_player;main;0,4.25;8,1;]"..
 	"list[current_player;main;0,5.5;8,3;8]"..
 	"list[current_player;craft;1.75,0.5;3,3;]"..

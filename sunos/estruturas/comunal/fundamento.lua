@@ -14,9 +14,8 @@ local S = sunos.S
 
 -- Verificar se pode construir e envontra vila 
 local verificar_terreno = function(pos, dist)
-	minetest.chat_send_all("com")
 	-- Encontrar vila ativa
-	vila = sunos.encontrar_vila(pos, 25)
+	local vila = sunos.encontrar_vila(pos, 25)
 	if not vila then
 		return S("Nenhuma vila habitavel encontrada")
 	end
@@ -33,9 +32,8 @@ local verificar_terreno = function(pos, dist)
 	for x=-1, 1 do
 		for y=-1, 1 do
 			for z=-1, 1 do
-				if minetest.is_protected({x=pos.x+((dist+2)*x), y=pos.y+((8*y)+7), z=pos.z+((dist+2)*z)}, name) == true then
-					minetest.chat_send_player(name, S("Muito perto de estruturas protegidas"))
-					return itemstack 
+				if minetest.is_protected({x=pos.x+((dist+2)*x), y=pos.y+((8*y)+7), z=pos.z+((dist+2)*z)}, "") == true then
+					return S("Muito perto de estruturas protegidas")
 				end
 			end
 		end

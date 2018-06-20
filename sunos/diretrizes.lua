@@ -49,16 +49,41 @@ sunos.var.debug_info = (minetest.settings:get("sunos_enable_debug_notify") == "t
 
 -- Nomes de NPCs (derivados do esperanto)
 sunos.var.npc_names = {
-	masculino = {
+	male = {
 		"Lumo", -- Luz
 		"Racio", -- Razão
 		"Honoro", -- Honra
+		"Akurata", -- Pontual
+		"Bonfama", -- de boa fama
+		"Bonulo", -- Bom
+		"Kora", -- Cordial
+		"Negro", -- Negro
+		"Obei", -- Obedecer
+		"Obstini", -- Teimar
+		"Poeto", -- Poeta
+		"Trunko", -- Tronco
+		"Flavo", -- Amarelo
 	},
-	feminino = {
-		"Hela", -- Luminosa, luzente
+	female = {
+		"Flava", -- Amarela
+		"Hela", -- Luminosa
 		"Brava", -- valente
+		"Afable", -- Amavel
+		"Bela", -- Bela
+		"Danka", -- Grato
+		"Eleganta", -- Elegante
+		"Epopea", -- Épico
+		"Negra", -- Negra
+		"Nigra", -- Negra
+		"Obeema", -- Obediente
 	},
 }
+for _, name in ipairs(sunos.var.npc_names.male) do
+	npc.info.register_name(name, {"male", "sunos"})
+end
+for _, name in ipairs(sunos.var.npc_names.female) do
+	npc.info.register_name(name, {"female", "sunos"})
+end
 
 -- Nodes de mobilias (index é o place_name)
 -- Exemplo: sunos.nodes_de_mobilias["bau_primario"] = {"sunos:bau_casa"}

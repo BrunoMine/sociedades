@@ -17,7 +17,7 @@ local S = sunos.S
 local verificar_terreno = function(pos, dist)
 	
 	-- Encontrar vila ativa
-	vila = sunos.encontrar_vila(pos, 25)
+	local vila = sunos.encontrar_vila(pos, 25)
 	if not vila then
 		return S("Nenhuma vila habitavel encontrada")
 	end
@@ -94,6 +94,7 @@ minetest.register_node("sunos:fundamento_loja", {
 			-- Marcar area necessaria
 			sunos.criar_caixa_de_area(pointed_thing.under, 2+1)
 			-- Retorna mensagem de falha
+			minetest.chat_send_all("a3")
 			minetest.chat_send_player(placer:get_player_name(), r)
 			return itemstack
 		end

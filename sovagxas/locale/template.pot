@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-27 11:36-0300\n"
+"POT-Creation-Date: 2018-06-20 16:34-0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,6 +19,10 @@ msgstr ""
 
 #: craftitens.lua
 msgid "Muda de Arvore Sovagxa"
+msgstr ""
+
+#: nodes/bancada.lua
+msgid "Craftador"
 msgstr ""
 
 #: nodes/bancada.lua
@@ -34,13 +38,19 @@ msgid "Bau Sovagxa"
 msgstr ""
 
 #: nodes/bau.lua
-msgid "Inventario lotado. Esvazie um pouco."
+msgid "Inventario lotado. Esvazie um pouco"
 msgstr ""
 
 #: nodes/bau.lua
-msgid ""
-"Bau vazio no momento. Aguarde ate \n"
-"que um sovagxa coloque algo aqui"
+msgid "Bau vazio no momento"
+msgstr ""
+
+#: nodes/bau.lua
+msgid "Aguarde ate que um sovagxa coloque algo dentro"
+msgstr ""
+
+#: nodes/jungleleaves.lua
+msgid "de arvore sovagxa"
 msgstr ""
 
 #: nodes/totem.lua

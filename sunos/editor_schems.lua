@@ -129,7 +129,7 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 			-- Verificar estrutura e largura 
 			local estrutura = minetest.get_meta(acessos[name].pos):get_string("estrutura")
 			if tipo == "" or estrutura == "" then 
-				minetest.chat_send_player(name, S("Defina o tipo e estrutura desejada."))
+				minetest.chat_send_player(name, S("Defina o tipo e estrutura desejada"))
 				return
 			end
 			-- Separar largura
@@ -155,9 +155,9 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 			local r = minetest.place_schematic({x=pos.x+8-dist, y=pos.y, z=pos.z-dist}, minetest.get_modpath("sunos").."/schems/"..arq, 0, nil, true)
 			
 			if r == true then
-				minetest.chat_send_player(name, S("Estrutura carregada."))
+				minetest.chat_send_player(name, S("Estrutura carregada"))
 			else
-				minetest.chat_send_player(name, S("Falha ao carregar estrutura."))
+				minetest.chat_send_player(name, S("Falha ao carregar estrutura"))
 			end
 			return
 		end
@@ -175,7 +175,7 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 			-- Verificar estrutura e largura 
 			local estrutura = minetest.get_meta(acessos[name].pos):get_string("estrutura")
 			if tipo == "" or estrutura == "" then 
-				minetest.chat_send_player(name, S("Defina o tipo e estrutura desejada."))
+				minetest.chat_send_player(name, S("Defina o tipo e estrutura desejada"))
 				return
 			end
 			-- Separar largura
@@ -191,7 +191,7 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 			local arq = tipo.."/"..estrutura.."."..largura..".mts"..step_sufix
 			-- Remove o antigo arquivo schematic
 			if step_sufix == "" and os.remove(minetest.get_modpath("sunos").."/schems/"..arq) == nil then
-				minetest.chat_send_player(name, S("Falha ao remover arquivo antigo."))
+				minetest.chat_send_player(name, S("Falha ao remover arquivo antigo"))
 			end
 			
 			-- Criar novo arquivo schematic
@@ -203,7 +203,7 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 			)
 			
 			-- Avisa o bug do minetest
-			minetest.chat_send_player(name, S("Estrutura foi salva. Mas precisa reiniciar o minetest para carregar ela novamente."))
+			minetest.chat_send_player(name, S("Estrutura foi salva. Mas precisa reiniciar o minetest para carregar ela novamente"))
 			return
 		end
 		
@@ -211,7 +211,7 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 			
 			-- Verificar nome da nova estrutura
 			if fields.novo_nome == "" then 
-				minetest.chat_send_player(name, S("Defina um nome da estrutura."))
+				minetest.chat_send_player(name, S("Defina um nome da estrutura"))
 				return
 			end
 			if string.match(fields.novo_nome, " ") ~= nil then
@@ -222,7 +222,7 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 			-- Verificar tipo
 			local tipo = minetest.get_meta(acessos[name].pos):get_string("tipo_nome")
 			if tipo == "" then
-				minetest.chat_send_player(name, S("Nenhum tipo definido."))
+				minetest.chat_send_player(name, S("Nenhum tipo definido"))
 				return
 			end
 			
@@ -239,7 +239,7 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 				minetest.get_modpath("sunos").."/schems/"..arq
 			)
 			
-			minetest.chat_send_player(name, S("Estrutura nova foi salva."))
+			minetest.chat_send_player(name, S("Estrutura nova foi salva"))
 			return
 		end
 		

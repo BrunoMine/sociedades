@@ -16,7 +16,7 @@ local S = sunos.S
 local verificar_terreno = function(pos, dist)
 	
 	-- Encontrar vila ativa
-	vila = sunos.encontrar_vila(pos, 25)
+	local vila = sunos.encontrar_vila(pos, 25)
 	if not vila then
 		return S("Nenhuma vila habitavel encontrada")
 	end

@@ -68,7 +68,7 @@ sovagxas.montar_arvore = function(pos)
 			while z <= limz do
 				
 				if math.random(1,3) > 1 then
-					minetest.set_node({x=x, y=y, z=z}, {name="default:jungleleaves"})
+					minetest.set_node({x=x, y=y, z=z}, {name="sovagxas:jungleleaves"})
 				end
 				
 				z = z + 1
@@ -185,7 +185,7 @@ sovagxas.montar_arvore = function(pos)
 		while z <= limz do
 			
 			if math.random(0,1) > 0 then
-				minetest.set_node({x=x, y=y, z=z}, {name="default:jungleleaves"})
+				minetest.set_node({x=x, y=y, z=z}, {name="sovagxas:jungleleaves"})
 			end
 			
 			z = z + 1
@@ -204,7 +204,7 @@ sovagxas.montar_arvore = function(pos)
 		while z <= limz do
 			
 			if math.random(0,1) > 0 then
-				minetest.set_node({x=x, y=y, z=z}, {name="default:jungleleaves"})
+				minetest.set_node({x=x, y=y, z=z}, {name="sovagxas:jungleleaves"})
 			end
 			
 			z = z + 1
@@ -327,10 +327,10 @@ sovagxas.montar_arvore = function(pos)
 		minetest.set_node({x=slots_mobilia[i][1].x+1, y=slots_mobilia[i][1].y+2, z=slots_mobilia[i][1].z}, {name="air"})
 		minetest.set_node({x=slots_mobilia[i][1].x-1, y=slots_mobilia[i][1].y+2, z=slots_mobilia[i][1].z}, {name="air"})
 		minetest.set_node({x=slots_mobilia[i][1].x, y=slots_mobilia[i][1].y+3, z=slots_mobilia[i][1].z}, {name="air"})
-		minetest.set_node({x=slots_mobilia[i][1].x, y=slots_mobilia[i][1].y+3, z=slots_mobilia[i][1].z+1}, {name="default:jungleleaves"})
-		minetest.set_node({x=slots_mobilia[i][1].x, y=slots_mobilia[i][1].y+3, z=slots_mobilia[i][1].z-1}, {name="default:jungleleaves"})
-		minetest.set_node({x=slots_mobilia[i][1].x+1, y=slots_mobilia[i][1].y+3, z=slots_mobilia[i][1].z}, {name="default:jungleleaves"})
-		minetest.set_node({x=slots_mobilia[i][1].x-1, y=slots_mobilia[i][1].y+3, z=slots_mobilia[i][1].z}, {name="default:jungleleaves"})
+		minetest.set_node({x=slots_mobilia[i][1].x, y=slots_mobilia[i][1].y+3, z=slots_mobilia[i][1].z+1}, {name="sovagxas:jungleleaves"})
+		minetest.set_node({x=slots_mobilia[i][1].x, y=slots_mobilia[i][1].y+3, z=slots_mobilia[i][1].z-1}, {name="sovagxas:jungleleaves"})
+		minetest.set_node({x=slots_mobilia[i][1].x+1, y=slots_mobilia[i][1].y+3, z=slots_mobilia[i][1].z}, {name="sovagxas:jungleleaves"})
+		minetest.set_node({x=slots_mobilia[i][1].x-1, y=slots_mobilia[i][1].y+3, z=slots_mobilia[i][1].z}, {name="sovagxas:jungleleaves"})
 		
 		-- Realiza procedimento para spawnar um NPC no bau
 		minetest.after(2, sovagxas.verif_bau_sovagxa, slots_mobilia[i][1])

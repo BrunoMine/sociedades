@@ -22,7 +22,7 @@ local atualizar_string_menu_comunal = function()
 	string_menu_comunal = ""
 	for item,_ in pairs(sunos.estruturas.comunal.var.tb_menu_comunal) do
 		if string_menu_comunal ~= "" then string_menu_comunal = string_menu_comunal .. "," end
-		string_menu_comunal = string_menu_comunal .. item
+		string_menu_comunal = string_menu_comunal .. S(item)
 		table.insert(tb_itens_menu_comunal, item)
 	end
 end
@@ -42,7 +42,7 @@ local avisar = function(player, texto)
 	minetest.show_formspec(player:get_player_name(), "sunos:npc_comunal", "size[8,3]"
 		..default.gui_bg
 		..default.gui_bg_img
-		.."textarea[0.5,0.2;7.6,3.1;;"..S("Aviso").."\n"..S(texto)..";]")
+		.."textarea[0.5,0.2;7.6,3.1;;"..S("Aviso").."\n"..texto..";]")
 	return true
 end
 
@@ -160,6 +160,17 @@ sunos.npcs.npc.registrados.comunal.on_rightclick = function(ent, player, fields)
 	end
 end
 
+-- Pegar descrição de item
+local get_desc_item = function(itemname)
+	local desc_item = "fail" 
+	if minetest.registered_nodes[itemname] then desc_item = minetest.registered_nodes[itemname].description
+	elseif minetest.registered_tools[itemname] then desc_item = minetest.registered_tools[itemname].description
+	elseif minetest.registered_items[itemname] then desc_item = minetest.registered_items[itemname].description
+	elseif minetest.registered_craftitems[itemname] then desc_item = minetest.registered_craftitems[itemname].description
+	end
+	return desc_item
+end
+
 -- Receptor de botoes
 minetest.register_on_player_receive_fields(function(player, formname, fields)
 	if formname == "sunos:npcs_npc_comunal" then
@@ -194,16 +205,9 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 			
 			-- Tenta trocar
 			if sunos.trocar_plus(player, dados.item_rem, {dados.item_add}) == false then
-				return avisar(player, S("Precisa dos itens exigidos para obter @1", titulo))
+				return avisar(player, S("Precisa dos itens exigidos para obter @1", get_desc_item(dados.item_add)))
 			else
-				-- Pegar descrição do item
-				local desc_item = "fail" 
-				if minetest.registered_nodes[dados.item_add] then desc_item = minetest.registered_nodes[dados.item_add].description
-				elseif minetest.registered_tools[dados.item_add] then desc_item = minetest.registered_tools[dados.item_add].description
-				elseif minetest.registered_items[dados.item_add] then desc_item = minetest.registered_items[dados.item_add].description
-				elseif minetest.registered_craftitems[dados.item_add] then desc_item = minetest.registered_craftitems[dados.item_add].description
-				end
-				return avisar(player, S("Recebeste um @1", desc_item))
+				return avisar(player, S("Recebeste um @1", get_desc_item(dados.item_add)))
 			end
 		end
 	end

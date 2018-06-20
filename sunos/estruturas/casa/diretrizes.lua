@@ -14,12 +14,10 @@ sunos.estruturas.casa.var = {}
 
 -- Nodes decorativos simples
 sunos.estruturas.casa.var.decor_simples = {
-	"flowers:rose",
-	"flowers:tulip",
-	"flowers:geranium",
 	"flowers:mushroom_brown",
 	"vessels:glass_bottle",
-	"vessels:drinking_glass"
+	"vessels:drinking_glass",
+	"sunos:nectar_node_nodrop",
 }
 
 -- Tabela de população por tamanho de casa

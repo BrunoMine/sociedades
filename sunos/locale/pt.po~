@@ -1,14 +1,14 @@
 # Portuguese translations for Sunos package
 # Traduções em português brasileiro para o pacote Sunos.
-# Copyright (C) 2017 GNU LESSER GENERAL PUBLIC LICENSE
+# Copyright (C) 2018 GNU LESSER GENERAL PUBLIC LICENSE
 # This file is distributed under the same license as the Sunos package.
-# BrunoMine <borgesdossantosbruno@gmail.com>, 2017.
+# BrunoMine <borgesdossantosbruno@gmail.com>, 2018.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: 1.4\n"
+"Project-Id-Version: 3.0.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-06-21 11:53-0300\n"
+"POT-Creation-Date: 2018-06-21 12:05-0300\n"
 "PO-Revision-Date: 2018-06-21 11:53-0300\n"
 "Last-Translator: BrunoMine <borgesdossantosbruno@gmail.com>\n"
 "Language-Team: Brazilian Portuguese\n"
@@ -263,7 +263,7 @@ msgstr "Nenhuma atividade disponivel"
 msgid "Precisa dos itens exigidos para obter @1"
 msgstr "Precisa dos itens exigidos para obter @1"
 
-#: estruturas/casa/interface.lua
+#: estruturas/casa/interface.lua estruturas/comunal/interface.lua
 msgid "Recebeste @1"
 msgstr "Recebeste @1"
 
@@ -356,10 +356,6 @@ msgstr "Escolha algo da lista"
 #: estruturas/taverna/fundamento.lua
 msgid "A vila precisa ter ao menos @1 habitantes"
 msgstr "A vila precisa ter ao menos @1 habitantes"
-
-#: estruturas/comunal/interface.lua
-msgid "Recebeste um @1"
-msgstr "Recebeste um @1"
 
 #: estruturas/comunal/npc.lua
 msgid "Solo de Atendente Comunal dos Sunos"
@@ -484,6 +480,9 @@ msgstr "Kit Reparador de estrutura dos Sunos"
 #: craftitens/salada_de_frutas.lua
 msgid "Salada de Frutas dos Sunos"
 msgstr "Salada de Frutas dos Sunos"
+
+#~ msgid "Recebeste um @1"
+#~ msgstr "Recebeste um @1"
 
 #~ msgid "Recebeste um Fundamento de Casa Comunal"
 #~ msgstr "Recebeste um Fundamento de Casa Comunal"

@@ -90,7 +90,7 @@ minetest.register_node("sunos:fundamento_comunal", {
 			})
 			
 			-- Retorna mensagem de montagem concluida
-			minetest.chat_send_player(placer:get_player_name(), S("Casa Comunal sendo construida"))
+			minetest.chat_send_player(placer:get_player_name(), S("Construindo @1", S("Casa Comunal")))
 			itemstack:take_item()
 			return itemstack
 			

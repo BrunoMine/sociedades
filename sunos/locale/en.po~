@@ -1,14 +1,14 @@
 # English translations for Sunos package.
-# Copyright (C) 2017 GNU LESSER GENERAL PUBLIC LICENSE
+# Copyright (C) 2018 GNU LESSER GENERAL PUBLIC LICENSE
 # This file is distributed under the same license as the Sunos package.
 # Bruno <borgesdossantosbruno@gmail.com>, 2017.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: \n"
+"Project-Id-Version: 3.0.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-06-21 11:53-0300\n"
-"PO-Revision-Date: 2018-06-21 11:53-0300\n"
+"POT-Creation-Date: 2018-06-21 12:05-0300\n"
+"PO-Revision-Date: 2018-06-21 12:11-0300\n"
 "Last-Translator: Bruno <borgesdossantosbruno@gmail.com>\n"
 "Language-Team: English\n"
 "Language: en\n"
@@ -259,7 +259,7 @@ msgstr "No interaction available"
 msgid "Precisa dos itens exigidos para obter @1"
 msgstr "You need the required items to trade @1"
 
-#: estruturas/casa/interface.lua
+#: estruturas/casa/interface.lua estruturas/comunal/interface.lua
 msgid "Recebeste @1"
 msgstr "You got the @1"
 
@@ -353,13 +353,9 @@ msgstr "Choose something from the list"
 msgid "A vila precisa ter ao menos @1 habitantes"
 msgstr "The village must have at least @1 inhabitants"
 
-#: estruturas/comunal/interface.lua
-msgid "Recebeste um @1"
-msgstr "Receveste@1"
-
 #: estruturas/comunal/npc.lua
 msgid "Solo de Atendente Comunal dos Sunos"
-msgstr "Sunian Barman Floor"
+msgstr "Floor of Sune comunal attendant"
 
 #: estruturas/emporio/diretrizes.lua estruturas/emporio/init.lua
 msgid "Emporio"
@@ -371,7 +367,7 @@ msgstr "The main place to buy common items from the sunes."
 
 #: estruturas/emporio/init.lua
 msgid "Fundamento de Emporio dos Sunos"
-msgstr "Structural Basis of Sunian Emporium"
+msgstr "Bedrock of Sune Emporium"
 
 #: estruturas/emporio/init.lua
 msgid "Emporio construido"
@@ -379,11 +375,11 @@ msgstr "Emporium build"
 
 #: estruturas/emporio/placa.lua
 msgid "Placa de Emporio dos Sunos"
-msgstr "Sunian Emporium Plate"
+msgstr "Sune Emporium Plate"
 
 #: estruturas/loja/bau.lua estruturas/loja/init.lua
 msgid "Bau de Venda dos Sunos"
-msgstr "Sunian Trader"
+msgstr "Sune Trader"
 
 #: estruturas/loja/bau.lua
 msgid "Precisa do item para trocar"
@@ -399,7 +395,7 @@ msgstr "Market"
 
 #: estruturas/loja/fundamento.lua
 msgid "Fundamento de Loja dos Sunos"
-msgstr "Structural Basis of Sunian Small Trade Fair"
+msgstr "Bedrockof Sune Small Trade Fair"
 
 #: estruturas/loja/fundamento.lua
 msgid "Loja sendo construida"
@@ -415,7 +411,7 @@ msgstr "Barrel"
 
 #: estruturas/taverna/bau.lua estruturas/taverna/init.lua
 msgid "Bau de Taverna dos Sunos"
-msgstr "Chest of Sunian Tavern"
+msgstr "Chest of Sune Tavern"
 
 #: estruturas/taverna/diretrizes.lua estruturas/taverna/fundamento.lua
 msgid "Taverna"
@@ -426,11 +422,11 @@ msgid ""
 "Uma bom ponto de encontro dos sunos onde podem ser comprados alguns itens "
 "especiais."
 msgstr ""
-"A good meeting point for the sunos where you can buy some special items."
+"A good meeting point for the sunes where you can buy some special items."
 
 #: estruturas/taverna/fundamento.lua
 msgid "Fundamento de taverna dos Sunos"
-msgstr "Structural Basis of Sunian Tavern"
+msgstr "Bedrock of Sune Tavern"
 
 #: estruturas/taverna/fundamento.lua
 msgid "Taverna sendo construido"
@@ -450,7 +446,7 @@ msgstr "Fruit Nectar of Sunes"
 
 #: estruturas/taverna/npc.lua
 msgid "Solo de Barman dos Sunos"
-msgstr "Sunian Barman Floor"
+msgstr "Floor of Sune Barman"
 
 #: estruturas/taverna/petisco.lua
 msgid "Petisco de Frutas dos Sunos"
@@ -478,7 +474,10 @@ msgstr "Sune Structural Repair Kit"
 
 #: craftitens/salada_de_frutas.lua
 msgid "Salada de Frutas dos Sunos"
-msgstr "Sunian Fruit Salad"
+msgstr "Fruit Salad of Sunes"
+
+#~ msgid "Recebeste um @1"
+#~ msgstr "Receveste@1"
 
 #~ msgid "Recebeste um Fundamento de Casa Comunal"
 #~ msgstr "You have received a Bedrock of Sune Communal House"

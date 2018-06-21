@@ -86,7 +86,7 @@ minetest.register_node("sunos:fundamento_casa_pequena", {
 			})
 			
 			-- Retorna mensagem de montagem concluida
-			minetest.chat_send_player(placer:get_player_name(), S("Casa sendo construida"))
+			minetest.chat_send_player(placer:get_player_name(), S("Construindo @1", S("Casa Pequena")))
 			itemstack:take_item()
 			return itemstack
 			
@@ -138,7 +138,7 @@ minetest.register_node("sunos:fundamento_casa_mediana", {
 			})
 			
 			-- Retorna mensagem de montagem concluida
-			minetest.chat_send_player(placer:get_player_name(), S("Casa sendo construida"))
+			minetest.chat_send_player(placer:get_player_name(), S("Construindo @1", S("Casa Mediana")))
 			itemstack:take_item()
 			return itemstack
 			
@@ -192,7 +192,7 @@ minetest.register_node("sunos:fundamento_casa_grande", {
 			})
 			
 			-- Retorna mensagem de montagem concluida
-			minetest.chat_send_player(placer:get_player_name(), S("Casa sendo construida"))
+			minetest.chat_send_player(placer:get_player_name(), S("Construindo @1", S("Casa Grande")))
 			itemstack:take_item()
 			return itemstack
 			

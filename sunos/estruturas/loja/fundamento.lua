@@ -86,7 +86,7 @@ minetest.register_node("sunos:fundamento_loja", {
 			})
 			
 			-- Retorna mensagem de montagem concluida
-			minetest.chat_send_player(placer:get_player_name(), S("Loja sendo construida"))
+			minetest.chat_send_player(placer:get_player_name(), S("Construindo @1", S("Feirinha")))
 			itemstack:take_item()
 			return itemstack
 			

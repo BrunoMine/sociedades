@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-06-21 12:05-0300\n"
+"POT-Creation-Date: 2018-06-21 12:22-0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -222,16 +222,30 @@ msgstr ""
 msgid "Fundamento Suno de Casa Pequena"
 msgstr ""
 
-#: estruturas/casa/fundamento.lua
-msgid "Casa sendo construida"
+#: estruturas/casa/fundamento.lua estruturas/comunal/diretrizes.lua
+msgid "Casa Pequena"
+msgstr ""
+
+#: estruturas/casa/fundamento.lua estruturas/comunal/fundamento.lua
+#: estruturas/emporio/init.lua estruturas/loja/fundamento.lua
+#: estruturas/taverna/fundamento.lua
+msgid "Construindo @1"
 msgstr ""
 
 #: estruturas/casa/fundamento.lua
 msgid "Fundamento Suno de Casa Mediana"
 msgstr ""
 
+#: estruturas/casa/fundamento.lua estruturas/comunal/diretrizes.lua
+msgid "Casa Mediana"
+msgstr ""
+
 #: estruturas/casa/fundamento.lua
 msgid "Fundamento Suno de Casa Grande"
+msgstr ""
+
+#: estruturas/casa/fundamento.lua estruturas/comunal/diretrizes.lua
+msgid "Casa Grande"
 msgstr ""
 
 #: estruturas/casa/interface.lua estruturas/casa/npc.lua
@@ -268,15 +282,7 @@ msgid "Bau da Casa Comunal dos Sunos"
 msgstr ""
 
 #: estruturas/comunal/diretrizes.lua
-msgid "Casa Pequena"
-msgstr ""
-
-#: estruturas/comunal/diretrizes.lua
 msgid "Aumenta um pouco a quantidade de moradores da vila"
-msgstr ""
-
-#: estruturas/comunal/diretrizes.lua
-msgid "Casa Mediana"
 msgstr ""
 
 #: estruturas/comunal/diretrizes.lua
@@ -284,14 +290,10 @@ msgid "Aumenta a quantidade de moradores da vila"
 msgstr ""
 
 #: estruturas/comunal/diretrizes.lua
-msgid "Casa Grande"
-msgstr ""
-
-#: estruturas/comunal/diretrizes.lua
 msgid "Aumenta bastante a quantidade de moradores da vila"
 msgstr ""
 
-#: estruturas/comunal/diretrizes.lua
+#: estruturas/comunal/diretrizes.lua estruturas/loja/fundamento.lua
 msgid "Feirinha"
 msgstr ""
 
@@ -314,10 +316,6 @@ msgstr ""
 
 #: estruturas/comunal/fundamento.lua
 msgid "Fundamento de Casa Comunal dos Sunos"
-msgstr ""
-
-#: estruturas/comunal/fundamento.lua
-msgid "Casa Comunal sendo construida"
 msgstr ""
 
 #: estruturas/comunal/interface.lua
@@ -365,10 +363,6 @@ msgstr ""
 msgid "Fundamento de Emporio dos Sunos"
 msgstr ""
 
-#: estruturas/emporio/init.lua
-msgid "Emporio construido"
-msgstr ""
-
 #: estruturas/emporio/placa.lua
 msgid "Placa de Emporio dos Sunos"
 msgstr ""
@@ -391,10 +385,6 @@ msgstr ""
 
 #: estruturas/loja/fundamento.lua
 msgid "Fundamento de Loja dos Sunos"
-msgstr ""
-
-#: estruturas/loja/fundamento.lua
-msgid "Loja sendo construida"
 msgstr ""
 
 #: estruturas/loja/init.lua
@@ -421,10 +411,6 @@ msgstr ""
 
 #: estruturas/taverna/fundamento.lua
 msgid "Fundamento de taverna dos Sunos"
-msgstr ""
-
-#: estruturas/taverna/fundamento.lua
-msgid "Taverna sendo construido"
 msgstr ""
 
 #: estruturas/taverna/interface.lua estruturas/taverna/petisco.lua

@@ -130,6 +130,7 @@ sunos.var.nodes_trocados = {
 	["sunos:kit_culinario"] = "sunos:kit_culinario_nodrop",
 	["sunos:nectar"] = "sunos:nectar_nodrop",
 	["sunos:nectar_node"] = "sunos:nectar_node_nodrop",
+	["sunos:caixa_de_musica"] = "sunos:caixa_de_musica_nodrop",
 	
 }
 
@@ -164,11 +165,10 @@ sunos.var.vendas = {
 
 -- Tabela de musicas dos sunos
 sunos.var.musicas = {
-	["sunos_sol"] = {duracao=37, gain=0.5},
-	["sunos_bondade"] = {duracao=37, gain=0.5},
-	["sunos_coragem"] = {duracao=26, gain=0.5},
-	["sunos_alegria"] = {duracao=21, gain=0.5},
-	["sunos_colheita"] = {duracao=29, gain=0.5},
+	["sunos_musica_sol"] = {duracao=26, gain=0.5},
+	["sunos_musica_tempo"] = {duracao=30, gain=0.5},
+	["sunos_musica_alegria"] = {duracao=22, gain=0.5},
+	["sunos_musica_colheita"] = {duracao=37, gain=0.5},
 }
 
 -- Tabela de grupos de nodes

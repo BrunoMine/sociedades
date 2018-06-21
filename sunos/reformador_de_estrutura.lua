@@ -36,7 +36,10 @@ sunos.restaurar_estrutura = function(pos)
 	-- Remonta estrutura
 	sunos.montar_estrutura(pos, dist, tipo, rotat, schem)
 	
-	-- Estantes e fornos se mantem altomaticamente por sobreposição
+	-- Estantes se mantem altomaticamente por sobreposição
+	
+	-- Ajustar fornos
+	sunos.ajustar_fornos(pos, dist)
 	
 	-- Reestabelece fundamento
 	minetest.set_node(pos, {name="sunos:fundamento"})

@@ -370,7 +370,7 @@ sunos.npcs.npc.registrar = function(tipo, def)
 				-- Verifica se atingiu o tempo
 				if self.sunos_t[n] >= tb_timers[tipo][n].time then
 					self.sunos_t[n] = 0 -- zera temporizador
-					local r = tb_timers[tipo][n].func(self)
+					local r = tb_timers[tipo][n].func(self, dtime)
 					if r ~= nil then
 						return r
 					end
@@ -398,7 +398,7 @@ sunos.npcs.npc.registrar = function(tipo, def)
 	-- Verifica se quer durmir (atravez de uma flag)
 	sunos.npcs.npc.register_step(tipo, {
 		time = 1,
-		func = function(self)
+		func = function(self, dtime)
 			
 			-- Verifica se deve ir durmir
 			if self.flags["sunos_repouso_status"] == "durmir" then
@@ -467,7 +467,7 @@ sunos.npcs.npc.registrar = function(tipo, def)
 	-- Verifica se é o NPC atual do proprio npcnode (confere hash)
 	sunos.npcs.npc.register_step(tipo, {
 		time = 11,
-		func = function(self)
+		func = function(self, dtime)
 			local node = sunos.pegar_node(self.mypos) -- Certifica que carregou no node
 			if minetest.get_meta(self.mypos):get_string("sunos_npchash") ~= self.sunos_npchash then
 				sunos.debug("NPC "..minetest.pos_to_string(self.object:getpos())
@@ -481,7 +481,7 @@ sunos.npcs.npc.registrar = function(tipo, def)
 	-- Verifica se algum dos jogadores proximos é um inimigo
 	sunos.npcs.npc.register_step(tipo, {
 		time = 8,
-		func = function(self)
+		func = function(self, dtime)
 			if self.state ~= "attack" then -- Verifica se ja não está em um ataque
 				for _,obj in ipairs(minetest.get_objects_inside_radius(self.object:getpos(), 13)) do
 					if obj:is_player() then
@@ -502,7 +502,7 @@ sunos.npcs.npc.registrar = function(tipo, def)
 	-- Registra envio ao checkin
 	sunos.npcs.npc.register_step(tipo, {
 		time = 9,
-		func = function(self)
+		func = function(self, dtime)
 			
 			-- Verifica se tem checkin
 			if not self.sunos_checkin then

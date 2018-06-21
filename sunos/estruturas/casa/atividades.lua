@@ -28,6 +28,7 @@ sunos.estruturas.casa.interagir_casa = {
 				"kit_culinario_1",
 				"kit_culinario_2",
 				"caixa_de_musica_1",
+				"caixa_de_musica_2",
 			},
 		},
 		is_state_program = true,

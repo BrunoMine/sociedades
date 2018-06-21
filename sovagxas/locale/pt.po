@@ -1,11 +1,11 @@
 # Traduções em português brasileiro para o pacote Sovagxas.
-# Copyright (C) 2017 BrunoMine
+# Copyright (C) 2018 BrunoMine
 # Este arquivo é distribuído sob a mesma licença que o pacote Sovagxas.
 # BrunoMine <borgesdossantosbruno@gmail.com>, 2017.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: 1.0\n"
+"Project-Id-Version: 3.0.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-06-20 16:32-0300\n"
 "PO-Revision-Date: 2018-06-20 16:32-0300\n"

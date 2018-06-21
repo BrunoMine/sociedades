@@ -1,4 +1,4 @@
-Sunos v2.1.0
+Sunos v3.0.0
 ============
 
 Esse mod adiciona os povos sunos ao jogo que aparecem aleatoriamente pelo mapa.

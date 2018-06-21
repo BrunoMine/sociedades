@@ -13,10 +13,12 @@
 sovagxas = {}
 
 -- Versão do projeto (MAJOR.MINOR)
-sovagxas.versao = "1.0"
+sovagxas.versao = "3.0"
 
 -- Versoes compativeis
-sovagxas.versao_comp = {}
+sovagxas.versao_comp = {
+	--["2.0"] = true, -- Exemplo
+}
 
 -- Notificador de Inicializador
 local notificar = function(msg)

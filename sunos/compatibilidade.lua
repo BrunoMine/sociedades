@@ -1,6 +1,6 @@
 --[[
 	Mod Sunos para Minetest
-	Copyright (C) 2017 BrunoMine (https://github.com/BrunoMine)
+	Copyright (C) 2018 BrunoMine (https://github.com/BrunoMine)
 	
 	Recebeste uma cópia da GNU Lesser General
 	Public License junto com esse software,
@@ -24,70 +24,22 @@ sunos.verif_comp = function(versao)
 	return false
 end 
 
--- Remover nodes incompativeis
-
--- LBM para atualizar fundamentos
+-- LBM para remover nodes com versao errada
 minetest.register_lbm({
-	name = "sunos:update_fundamentos",
+	name = "sunos:compatibilidade_nodes",
 	nodenames = {"sunos:fundamento"},
+	run_at_every_load = true,
 	action = function(pos, node)
-		-- Pega a versão armazenada
-		local v = minetest.get_meta(pos):get_string("versao")
+		local meta = minetest.get_meta(pos)
 		
-		-- Verifica se é compativel
-		if sunos.verif_comp(v) == false then
-			-- Pega distancia do centro a borda
-			local dist = minetest.get_meta(pos):get_string("dist")
-			if dist == "" then dist = 1 end
-			-- Remover fundamento
-			minetest.set_node(pos, {name="default:tree"})
-		end
-		
-		-- Realiza procedimentos de atualização para compativeis
-		
-		-- Reconstroi estrutura da versão 2.0
-		if v == "2.0" then
-			local meta = minetest.get_meta(pos)
-			
-			-- Coleta dados da estrutura
-			local vila = meta:get_string("vila")
+		if sunos.verif_comp(meta:get_string("versao")) == false then
 			local dist = meta:get_string("dist")
-			local tipo = meta:get_string("tipo")
-			
-			-- Verifica se vila existe
-			if sunos.verificar_vila_existente(vila) == false then
-				-- Remover fundamento
-				minetest.set_node(pos, {name="default:tree"})
-				sunos.montar_ruinas(pos, dist)
-				return
+			if dist ~= "" then
+				sunos.montar_ruinas(pos, tonumber(dist))
 			end
-			
-			-- Reconstroi casa
-			if tipo == "casa" then
-				local itens_repo = sunos.estruturas.casa.gerar_itens_repo[dist]()
-				sunos.estruturas.casa.construir(pos, dist, vila, false, itens_repo, false, true)
-			
-			-- Reconstroi taverna
-			elseif tipo == "taverna" then
-				sunos.estruturas.taverna.construir(pos, vila, true)
-			
-			-- Destroi outras estruturas
-			else
-				-- Remover fundamento
-				minetest.set_node(pos, {name="default:tree"})
-				sunos.montar_ruinas(pos, dist)
-			end
+			minetest.remove_node(pos)
+			minetest.set_node(pos, {name="default:cobble"})
 		end
-		
-	end,
-})
-
--- LBM para remover nodes obsoletos anteriores a 1.4
-minetest.register_lbm({
-	name = "sunos:remove_oldnodes_1dot4",
-	nodenames = {"sunos:bau", "sunos:bau_casa_comunal", "sunos:bau_loja"},
-	action = function(pos, node)
-		minetest.remove_node(pos)
 	end,
 })
 

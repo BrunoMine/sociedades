@@ -1,6 +1,6 @@
 --[[
 	Mod Sovagxas para Minetest
-	Copyright (C) 2017 BrunoMine (https://github.com/BrunoMine)
+	Copyright (C) 2018 BrunoMine (https://github.com/BrunoMine)
 	
 	Recebeste uma cópia da GNU Lesser General
 	Public License junto com esse software,
@@ -63,7 +63,7 @@ minetest.register_node("sovagxas:bau", {
 		"default_chest_side.png^sovagxas_bau_lado.png", 
 		"default_chest_front.png^sovagxas_bau_lado.png"},
 	paramtype2 = "facedir",
-	groups = {choppy=2,oddly_breakable_by_hand=2},
+	groups = {choppy=2,oddly_breakable_by_hand=2,not_in_creative_inventory=1},
 	legacy_facedir_simple = true,
 	is_ground_content = false,
 	drop = "default:chest",
@@ -172,18 +172,12 @@ minetest.register_abm({
 	action = function(pos)
 		local meta = minetest.get_meta(pos)
 		
-		-- Verificar versao
-		if sovagxas.verif_comp(meta:get_string("versao")) ~= true then
-			local node = minetest.get_node(pos)
-			minetest.set_node(pos, {name="default:chest", param2 = node.param2})
-			return
-		end
-		
 		-- Verificar se arvore ainda existe
 		local p_arv = minetest.deserialize(meta:get_string("arvore"))
 		local folhas = minetest.find_nodes_in_area(
 			{x=p_arv.x-8, y=p_arv.y-3, z=p_arv.z-8}, 
 			{x=p_arv.x+8, y=p_arv.y+3, z=p_arv.z+8}, {"sovagxas:jungleleaves"})
+			
 		if table.maxn(folhas) < 800 then
 			local node = minetest.get_node(pos)
 			minetest.set_node(pos, {name="default:chest", param2 = node.param2})

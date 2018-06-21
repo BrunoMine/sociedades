@@ -29,8 +29,6 @@ timeout_bau = 5--20
 -- Verificador do npc suno comum 
 -- Tempo (em segundos) que um npc demora para verificar se esta perto da pos de seu bau
 sunos.timer_npc_check = 10
--- A cada quantos loops de verificação do npc ele deve verificar se seu bau ainda existe
-local qtd_loops_npc = 3
 
 -- Verificar distancia entre duas pos
 local verif_dist_pos = function(pos1, pos2)
@@ -115,7 +113,7 @@ sunos.npcs.npc.spawn = function(tipo, vila, npcnode_pos, spos)
 		local ent = obj:get_luaentity()
 		ent.tipo = tipo -- Tipo de npc
 		ent.temp = 0 -- Temporizador
-		ent.loop = 0 -- Numero de loop de temporizador
+		ent.versao = sunos.versao -- Versao do mod
 		ent.vila = vila -- numero da vila
 		ent.mypos = npcnode_pos -- pos do npcnode de spawn (bau)
 		ent.mynode = minetest.get_node(npcnode_pos).name -- nome do node de spawn (bau)
@@ -318,8 +316,16 @@ sunos.npcs.npc.registrar = function(tipo, def)
 			end
 			
 			-- Verifica se já está registrado
-			if self.sunos_registrado == true and sunos.npcs.npc.registrados[tipo].on_spawn then
-				sunos.npcs.npc.registrados[tipo].on_spawn(self)
+			if self.sunos_registrado == true then
+				-- Verifica a versao do mod
+				if sunos.verif_comp(self.versao or "") == false then
+					self.object:remove()
+					return
+				end
+				-- executa on_spawn registrado
+				if sunos.npcs.npc.registrados[tipo].on_spawn then
+					sunos.npcs.npc.registrados[tipo].on_spawn(self)
+				end
 			end
 			
 			-- Verifica se está durmindo

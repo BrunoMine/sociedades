@@ -92,6 +92,8 @@ sunos.verificar_fundamento = function(pos)
 	if node.name ~= "sunos:fundamento" then return end
 	
 	local meta = minetest.get_meta(pos)
+	
+	local meta = minetest.get_meta(pos)
 	local vila = meta:get_string("vila")
 	if not vila then return end
 	vila = tonumber(vila)
@@ -101,7 +103,6 @@ sunos.verificar_fundamento = function(pos)
 	
 	-- Verificar mapa carregado antes de verificar estruturas
 	if sunos.verif_carregamento(pos, tonumber(dist)) == false then
-		minetest.chat_send_all("nao carregado")
 		return
 	end
 	
@@ -111,7 +112,6 @@ sunos.verificar_fundamento = function(pos)
 		minetest.set_node(pos, {name="default:tree"})
 		-- Montar ruinas
 		sunos.montar_ruinas(pos, dist)
-		minetest.chat_send_all("3")
 		return
 	end
 	
@@ -123,7 +123,6 @@ sunos.verificar_fundamento = function(pos)
 		minetest.set_node(pos, {name="default:tree"})
 		-- Montar ruinas
 		sunos.montar_ruinas(pos, dist)
-		minetest.chat_send_all("4")
 		return
 	end
 	
@@ -131,7 +130,6 @@ sunos.verificar_fundamento = function(pos)
 	if sunos.bd.verif("vila_"..vila, tipo) == true then
 		local p = sunos.bd.pegar("vila_"..vila, tipo).estrutura.pos
 		if p.x ~= pos.x or p.y ~= pos.y or p.z ~= pos.z then
-			minetest.chat_send_all("5")
 			-- Exclui o arquivo da estrutura do banco de dados
 			sunos.bd.remover("vila_"..vila, tipo)
 			-- Trocar bloco de fundamento por madeira
@@ -158,7 +156,6 @@ sunos.verificar_fundamento = function(pos)
 		
 		-- Montar ruinas
 		sunos.montar_ruinas(pos, dist)
-		minetest.chat_send_all("6")
 		return
 	end
 	
@@ -168,7 +165,6 @@ sunos.verificar_fundamento = function(pos)
 		minetest.set_node(pos, {name="default:tree"})
 		-- Montar ruinas
 		sunos.montar_ruinas(pos, dist)
-		minetest.chat_send_all("7")
 		return
 	end
 end
@@ -176,7 +172,7 @@ end
 -- Atualiza as estruturas verificando se estao obstruidas
 minetest.register_abm({
 	nodenames = {"sunos:fundamento"},
-	interval = sunos.var.tempo_verif_estruturas,
+	interval = 5,--sunos.var.tempo_verif_estruturas,
 	chance = 2,
 	action = function(pos)
 		minetest.after(4, sunos.verificar_fundamento, {x=pos.x, y=pos.y, z=pos.z})	

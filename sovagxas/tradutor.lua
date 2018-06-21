@@ -17,6 +17,10 @@ local modpath = minetest.get_modpath("sovagxas")
 sovagxas.intllib = {}
 sovagxas.intllib.S, sovagxas.intllib.NS = dofile(modpath.."/lib/intllib.lua")
 
+-- Configura tradutor opicional
+sunos.S = sunos.intllib.S
+sunos.NS = sunos.intllib.NS
+
 --
 -- Ajustes devido ao bug de tradutor ler apenas traduzir do ingles
 --
@@ -122,7 +126,15 @@ do
 end
 
 -- Ajuste para repassar termos em ingles
-local s = minetest.get_translator("sovagxas")
+local s
+if minetest.get_translator ~= nil then
+	s = minetest.get_translator("sovagxas")
+else
+	s = sunos.intllib.S
+end
+
+-- Tradução (desativado por enquanto usando sistema para compensar bug de traduções)
+-- sovagxas.s = minetest.get_translator("sovagxas")
 sovagxas.s = function(...)
 	local args = { ... }
 	if pt_to_en[args[1]] ~= nil then
@@ -131,9 +143,6 @@ sovagxas.s = function(...)
 	minetest.log("error", "[Sovagxas] String "..dump(args[1]).." nao catalogada")
 	return s(...)
 end
-
--- Tradução (desativado por enquanto usando sistema para compensar bug de traduções)
--- sovagxas.s = minetest.get_translator("sovagxas")
 
 -- Marcador e ajustador de strings traduziveis
 sovagxas.S = function(...)

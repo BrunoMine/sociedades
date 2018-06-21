@@ -13,11 +13,11 @@
 sunos = {}
 
 -- Versão do projeto
-sunos.versao = "2.2"
+sunos.versao = "3.0"
 
 -- Versoes compativeis
 sunos.versao_comp = {
-	["2.0"] = true,
+	--["2.0"] = true, -- Exemplo
 }
 
 -- Notificador de Inicializador

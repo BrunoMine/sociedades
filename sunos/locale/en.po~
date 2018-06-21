@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-06-19 17:34-0300\n"
-"PO-Revision-Date: 2018-06-19 17:09-0300\n"
+"POT-Creation-Date: 2018-06-21 11:53-0300\n"
+"PO-Revision-Date: 2018-06-21 11:53-0300\n"
 "Last-Translator: Bruno <borgesdossantosbruno@gmail.com>\n"
 "Language-Team: English\n"
 "Language: en\n"
@@ -77,50 +77,43 @@ msgid "Salvar nova estrutura"
 msgstr "Save new structure"
 
 #: editor_schems.lua
-#, fuzzy
 msgid "Defina o tipo e estrutura desejada"
-msgstr "Define the desired type and structure."
+msgstr "Define the desired type and structure"
 
 #: editor_schems.lua
-#, fuzzy
 msgid "Estrutura carregada"
-msgstr "Structure loaded."
+msgstr "Structure loaded"
 
 #: editor_schems.lua
-msgid "Falha ao carregar estrutura."
-msgstr "Failed to load structure."
+msgid "Falha ao carregar estrutura"
+msgstr "Failed to load structure"
 
 #: editor_schems.lua
-#, fuzzy
 msgid "Falha ao remover arquivo antigo"
-msgstr "Failed to remove old file."
+msgstr "Failed to remove old file"
 
 #: editor_schems.lua
-#, fuzzy
 msgid ""
 "Estrutura foi salva. Mas precisa reiniciar o minetest para carregar ela "
 "novamente"
 msgstr ""
-"Structure has been saved. But need to restart the minetest to load it again."
+"Structure has been saved. But need to restart the minetest to load it again"
 
 #: editor_schems.lua
-#, fuzzy
 msgid "Defina um nome da estrutura"
-msgstr "Define a structure name."
+msgstr "Define a structure name"
 
 #: editor_schems.lua
 msgid "Use apenas letras e sublinhado (_)"
 msgstr "Use only letters and underline (_)"
 
 #: editor_schems.lua
-#, fuzzy
 msgid "Nenhum tipo definido"
-msgstr "No type defined."
+msgstr "No type defined"
 
 #: editor_schems.lua
-#, fuzzy
 msgid "Estrutura nova foi salva"
-msgstr "New structure saved."
+msgstr "New structure saved"
 
 #: editor_schems.lua
 msgid "Editor de estruturas dos Sunos"
@@ -128,15 +121,15 @@ msgstr "Sunes Structures Editor"
 
 #: estrutura.lua nodes/fundamento.lua
 msgid "Fundamento dos Sunos"
-msgstr "Structural Basis of Sunes"
+msgstr "Sunes Bedrock"
 
 #: inimigos.lua
 msgid "Acabaste de se tornar inimigo de uma vila dos Sunos"
-msgstr "You have just become an enemy of a sunean village"
+msgstr "You have just become an enemy of a sune village"
 
 #: nodes/bancada.lua
 msgid "Bancada dos Sunos"
-msgstr "Sunian Bench"
+msgstr "Sune Bench"
 
 #: nodes/bancada.lua nodes/bancada_de_trabalho.lua nodes/bau.lua
 #: nodes/caixa_de_musica.lua nodes/carpete.lua nodes/compost.lua
@@ -147,7 +140,7 @@ msgstr "No Drop"
 
 #: nodes/bancada_de_trabalho.lua
 msgid "Bancada de Trabalho dos Sunos"
-msgstr "Sunian Workbench"
+msgstr "Sune Workbench"
 
 #: nodes/bancada_de_trabalho.lua
 msgid "Craftador"
@@ -211,7 +204,7 @@ msgstr "Sales Box"
 
 #: estruturas/casa/bau.lua estruturas/casa/init.lua
 msgid "Bau da Casa dos Sunos"
-msgstr "Chest of Sunian House"
+msgstr "Chest of Sune House"
 
 #: estruturas/casa/fundamento.lua estruturas/comunal/fundamento.lua
 #: estruturas/emporio/init.lua estruturas/loja/fundamento.lua
@@ -231,7 +224,7 @@ msgstr "Limit of 20 inhabitants has been reached"
 
 #: estruturas/casa/fundamento.lua
 msgid "Fundamento Suno de Casa Pequena"
-msgstr "Structural Basis of Sunian Small House"
+msgstr "Bedrock of Sune Small House"
 
 #: estruturas/casa/fundamento.lua
 msgid "Casa sendo construida"
@@ -239,11 +232,11 @@ msgstr "House being built"
 
 #: estruturas/casa/fundamento.lua
 msgid "Fundamento Suno de Casa Mediana"
-msgstr "Structural Basis of Sunian Median House"
+msgstr "Bedrock of Sune Median House"
 
 #: estruturas/casa/fundamento.lua
 msgid "Fundamento Suno de Casa Grande"
-msgstr "Structural Basis of Sunian Big House"
+msgstr "Bedrock of Sune Big House"
 
 #: estruturas/casa/interface.lua estruturas/casa/npc.lua
 #: estruturas/comunal/interface.lua
@@ -252,23 +245,23 @@ msgstr "Notice"
 
 #: estruturas/casa/interface.lua
 msgid "Oi. Ajude essa vila a montar uma Casa Comunal"
-msgstr "Hi. Help this village set up a Communal House"
+msgstr "Hi. Help this village build a Communal House"
 
 #: estruturas/casa/interface.lua
 msgid "Trocar por Fundamento"
-msgstr "Make a Structural Basis"
+msgstr "Make a Bedrock"
 
 #: estruturas/casa/interface.lua
 msgid "Nenhuma atividade disponivel"
 msgstr "No interaction available"
 
-#: estruturas/casa/interface.lua
-msgid "Faltou itens para trocar pelo fundamento de Casa Comunal"
-msgstr "Unanswered items to exchange for the foundation of the Communal House"
+#: estruturas/casa/interface.lua estruturas/comunal/interface.lua
+msgid "Precisa dos itens exigidos para obter @1"
+msgstr "You need the required items to trade @1"
 
 #: estruturas/casa/interface.lua
-msgid "Recebeste um Fundamento de Casa Comunal"
-msgstr "You have received a Communal House Structural Basis"
+msgid "Recebeste @1"
+msgstr "You got the @1"
 
 #: estruturas/casa/interface.lua
 msgid "Coloque em um local adequado para que seja construida"
@@ -276,7 +269,7 @@ msgstr "Place in a suitable place for it to be built"
 
 #: estruturas/comunal/bau.lua estruturas/comunal/init.lua
 msgid "Bau da Casa Comunal dos Sunos"
-msgstr "Chest of Sunian Communal House"
+msgstr "Chest of Sune Communal House"
 
 #: estruturas/comunal/diretrizes.lua
 msgid "Casa Pequena"
@@ -325,7 +318,7 @@ msgstr "The village must have inhabitants"
 
 #: estruturas/comunal/fundamento.lua
 msgid "Fundamento de Casa Comunal dos Sunos"
-msgstr "Structural Basis of Sunian Communal House"
+msgstr "Bedrock of Sune Communal House"
 
 #: estruturas/comunal/fundamento.lua
 msgid "Casa Comunal sendo construida"
@@ -349,7 +342,7 @@ msgstr "Requirements"
 
 #: estruturas/comunal/interface.lua
 msgid "Habitantes requeridos: @1"
-msgstr "Current required: @1"
+msgstr "Inhabitants required: @1"
 
 #: estruturas/comunal/interface.lua
 msgid "Escolha algo da lista"
@@ -361,12 +354,8 @@ msgid "A vila precisa ter ao menos @1 habitantes"
 msgstr "The village must have at least @1 inhabitants"
 
 #: estruturas/comunal/interface.lua
-msgid "Precisa dos itens exigidos para obter @1"
-msgstr "You need the required items to trade @1"
-
-#: estruturas/comunal/interface.lua
 msgid "Recebeste um @1"
-msgstr "You received a @1"
+msgstr "Receveste@1"
 
 #: estruturas/comunal/npc.lua
 msgid "Solo de Atendente Comunal dos Sunos"
@@ -490,6 +479,12 @@ msgstr "Sune Structural Repair Kit"
 #: craftitens/salada_de_frutas.lua
 msgid "Salada de Frutas dos Sunos"
 msgstr "Sunian Fruit Salad"
+
+#~ msgid "Recebeste um Fundamento de Casa Comunal"
+#~ msgstr "You have received a Bedrock of Sune Communal House"
+
+#~ msgid "Faltou itens para trocar pelo fundamento de Casa Comunal"
+#~ msgstr "Unanswered items to exchange for the Bedrock of the Communal House"
 
 #~ msgid "Vila abandonada"
 #~ msgstr "Abandoned village"

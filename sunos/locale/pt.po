@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-06-19 17:36-0300\n"
-"PO-Revision-Date: 2018-06-19 17:36-0300\n"
+"POT-Creation-Date: 2018-06-21 12:05-0300\n"
+"PO-Revision-Date: 2018-06-21 11:53-0300\n"
 "Last-Translator: BrunoMine <borgesdossantosbruno@gmail.com>\n"
 "Language-Team: Brazilian Portuguese\n"
 "Language: pt_BR\n"
@@ -259,13 +259,13 @@ msgstr "Trocar por Fundamento"
 msgid "Nenhuma atividade disponivel"
 msgstr "Nenhuma atividade disponivel"
 
-#: estruturas/casa/interface.lua
-msgid "Faltou itens para trocar pelo fundamento de Casa Comunal"
-msgstr "Faltou itens para trocar pelo fundamento de Casa Comunal"
+#: estruturas/casa/interface.lua estruturas/comunal/interface.lua
+msgid "Precisa dos itens exigidos para obter @1"
+msgstr "Precisa dos itens exigidos para obter @1"
 
-#: estruturas/casa/interface.lua
-msgid "Recebeste um Fundamento de Casa Comunal"
-msgstr "Recebeste um Fundamento de Casa Comunal"
+#: estruturas/casa/interface.lua estruturas/comunal/interface.lua
+msgid "Recebeste @1"
+msgstr "Recebeste @1"
 
 #: estruturas/casa/interface.lua
 msgid "Coloque em um local adequado para que seja construida"
@@ -356,14 +356,6 @@ msgstr "Escolha algo da lista"
 #: estruturas/taverna/fundamento.lua
 msgid "A vila precisa ter ao menos @1 habitantes"
 msgstr "A vila precisa ter ao menos @1 habitantes"
-
-#: estruturas/comunal/interface.lua
-msgid "Precisa dos itens exigidos para obter @1"
-msgstr "Precisa dos itens exigidos para obter @1"
-
-#: estruturas/comunal/interface.lua
-msgid "Recebeste um @1"
-msgstr "Recebeste um @1"
 
 #: estruturas/comunal/npc.lua
 msgid "Solo de Atendente Comunal dos Sunos"
@@ -488,6 +480,15 @@ msgstr "Kit Reparador de estrutura dos Sunos"
 #: craftitens/salada_de_frutas.lua
 msgid "Salada de Frutas dos Sunos"
 msgstr "Salada de Frutas dos Sunos"
+
+#~ msgid "Recebeste um @1"
+#~ msgstr "Recebeste um @1"
+
+#~ msgid "Recebeste um Fundamento de Casa Comunal"
+#~ msgstr "Recebeste um Fundamento de Casa Comunal"
+
+#~ msgid "Faltou itens para trocar pelo fundamento de Casa Comunal"
+#~ msgstr "Faltou itens para trocar pelo fundamento de Casa Comunal"
 
 #~ msgid "Vila abandonada"
 #~ msgstr "Vila abandonada"

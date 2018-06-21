@@ -84,16 +84,16 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 		end
 		
 		if fields.trocar then -- Trocar fundamento de casa comunal
-			
+			local desc_item = minetest.registered_nodes["sunos:fundamento_comunal"].description
 			-- Tenta trocar pelo fundamento de casa comunal
 			if sunos.trocar_plus(player, 
 				{"default:tree 20", "default:stone 70", "farming:straw 30"}, 
 				{"sunos:fundamento_comunal"}
 			) == false 
 			then
-				return minetest.chat_send_player(name, S("Faltou itens para trocar pelo fundamento de Casa Comunal"))
+				return minetest.chat_send_player(name, S("Precisa dos itens exigidos para obter @1", "'"..desc_item.."'"))
 			else
-				minetest.chat_send_player(name, S("Recebeste um Fundamento de Casa Comunal"))
+				minetest.chat_send_player(name, S("Recebeste @1", "'"..desc_item.."'"))
 				minetest.chat_send_player(name, S("Coloque em um local adequado para que seja construida"))
 				return
 			end

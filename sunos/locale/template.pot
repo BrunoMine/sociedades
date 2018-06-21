@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-06-19 17:36-0300\n"
+"POT-Creation-Date: 2018-06-21 12:05-0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -251,12 +251,12 @@ msgstr ""
 msgid "Nenhuma atividade disponivel"
 msgstr ""
 
-#: estruturas/casa/interface.lua
-msgid "Faltou itens para trocar pelo fundamento de Casa Comunal"
+#: estruturas/casa/interface.lua estruturas/comunal/interface.lua
+msgid "Precisa dos itens exigidos para obter @1"
 msgstr ""
 
-#: estruturas/casa/interface.lua
-msgid "Recebeste um Fundamento de Casa Comunal"
+#: estruturas/casa/interface.lua estruturas/comunal/interface.lua
+msgid "Recebeste @1"
 msgstr ""
 
 #: estruturas/casa/interface.lua
@@ -347,14 +347,6 @@ msgstr ""
 #: estruturas/comunal/interface.lua estruturas/emporio/init.lua
 #: estruturas/taverna/fundamento.lua
 msgid "A vila precisa ter ao menos @1 habitantes"
-msgstr ""
-
-#: estruturas/comunal/interface.lua
-msgid "Precisa dos itens exigidos para obter @1"
-msgstr ""
-
-#: estruturas/comunal/interface.lua
-msgid "Recebeste um @1"
 msgstr ""
 
 #: estruturas/comunal/npc.lua

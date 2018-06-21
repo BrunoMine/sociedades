@@ -205,9 +205,9 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 			
 			-- Tenta trocar
 			if sunos.trocar_plus(player, dados.item_rem, {dados.item_add}) == false then
-				return avisar(player, S("Precisa dos itens exigidos para obter @1", get_desc_item(dados.item_add)))
+				return avisar(player, S("Precisa dos itens exigidos para obter @1", "'"..get_desc_item(dados.item_add).."'"))
 			else
-				return avisar(player, S("Recebeste um @1", get_desc_item(dados.item_add)))
+				return avisar(player, S("Recebeste @1", "'"..get_desc_item(dados.item_add).."'"))
 			end
 		end
 	end

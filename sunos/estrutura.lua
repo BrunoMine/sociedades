@@ -21,12 +21,12 @@ local worldpath = minetest.get_worldpath()
 ]]
 minetest.register_node("sunos:fundamento", {
 	description = S("Fundamento dos Sunos"),
-	tiles = {"default_tree_top.png^sunos_fundamento.png", "default_tree_top.png", "default_tree.png"},
+	tiles = {"default_cobble.png^sunos_fundamento.png", "default_cobble.png", "default_cobble.png"},
 	paramtype2 = "facedir",
 	is_ground_content = false,
 	groups = {choppy = 2, oddly_breakable_by_hand = 1, not_in_creative_inventory=1},
 	sounds = default.node_sound_wood_defaults(),
-	drop = "default:tree",
+	drop = "default:cobble",
 	
 	-- Nao pode ser escavado/quebrado por jogadores
 	on_dig = function() end,
@@ -109,7 +109,7 @@ sunos.verificar_fundamento = function(pos)
 	-- Verifica se o registro da vila ainda existe no banco de dados
 	if table.maxn(minetest.get_dir_list(worldpath.."/sunos/vila_"..vila)) == 0 then
 		-- Trocar bloco de fundamento por madeira
-		minetest.set_node(pos, {name="default:tree"})
+		minetest.set_node(pos, {name="default:cobble"})
 		-- Montar ruinas
 		sunos.montar_ruinas(pos, dist)
 		return
@@ -120,7 +120,7 @@ sunos.verificar_fundamento = function(pos)
 		and sunos.bd.verif("vila_"..vila, tipo) == false -- Caso seja uma estrutura única
 	then
 		-- Trocar bloco de fundamento por madeira
-		minetest.set_node(pos, {name="default:tree"})
+		minetest.set_node(pos, {name="default:cobble"})
 		-- Montar ruinas
 		sunos.montar_ruinas(pos, dist)
 		return
@@ -133,7 +133,7 @@ sunos.verificar_fundamento = function(pos)
 			-- Exclui o arquivo da estrutura do banco de dados
 			sunos.bd.remover("vila_"..vila, tipo)
 			-- Trocar bloco de fundamento por madeira
-			minetest.set_node(pos, {name="default:tree"})
+			minetest.set_node(pos, {name="default:cobble"})
 			-- Atualizar banco de dados da vila
 			minetest.after(0.1, sunos.atualizar_bd_vila, vila)
 			-- Montar ruinas
@@ -149,7 +149,7 @@ sunos.verificar_fundamento = function(pos)
 		sunos.bd.remover("vila_"..vila, tipo) -- Caso seja unico
 		
 		-- Trocar bloco de fundamento por madeira
-		minetest.set_node(pos, {name="default:tree"})
+		minetest.set_node(pos, {name="default:cobble"})
 	
 		-- Atualizar banco de dados da vila
 		minetest.after(0.1, sunos.atualizar_bd_vila, vila)
@@ -162,7 +162,7 @@ sunos.verificar_fundamento = function(pos)
 	-- Chamadas de verificação registradas na estrutura
 	if sunos.estruturas[tipo].verificar ~= nil and sunos.estruturas[tipo].verificar(pos) == false then
 		-- Trocar bloco de fundamento por madeira
-		minetest.set_node(pos, {name="default:tree"})
+		minetest.set_node(pos, {name="default:cobble"})
 		-- Montar ruinas
 		sunos.montar_ruinas(pos, dist)
 		return

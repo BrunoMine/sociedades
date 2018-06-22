@@ -145,26 +145,28 @@ sunos.s = function(...)
 end
 
 -- Marcador e ajustador de strings traduziveis
-sunos.S = function(...)
-	local args = { ... }
-	if type(args[1]) == "table" then
-		local r = {}
-		for n,a in ipairs(args[1]) do
-			if n ~= 1 then -- Não traduz o primeiro
-				table.insert(r, sunos.S(a))
-			else
-				table.insert(r, a)
+if minetest.get_translator ~= nil then
+	sunos.S = function(...)
+		local args = { ... }
+		if type(args[1]) == "table" then
+			local r = {}
+			for n,a in ipairs(args[1]) do
+				if n ~= 1 then -- Não traduz o primeiro
+					table.insert(r, sunos.S(a))
+				else
+					table.insert(r, a)
+				end
 			end
+			
+			return sunos.s(unpack(r))
+			
+		elseif type(args[1]) == "string" then
+			-- Não traduz caso faltem argumentos (devido strings ilustrativas)
+			return sunos.s(...)
+			
+		else
+			return args[1]
 		end
-		
-		return sunos.s(unpack(r))
-		
-	elseif type(args[1]) == "string" then
-		-- Não traduz caso faltem argumentos (devido strings ilustrativas)
-		return sunos.s(...)
-		
-	else
-		return args[1]
 	end
 end
 

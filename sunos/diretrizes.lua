@@ -131,6 +131,7 @@ sunos.var.nodes_trocados = {
 	["sunos:nectar"] = "sunos:nectar_nodrop",
 	["sunos:nectar_node"] = "sunos:nectar_node_nodrop",
 	["sunos:caixa_de_musica"] = "sunos:caixa_de_musica_nodrop",
+	["compost:wood_barrel_empty"] = "sunos:wood_barrel_nodrop",
 	
 }
 

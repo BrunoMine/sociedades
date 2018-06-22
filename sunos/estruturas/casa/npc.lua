@@ -223,28 +223,38 @@ sunos.estruturas.casa.select_occupation = function(pos, vila)
 		["23"] = pos,
 	}
 	
+	-- Pega população
+	local pop = sunos.bd.verif("vila_"..vila, "pop_total")
+	if pop == true then
+		pop = tonumber(sunos.bd.pegar("vila_"..vila, "pop_total"))
+	else
+		pop = 1 -- considera 1 para fins estatisticos caso nao existam dados ainda
+	end 
+	
+	-- Verifica se tem loja
 	local loja = sunos.bd.verif("vila_"..vila, "loja")
+	
+	-- Tenta limitar a 2 lojista em toda a vila
+	local chance_lojista = math.ceil((2/pop)*100)
+	-- Limita chance a 30%
+	if chance_lojista > 30 then chance_lojista = 30 end
+	
 	-- CASEIRO 40%
 	local s = math.random(1, 100)
-	
-	if s >= 1 and s <= 40 then -- minimo 40% é caseiro
-		
-		return "sunos_npc_caseiro", checkin
-	
-	-- LOJISTA 30%
-	elseif s >= 41 and s <= 70 and loja == true then 
+	-- LOJISTA 1 a 30% (dependendo da população)
+	if s >= 1 and s <= chance_lojista and loja == true then 
 	
 		local dados_loja = sunos.bd.pegar("vila_"..vila, "loja")
-		checkin["7"] = dados_loja.estrutura.pos
 		checkin["8"] = dados_loja.estrutura.pos
 		checkin["9"] = dados_loja.estrutura.pos
 		checkin["10"] = dados_loja.estrutura.pos
 		checkin["11"] = dados_loja.estrutura.pos
 		checkin["12"] = dados_loja.estrutura.pos
+		checkin["13"] = dados_loja.estrutura.pos
+		checkin["14"] = dados_loja.estrutura.pos
 		return "sunos_npc_caseiro_lojista", checkin
 	end
 	
-	-- Os outros 30% tambem vira caseiro
 	-- Se nao houver o escolhido, vira caseiro
 	return occupation, checkin
 end

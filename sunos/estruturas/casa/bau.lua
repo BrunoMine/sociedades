@@ -34,6 +34,31 @@ minetest.register_node("sunos:bau_casa", {
 	on_dig = function() end,
 })
 
+-- Altera a ocupação do NPC de acordo com a vila atual
+minetest.register_abm({
+	nodenames = {"sunos:bau_casa"},
+	interval = 5,--300, -- 5 min
+	chance = 1,
+	action = function(pos)
+		local meta = minetest.get_meta(pos)
+		local ultima_data = meta:get_string("occupation_date")
+		if ultima_data == "" 
+			or tonumber(ultima_data)+2 <= minetest.get_day_count() -- No 2º dia apos a ultima data
+		then
+			
+			-- Cria nova ocupação e configura npcnode
+			local occupation, checkin = sunos.estruturas.casa.select_occupation(pos, meta:get_string("vila"))
+			sunos.npcnode.set_npcnode(pos, {
+				tipo = "caseiro",
+				occupation = occupation,
+				checkin = checkin,
+			})
+			-- Data da ocupação
+			meta:set_string("occupation_date", minetest.get_day_count())
+		end
+	end,
+})
+
 -- Registrar Spawner
 sunos.npc_checkin.register_spawner("sunos:bau_casa", {
 	func_spawn = function(pos, npc_tipo, npcnode_pos)

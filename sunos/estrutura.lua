@@ -172,7 +172,7 @@ end
 -- Atualiza as estruturas verificando se estao obstruidas
 minetest.register_abm({
 	nodenames = {"sunos:fundamento"},
-	interval = 5,--sunos.var.tempo_verif_estruturas,
+	interval = sunos.var.tempo_verif_estruturas,
 	chance = 2,
 	action = function(pos)
 		minetest.after(4, sunos.verificar_fundamento, {x=pos.x, y=pos.y, z=pos.z})	

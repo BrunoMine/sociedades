@@ -67,6 +67,8 @@ local set_bau = function(pos, vila, dist)
 			occupation = occupation,
 			checkin = checkin,
 		})
+		-- Data da ocupação
+		meta:set_string("occupation_date", minetest.get_day_count())
 	end
 	
 end

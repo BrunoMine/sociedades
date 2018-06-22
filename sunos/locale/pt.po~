@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 3.0.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-06-21 12:05-0300\n"
-"PO-Revision-Date: 2018-06-21 11:53-0300\n"
+"POT-Creation-Date: 2018-06-21 12:22-0300\n"
+"PO-Revision-Date: 2018-06-21 12:22-0300\n"
 "Last-Translator: BrunoMine <borgesdossantosbruno@gmail.com>\n"
 "Language-Team: Brazilian Portuguese\n"
 "Language: pt_BR\n"
@@ -230,17 +230,31 @@ msgstr "Limite @1 habitantes da vila ja foi atingido"
 msgid "Fundamento Suno de Casa Pequena"
 msgstr "Fundamento Suno de Casa Pequena"
 
-#: estruturas/casa/fundamento.lua
-msgid "Casa sendo construida"
-msgstr "Casa sendo construida"
+#: estruturas/casa/fundamento.lua estruturas/comunal/diretrizes.lua
+msgid "Casa Pequena"
+msgstr "Casa Pequena"
+
+#: estruturas/casa/fundamento.lua estruturas/comunal/fundamento.lua
+#: estruturas/emporio/init.lua estruturas/loja/fundamento.lua
+#: estruturas/taverna/fundamento.lua
+msgid "Construindo @1"
+msgstr "Construindo @1"
 
 #: estruturas/casa/fundamento.lua
 msgid "Fundamento Suno de Casa Mediana"
 msgstr "Fundamento Suno de Casa Mediana"
 
+#: estruturas/casa/fundamento.lua estruturas/comunal/diretrizes.lua
+msgid "Casa Mediana"
+msgstr "Casa Mediana"
+
 #: estruturas/casa/fundamento.lua
 msgid "Fundamento Suno de Casa Grande"
 msgstr "Fundamento Suno de Casa Grande"
+
+#: estruturas/casa/fundamento.lua estruturas/comunal/diretrizes.lua
+msgid "Casa Grande"
+msgstr "Casa Grande"
 
 #: estruturas/casa/interface.lua estruturas/casa/npc.lua
 #: estruturas/comunal/interface.lua
@@ -276,30 +290,18 @@ msgid "Bau da Casa Comunal dos Sunos"
 msgstr "Bau da Casa Comunal dos Sunos"
 
 #: estruturas/comunal/diretrizes.lua
-msgid "Casa Pequena"
-msgstr "Casa Pequena"
-
-#: estruturas/comunal/diretrizes.lua
 msgid "Aumenta um pouco a quantidade de moradores da vila"
 msgstr "Aumenta um pouco a quantidade de moradores da vila"
-
-#: estruturas/comunal/diretrizes.lua
-msgid "Casa Mediana"
-msgstr "Casa Mediana"
 
 #: estruturas/comunal/diretrizes.lua
 msgid "Aumenta a quantidade de moradores da vila"
 msgstr "Aumenta a quantidade de moradores da vila"
 
 #: estruturas/comunal/diretrizes.lua
-msgid "Casa Grande"
-msgstr "Casa Grande"
-
-#: estruturas/comunal/diretrizes.lua
 msgid "Aumenta bastante a quantidade de moradores da vila"
 msgstr "Aumenta bastante a quantidade de moradores da vila"
 
-#: estruturas/comunal/diretrizes.lua
+#: estruturas/comunal/diretrizes.lua estruturas/loja/fundamento.lua
 msgid "Feirinha"
 msgstr "Feirinha"
 
@@ -323,10 +325,6 @@ msgstr "A vila precisa ter habitantes"
 #: estruturas/comunal/fundamento.lua
 msgid "Fundamento de Casa Comunal dos Sunos"
 msgstr "Fundamento de Casa Comunal dos Sunos"
-
-#: estruturas/comunal/fundamento.lua
-msgid "Casa Comunal sendo construida"
-msgstr "Casa Comunal sendo construida"
 
 #: estruturas/comunal/interface.lua
 msgid "Nenhuma Casa Comunal nessa vila "
@@ -373,10 +371,6 @@ msgstr "O principal lugar para comprar itens comuns dos sunos."
 msgid "Fundamento de Emporio dos Sunos"
 msgstr "Fundamento de Emporio dos Sunos"
 
-#: estruturas/emporio/init.lua
-msgid "Emporio construido"
-msgstr "Emporio construido"
-
 #: estruturas/emporio/placa.lua
 msgid "Placa de Emporio dos Sunos"
 msgstr "Placa de Emporio dos Sunos"
@@ -400,10 +394,6 @@ msgstr "Loja"
 #: estruturas/loja/fundamento.lua
 msgid "Fundamento de Loja dos Sunos"
 msgstr "Fundamento de Loja dos Sunos"
-
-#: estruturas/loja/fundamento.lua
-msgid "Loja sendo construida"
-msgstr "Loja sendo construida"
 
 #: estruturas/loja/init.lua
 msgid "Troque alguns itens aqui"
@@ -432,10 +422,6 @@ msgstr ""
 #: estruturas/taverna/fundamento.lua
 msgid "Fundamento de taverna dos Sunos"
 msgstr "Fundamento de taverna dos Sunos"
-
-#: estruturas/taverna/fundamento.lua
-msgid "Taverna sendo construido"
-msgstr "Taverna sendo construido"
 
 #: estruturas/taverna/interface.lua estruturas/taverna/petisco.lua
 msgid "Precisa pagar por isso"
@@ -480,6 +466,21 @@ msgstr "Kit Reparador de estrutura dos Sunos"
 #: craftitens/salada_de_frutas.lua
 msgid "Salada de Frutas dos Sunos"
 msgstr "Salada de Frutas dos Sunos"
+
+#~ msgid "Casa sendo construida"
+#~ msgstr "Casa sendo construida"
+
+#~ msgid "Casa Comunal sendo construida"
+#~ msgstr "Casa Comunal sendo construida"
+
+#~ msgid "Emporio construido"
+#~ msgstr "Emporio construido"
+
+#~ msgid "Loja sendo construida"
+#~ msgstr "Loja sendo construida"
+
+#~ msgid "Taverna sendo construido"
+#~ msgstr "Taverna sendo construido"
 
 #~ msgid "Recebeste um @1"
 #~ msgstr "Recebeste um @1"

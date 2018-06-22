@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 3.0.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-06-21 12:22-0300\n"
-"PO-Revision-Date: 2018-06-21 12:23-0300\n"
+"POT-Creation-Date: 2018-06-21 20:19-0300\n"
+"PO-Revision-Date: 2018-06-21 20:21-0300\n"
 "Last-Translator: Bruno <borgesdossantosbruno@gmail.com>\n"
 "Language-Team: English\n"
 "Language: en\n"
@@ -219,8 +219,8 @@ msgid "Muito perto de estruturas protegidas"
 msgstr "Very close to protected structures"
 
 #: estruturas/casa/fundamento.lua
-msgid "Limite @1 habitantes da vila ja foi atingido"
-msgstr "Limit of 20 inhabitants has been reached"
+msgid "Limite de @1 habitantes da vila ja foi atingido"
+msgstr "Limit of @1 inhabitants has been reached"
 
 #: estruturas/casa/fundamento.lua
 msgid "Fundamento Suno de Casa Pequena"

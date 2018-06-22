@@ -1,12 +1,12 @@
 ### Arquivo gerado por sovagxas apartir de pt.po
 # textdomain: sovagxas
-Sovagxian Chest=Bau Sovagxa
-Sovagxian Totem=Totem Sovagxa
-for sovagxian tree=de arvore sovagxa
-Sovagxian Tree Sapling=Muda de Arvore Sovagxa
+Sovagxan Totem=Totem Sovagxa
+for sovagxan tree=de arvore sovagxa
+Sovagxan Chest=Bau Sovagxa
+Crafting=Craftador
 Full inventory. Empty a little=Inventario lotado. Esvazie um pouco
 Sovagxian Workbench=Bancada de Trabalho Sovagxa
-Crafting=Craftador
+Wait until a sovagxan puts something here=Aguarde ate que um sovagxa coloque algo dentro
 Empty=Bau vazio no momento
-Wait until a sovagxe puts something here=Aguarde ate que um sovagxa coloque algo dentro
+Sovagxan Tree Sapling=Muda de Arvore Sovagxa
 No Drop=Sem Drop

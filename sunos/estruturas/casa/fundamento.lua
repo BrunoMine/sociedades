@@ -14,7 +14,7 @@ local S = sunos.S
 
 -- Verificar terreno antes de construir casa
 local verificar_terreno = function(pos, dist)
-	
+
 	-- Encontrar vila ativa
 	local vila = sunos.encontrar_vila(pos, 25)
 	if not vila then
@@ -34,7 +34,7 @@ local verificar_terreno = function(pos, dist)
 	
 	-- Verifica limite de população
 	if tonumber(sunos.bd.pegar("vila_"..vila, "pop_total")) >= sunos.var.max_pop then
-		return S("Limite @1 habitantes da vila ja foi atingido", sunos.var.max_pop)
+		return S("Limite de @1 habitantes da vila ja foi atingido", sunos.var.max_pop)
 	end
 	
 	-- Verificações de area
@@ -68,7 +68,7 @@ minetest.register_node("sunos:fundamento_casa_pequena", {
 		local r, vila = verificar_terreno(pos, 2)
 		
 		if r == true then
-			
+		
 			-- Coloca rua em torno
 			sunos.colocar_rua(pos, 2)
 			
@@ -116,11 +116,10 @@ minetest.register_node("sunos:fundamento_casa_mediana", {
 	on_place = function(itemstack, placer, pointed_thing)
 		
 		local pos = pointed_thing.under
-		
 		local r, vila = verificar_terreno(pos, 3)
 		
 		if r == true then
-			
+		
 			-- Coloca rua em torno
 			sunos.colocar_rua(pos, 3)
 			

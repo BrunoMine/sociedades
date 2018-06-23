@@ -305,7 +305,7 @@ sunos.npcs.npc.registrar = function(tipo, def)
 		on_spawn = function(self)
 		
 			if self.initialized == nil then
-				npc.initialize(self, self.object:getpos(), true)
+				npc.initialize(self, self.object:getpos(), true, nil, {name={tags={"sunos"}}})
 				self.tamed = false
 			end
 			
@@ -403,7 +403,7 @@ sunos.npcs.npc.registrar = function(tipo, def)
 	
 	-- Verifica se quer durmir (atravez de uma flag)
 	sunos.npcs.npc.register_step(tipo, {
-		time = 1,
+		time = 10,
 		func = function(self, dtime)
 			
 			-- Verifica se deve ir durmir
@@ -507,7 +507,7 @@ sunos.npcs.npc.registrar = function(tipo, def)
 	
 	-- Registra envio ao checkin
 	sunos.npcs.npc.register_step(tipo, {
-		time = 9,
+		time = 10,
 		func = function(self, dtime)
 			
 			-- Verifica se tem checkin

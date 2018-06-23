@@ -243,7 +243,7 @@ sunos.estruturas.casa.select_occupation = function(pos, vila)
 	local s = math.random(1, 100)
 	-- LOJISTA 1 a 30% (dependendo da população)
 	if s >= 1 and s <= chance_lojista and loja == true then 
-	
+		
 		local dados_loja = sunos.bd.pegar("vila_"..vila, "loja")
 		checkin["8"] = dados_loja.estrutura.pos
 		checkin["9"] = dados_loja.estrutura.pos

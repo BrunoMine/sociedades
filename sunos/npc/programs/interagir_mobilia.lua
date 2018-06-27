@@ -224,7 +224,7 @@ npc.programs.instr.register("sunos:set_animation", function(self, args)
 end)
 
 npc.programs.instr.register("sunos:reset_animation", function(self, args)
-	self.object:set_properties({mesh = "character.b3d"})
+	self.object:set_properties({mesh = "sunos_character.b3d"})
 	self.object:set_animation(
 		{x = npc.ANIMATION_STAND_START, y = npc.ANIMATION_STAND_END},
         	30, 

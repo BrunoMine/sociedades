@@ -269,7 +269,7 @@ sunos.npcs.npc.registrar = function(tipo, def)
 		armor = 100,
 		collisionbox = {-0.35,0.0,-0.35, 0.35,1.8,0.35},
 		visual = "mesh",
-		mesh = "character.b3d",
+		mesh = "sunos_character.b3d",
 		drawtype = "front",
 		textures = {
 			{"sunos_npc_male.png"},

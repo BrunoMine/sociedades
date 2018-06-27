@@ -46,6 +46,9 @@ Autores de mídias (texturas, modelos and sons)
 Todos que não est~ao listados aqui:
 BrunoMine, Bruno Borges <borgesdossantosbruno@gmail.com> (CC BY-SA 3.0)
 
+stujones11 (CC BY-SA 3.0):
+  sunos_character.b3d -- Derivado de um modelo de MirceaKitsune (CC BY-SA 3.0)
+
 VanessaE (CC-BY-SA 3.0)
 	sunos_barril.png
 	sunos_barril.obj

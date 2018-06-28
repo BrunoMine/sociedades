@@ -30,7 +30,7 @@ sunos.var.tempo_verif_restauro = 600
 sunos.var.tempo_atualizar_jogadores_perto = 5
 
 -- Tempo (em segundos) entre as verificações de estrutura obstruida
-sunos.var.tempo_verif_estruturas = tonumber(minetest.setting_get("sunos_verif_fundamento") or 60)
+sunos.var.tempo_verif_estruturas = tonumber(minetest.setting_get("sunos_verif_fundamento") or 120)
 
 -- Tempo (em segundos) em que uma casa comunal pode ficar em decadencia antes de perder o fundamento
 sunos.var.tempo_decadencia = tonumber(minetest.setting_get("sunos_comunal_decadencia") or 300)
@@ -40,6 +40,9 @@ sunos.var.moeda = minetest.setting_get("sunos_moeda") or "default:apple"
 
 -- Limite de nodes destruidos em uma estrutura para justificar abandono
 sunos.var.limite_nodes_destruidos_abandonar = 8
+
+-- Construir estruturas instantaneamente
+sunos.var.instant_structure_build = (minetest.settings:get("sunos_instant_structure_build") == "true") or false
 
 -- Limite de população das vilas
 sunos.var.max_pop = 40

@@ -187,5 +187,11 @@ sunos.colocar_fundamento_step = function(pos, def)
 	meta:set_string("duracao", (def.dias*24000))
 	meta:set_string("schem", def.schem)
 	meta:set_string("rotat", def.rotat)
+	
+	-- Verifica se deve construir instantaneamente
+	if sunos.var.instant_structure_build == true then
+		meta:set_string("duracao", 0)
+	end
+	
 	minetest.get_node_timer(pos):set(0.1, 0) -- Inicia temporizador
 end

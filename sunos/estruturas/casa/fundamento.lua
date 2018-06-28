@@ -80,7 +80,7 @@ minetest.register_node("sunos:fundamento_casa_pequena", {
 				tipo = "casa",
 				dist = 2,
 				vila = vila,
-				dias = 1,
+				dias = sunos.estruturas.casa.var.tb_tempo_construindo_casa[tostring(2*2+1)],
 				schem = schem,
 				rotat = sunos.pegar_rotat(),
 			})
@@ -131,7 +131,7 @@ minetest.register_node("sunos:fundamento_casa_mediana", {
 				tipo = "casa",
 				dist = 3,
 				vila = vila,
-				dias = 2,
+				dias = sunos.estruturas.casa.var.tb_tempo_construindo_casa[tostring(3*2+1)],
 				schem = schem,
 				rotat = sunos.pegar_rotat(),
 			})
@@ -185,7 +185,7 @@ minetest.register_node("sunos:fundamento_casa_grande", {
 				tipo = "casa",
 				dist = 4,
 				vila = vila,
-				dias = 3,
+				dias = sunos.estruturas.casa.var.tb_tempo_construindo_casa[tostring(4*2+1)],
 				schem = schem,
 				rotat = sunos.pegar_rotat(),
 			})

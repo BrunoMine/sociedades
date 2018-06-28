@@ -55,6 +55,10 @@ sunos_item_nectar_custo (Custo de compra de Nectar de Frutas) int 6
 # Outros
 #
 
+# Construir estruturas instantaneamente
+# Ignora o tempo de construção
+sunos_instant_structure_build (Construcao instantanea) bool false
+
 # Probabilidade de surgirem vilas no mapa (em porcentagem)
 # - 100 para surgir sempre que possivel
 # - 0 para nunca surgir
@@ -65,7 +69,7 @@ sunos_chance (Probabilidade de surgimento de vilas) int 100 0 100
 # as dinamicas de reconhecimento das vilas
 # Valores altos reduzem a demanda por processamento e pioram as dinamicas 
 # de reconhecimento das vilas
-sunos_verif_fundamento (Tempo de verificador do Fundamentos) int 10
+sunos_verif_fundamento (Tempo de verificador do Fundamentos) int 120
 
 # Habilita mensagens no depurador (para desenvolvimento)
 sunos_enable_debug_notify (Depurador) bool false

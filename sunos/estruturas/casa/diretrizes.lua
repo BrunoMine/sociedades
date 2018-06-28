@@ -28,6 +28,14 @@ sunos.estruturas.casa.var.tb_pop_casa = {
 	["9"] =			3,
 }
 
+-- Tabela de tempo para construir por tamanho de casa
+sunos.estruturas.casa.var.tb_tempo_construindo_casa = {
+	-- Largura da casa	Dias
+	["5"] = 		1,
+	["7"] =			2,
+	["9"] =			3,
+}
+
 -- Itens que aparecem nas estantes de livros
 sunos.estruturas.casa.var.estante_livros = {
 	"default:book",

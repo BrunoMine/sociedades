@@ -39,16 +39,12 @@ minetest.register_craft({
 	}
 })
 
--- Placa e Degrau de Rua Calcetada
 stairs.register_stair_and_slab(
 	"rua_calcetada",
 	"sunos:rua_calcetada",
 	{crumbly = 3, soil = 1, spreading_dirt_type = 1},
 	{"default_grass.png^sunos_rua_calcetada_cima.png", "default_dirt.png",
-		{
-			name = "default_dirt.png^default_grass_side.png^sunos_rua_calcetada_lado.png",
-			tileable_vertical = false
-		}
+		"default_dirt.png^default_grass_side.png^sunos_rua_calcetada_lado.png"
 	},
 	S("Degrau de Rua Calcetada"),
 	S("Placa de Rua Calcetada"),

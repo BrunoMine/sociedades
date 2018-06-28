@@ -52,7 +52,7 @@ end
 minetest.register_node("sunos:fundamento_casa_pequena", {
 	description = S("Fundamento Suno de Casa Pequena"),
 	tiles = {"default_tree_top.png^sunos_fundamento.png", "default_tree_top.png", "default_tree.png"},
-	inventory_image = "sunos_fundamento_fundo_inv.png^sunos_fundamento_casa_inv.png",
+	inventory_image = "sunos_fundamento_fundo_inv.png^sunos_fundamento_casa_inv.png^sunos_fundamento_casa_pequena_inv.png",
 	wield_image = "sunos_fundamento_estrutura_namao.png^sunos_fundamento_casa_namao.png",
 	paramtype2 = "facedir",
 	is_ground_content = false,
@@ -104,7 +104,7 @@ minetest.register_node("sunos:fundamento_casa_pequena", {
 minetest.register_node("sunos:fundamento_casa_mediana", {
 	description = S("Fundamento Suno de Casa Mediana"),
 	tiles = {"default_tree_top.png^sunos_fundamento.png", "default_tree_top.png", "default_tree.png"},
-	inventory_image = "sunos_fundamento_fundo_inv.png^sunos_fundamento_casa_inv.png",
+	inventory_image = "sunos_fundamento_fundo_inv.png^sunos_fundamento_casa_inv.png^sunos_fundamento_casa_mediana_inv.png",
 	wield_image = "sunos_fundamento_estrutura_namao.png^sunos_fundamento_casa_namao.png",
 	paramtype2 = "facedir",
 	is_ground_content = false,
@@ -157,7 +157,7 @@ minetest.register_node("sunos:fundamento_casa_mediana", {
 minetest.register_node("sunos:fundamento_casa_grande", {
 	description = S("Fundamento Suno de Casa Grande"),
 	tiles = {"default_tree_top.png^sunos_fundamento.png", "default_tree_top.png", "default_tree.png"},
-	inventory_image = "sunos_fundamento_fundo_inv.png^sunos_fundamento_casa_inv.png",
+	inventory_image = "sunos_fundamento_fundo_inv.png^sunos_fundamento_casa_inv.png^sunos_fundamento_casa_grande_inv.png",
 	wield_image = "sunos_fundamento_estrutura_namao.png^sunos_fundamento_casa_namao.png",
 	paramtype2 = "facedir",
 	is_ground_content = false,

@@ -101,7 +101,7 @@ sunos.npc_checkin.register_spawner = function(nodename, def)
 	minetest.register_abm{
 		label = "sunos:spawner_checkin",
 		nodenames = sunos.npc_checkin.spawners,
-		interval = 5,--10,
+		interval = 30,
 		chance = 1,
 		action = function(pos)
 			

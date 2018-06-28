@@ -12,20 +12,6 @@
 -- Tradução de strings
 local S = sunos.S
 
--- Correcao para versoes antigas
-
-if not minetest.registered_nodes[nodename] then 
-	minetest.register_alias("stairs:stair_straw", "farming:straw")
-	minetest.register_alias("stairs:stair_inner_straw", "farming:straw")
-	minetest.register_alias("stairs:stair_outer_straw", "farming:straw")
-	minetest.register_alias("stairs:stair_wood", "default:wood")
-	minetest.register_alias("stairs:stair_inner_wood", "default:wood")
-	minetest.register_alias("stairs:stair_outer_wood", "default:wood")
-	minetest.register_alias("stairs:stair_cobble", "default:cobble")
-	minetest.register_alias("stairs:stair_inner_cobble", "default:cobble")
-	minetest.register_alias("stairs:stair_outer_cobble", "default:cobble")
-end
-
 -- Tabela de nodes
 local nodes_trocaveis_nodrop = {
 	["default:tree"] = {name="sunos:tree_nodrop"},

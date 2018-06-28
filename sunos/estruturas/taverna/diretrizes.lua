@@ -16,7 +16,7 @@ sunos.estruturas.taverna.var = {}
 
 -- Tabela de niveis de acordo com população
 sunos.estruturas.taverna.var.niveis = {
-	1,--15, -- nivel 1
+	15, -- nivel 1
 	20, -- nivel 2
 }
 

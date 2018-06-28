@@ -25,24 +25,59 @@ local add_efeito = function(pos, dist)
 	}
 	for _,p in ipairs(vetores) do
 		minetest.add_particlespawner({
-			amount = 64,
-			time = 1.5,
-			minpos = vector.subtract(p, dist / 2),
-			maxpos = vector.add(p, dist / 2),
-			minvel = {x = -10, y = -10, z = -10},
-			maxvel = {x = 10, y = 10, z = 10},
+			amount = 22*4,
+			time = 8,
+			minpos = {x=p.x-dist*1.1, y=p.y, z=p.z-dist*1.1},
+			maxpos = {x=p.x+dist*1.1, y=p.y, z=p.z+dist*1.1},
+			minvel = {x = 0, y = 1, z = 0},
+			maxvel = {x = 0, y = 4, z = 0},
 			minacc = vector.new(),
 			maxacc = vector.new(),
-			minexptime = 1,
-			maxexptime = 2.5,
-			minsize = 3,
-			maxsize = 6,
-			texture = "tnt_smoke.png",
+			minexptime = 2,
+			maxexptime = 5,
+			minsize = 5,
+			maxsize = 8,
+			texture = "default_tree.png^sunos_filtro_circular.png^[makealpha:76,255,0",
+		})
+		minetest.add_particlespawner({
+			amount = 28*4,
+			time = 8,
+			minpos = {x=p.x-dist*1.1, y=p.y, z=p.z-dist*1.1},
+			maxpos = {x=p.x+dist*1.1, y=p.y, z=p.z+dist*1.1},
+			minvel = {x = 0, y = 1, z = 0},
+			maxvel = {x = 0, y = 4, z = 0},
+			minacc = vector.new(),
+			maxacc = vector.new(),
+			minexptime = 2,
+			maxexptime = 5,
+			minsize = 5,
+			maxsize = 8,
+			texture = "default_cobble.png^sunos_filtro_circular.png^[makealpha:76,255,0",
+		})
+		minetest.add_particlespawner({
+			amount = 15*4,
+			time = 8,
+			minpos = {x=p.x-dist*1.1, y=p.y, z=p.z-dist*1.1},
+			maxpos = {x=p.x+dist*1.1, y=p.y, z=p.z+dist*1.1},
+			minvel = {x = 0, y = 1, z = 0},
+			maxvel = {x = 0, y = 2, z = 0},
+			minacc = vector.new(),
+			maxacc = vector.new(),
+			minexptime = 2,
+			maxexptime = 5,
+			minsize = 5,
+			maxsize = 8,
+			texture = "farming_straw.png^sunos_filtro_circular.png^[makealpha:76,255,0",
 		})
 	end
 	
 	-- Tocar som
 	minetest.sound_play("sunos_iniciando_estrutura", {
+		pos = pos,
+		max_hear_distance = 15,
+		gain = 0.7,
+	})
+	minetest.sound_play("sunos_batidas_bancada", {
 		pos = pos,
 		max_hear_distance = 15,
 		gain = 0.7,
@@ -56,7 +91,7 @@ end
 ]]
 minetest.register_node("sunos:fundamento_step", {
 	description = S("Fundamento dos Sunos STEP"),
-	tiles = {"default_tree_top.png^sunos_fundamento.png", "default_tree_top.png", "default_tree.png"},
+	tiles = {"default_cobble.png^sunos_fundamento.png", "default_cobble.png", "default_cobble.png"},
 	paramtype2 = "facedir",
 	is_ground_content = false,
 	groups = {choppy = 2, oddly_breakable_by_hand = 1, not_in_creative_inventory=1},

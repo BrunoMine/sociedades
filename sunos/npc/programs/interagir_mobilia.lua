@@ -239,10 +239,14 @@ npc.programs.instr.register("sunos:execute_func_mobilia", function(self, args)
 	if args.check_pos and verif_dist_pos(args.check_pos, self.object:getpos()) > 1.5 then return end
 	
 	-- Função para inicio do trabalho na mobilia
-	if args.tipo == "pre" then
-		args.m.pre_func(self, args.pos)
+	if args.m and args.tipo == "pre" then
+		if args.m.pre_func then
+			args.m.pre_func(self, args.pos)
+		end
 	elseif args.tipo == "pos" then
-		args.m.pos_func(self, args.pos)
+		if args.m.pos_func then
+			args.m.pos_func(self, args.pos)
+		end
 	end
 end)
 
@@ -511,7 +515,7 @@ npc.programs.register("sunos:interagir_mobilia", function(self, args)
 			})
 			
 			-- Executa pré funcao da mobilia
-			if m.pre_func then
+			if m.pre_func ~= nil then
 				npc.exec.proc.enqueue(self, "sunos:execute_func_mobilia", {
 					tipo = "pre",
 					pos = p.pos,
@@ -528,7 +532,7 @@ npc.programs.register("sunos:interagir_mobilia", function(self, args)
 			end
 			
 			-- Executa pos funcao da mobilia
-			if m.pos_func then
+			if m.pos_func ~= nil then
 				npc.exec.proc.enqueue(self, "sunos:execute_func_mobilia", {
 					tipo = "pos",
 					pos = p.pos,

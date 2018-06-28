@@ -1,13 +1,12 @@
 --[[
-	Mod Sunos para Minetest
-	Copyright (C) 2017 BrunoMine (https://github.com/BrunoMine)
+	Mod sunos para Minetest
+	Copyright (C) 2018 BrunoMine (https://github.com/BrunoMine)
 	
 	Recebeste uma cópia da GNU Lesser General
 	Public License junto com esse software,
 	se não, veja em <http://www.gnu.org/licenses/>. 
 	
-	Internacionalização de strings de texto exibido
-	
+	Sistema de tradução
   ]]
 
 -- Modpath
@@ -133,42 +132,46 @@ else
 	s = sunos.intllib.S
 end
 
--- Tradução (desativado por enquanto usando sistema para compensar bug de traduções)
--- sunos.s = minetest.get_translator("sunos")
 sunos.s = function(...)
 	local args = { ... }
 	if pt_to_en[args[1]] ~= nil then
 		return s(pt_to_en[args[1]], unpack(args, 2))
 	end
-	minetest.log("error", "[Sunos] String "..dump(args[1]).." nao catalogada")
+	minetest.log("error", "[sunos] String "..dump(args[1]).." nao catalogada")
 	return s(...)
 end
 
--- Marcador e ajustador de strings traduziveis
-if minetest.get_translator ~= nil then
-	sunos.S = function(...)
-		local args = { ... }
-		if type(args[1]) == "table" then
-			local r = {}
-			for n,a in ipairs(args[1]) do
-				if n ~= 1 then -- Não traduz o primeiro
-					table.insert(r, sunos.S(a))
-				else
-					table.insert(r, a)
-				end
+-- Não troca string caso esteja trabalhando com intllib
+if minetest.get_modpath("intllib") ~= nil 
+	and minetest.get_translator == nil 
+then
+	sunos.s = s
+end
+
+sunos.S = function(...)
+	local args = { ... }
+	if type(args[1]) == "table" then
+		local r = {}
+		for n,a in ipairs(args[1]) do
+			if n ~= 1 then -- Não traduz o primeiro
+				table.insert(r, sunos.S(a))
+			else
+				table.insert(r, a)
 			end
-			
-			return sunos.s(unpack(r))
-			
-		elseif type(args[1]) == "string" then
-			-- Não traduz caso faltem argumentos (devido strings ilustrativas)
-			return sunos.s(...)
-			
-		else
-			return args[1]
 		end
+		
+		return sunos.s(unpack(r))
+		
+	elseif type(args[1]) == "string" then
+		-- Não traduz caso faltem argumentos (devido strings ilustrativas)
+		return sunos.s(...)
+		
+	else
+		return args[1]
 	end
 end
 
 -- Função que retorna a string inalterada para passar pela checagem
 sunos.Sfake = function(s) return s end
+
+

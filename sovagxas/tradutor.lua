@@ -1,13 +1,12 @@
 --[[
-	Mod Sovagxas para Minetest
-	Copyright (C) 2017 BrunoMine (https://github.com/BrunoMine)
+	Mod sovagxas para Minetest
+	Copyright (C) 2018 BrunoMine (https://github.com/BrunoMine)
 	
 	Recebeste uma cópia da GNU Lesser General
 	Public License junto com esse software,
 	se não, veja em <http://www.gnu.org/licenses/>. 
 	
-	Internacionalização de strings de texto exibido
-	
+	Sistema de tradução
   ]]
 
 -- Modpath
@@ -133,42 +132,46 @@ else
 	s = sovagxas.intllib.S
 end
 
--- Tradução (desativado por enquanto usando sistema para compensar bug de traduções)
--- sovagxas.s = minetest.get_translator("sovagxas")
 sovagxas.s = function(...)
 	local args = { ... }
 	if pt_to_en[args[1]] ~= nil then
 		return s(pt_to_en[args[1]], unpack(args, 2))
 	end
-	minetest.log("error", "[Sovagxas] String "..dump(args[1]).." nao catalogada")
+	minetest.log("error", "[sovagxas] String "..dump(args[1]).." nao catalogada")
 	return s(...)
 end
 
--- Marcador e ajustador de strings traduziveis
-if minetest.get_translator ~= nil then
-	sovagxas.S = function(...)
-		local args = { ... }
-		if type(args[1]) == "table" then
-			local r = {}
-			for n,a in ipairs(args[1]) do
-				if n ~= 1 then -- Não traduz o primeiro
-					table.insert(r, sovagxas.S(a))
-				else
-					table.insert(r, a)
-				end
+-- Não troca string caso esteja trabalhando com intllib
+if minetest.get_modpath("intllib") ~= nil 
+	and minetest.get_translator == nil 
+then
+	sovagxas.s = s
+end
+
+sovagxas.S = function(...)
+	local args = { ... }
+	if type(args[1]) == "table" then
+		local r = {}
+		for n,a in ipairs(args[1]) do
+			if n ~= 1 then -- Não traduz o primeiro
+				table.insert(r, sovagxas.S(a))
+			else
+				table.insert(r, a)
 			end
-			
-			return sovagxas.s(unpack(r))
-			
-		elseif type(args[1]) == "string" then
-			-- Não traduz caso faltem argumentos (devido strings ilustrativas)
-			return sovagxas.s(...)
-			
-		else
-			return args[1]
 		end
+		
+		return sovagxas.s(unpack(r))
+		
+	elseif type(args[1]) == "string" then
+		-- Não traduz caso faltem argumentos (devido strings ilustrativas)
+		return sovagxas.s(...)
+		
+	else
+		return args[1]
 	end
 end
 
 -- Função que retorna a string inalterada para passar pela checagem
 sovagxas.Sfake = function(s) return s end
+
+

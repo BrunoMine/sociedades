@@ -154,7 +154,9 @@ sunos.npc_checkin.register_spawner = function(nodename, def)
 						-- Registro de checkins
 						if mynpc_checkin then
 						
-							if pos_to_string(mynpc_checkin[tostring(time)]) == pos_to_string(pos) then
+							if pos_to_string(mynpc_checkin[tostring(time)]) == pos_to_string(pos) 
+								and sunos.npc_checkin.registered_spawners[node.name]
+							then
 							
 								-- Spawna o NPC na região comum
 								sunos.npc_checkin.registered_spawners[node.name].func_spawn(

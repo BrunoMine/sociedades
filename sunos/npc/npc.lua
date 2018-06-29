@@ -41,12 +41,6 @@ local verif_dist_pos = function(pos1, pos2)
 	return x or y or z
 end
 
--- Tabelas
-local sunos_walkable_nodes = {
-	"sunos:carpete_palha",
-	"sunos:carpete_palha_nodrop"
-}
-
 -- Pegar horario atual em minetest para checkins
 sunos.npcs.npc.get_time = function()
 	local time = minetest.get_timeofday() * 24
@@ -263,7 +257,7 @@ sunos.npcs.npc.registrar = function(tipo, def)
 		damage = 3,
 		attack_type = "dogfight",
 		attacks_monsters = true,
-		pathfinding = false,
+		pathfinding = true,
 		hp_min = 10,
 		hp_max = 20,
 		armor = 100,
@@ -287,7 +281,7 @@ sunos.npcs.npc.registrar = function(tipo, def)
 		view_range = 15,
 		owner = "",
 		order = "follow",
-		fear_height = 3,
+		fear_height = 7,
 		animation = {
 			speed_normal = 30,
 			speed_run = 30,
@@ -370,6 +364,11 @@ sunos.npcs.npc.registrar = function(tipo, def)
 				return
 			end
 			
+			-- Evita continuar se esta em luta
+			if self.state == "attack" then
+				return
+			end
+			
 			-- Realiza timers registrados
 			for n,d in ipairs(tb_timers[tipo]) do
 				self.sunos_t[n] = self.sunos_t[n] + dtime
@@ -391,7 +390,16 @@ sunos.npcs.npc.registrar = function(tipo, def)
 			return npc.step(self, dtime)
 		
 		end,
-	
+		
+		-- Ao ser socado
+		do_punch = function(self, hitter, time_from_last_punch, tool_capabilities, direction)
+			if hitter and hitter:is_player() == true then
+				self.attack = obj
+				self.state = "attack"
+				sunos.novo_inimigo(self.vila, hitter:get_player_name())
+			end
+		end,
+		
 		-- Clique direito (acessar)
 		on_rightclick = function(self, player)
 			if sunos.npcs.npc.registrados[tipo].on_rightclick then 

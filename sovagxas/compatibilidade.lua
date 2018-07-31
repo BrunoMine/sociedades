@@ -32,7 +32,7 @@ minetest.register_lbm({
 	action = function(pos, node)
 		local meta = minetest.get_meta(pos)
 		
-		if sunos.verif_comp(meta:get_string("versao")) == false then
+		if sovagxas.verif_comp(meta:get_string("versao")) == false then
 			local node = minetest.get_node(pos)
 			minetest.set_node(pos, {name="default:chest", param2 = node.param2})
 		end

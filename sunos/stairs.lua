@@ -17,7 +17,7 @@ local function rotate_and_place(itemstack, placer, pointed_thing)
 	local p0 = pointed_thing.under
 	local p1 = pointed_thing.above
 	local param2 = 0
-
+	
 	local placer_pos = placer:getpos()
 	if placer_pos then
 		param2 = minetest.dir_to_facedir(vector.subtract(p1, placer_pos))
@@ -144,10 +144,8 @@ end
 -- Nodes will be called stairs:{stair,slab}_<subname>
 
 function stairs.register_stair_and_slab(subname, recipeitem, groups, images, desc_stair, desc_slab, sounds)
-	stairs.register_stair(subname, recipeitem, groups, images, desc_stair, sounds)
 	stairs.register_stair_inner(subname, recipeitem, groups, images, desc_stair, sounds)
 	stairs.register_stair_outer(subname, recipeitem, groups, images, desc_stair, sounds)
-	stairs.register_slab(subname, recipeitem, groups, images, desc_slab, sounds)
 end
 
 stairs.register_stair_and_slab(

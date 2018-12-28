@@ -202,6 +202,18 @@ sunos.npcs.npc.send_to_checkin = function(self)
 	end
 end
 
+-- Verificar se é NPc do bau
+local verif_npc_bau = function(self)
+	if self.object and self.mypos and self.sunos_npchash then
+		-- Verifica se é o npc atual de seu node
+		if minetest.get_meta(self.mypos):get_string("sunos_npchash") ~= self.sunos_npchash then
+			return false
+		else
+			return true
+		end
+	end
+	return false
+end
 
 -- Instrução para manter deitado
 npc.programs.instr.register("sunos:definir_deitado", function(self, args)
@@ -364,9 +376,9 @@ sunos.npcs.npc.registrar = function(tipo, def)
 				return
 			end
 			
-			-- Evita continuar se esta em luta
-			if self.state == "attack" then
-				return
+			if verif_npc_bau(self) == false then
+				self.object:remove()
+				return 
 			end
 			
 			-- Realiza timers registrados
@@ -380,6 +392,11 @@ sunos.npcs.npc.registrar = function(tipo, def)
 						return r
 					end
 				end
+			end
+			
+			-- Evita continuar se esta em luta
+			if self.state == "attack" then
+				return
 			end
 			
 			-- Realiza procedimento personalizado

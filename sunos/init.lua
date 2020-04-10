@@ -107,3 +107,10 @@ dofile(modpath.."/estruturas/loja/init.lua")
 dofile(modpath.."/estruturas/emporio/init.lua")
 dofile(modpath.."/estruturas/taverna/init.lua")
 notificar("[OK]!")
+
+-- Hot fix
+old_is_protected = minetest.is_protected
+function minetest.is_protected(pos, name)
+	if name == "" then name = "any player" end
+	return old_is_protected(pos, name)
+end

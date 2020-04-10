@@ -52,8 +52,8 @@ sunos.verif_terreno = function(pos, dist)
 		end
 	end
 	
-	-- Verificar faixa de subsolo considerando 2 faixas
-	do
+	-- Verificar faixa de subsolo considerando 2 faixas [TEM ERROS| DIFICIL PREVER TODOS OS BLOCOS ACEITAVEIS]
+	--[[do
 		-- Pegar nodes da faixa de terra
 		local subsolo = minetest.find_nodes_in_area(
 			{x=pos.x-dist, y=pos.y-2, z=pos.z-dist}, 
@@ -64,7 +64,7 @@ sunos.verif_terreno = function(pos, dist)
 		if table.maxn(subsolo) < ( ((2*dist+1)^2) * 2) then
 			return 3
 		end
-	end
+	end]]
 	
 	-- Retorna sem erros
 	return 0
